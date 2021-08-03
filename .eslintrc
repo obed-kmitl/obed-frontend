@@ -1,0 +1,20 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["airbnb-base", "next", "next/core-web-vitals"],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"],
+    "linebreak-style": 0,
+    "no-tabs": 0,
+    "import/prefer-default-export": 0,
+    "@next/next/link-passhref": 0
+  }
+}

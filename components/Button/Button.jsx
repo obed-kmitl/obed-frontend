@@ -3,7 +3,7 @@ import cn from 'classname';
 import styles from './Button.module.scss';
 
 export default function MyBtn({
-  children, type, danger, disabled, block, loading, onClick, carrot = false,
+  children, type, danger, disabled, block, loading, onClick, carrot,
 }) {
   return (
     <div className={cn(carrot ? styles.btnCarrot : styles.btnTurquoise,

@@ -20,6 +20,8 @@
   font-display: swap;
 }
 
+@import "~antd/dist/antd.css";
+
 html,
 body {
   padding: 0;

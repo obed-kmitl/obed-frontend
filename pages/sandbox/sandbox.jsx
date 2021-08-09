@@ -11,7 +11,7 @@ export default function Sandbox() {
         <MyBtn>Seccondary</MyBtn>
         <MyBtn type="primary" carrot>Primary</MyBtn>
         <MyBtn carrot>Seccondary</MyBtn>
-        <MyBtn danger onClick={() => alert('Danger')}>Seccondary</MyBtn>
+        <MyBtn danger onClick={() => alert('Danger')}>Danger</MyBtn>
         <MyBtn disabled>Disabled</MyBtn>
       </div><hr />
     </div>

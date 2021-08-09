@@ -1,0 +1,131 @@
+@import "../../styles/color.scss";
+
+.logo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 30px;
+  img {
+    margin: 18px auto 0 auto;
+  }
+  h1 {
+    margin: -16px auto 0 auto;
+    font-size: 28px;
+    color: white;
+  }
+}
+
+.container {
+  height: 100vh;
+  background-color: $color-primary-carrot;
+
+  .menu {
+    background: inherit;
+    color: white;
+    transition: none;
+    a {
+      color: inherit;
+      &:hover {
+        color: inherit;
+      }
+    }
+
+    .item {
+      font-size: 16px;
+      transition: none;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      &:global(.ant-menu-item-selected) {
+        color: $color-primary-turquoise;
+        background-color: $color-carrot-100;
+        &::after {
+          border-right: 3px solid $color-primary-turquoise;
+        }
+      }
+      &:hover {
+        color: $color-primary-turquoise;
+      }
+    }
+  }
+
+  &Admin {
+    height: 100vh;
+    background-color: $color-primary-turquoise;
+
+    .menu {
+      background: inherit;
+      color: white;
+      transition: none;
+      a {
+        color: inherit;
+        &:hover {
+          color: inherit;
+        }
+      }
+
+      .item {
+        font-size: 16px;
+        transition: none;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        &:global(.ant-menu-item-selected) {
+          color: $color-primary-carrot;
+          background-color: $color-turquoise-100;
+          &::after {
+            border-right: 3px solid $color-primary-carrot;
+          }
+        }
+
+        &:hover {
+          color: $color-primary-carrot;
+        }
+      }
+    }
+  }
+}
+// .cascader{
+//   width: 256px;
+//   background-color: $color-carrot-100;
+//   border: none;
+//   color: $color-primary-turquoise;
+//   border-radius: 0;
+//   input{
+//     height: 56px;
+//     border: none;
+
+//   }
+
+// }
+.menu{
+  .year {
+    padding: 8px 0;
+    margin: 4px 0;
+    color: $color-primary-turquoise;
+    background: $color-carrot-100;
+    padding: 0;
+    &:global(.ant-menu-submenu > .ant-menu-submenu-title){
+      height: 56px;
+      display: flex;
+      align-items: center;
+    }
+  }
+  .course {
+    padding: 8px 0;
+    margin: 4px 0;
+    color: $color-primary-turquoise;
+    background: $color-carrot-100;
+    padding: 0;
+    &:global(.ant-menu-submenu > .ant-menu-submenu-title){
+      line-height: 1.5;
+      height: 80px;
+      display: flex;
+      align-items: center;
+    }
+  }
+  i{
+    color: $color-primary-turquoise;
+  }
+}

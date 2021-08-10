@@ -49,28 +49,31 @@
     }
     
   .year {
-    padding: 8px 0;
+
     margin: 4px 0;
     color: $color-primary-turquoise;
     background: $color-carrot-100;
-    padding: 0;
+ 
     &:global(.ant-menu-submenu > .ant-menu-submenu-title){
       height: 56px;
       display: flex;
       align-items: center;
+     
     }
-    }
+   
+  }
     .course {
-      padding: 8px 0;
+
       margin: 4px 0;
       color: $color-primary-turquoise;
       background: $color-carrot-100;
-      padding: 0;
+
       &:global(.ant-menu-submenu > .ant-menu-submenu-title){
         line-height: 1.5;
         height: 90px;
         display: flex;
         align-items: center;
+       
       }
     }
     i{

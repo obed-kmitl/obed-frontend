@@ -65,7 +65,7 @@ function keyPath(){
 
 const Sidebar = () => {
 
-    const isAdmin = false;
+    const isAdmin = true;
 
     return (
         <div className={styles.sidebar}>

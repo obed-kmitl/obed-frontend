@@ -10,7 +10,9 @@ const Header = () => {
     return (
         <div className={styles.container}>
             {name}
-            <Avatar size={50} icon={<UserOutlined />} />
+            <div className={styles.avatar}>
+                <Avatar size={50} icon={<UserOutlined />} />
+            </div>
         </div>
     )
 }

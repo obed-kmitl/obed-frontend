@@ -49,30 +49,26 @@
     }
     
   .year {
-
-    margin: 4px 0;
     color: $color-primary-turquoise;
-    background: $color-carrot-100;
- 
+
     &:global(.ant-menu-submenu > .ant-menu-submenu-title){
       height: 56px;
       display: flex;
       align-items: center;
+      background: $color-carrot-100;
      
     }
    
   }
     .course {
-
-      margin: 4px 0;
       color: $color-primary-turquoise;
-      background: $color-carrot-100;
-
+      
       &:global(.ant-menu-submenu > .ant-menu-submenu-title){
         line-height: 1.5;
         height: 90px;
         display: flex;
         align-items: center;
+        background: $color-carrot-100;
        
       }
     }

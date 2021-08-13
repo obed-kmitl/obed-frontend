@@ -1,8 +1,9 @@
 import propTypes from 'prop-types';
+import cn from 'classname';
 import styles from './Typography.module.scss';
 
-function Body({ level, children }) {
-  return <p className={styles.body} level={level}>{children}</p>;
+function Body({ level, children, className }) {
+  return <p className={cn(styles.body, className)} level={level}>{children}</p>;
 }
 
 Body.propTypes = {

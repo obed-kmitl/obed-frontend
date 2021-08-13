@@ -9,7 +9,8 @@ export default function MyBtn({
     <div className={cn(carrot ? styles.btnCarrot : styles.btnTurquoise,
       danger && styles.btnDanger)}>
       <Button type={type} danger={danger} disabled={disabled}
-        block={block} loading={loading} onClick={onClick}>{children}</Button>
+        block={block} loading={loading} onClick={onClick}>{children}
+      </Button>
     </div>
   );
 }

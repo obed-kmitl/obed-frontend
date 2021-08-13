@@ -6,6 +6,7 @@
       font-weight: 500;
       background-color: $color-white;
       color: $primaryColor;
+      border-color: $primaryColor;
       &:focus {
         background-color: $color-white;
         color: $lighterColor;

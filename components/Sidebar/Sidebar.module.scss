@@ -11,8 +11,7 @@
   }
   h1 {
     margin: -16px auto 0 auto;
-    font-size: 28px;
-    color: white;
+    color: $color-white;
   }
 }
 
@@ -20,17 +19,24 @@
   height: 100vh;
   background-color: $color-primary-carrot;
 
+  h5{
+    color: inherit;
+    margin: 0;
+  }
+
   .menu {
     background: inherit;
-    color: white;
+    color: $color-white;
     transition: none;
     a {
+      font-size: 16px;
+      font-weight: 500;
       color: inherit;
       &:hover {
         color: inherit;
       }
     }
-    font-size: 16px;
+   
     .item {
       transition: none;
       height: 56px;
@@ -45,6 +51,9 @@
       }
       &:hover {
         color: $color-primary-turquoise;
+      }
+      .icon{
+        transition: none;
       }
     }
     
@@ -86,6 +95,8 @@
       color: white;
       transition: none;
       a {
+        font-size: 16px;
+        font-weight: 500;
         color: inherit;
         &:hover {
           color: inherit;
@@ -105,9 +116,11 @@
             border-right: 3px solid $color-primary-carrot;
           }
         }
-
         &:hover {
           color: $color-primary-carrot;
+        }
+        .icon{
+          transition: none;
         }
       }
     }

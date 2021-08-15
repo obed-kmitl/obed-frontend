@@ -16,6 +16,9 @@ import { useState } from 'react';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
+import { Header } from '../../components';
+import { Headers } from 'node-fetch';
+import Head from 'next/head';
 
 const semesters = [
     {
@@ -87,10 +90,10 @@ function keyPath() {
 }
 
 
-
 const Sidebar = () => {
 
-    const isAdmin = true;
+    const isAdmin = false;
+
     const [semesterTitle, setSemesterTitle] = useState({
         id: semesters[0].id,
         semester: semesters[0].semester,
@@ -108,7 +111,7 @@ const Sidebar = () => {
             <Sider className={isAdmin ? styles.containerAdmin : styles.container} width={256} >
                 <div className={styles.logo}>
                     <img src="/Logo.png" height="119px" width="179px" alt="OBED Logo" />
-                    {isAdmin && <h1> Administrator </h1>}
+                    {isAdmin &&  <Header level={1}>Administrator</Header>}
                 </div>
                 {!isAdmin ?
                     <>
@@ -117,7 +120,7 @@ const Sidebar = () => {
                             defaultSelectedKeys={['1']}
                             mode="vertical"
                         >
-                            <SubMenu className={styles.year} key="sub1" title={<div>{semesterTitle.semester}{"/"}{semesterTitle.year}</div>} >
+                            <SubMenu className={styles.year} key="sub1" title={<Header level={5}>{semesterTitle.semester}{"/"}{semesterTitle.year}</Header>} >
                                 {semesters.map((semester) =>
                                     <Menu.Item
                                         key={semester.id}
@@ -140,10 +143,13 @@ const Sidebar = () => {
                             <SubMenu
                                 className={styles.course} key="sub2"
                                 title={
+                                    
                                     <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                                        <Header level={5}>
                                         {courseTitle.courseId} <br />
-                                        {courseTitle.courseName} <br />
+                                        <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{courseTitle.courseName}</div>
                                         Section {courseTitle.section}
+                                        </Header>
                                     </div>
                                 }
                             >
@@ -170,32 +176,32 @@ const Sidebar = () => {
                         >
                             <Menu.Item className={styles.item} key="4">
                                 <Link href="/">
-                                    <a> <AreaChartOutlined /> Overview </a>
+                                    <a> <AreaChartOutlined className={styles.icon}/> Overview </a>
                                 </Link>
                             </Menu.Item>
                             <Menu.Item key="5" className={styles.item}>
                                 <Link href="#">
-                                    <a> <TeamOutlined /> Student </a>
+                                    <a> <TeamOutlined className={styles.icon}/> Student </a>
                                 </Link>
                             </Menu.Item>
                             <Menu.Item key="6" className={styles.item}>
                                 <Link href="#">
-                                    <a> <FormOutlined /> Planning </a>
+                                    <a> <FormOutlined className={styles.icon}/> Planning </a>
                                 </Link>
                             </Menu.Item>
                             <Menu.Item key="7" className={styles.item}>
                                 <Link href="#">
-                                    <a> <BulbOutlined /> Learning Outcome </a>
+                                    <a> <BulbOutlined className={styles.icon}/> Learning Outcome </a>
                                 </Link>
                             </Menu.Item>
                             <Menu.Item key="8" className={styles.item}>
                                 <Link href="#">
-                                    <a> <ExperimentOutlined /> Activity </a>
+                                    <a> <ExperimentOutlined className={styles.icon}/> Activity </a>
                                 </Link>
                             </Menu.Item>
                             <Menu.Item key="9" className={styles.item}>
                                 <Link href="#">
-                                    <a> <FileTextOutlined /> Report </a>
+                                    <a> <FileTextOutlined className={styles.icon}/> Report </a>
                                 </Link>
                             </Menu.Item>
                         </Menu>
@@ -207,17 +213,17 @@ const Sidebar = () => {
                     >
                         <Menu.Item className={styles.item} key="1">
                             <Link href="/">
-                                <a> <FileTextOutlined /> Curriculum </a>
+                                <a> <FileTextOutlined className={styles.icon}/> Curriculum </a>
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="2" className={styles.item}>
                             <Link href="/test">
-                                <a> <TeamOutlined /> Teacher </a>
+                                <a> <TeamOutlined className={styles.icon}/> Teacher </a>
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="3" className={styles.item}>
                             <Link href="/test">
-                                <a> <CalendarOutlined /> Semester plan </a>
+                                <a> <CalendarOutlined className={styles.icon}/> Semester plan </a>
                             </Link>
                         </Menu.Item>
                     </Menu>

@@ -147,7 +147,7 @@ const Sidebar = () => {
                                     <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
                                         <Header level={5}>
                                         {courseTitle.courseId} <br />
-                                        <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{courseTitle.courseName}</div>
+                                        <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: "200px"}}>{courseTitle.courseName}</div>
                                         Section {courseTitle.section}
                                         </Header>
                                     </div>

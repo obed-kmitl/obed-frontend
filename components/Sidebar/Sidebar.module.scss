@@ -43,12 +43,15 @@
       &:global(.ant-menu-item-selected) {
         color: $color-primary-turquoise;
         background-color: $color-carrot-100;
+        &:hover {
+          background-color: $color-carrot-100; 
+        }
         &::after {
           border-right: 3px solid $color-primary-turquoise;
         }
       }
       &:hover {
-        color: $color-turquoise-600;
+        background-color: $color-carrot-200; 
       }
       .icon{
         transition: none;
@@ -121,7 +124,8 @@
           }
         }
         &:hover {
-          color: $color-primary-carrot;
+          color:$color-primary-carrot;
+          background-color: $color-turquoise-100; 
         }
         .icon{
           transition: none;

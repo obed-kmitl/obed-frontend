@@ -17,8 +17,6 @@ import { useState } from 'react';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 import { Header } from '../../components';
-import { Headers } from 'node-fetch';
-import Head from 'next/head';
 
 const semesters = [
     {
@@ -92,7 +90,7 @@ function keyPath() {
 
 const Sidebar = () => {
 
-    const isAdmin = false;
+    const isAdmin = true;
 
     const [semesterTitle, setSemesterTitle] = useState({
         id: semesters[0].id,

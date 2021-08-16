@@ -92,11 +92,12 @@
   &Admin {
     height: 100vh;
     background-color: $color-primary-turquoise;
-
+    
     .menu {
       background: inherit;
       color: white;
       transition: none;
+      border: 0px;
       a {
         font-size: 16px;
         font-weight: 500;

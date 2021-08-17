@@ -13,13 +13,9 @@ import {
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 
-import { Headers } from 'node-fetch';
-import Head from 'next/head';
-import { Header } from '..';
-import styles from './Sidebar.module.scss';
-
 const { Sider } = Layout;
 const { SubMenu } = Menu;
+import { Header } from '../../components';
 
 const semesters = [
   {
@@ -104,46 +100,62 @@ const Sidebar = () => {
     section: courses[0].section,
   });
 
-  return (
-    <div className={styles.sidebar}>
-      <Sider className={isAdmin ? styles.containerAdmin : styles.container} width={256} >
-        <div className={styles.logo}>
-          <img src="/Logo.png" height="119px" width="179px" alt="OBED Logo" />
-          {isAdmin && <Header level={1}>Administrator</Header>}
-        </div>
-        {!isAdmin
-          ? <>
-            <Menu
-              className={styles.menu}
-              defaultSelectedKeys={['1']}
-              mode="vertical"
-            >
-              <SubMenu className={styles.year} key="sub1" title={<Header level={5}>{semesterTitle.semester}{'/'}{semesterTitle.year}</Header>} >
-                {semesters.map((semester) => <Menu.Item
-                  key={semester.id}
-                  onClick={() => setSemesterTitle({
-                    id: semester.id,
-                    semester: semester.semester,
-                    year: semester.year,
-                  })}
-                >
-                  {semester.semester}/{semester.year}
-                </Menu.Item>)}
-              </SubMenu>
-            </Menu>
-            <Menu
-              className={styles.menu}
-              defaultSelectedKeys={['1']}
-              mode="vertical"
-            >
-              <SubMenu
-                className={styles.course} key="sub2"
-                title={
+    const isAdmin = true;
 
-                  <div>
-                    <Header level={5}>
-                      {courseTitle.courseId} <br />
-                      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', width: '200px' }}>{courseTitle.courseName}</div>
+    const [semesterTitle, setSemesterTitle] = useState({
+        id: semesters[0].id,
+        semester: semesters[0].semester,
+        year: semesters[0].year
+    })
+    const [courseTitle, setCourseTitle] = useState({
+        id: courses[0].id,
+        courseId: courses[0].courseId,
+        courseName: courses[0].courseName,
+        section: courses[0].section
+    })
+    
+    return (
+        <div className={styles.sidebar}>
+            <Sider className={isAdmin ? styles.containerAdmin : styles.container} width={256} >
+                <div className={styles.logo}>
+                    <img src="/Logo.png" height="119px" width="179px" alt="OBED Logo" />
+                    {isAdmin &&  <Header level={1}>Administrator</Header>}
+                </div>
+                {!isAdmin ?
+                    <>
+                        <Menu
+                            className={styles.menu}
+                            defaultSelectedKeys={['1']}
+                            mode="vertical"
+                        >
+                            <SubMenu className={styles.year} key="sub1" title={<Header level={5}>{semesterTitle.semester}{"/"}{semesterTitle.year}</Header>} >
+                                {semesters.map((semester) =>
+                                    <Menu.Item
+                                        key={semester.id}
+                                        onClick={()=>setSemesterTitle({
+                                            id: semester.id,
+                                            semester: semester.semester,
+                                            year: semester.year
+                                        })}
+                                    >
+                                        {semester.semester}/{semester.year}
+                                    </Menu.Item>
+                                )}
+                            </SubMenu>
+                        </Menu>    
+                        <Menu
+                            className={styles.menu}
+                            defaultSelectedKeys={['1']}
+                            mode="vertical"
+                        >
+                            <SubMenu
+                                className={styles.course} key="sub2"
+                                title={
+                                    
+                                    <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                                        <Header level={5}>
+                                        {courseTitle.courseId} <br />
+                                        <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: "200px"}}>{courseTitle.courseName}</div>
                                         Section {courseTitle.section}
                     </Header>
                   </div>

@@ -18,7 +18,7 @@
 .container {
   height: 100vh;
   background-color: $color-primary-carrot;
-
+ 
   h5{
     color: inherit;
     margin: 0;
@@ -28,15 +28,13 @@
     background: inherit;
     color: $color-white;
     transition: none;
+    border: 0px;
     a {
       font-size: 16px;
       font-weight: 500;
       color: inherit;
-      &:hover {
-        color: inherit;
-      }
     }
-   
+    
     .item {
       transition: none;
       height: 56px;
@@ -45,30 +43,32 @@
       &:global(.ant-menu-item-selected) {
         color: $color-primary-turquoise;
         background-color: $color-carrot-100;
+        &:hover {
+          background-color: $color-carrot-100; 
+        }
         &::after {
           border-right: 3px solid $color-primary-turquoise;
         }
       }
       &:hover {
-        color: $color-primary-turquoise;
+        background-color: $color-carrot-200; 
       }
       .icon{
         transition: none;
       }
     }
     
-  .year {
-    color: $color-primary-turquoise;
+    .year {
+      color: $color-primary-turquoise;
 
-    &:global(.ant-menu-submenu > .ant-menu-submenu-title){
-      height: 56px;
-      display: flex;
-      align-items: center;
-      background: $color-carrot-100;
-     
+      &:global(.ant-menu-submenu > .ant-menu-submenu-title){
+        height: 56px;
+        display: flex;
+        align-items: center;
+        background: $color-carrot-100;
+      }
+    
     }
-   
-  }
     .course {
       color: $color-primary-turquoise;
       
@@ -78,22 +78,29 @@
         display: flex;
         align-items: center;
         background: $color-carrot-100;
-       
       }
     }
     i{
-      color: $color-primary-turquoise;
+      color: inherit;
+     
     }
+    :hover {
+      color: $color-turquoise-500;
+
+    }
+  
+    
   }
 
   &Admin {
     height: 100vh;
     background-color: $color-primary-turquoise;
-
+    
     .menu {
       background: inherit;
       color: white;
       transition: none;
+      border: 0px;
       a {
         font-size: 16px;
         font-weight: 500;
@@ -117,7 +124,8 @@
           }
         }
         &:hover {
-          color: $color-primary-carrot;
+          color:$color-primary-carrot;
+          background-color: $color-turquoise-100; 
         }
         .icon{
           transition: none;

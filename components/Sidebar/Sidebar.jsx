@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import React, { useState } from 'react';
+import styles from './Sidebar.module.scss'
+
 import { Layout, Menu } from 'antd';
 import {
   AreaChartOutlined,
@@ -86,19 +88,6 @@ function keyPath() {
 }
 
 const Sidebar = () => {
-  const isAdmin = false;
-
-  const [semesterTitle, setSemesterTitle] = useState({
-    id: semesters[0].id,
-    semester: semesters[0].semester,
-    year: semesters[0].year,
-  });
-  const [courseTitle, setCourseTitle] = useState({
-    id: courses[0].id,
-    courseId: courses[0].courseId,
-    courseName: courses[0].courseName,
-    section: courses[0].section,
-  });
 
     const isAdmin = true;
 

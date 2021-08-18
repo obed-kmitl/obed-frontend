@@ -1,11 +1,25 @@
 import Head from 'next/head';
 import { Tabs } from 'antd';
 import {
-  MyBtn, MyTabs, Header, Body,
+  MyBtn, MyTabs, Header, Body
 } from '../../components';
+
+//fix useLayoutEffect SSR warning
+import dynamic from 'next/dynamic'
+const MySelect = dynamic(
+  () => import('../../components/Select/Select'),
+  { ssr: false }
+)
+
 import styles from './sandbox.module.scss';
 
 export default function Sandbox() {
+  const option = ["option1","option2","option3","option4","option5"]
+
+  function handleSelectChange(value) {
+    console.log(`selected ${value}`);
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -33,6 +47,12 @@ export default function Sandbox() {
       เนื้อหาของแท็บอื่น ๆ
         </Tabs.TabPane>
       </MyTabs>
+      <p>Select</p>
+      <div className={styles.selectContainer}>
+      <MySelect option={option} onChange={handleSelectChange}/>
+      <MySelect option={option} width="300px" onChange={handleSelectChange}/>
+      <MySelect option={option} mode="multiple" onChange={handleSelectChange}/>
+      </div>
       <p>Typo</p>
       <div className={styles.textContainer}>
         <div className={styles.left}>
@@ -52,6 +72,8 @@ export default function Sandbox() {
           <Text level="c2">Caption 2 - 12px Light</Text> */}
         </div>
       </div>
+    
+     
     </div>
   );
 }

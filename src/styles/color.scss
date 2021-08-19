@@ -1,0 +1,56 @@
+// CI Guideline:
+//   Primary color will be mainly used.
+//   Shading colors are the alternative that can be used as needed.
+
+// Orange shade
+
+$color-carrot-100: #fef2e4;
+$color-carrot-200: #fcd8ad;
+$color-carrot-300: #fabe76;
+$color-carrot-400: #f8a43f;
+$color-carrot-500: #f7941d;
+$color-carrot-600: #d57808;
+
+// Turquoise shade
+
+$color-turquoise-100: #dbf8ff;
+$color-turquoise-200: #92e9ff;
+$color-turquoise-300: #71e3ff;
+$color-turquoise-400: #00ccff;
+$color-turquoise-500: #009fc7;
+$color-turquoise-600: #00718e;
+
+// Grey shade
+
+$color-grey-100: #ebebeb;
+$color-grey-200: #c3c3c4;
+$color-grey-300: #9b9c9d;
+$color-grey-400: #747476;
+$color-grey-500: #4c4d4f;
+$color-grey-600: #252629;
+
+// Green shade
+
+$color-olive-100: #e5f0d8;
+$color-olive-200: #b2d38b;
+$color-olive-300: #8bbd51;
+$color-olive-400: #68a028;
+$color-olive-500: #538020;
+$color-olive-600: #49701c;
+
+// Red shade
+
+$color-rose-100: #f4dada;
+$color-rose-200: #eab5b5;
+$color-rose-300: #e09090;
+$color-rose-400: #d15959;
+$color-rose-500: #c73535;
+$color-rose-600: #a32c2c;
+
+$color-disable: $color-grey-200;
+$color-success: $color-olive-400;
+$color-danger: $color-rose-500;
+$color-primary-carrot: $color-carrot-500;
+$color-primary-turquoise: $color-turquoise-500;
+$color-text-primary: $color-grey-600;
+$color-white: #ffffff;

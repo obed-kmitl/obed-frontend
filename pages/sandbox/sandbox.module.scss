@@ -22,3 +22,8 @@
     flex: 1 0;
   }
 }
+.selectContainer{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}

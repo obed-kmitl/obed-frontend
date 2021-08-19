@@ -3,12 +3,26 @@ import { Tabs } from 'antd';
 import {
   MyBtn, MyTabs, Header, Body, MyInput
 } from '../../components';
+
+//fix useLayoutEffect SSR warning
+import dynamic from 'next/dynamic'
+const MySelect = dynamic(
+  () => import('../../components/Select/Select'),
+  { ssr: false }
+)
+
 import styles from './sandbox.module.scss';
 
 export default function Sandbox() {
 
   const titleSelector=["Mr.","Ms.","Miss","Prof.","อ.","ผศ.","ดร."] 
   const onSearch = value => console.log(value);
+  const option = ["option1","option2","option3","option4","option5"]
+
+  function handleSelectChange(value) {
+    console.log(`selected ${value}`);
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -45,6 +59,12 @@ export default function Sandbox() {
         <MyInput placeholder="placeholder" password />
         <MyInput placeholder="placeholder" addonBefore={titleSelector}/>
         <MyInput placeholder="placeholder" search onSearch={onSearch} />
+      </div>  
+      <p>Select</p>
+      <div className={styles.selectContainer}>
+      <MySelect option={option} onChange={handleSelectChange}/>
+      <MySelect option={option} width="300px" onChange={handleSelectChange}/>
+      <MySelect option={option} mode="multiple" onChange={handleSelectChange}/>
       </div>
       <p>Typo</p>
       <div className={styles.textContainer}>
@@ -65,7 +85,7 @@ export default function Sandbox() {
           <Text level="c2">Caption 2 - 12px Light</Text> */}
         </div>
       </div>
-
+ 
     </div>
   );
 }

@@ -3,13 +3,13 @@ import cn from 'classname';
 import styles from './Button.module.scss';
 
 export default function MyBtn({
-  children, type, danger, disabled, block, loading, onClick, carrot,
+  children, type, danger, disabled, block, loading, onClick, carrot, title,
 }) {
   return (
     <div className={cn(carrot ? styles.btnCarrot : styles.btnTurquoise,
       danger && styles.btnDanger)}>
       <Button type={type} danger={danger} disabled={disabled}
-        block={block} loading={loading} onClick={onClick}>{children}
+        block={block} loading={loading} onClick={onClick} title={title}>{children}
       </Button>
     </div>
   );

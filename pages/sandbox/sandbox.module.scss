@@ -16,9 +16,9 @@
 .textContainer {
   display: flex;
   .left {
-    flex: 1;
+    flex: 1 0;
   }
   .right {
-    flex: 1;
+    flex: 1 0;
   }
 }

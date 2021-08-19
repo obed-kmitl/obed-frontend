@@ -1,11 +1,14 @@
 import Head from 'next/head';
 import { Tabs } from 'antd';
 import {
-  MyBtn, MyTabs, Header, Body,
+  MyBtn, MyTabs, Header, Body, MyInput
 } from '../../components';
 import styles from './sandbox.module.scss';
 
 export default function Sandbox() {
+
+  const titleSelector=["Mr.","Ms.","Miss","Prof.","อ.","ผศ.","ดร."] 
+  const onSearch = value => console.log(value);
   return (
     <div className={styles.container}>
       <Head>
@@ -24,15 +27,25 @@ export default function Sandbox() {
       <p>Tabs</p>
       <MyTabs defaultActiveKey="1">
         <Tabs.TabPane tab="Active" key="1">
-      Content of Tab Active
+          Content of Tab Active
         </Tabs.TabPane>
         <Tabs.TabPane tab="Archive" key="2">
-      Content of Tab Archive
+          Content of Tab Archive
         </Tabs.TabPane>
         <Tabs.TabPane tab="อื่น ๆ" key="3">
-      เนื้อหาของแท็บอื่น ๆ
+          เนื้อหาของแท็บอื่น ๆ
         </Tabs.TabPane>
       </MyTabs>
+      
+      <p>Input</p>
+      <div className={styles.btnContainer}>
+        <MyInput />
+        <MyInput placeholder="placeholder" />
+        <MyInput placeholder="placeholder" width="500px" />
+        <MyInput placeholder="placeholder" password />
+        <MyInput placeholder="placeholder" addonBefore={titleSelector}/>
+        <MyInput placeholder="placeholder" search onSearch={onSearch} />
+      </div>
       <p>Typo</p>
       <div className={styles.textContainer}>
         <div className={styles.left}>
@@ -52,6 +65,7 @@ export default function Sandbox() {
           <Text level="c2">Caption 2 - 12px Light</Text> */}
         </div>
       </div>
+
     </div>
   );
 }

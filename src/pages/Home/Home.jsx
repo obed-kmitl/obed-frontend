@@ -1,11 +1,11 @@
-import MyBtn from '../../components/Button/Button';
+import {Button} from '../../components';
 import styles from './Home.module.scss';
 
-export default function Home() {
+export const Home = () => {
   return (
     <div className={styles.container}>
       <h1 className="title">HOME</h1>
-      <MyBtn carrot>ทดสอบ</MyBtn>
+      <Button>ทดสอบ</Button>
     </div>
   )
 }

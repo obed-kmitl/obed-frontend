@@ -1,0 +1,38 @@
+@import "../../styles/color.scss";
+
+@mixin tabStyle($primaryColor, $lighterColor, $darkerColor) {
+  :global {
+    .ant-tabs-tab-btn {
+      background-color: $color-white;
+      &:hover {
+        background-color: $color-white;
+        color: $lighterColor;
+        border-color: $lighterColor;
+      }
+    }
+  }
+  border-radius: 100px;
+  padding-right: 12px 28px;
+  .icon {
+    > span:first-child {
+      padding-right: 12px;
+      font-size: 16px;
+    }
+  }
+}
+
+.tab {
+  @include tabStyle(
+    $color-turquoise-500,
+    $color-turquoise-400,
+    $color-turquoise-600
+  );
+  :global {
+    .ant-tabs-ink-bar {
+      background-color: $color-turquoise-500;
+    }
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+      color: $color-turquoise-500;
+    }
+  }
+}

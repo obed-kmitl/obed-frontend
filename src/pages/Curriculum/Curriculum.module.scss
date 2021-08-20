@@ -1,0 +1,42 @@
+@import "../../styles/color.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.curriculumMenu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.selectCurriculum {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.editBtn {
+  color: $color-turquoise-500;
+}
+
+.tabHead {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  div {
+    display: flex;
+    gap: 1rem;
+  }
+}

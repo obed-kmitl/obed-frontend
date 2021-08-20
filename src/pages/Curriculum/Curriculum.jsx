@@ -5,6 +5,7 @@ import {
 } from '@ant-design/icons';
 import { Header, Button, Tabs, TabPane } from '../../components';
 import styles from './Curriculum.module.scss';
+import { Helmet } from 'react-helmet';
 
 export function Curriculum() {
   const [selected, setSelected] = useState(null);
@@ -49,6 +50,9 @@ export function Curriculum() {
 
   return (
     <div className={styles.container}>
+      <Helmet>
+        <title>Curriculum - OBED</title>
+      </Helmet>
       <Header level={1}>Curriculum</Header>
       <div className={styles.selectCurriculum}>
         <Header level={2}>Select Active Curriculum</Header>

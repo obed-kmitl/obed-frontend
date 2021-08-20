@@ -2,10 +2,14 @@ import {
   Button, Tabs, TabPane, Header, Body,
 } from '../../components';
 import styles from './Sandbox.module.scss';
+import { Helmet } from 'react-helmet';
 
 export const Sandbox = () => {
   return(
     <div className={styles.container}>
+      <Helmet>
+        <title>Sandbox - OBED</title>
+      </Helmet>
       <h1><strong>OB</strong>ED SANDBOX</h1>
       <p>Button</p>
       <div className={styles.btnContainer}>

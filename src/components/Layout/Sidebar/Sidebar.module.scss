@@ -1,0 +1,136 @@
+@import "../../../styles/color.scss";
+
+.logo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 30px;
+  img {
+    margin: 18px auto 0 auto;
+  }
+  h1 {
+    margin: -16px auto 0 auto;
+    color: $color-white;
+  }
+}
+
+.container {
+  height: 100vh;
+  background-color: $color-primary-carrot;
+ 
+  h5{
+    color: inherit;
+    margin: 0;
+  }
+
+  .menu {
+    background: inherit;
+    color: $color-white;
+    transition: none;
+    border: 0px;
+    a {
+      font-size: 16px;
+      font-weight: 500;
+      color: inherit;
+    }
+    
+    .item {
+      transition: none;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      &:global(.ant-menu-item-selected) {
+        color: $color-primary-turquoise;
+        background-color: $color-carrot-100;
+        &:hover {
+          background-color: $color-carrot-100; 
+        }
+        &::after {
+          border-right: 3px solid $color-primary-turquoise;
+        }
+      }
+      &:hover {
+        background-color: $color-carrot-200; 
+      }
+      .icon{
+        transition: none;
+      }
+    }
+    
+    .year {
+      color: $color-primary-turquoise;
+
+      &:global(.ant-menu-submenu > .ant-menu-submenu-title){
+        height: 56px;
+        display: flex;
+        align-items: center;
+        background: $color-carrot-100;
+      }
+    
+    }
+    .course {
+      color: $color-primary-turquoise;
+      
+      &:global(.ant-menu-submenu > .ant-menu-submenu-title){
+        line-height: 1.5;
+        height: 90px;
+        display: flex;
+        align-items: center;
+        background: $color-carrot-100;
+      }
+    }
+    i{
+      color: inherit;
+     
+    }
+    :hover {
+      color: $color-turquoise-500;
+
+    }
+  
+    
+  }
+
+  &Admin {
+    height: 100vh;
+    background-color: $color-primary-turquoise;
+    
+    .menu {
+      background: inherit;
+      color: white;
+      transition: none;
+      border: 0px;
+      a {
+        font-size: 16px;
+        font-weight: 500;
+        color: inherit;
+        &:hover {
+          color: inherit;
+        }
+      }
+
+      .item {
+        font-size: 16px;
+        transition: none;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        &:global(.ant-menu-item-selected) {
+          color: $color-primary-carrot;
+          background-color: $color-turquoise-100;
+          &::after {
+            border-right: 3px solid $color-primary-carrot;
+          }
+        }
+        &:hover {
+          color:$color-primary-carrot;
+          background-color: $color-turquoise-100; 
+        }
+        .icon{
+          transition: none;
+        }
+      }
+    }
+  }
+}

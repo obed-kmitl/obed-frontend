@@ -1,0 +1,17 @@
+@import "../../../styles/color.scss";
+
+.container {
+    background-color: $color-turquoise-600;
+    height: 64px;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .avatar {
+        margin-left: 16px;
+    }
+}

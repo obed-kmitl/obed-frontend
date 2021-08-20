@@ -4,7 +4,7 @@ import styles from './Input.module.scss';
 
 const { Option } = Select
 const { Search } = Input;
-export default function MyInput({ placeholder, width, type, addonBefore, password , search ,onSearch }) {
+function MyInput({ placeholder, width, type, addonBefore, password , search ,onSearch }) {
 
     if (password) {
         return (
@@ -49,3 +49,5 @@ export default function MyInput({ placeholder, width, type, addonBefore, passwor
     )
 
 }
+
+export {MyInput as Input}

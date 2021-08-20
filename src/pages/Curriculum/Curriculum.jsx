@@ -3,7 +3,7 @@ import { Table, Divider } from 'antd';
 import {
   EditFilled,
 } from '@ant-design/icons';
-import { Header, Button, Tabs, TabPane } from '../../components';
+import { Header, Button, Tabs, TabPane , Select} from '../../components';
 import styles from './Curriculum.module.scss';
 import { Helmet } from 'react-helmet';
 
@@ -56,10 +56,10 @@ export function Curriculum() {
       <Header level={1}>Curriculum</Header>
       <div className={styles.selectCurriculum}>
         <Header level={2}>Select Active Curriculum</Header>
-        <select name="curriculum" defaultValue="0" onChange={(e) => setSelected(e.target.value)}>
+        <Select defaultValue="Curriculum" onChange={(value) => setSelected(value)}>
           <option disabled value="0">Curriculum</option>
           {curlist.map((e, i) => <option value={e.name} key={i}>{e.name}</option>)}
-        </select>
+        </Select>  
         <Header level={2}>or</Header>
         <Button>Create Curriculum</Button>
       </div>

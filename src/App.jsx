@@ -1,9 +1,5 @@
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from "react-router-dom";
-import {Curriculum, Home, Sandbox} from './pages'
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Curriculum, Home, Sandbox } from "./pages";
 
 function App() {
   return (

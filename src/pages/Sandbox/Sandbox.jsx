@@ -69,10 +69,13 @@ export const Sandbox = () => {
       <Collapse>
         <Panel header={"This is panel header 1"} key="1">
           <p>{text}</p>
-        </Panel> 
+        </Panel>
       </Collapse>
       <Collapse>
-        <Panel header="This is panel header 2" key="2">
+        <Panel header="This is panel header 2" key="1">
+          <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end" }}>
+            <Button type="primary" onClick={() => alert('Clicked')}>Primary</Button>
+          </div>
           <Collapse defaultActiveKey="1">
             <Panel header="This is panel nest panel" key="1">
               <p>{text}</p>
@@ -81,6 +84,11 @@ export const Sandbox = () => {
               <p>{text}</p>
             </Panel>
           </Collapse>
+        </Panel>
+      </Collapse>
+      <Collapse ghost>
+        <Panel header={"This is panel header 3"} key="1">
+          <p>{text}</p>
         </Panel>
       </Collapse>
       <div className={styles.textContainer}>

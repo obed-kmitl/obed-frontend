@@ -1,0 +1,9 @@
+@import "../../styles/color.scss";
+
+.container{
+    .collapse{
+        &:global(.ant-collapse ){
+            background-color: $color-white;
+        }
+    }
+}

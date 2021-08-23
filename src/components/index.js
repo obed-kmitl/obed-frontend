@@ -4,3 +4,4 @@ export { Body } from './Typography/Body';
 export { Tabs, TabPane } from './Tabs/MyTabs';
 export { Input } from './Input/Input'
 export { Select } from './Select/Select'
+export { Collapse , Panel } from './Collapse/Collapse'

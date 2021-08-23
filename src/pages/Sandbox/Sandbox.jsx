@@ -92,11 +92,7 @@ export const Sandbox = () => {
           <p>{text}</p>
         </Panel>
       </Collapse>
-      <Collapse>
-        <Panel header={ <div style={{display:"flex"}}><Header level={4} >1</Header> <Header level={4} >This is panel Header 4</Header></div>} key="1">
-          <p>{text}</p>
-        </Panel>
-      </Collapse>
+     
       <div className={styles.textContainer}>
         <div className={styles.left}>
           <Header level={1}>Heading 1 - 30px Med</Header>

@@ -1,6 +1,7 @@
 import {
   Button, Tabs, TabPane, Header, Body, Select, Input, Collapse, Panel
 } from '../../components';
+
 import styles from './Sandbox.module.scss';
 import { Helmet } from 'react-helmet';
 
@@ -67,7 +68,7 @@ export const Sandbox = () => {
       <p>Typo</p>
       <p>Collapse</p>
       <Collapse>
-        <Panel header={"This is panel header 1"} key="1">
+        <Panel header={ <Header level={4} >This is panel nest panel</Header>} key="1">
           <p>{text}</p>
         </Panel>
       </Collapse>
@@ -88,6 +89,11 @@ export const Sandbox = () => {
       </Collapse>
       <Collapse ghost>
         <Panel header={"This is panel header 3"} key="1">
+          <p>{text}</p>
+        </Panel>
+      </Collapse>
+      <Collapse>
+        <Panel header={ <div style={{display:"flex"}}><Header level={4} >1</Header> <Header level={4} >This is panel Header 4</Header></div>} key="1">
           <p>{text}</p>
         </Panel>
       </Collapse>

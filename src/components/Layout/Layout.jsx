@@ -8,15 +8,15 @@ const { Footer, Sider, Content } = Layout;
 
 function MyLayout ({ children }){
   return (
-    <>
-      <Layout className={styles.layout}>
+    <div className={styles.layout}>
+      <Layout >
         <Sidebar />
         <Layout>
           <Header />
           <Content className={styles.content}>{children}</Content>
         </Layout>
       </Layout>
-    </>
+    </div>
   )
 }
 export {MyLayout as Layout}

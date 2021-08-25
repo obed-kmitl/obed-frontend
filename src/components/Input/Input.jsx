@@ -3,7 +3,7 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import styles from './Input.module.scss';
 
 const { Option } = Select
-const { Search } = Input;
+const { Search, TextArea } = Input;
 function MyInput({ placeholder, width, type, addonBefore, password , search ,onSearch, defaultValue }) {
 
     if (password) {
@@ -52,4 +52,4 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
 
 }
 
-export {MyInput as Input}
+export {MyInput as Input, TextArea}

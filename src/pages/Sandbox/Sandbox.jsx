@@ -27,6 +27,12 @@ export const Sandbox = () => {
     precourse_id: "0",
     plos: ["1.1","1.3"]
   }
+  const mock2 = {
+    no: "ข้อ 1",
+    description: "จงแปลงเลข 127 ฐาน 10 เป็นเลขฐาน 2",
+    point: 4,
+    los: ["สามารถแปลงเลขระหว่างฐาน 2 และฐาน 10 ทั้งคิดและไม่คิดเครื่องหมาย"]
+  }
 
 
   return (
@@ -37,6 +43,7 @@ export const Sandbox = () => {
       <h1><strong>OB</strong>ED SANDBOX</h1>
       <TableCard type={1} edit />
       <TableCard type={1} data={mock} />
+      <TableCard type={2} data={mock2} edit />
       <p>Button</p>
       <div className={styles.btnContainer}>
         <Button type="primary" onClick={() => alert('Clicked')}>Primary</Button>

@@ -1,6 +1,6 @@
 import styles from "./TableCard.module.scss";
 import { useState } from "react";
-import { Input, Select, Option, Body } from "..";
+import { Input, Select, Option, Body, TextArea } from "..";
 import { SaveFilled, EditFilled } from "@ant-design/icons";
 import { Tag } from "antd";
 
@@ -120,7 +120,95 @@ export function TableCard({ edit, type, data = {} }) {
           </div>
         )
       ) : type === 2 ? (
-        <div className={styles.container}>Test</div>
+        mode ? (
+          <div className={styles.type2}>
+            <div className={styles.col1}>
+              <Body level={2}>1</Body>
+            </div>
+            <div className={styles.col2}>
+              <Input placeholder="No." defaultValue={data.no} width="100%" />
+            </div>
+            <div className={styles.col3}>
+              <TextArea
+                placeholder="Description"
+                defaultValue={data.description}
+                width="100%"
+                rows="4"
+              />
+            </div>
+            <div className={styles.col4}>
+              <Select
+                showSearch
+                placeholder="Select Learning Outcome"
+                defaultValue={data.los ? data.los : []}
+                width="100%"
+                mode="multiple"
+              >
+                <Option value="1">
+                  สามารถแปลงเลขระหว่างฐาน 2 และฐาน 10
+                  ทั้งคิดและไม่คิดเครื่องหมาย
+                </Option>
+                <Option value="2">
+                  สามารถแปลงเลขระหว่างฐาน 2 และฐาน 16
+                  ทั้งคิดและไม่คิดเครื่องหมาย
+                </Option>
+              </Select>
+            </div>
+            <div className={styles.col5}>
+              <Input
+                placeholder="Point"
+                defaultValue={data.point}
+                width="100%"
+                type="number"
+              />
+            </div>
+            <div className={styles.col6}>
+              <button onClick={() => setMode(!mode)}>
+                <SaveFilled style={{ fontSize: "24px" }} />
+                <br />
+                Save
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.type2}>
+            <div className={styles.col1}>
+              <Body level={2} center>1</Body>
+            </div>
+            <div className={styles.col2}>
+              <Body level={2}>{data.no}</Body>
+            </div>
+            <div className={styles.col3}>
+              <Body level={2}>{data.description}</Body>
+            </div>
+            <div className={styles.col4}>
+              {data.los?.map((ele, i) => (
+                <Tag
+                  key={i}
+                  color="blue"
+                  style={{
+                    maxWidth: "100%",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                  title={ele}
+                >
+                  {ele}
+                </Tag>
+              ))}
+            </div>
+            <div className={styles.col5}>
+              <Body level={2} center>{data.point}</Body>
+            </div>
+            <div className={styles.col6}>
+              <button onClick={() => setMode(!mode)}>
+                <EditFilled style={{ fontSize: "24px" }} />
+                <br />
+                Edit
+              </button>
+            </div>
+          </div>
+        )
       ) : null}
     </div>
   );

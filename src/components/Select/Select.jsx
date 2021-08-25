@@ -2,9 +2,12 @@ import { Select } from 'antd';
 // import styles from './Select.module.scss';
 const { Option } = Select;
 
-function MySelect({defaultValue,mode,width,onChange,option,children}) {
+function MySelect({defaultValue,mode,width,height,onChange,option,children,showSearch,placeholder,bordered,disabled}) {
     return (
-        <Select mode={mode} defaultValue={defaultValue?defaultValue:option[0]} style={{ width: width?width:"240px" }} onChange={onChange}>
+        <Select showSearch={showSearch} mode={mode} 
+        defaultValue={defaultValue?defaultValue:(option? option[0] : "")} 
+        style={{ width: width || "240px" }} onChange={onChange} disabled={disabled}
+        placeholder={placeholder} bordered={bordered} height={height}>
             {option?option.map((item,index)=>
                 <Option key={index}value={item}>{item}</Option>
             ):children}
@@ -12,4 +15,5 @@ function MySelect({defaultValue,mode,width,onChange,option,children}) {
     )
 }
 
+export {Option}
 export {MySelect as Select}

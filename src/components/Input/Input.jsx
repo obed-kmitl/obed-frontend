@@ -4,7 +4,7 @@ import styles from './Input.module.scss';
 
 const { Option } = Select
 const { Search } = Input;
-function MyInput({ placeholder, width, type, addonBefore, password , search ,onSearch }) {
+function MyInput({ placeholder, width, type, addonBefore, password , search ,onSearch, defaultValue }) {
 
     if (password) {
         return (
@@ -13,6 +13,7 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
                     style={{ width: width ? width : "240px" }}
                     placeholder={placeholder}
                     iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                    defaultValue={defaultValue}
                 />
             </div>
         )
@@ -24,6 +25,7 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
                     style={{ width: width ? width : "240px" }}
                     placeholder={placeholder?placeholder:"Please Input Search"}
                     onSearch={onSearch}
+                    defaultValue={defaultValue}
                 />
             </div>
         )
@@ -43,7 +45,7 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
                     </Select>
                     :null
                 }
-             
+                defaultValue={defaultValue}
             ></Input>
         </div>
     )

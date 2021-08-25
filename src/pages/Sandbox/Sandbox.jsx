@@ -1,5 +1,5 @@
 import {
-  Button, Tabs, TabPane, Header, Body, Select, Input, Collapse, Panel
+  Button, Tabs, TabPane, Header, Body, Select, Input, Collapse, Panel, TableCard
 } from '../../components';
 
 import styles from './Sandbox.module.scss';
@@ -20,6 +20,13 @@ export const Sandbox = () => {
   Known for its loyalty and faithfulness,
   it can be found as a welcome guest in many households across the world.
 `;
+  const mock = {
+    course_id: "01076001",
+    course_name_en: "Introduction to Computer Engineering",
+    course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
+    precourse_id: "0",
+    plos: ["1.1","1.3"]
+  }
 
 
   return (
@@ -28,6 +35,8 @@ export const Sandbox = () => {
         <title>Sandbox - OBED</title>
       </Helmet>
       <h1><strong>OB</strong>ED SANDBOX</h1>
+      <TableCard type={1} edit />
+      <TableCard type={1} data={mock} />
       <p>Button</p>
       <div className={styles.btnContainer}>
         <Button type="primary" onClick={() => alert('Clicked')}>Primary</Button>
@@ -65,7 +74,6 @@ export const Sandbox = () => {
         <Select option={option} width="300px" onChange={handleSelectChange} />
         <Select option={option} mode="multiple" onChange={handleSelectChange} />
       </div>
-      <p>Typo</p>
       <p>Collapse</p>
       <Collapse>
         <Panel header={ <Header level={4} >This is panel nest panel</Header>} key="1">
@@ -92,7 +100,7 @@ export const Sandbox = () => {
           <p>{text}</p>
         </Panel>
       </Collapse>
-     
+      <p>Typo</p>
       <div className={styles.textContainer}>
         <div className={styles.left}>
           <Header level={1}>Heading 1 - 30px Med</Header>

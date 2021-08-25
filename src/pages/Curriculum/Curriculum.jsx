@@ -33,7 +33,7 @@ export function Curriculum() {
     curriculum_id: '01072560',
     precourse_id: null,
     course_name_th: 'วงจรไฟฟ้าและอิเล็กทรอนิกส์',
-    course_name_en: 'Curcuits and Electronics',
+    course_name_en: 'Circuits and Electronics',
   }, {
     course_id: '01076004',
     curriculum_id: '01072560',

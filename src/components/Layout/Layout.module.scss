@@ -4,6 +4,14 @@
   background: $color-white;
   font-family: IBM Plex Sans Thai;
   height: 100vh;
+
+}
+.content {
+  overflow: auto;
+  background: $color-white;
+  padding: 30px 96px;
+  height: calc(100vh - 80px);
+}
   /* width */
   ::-webkit-scrollbar {
     height: 8px;
@@ -25,10 +33,3 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #444444;
   }
-}
-.content {
-  overflow: auto;
-  background: $color-white;
-  padding: 30px 96px;
-  height: calc(100vh - 80px);
-}

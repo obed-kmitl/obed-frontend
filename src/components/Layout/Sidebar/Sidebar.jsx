@@ -79,7 +79,7 @@ const courses = [
 
 const Sidebar = () => {
 
-    const isAdmin = true;
+    const isAdmin = false;
 
     const [semesterTitle, setSemesterTitle] = useState({
         id: semesters[0].id,

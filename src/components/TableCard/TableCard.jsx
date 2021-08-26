@@ -2,15 +2,23 @@ import styles from "./TableCard.module.scss";
 import { useState } from "react";
 import { Input, Select, Option, Body, TextArea } from "..";
 import { SaveFilled, EditFilled } from "@ant-design/icons";
-import { Tag } from "antd";
+import { Tag, Tooltip } from "antd";
 
-export function TableCard({ edit, type, data = {} }) {
+export function TableCard({
+  edit,
+  type,
+  data = {},
+  course = [{}],
+  lo = [{}],
+  plo = [{}],
+}) {
   const [mode, setMode] = useState(edit);
+  const prereq = course.find((ele) => ele.id === data.precourse_id);
 
   return (
     <div className={styles.container}>
       {type === 1 ? (
-        mode ? (
+        mode ? ( // Type 1 EDIT
           <div className={styles.type1}>
             <div className={styles.col1}>
               <Input
@@ -39,15 +47,11 @@ export function TableCard({ edit, type, data = {} }) {
                 width="100%"
               >
                 <Option value="0">None</Option>
-                <Option value="01076001">
-                  01076001 Introduction to Computer Engineering
-                </Option>
-                <Option value="01076002">
-                  01076002 Programming Fundamental
-                </Option>
-                <Option value="01076003">
-                  01076003 Circuits and Electronics
-                </Option>
+                {course.map((ele, i) => (
+                  <Option value={ele.id} key={i}>
+                    {ele.id + " " + ele.course_name_en}
+                  </Option>
+                ))}
               </Select>
             </div>
             <div className={styles.col4}>
@@ -57,12 +61,11 @@ export function TableCard({ edit, type, data = {} }) {
                 width="100%"
                 defaultValue={data.plos ? data.plos : []}
               >
-                <Option value="1.1">1.1</Option>
-                <Option value="1.2">1.2</Option>
-                <Option value="1.3">1.3</Option>
-                <Option value="1.4">1.4</Option>
-                <Option value="1.5">1.5</Option>
-                <Option value="1.6">1.6</Option>
+                {plo.map((ele, i) => (
+                  <Option value={ele.id} key={i}>
+                    {ele.id}
+                  </Option>
+                ))}
               </Select>
             </div>
             <div className={styles.col5}>
@@ -74,6 +77,7 @@ export function TableCard({ edit, type, data = {} }) {
             </div>
           </div>
         ) : (
+          // Type 1 VIEW
           <div className={styles.type1}>
             <div className={styles.col1}>
               <Body level={2}>{data.course_id}</Body>
@@ -86,28 +90,17 @@ export function TableCard({ edit, type, data = {} }) {
               </Body>
             </div>
             <div className={styles.col3}>
-              <Select
-                showSearch
-                placeholder="Search Prerequisite"
-                defaultValue={data.precourse_id ? data.precourse_id : "0"}
-                disabled
-                width="100%"
-              >
-                <Option value="0">None</Option>
-                <Option value="01076001">
-                  01076001 Introduction to Computer Engineering
-                </Option>
-                <Option value="01076002">
-                  01076002 Programming Fundamental
-                </Option>
-                <Option value="01076003">
-                  01076003 Circuits and Electronics
-                </Option>
-              </Select>
+              <Body level={2}>
+                {prereq ? prereq.id : "None"}
+                <br />
+                {prereq?.course_name_en}
+              </Body>
             </div>
             <div className={styles.col4}>
               {data.plos?.map((ele, i) => (
-                <Tag key={i}>{ele}</Tag>
+                <Tooltip title={plo.find((x) => x.id === ele)?.desc}>
+                  <Tag key={i}>{plo.find((x) => x.id === ele)?.id}</Tag>
+                </Tooltip>
               ))}
             </div>
             <div className={styles.col5}>
@@ -120,7 +113,7 @@ export function TableCard({ edit, type, data = {} }) {
           </div>
         )
       ) : type === 2 ? (
-        mode ? (
+        mode ? ( // Type 2 EDIT
           <div className={styles.type2}>
             <div className={styles.col1}>
               <Body level={2}>1</Body>
@@ -144,14 +137,9 @@ export function TableCard({ edit, type, data = {} }) {
                 width="100%"
                 mode="multiple"
               >
-                <Option value="1">
-                  สามารถแปลงเลขระหว่างฐาน 2 และฐาน 10
-                  ทั้งคิดและไม่คิดเครื่องหมาย
-                </Option>
-                <Option value="2">
-                  สามารถแปลงเลขระหว่างฐาน 2 และฐาน 16
-                  ทั้งคิดและไม่คิดเครื่องหมาย
-                </Option>
+                {lo.map((ele, i) => (
+                  <Option value={ele.id}>{ele.desc}</Option>
+                ))}
               </Select>
             </div>
             <div className={styles.col5}>
@@ -171,9 +159,12 @@ export function TableCard({ edit, type, data = {} }) {
             </div>
           </div>
         ) : (
+          // Type 2 VIEW
           <div className={styles.type2}>
             <div className={styles.col1}>
-              <Body level={2} center>1</Body>
+              <Body level={2} center>
+                1
+              </Body>
             </div>
             <div className={styles.col2}>
               <Body level={2}>{data.no}</Body>
@@ -183,22 +174,25 @@ export function TableCard({ edit, type, data = {} }) {
             </div>
             <div className={styles.col4}>
               {data.los?.map((ele, i) => (
-                <Tag
-                  key={i}
-                  color="blue"
-                  style={{
-                    maxWidth: "100%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                  title={ele}
-                >
-                  {ele}
-                </Tag>
+                <Tooltip title={lo.find((x) => x.id === ele).desc}>
+                  <Tag
+                    key={i}
+                    color="blue"
+                    style={{
+                      maxWidth: "100%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {lo.find((x) => x.id === ele).desc}
+                  </Tag>
+                </Tooltip>
               ))}
             </div>
             <div className={styles.col5}>
-              <Body level={2} center>{data.point}</Body>
+              <Body level={2} center>
+                {data.point}
+              </Body>
             </div>
             <div className={styles.col6}>
               <button onClick={() => setMode(!mode)}>

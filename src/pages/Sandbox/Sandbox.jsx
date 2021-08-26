@@ -24,15 +24,48 @@ export const Sandbox = () => {
     course_id: "01076001",
     course_name_en: "Introduction to Computer Engineering",
     course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-    precourse_id: "0",
-    plos: ["1.1","1.3"]
+    precourse_id: "01076002",
+    plos: ["1.1","1.3","2.1"]
   }
   const mock2 = {
     no: "ข้อ 1",
     description: "จงแปลงเลข 127 ฐาน 10 เป็นเลขฐาน 2",
     point: 4,
-    los: ["สามารถแปลงเลขระหว่างฐาน 2 และฐาน 10 ทั้งคิดและไม่คิดเครื่องหมาย"]
+    los: [1, 2],
   }
+  const mockLO = [{
+    id: 1,
+    desc: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 10 ทั้งคิดและไม่คิดเครื่องหมาย"
+  },{
+    id: 2,
+    desc: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 8 ทั้งคิดและไม่คิดเครื่องหมาย"
+  },{
+    id: 3,
+    desc: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 16 ทั้งคิดและไม่คิดเครื่องหมาย"
+  }]
+  const mockCourseList = [{
+    id: "01076001",
+    course_name_en: "Introduction to Computer Engineering",
+  },{
+    id: "01076002",
+    course_name_en: "Programming Fundamental",
+  },{
+    id: "01076003",
+    course_name_en: "Circuits and Electronics",
+  }]
+  const mockPLO = [{
+    id: "1.1",
+    desc: "PLO 1.1"
+  },{
+    id: "1.2",
+    desc: "PLO 1.2"
+  },{
+    id: "1.3",
+    desc: "PLO 1.3"
+  },{
+    id: "2.1",
+    desc: "PLO 2.1"
+  }]
 
 
   return (
@@ -41,9 +74,14 @@ export const Sandbox = () => {
         <title>Sandbox - OBED</title>
       </Helmet>
       <h1><strong>OB</strong>ED SANDBOX</h1>
-      <TableCard type={1} edit />
-      <TableCard type={1} data={mock} />
-      <TableCard type={2} data={mock2} edit />
+      <p>TableCard Type 1</p>
+      <TableCard type={1} data={mock} course={mockCourseList} plo={mockPLO} />
+      <p>TableCard Type 1 + Edit</p>
+      <TableCard type={1} course={mockCourseList} plo={mockPLO} edit />
+      <p>TableCard Type 2</p>
+      <TableCard type={2} data={mock2} lo={mockLO} />
+      <p>TableCard Type 2 + Edit</p>
+      <TableCard type={2} data={mock2} lo={mockLO} edit />
       <p>Button</p>
       <div className={styles.btnContainer}>
         <Button type="primary" onClick={() => alert('Clicked')}>Primary</Button>

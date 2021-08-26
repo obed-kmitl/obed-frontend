@@ -1,13 +1,33 @@
-.layout{
-    background: white;
-    font-family: IBM Plex Sans Thai;
-    height: 100vh;
-    min-height: auto;
-    overflow: auto;
+@import "../../styles/color.scss";
+
+.layout {
+  background: $color-white;
+  font-family: IBM Plex Sans Thai;
+  height: 100vh;
+  /* width */
+  ::-webkit-scrollbar {
+    width: 8px;
   }
-  .content{
-    background: white;
-    padding:30px 96px;
-    height: calc(100vh - 80px);
-    
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #ffffff;
   }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #555555;
+    border-radius: 10px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #444444;
+  }
+}
+.content {
+  overflow: auto;
+  background: $color-white;
+  padding: 30px 96px;
+  height: calc(100vh - 80px);
+}

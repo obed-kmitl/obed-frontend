@@ -3,7 +3,7 @@ import Sidebar from './Sidebar/Sidebar'
 import Header from './Header/Header'
 import {Layout} from 'antd';
 
-const { Footer, Sider, Content } = Layout;
+const { Content } = Layout;
 
 
 function MyLayout ({ children }){

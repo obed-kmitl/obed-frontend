@@ -7,12 +7,15 @@ const { Footer, Sider, Content } = Layout;
 
 
 function MyLayout ({ children }){
+
+  const userName="Admin"
+
   return (
     <>
       <Layout className={styles.layout}>
         <Sidebar />
         <Layout>
-          <Header />
+          <Header name={userName}/>
           <Content className={styles.content}>{children}</Content>
         </Layout>
       </Layout>

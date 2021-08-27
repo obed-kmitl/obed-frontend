@@ -4,13 +4,15 @@ import {
 
 import styles from './Sandbox.module.scss';
 import { Helmet } from 'react-helmet';
+import { useState } from 'react';
+
+//text แบบ edit ได้ ต้องทำเป็นคอมโพเนนต์เพิ่มมั้ย ????
+import { Typography } from 'antd';
+const { Paragraph } = Typography
 
 export const Sandbox = () => {
-  const option = ["option1", "option2", "option3", "option4", "option5"]
 
-  function handleSelectChange(value) {
-    console.log(`selected ${value}`);
-  }
+  const option = ["option1", "option2", "option3", "option4", "option5"]
 
   const titleSelector = ["Mr.", "Ms.", "Miss", "Prof.", "อ.", "ผศ.", "ดร."]
   const onSearch = value => console.log(value);
@@ -20,6 +22,12 @@ export const Sandbox = () => {
   Known for its loyalty and faithfulness,
   it can be found as a welcome guest in many households across the world.
 `;
+
+  const [editableStr, setEditableStr] = useState('This is an editable text.');
+
+  function handleSelectChange(value) {
+    console.log(`selected ${value}`);
+  }
 
 
   return (
@@ -68,7 +76,7 @@ export const Sandbox = () => {
       <p>Typo</p>
       <p>Collapse</p>
       <Collapse>
-        <Panel header={ <Header level={4} >This is panel nest panel</Header>} key="1">
+        <Panel header={<Header level={4} ><Paragraph editable={{ onChange: setEditableStr }} style={{margin:0}}>{editableStr}</Paragraph></Header>} key="1">
           <p>{text}</p>
         </Panel>
       </Collapse>
@@ -88,11 +96,11 @@ export const Sandbox = () => {
         </Panel>
       </Collapse>
       <Collapse ghost>
-        <Panel header={"This is panel header 3"} key="1">
+        <Panel header="This is panel header 3" extra={<Header level={4} >100%</Header>} key="1">
           <p>{text}</p>
         </Panel>
       </Collapse>
-     
+
       <div className={styles.textContainer}>
         <div className={styles.left}>
           <Header level={1}>Heading 1 - 30px Med</Header>

@@ -7,12 +7,15 @@ const { Content } = Layout;
 
 
 function MyLayout ({ children }){
+
+  const userName="Admin"
+
   return (
     <div className={styles.layout}>
       <Layout >
         <Sidebar />
         <Layout>
-          <Header />
+          <Header name={userName}/>
           <Content className={styles.content}>{children}</Content>
         </Layout>
       </Layout>

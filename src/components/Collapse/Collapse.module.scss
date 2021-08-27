@@ -3,11 +3,7 @@
 .container{
     .collapse{
         &:global(.ant-collapse ){
-            background-color: $color-white;
-            .ant-collapse-item > .ant-collapse-content {
-                background-color: red;
-            }
-            
+            background-color: $color-white;  
         }
         &:global(.ant-collapse-ghost > .ant-collapse-item >.ant-collapse-header ){
             border-bottom: 1px solid #d9d9d9;;

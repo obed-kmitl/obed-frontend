@@ -88,11 +88,11 @@ export const Sandbox = () => {
         </Panel>
       </Collapse>
       <Collapse ghost>
-        <Panel header={"This is panel header 3"} key="1">
+        <Panel header="This is panel header 3" extra={<Header level={4} >100%</Header>} key="1">
           <p>{text}</p>
         </Panel>
       </Collapse>
-     
+
       <div className={styles.textContainer}>
         <div className={styles.left}>
           <Header level={1}>Heading 1 - 30px Med</Header>

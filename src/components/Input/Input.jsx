@@ -34,7 +34,7 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
     return (
         <div className={styles.input}>
             <Input
-                style={{ width: width ? width : "240px" }}
+                style={{ width: width ? width : "100%" }}
                 placeholder={placeholder}
                 type={type}
                 addonBefore={addonBefore?

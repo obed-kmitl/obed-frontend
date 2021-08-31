@@ -82,7 +82,7 @@ const Sidebar = () => {
 
     const userName = "username test long name with elipisis"
 
-    const isAdmin = false;
+    const isAdmin = true;
 
     const [semesterTitle, setSemesterTitle] = useState({
         id: semesters[0].id,

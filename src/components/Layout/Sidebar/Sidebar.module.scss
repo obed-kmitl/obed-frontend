@@ -14,7 +14,7 @@
     color: $color-white;
   }
 }
-.sidebar{
+.sidebar {
   height: 100vh;
 }
 .container {
@@ -26,7 +26,7 @@
     color: inherit;
     margin: 0;
   }
-  &:global(.ant-layout-sider > .ant-layout-sider-children  ) {
+  &:global(.ant-layout-sider > .ant-layout-sider-children) {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -96,7 +96,16 @@
   }
 
   &Admin {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
     background-color: $color-primary-turquoise;
+    &:global(.ant-layout-sider > .ant-layout-sider-children  ) {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+    }
+
     .menu {
       background: inherit;
       color: white;

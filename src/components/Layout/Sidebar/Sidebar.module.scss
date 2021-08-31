@@ -14,15 +14,22 @@
     color: $color-white;
   }
 }
-
-.container {
+.sidebar{
   height: 100vh;
+}
+.container {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
   background-color: $color-primary-carrot;
-
- 
-  h5{
+  h5 {
     color: inherit;
     margin: 0;
+  }
+  &:global(.ant-layout-sider > .ant-layout-sider-children  ) {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
   }
 
   .menu {
@@ -35,7 +42,7 @@
       font-weight: 500;
       color: inherit;
     }
-    
+
     .item {
       transition: none;
       height: 56px;
@@ -45,35 +52,34 @@
         color: $color-primary-turquoise;
         background-color: $color-carrot-100;
         &:hover {
-          background-color: $color-carrot-100; 
+          background-color: $color-carrot-100;
         }
         &::after {
           border-right: 3px solid $color-primary-turquoise;
         }
       }
       &:hover {
-        background-color: $color-carrot-200; 
+        background-color: $color-carrot-200;
       }
-      .icon{
+      .icon {
         transition: none;
       }
     }
-    
+
     .year {
       color: $color-primary-turquoise;
 
-      &:global(.ant-menu-submenu > .ant-menu-submenu-title){
+      &:global(.ant-menu-submenu > .ant-menu-submenu-title) {
         height: 56px;
         display: flex;
         align-items: center;
         background: $color-carrot-100;
       }
-    
     }
     .course {
       color: $color-primary-turquoise;
-      
-      &:global(.ant-menu-submenu > .ant-menu-submenu-title){
+
+      &:global(.ant-menu-submenu > .ant-menu-submenu-title) {
         line-height: 1.5;
         height: 90px;
         display: flex;
@@ -81,22 +87,16 @@
         background: $color-carrot-100;
       }
     }
-    i{
+    i {
       color: inherit;
-     
     }
     :hover {
       color: $color-turquoise-500;
-
     }
-  
-    
   }
 
   &Admin {
-    height: 100vh;
     background-color: $color-primary-turquoise;
-    
     .menu {
       background: inherit;
       color: white;
@@ -125,13 +125,27 @@
           }
         }
         &:hover {
-          color:$color-primary-carrot;
-          background-color: $color-turquoise-100; 
+          color: $color-primary-carrot;
+          background-color: $color-turquoise-100;
         }
-        .icon{
+        .icon {
           transition: none;
         }
       }
     }
+  }
+}
+
+.footer {
+  min-height: 64px;
+  margin: 0 20px 20px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: $color-white;
+  a {
+    margin-left: 4px;
+    font-size: 18px;
+    color: inherit;
   }
 }

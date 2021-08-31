@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route as PublicRoute } from "react-router-dom";
 import { Curriculum, Home, Sandbox, Profile } from "./pages";
 import { Layout } from "./components/Layout/Layout"
 
@@ -7,18 +7,18 @@ function App() {
     <Router>
       <Layout>
         <Switch>
-          <Route path="/curriculum">
+          <PublicRoute path="/curriculum">
             <Curriculum />
-          </Route>
-          <Route path="/sandbox">
+          </PublicRoute>
+          <PublicRoute path="/sandbox">
             <Sandbox />
-          </Route>
-          <Route path="/profile">
+          </PublicRoute>
+          <PublicRoute path="/profile">
             <Profile />
-          </Route>
-          <Route path="/">
+          </PublicRoute>
+          <PublicRoute path="/">
             <Home />
-          </Route>
+          </PublicRoute>
         </Switch>
       </Layout>
     </Router>

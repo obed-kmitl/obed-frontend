@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import styles from './Sidebar.module.scss'
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Avatar } from 'antd';
 import {
     AreaChartOutlined,
     FileTextOutlined,
@@ -8,7 +8,8 @@ import {
     CalendarOutlined,
     FormOutlined,
     BulbOutlined,
-    ExperimentOutlined
+    ExperimentOutlined,
+    UserOutlined
 } from '@ant-design/icons';
 // import { useRouter } from 'next/router'
 import { useState } from 'react';
@@ -79,6 +80,8 @@ const courses = [
 
 const Sidebar = () => {
 
+    const userName = "username test long name with elipisis"
+
     const isAdmin = false;
 
     const [semesterTitle, setSemesterTitle] = useState({
@@ -97,127 +100,135 @@ const Sidebar = () => {
 
     return (
         <div className={styles.sidebar}>
-            <Sider className={isAdmin ? styles.containerAdmin : styles.container} width={256} >
-                <div className={styles.logo}>
-                    <img src={logo} height="119px" width="179px" alt="OBED Logo" />
-                    {isAdmin && <Header level={1}>Administrator</Header>}
-                </div>
-                {!isAdmin ?
-                    <>
-                        <Menu
-                            className={styles.menu}
-                            defaultSelectedKeys={['1']}
-                            mode="vertical"
-                        >
-                            <SubMenu className={styles.year} key="sub1" title={<Header level={5}>{semesterTitle.semester}{"/"}{semesterTitle.year}</Header>} >
-                                {semesters.map((semester) =>
-                                    <Menu.Item
-                                        key={semester.id}
-                                        onClick={() => setSemesterTitle({
-                                            id: semester.id,
-                                            semester: semester.semester,
-                                            year: semester.year
-                                        })}
-                                    >
-                                        {semester.semester}/{semester.year}
-                                    </Menu.Item>
-                                )}
-                            </SubMenu>
-                        </Menu>
-                        <Menu
-                            className={styles.menu}
-                            defaultSelectedKeys={['1']}
-                            mode="vertical"
-                        >
-                            <SubMenu
-                                className={styles.course} key="sub2"
-                                title={
-
-                                    <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                                        <Header level={5}>
-                                            {courseTitle.courseId} <br />
-                                            <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: "200px" }}>{courseTitle.courseName}</div>
-                                            Section {courseTitle.section}
-                                        </Header>
-                                    </div>
-                                }
+            <Sider 
+                className={isAdmin ? styles.containerAdmin : styles.container} 
+                width={256} 
+            >
+                <div>
+                    <div className={styles.logo}>
+                        <img src={logo} height="119px" width="179px" alt="OBED Logo" />
+                        {isAdmin && <Header level={1}>Administrator</Header>}
+                    </div>
+                    {!isAdmin ?
+                        <>
+                            <Menu
+                                className={styles.menu}
+                                defaultSelectedKeys={['1']}
+                                mode="vertical"
                             >
-                                {courses.map((course) =>
-                                    <Menu.Item
-                                        key={course.id}
-                                        onClick={() => setCourseTitle({
-                                            id: course.id,
-                                            courseId: course.courseId,
-                                            courseName: course.courseName,
-                                            section: course.section
-                                        })}>
+                                <SubMenu className={styles.year} key="sub1" title={<Header level={5}>{semesterTitle.semester}{"/"}{semesterTitle.year}</Header>} >
+                                    {semesters.map((semester) =>
+                                        <Menu.Item
+                                            key={semester.id}
+                                            onClick={() => setSemesterTitle({
+                                                id: semester.id,
+                                                semester: semester.semester,
+                                                year: semester.year
+                                            })}
+                                        >
+                                            {semester.semester}/{semester.year}
+                                        </Menu.Item>
+                                    )}
+                                </SubMenu>
+                            </Menu>
+                            <Menu
+                                className={styles.menu}
+                                defaultSelectedKeys={['1']}
+                                mode="vertical"
+                            >
+                                <SubMenu
+                                    className={styles.course} key="sub2"
+                                    title={
+
                                         <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                                            {course.courseId}{" "}{course.courseName}{" "}{"Section"}{" "}{course.section}
+                                            <Header level={5}>
+                                                {courseTitle.courseId} <br />
+                                                <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: "200px" }}>{courseTitle.courseName}</div>
+                                                Section {courseTitle.section}
+                                            </Header>
                                         </div>
-                                    </Menu.Item>
-                                )}
-                            </SubMenu>
-                        </Menu>
-                        <Menu
+                                    }
+                                >
+                                    {courses.map((course) =>
+                                        <Menu.Item
+                                            key={course.id}
+                                            onClick={() => setCourseTitle({
+                                                id: course.id,
+                                                courseId: course.courseId,
+                                                courseName: course.courseName,
+                                                section: course.section
+                                            })}>
+                                            <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                                                {course.courseId}{" "}{course.courseName}{" "}{"Section"}{" "}{course.section}
+                                            </div>
+                                        </Menu.Item>
+                                    )}
+                                </SubMenu>
+                            </Menu>
+                            <Menu
+                                className={styles.menu}
+                                defaultSelectedKeys={"4"/*keyPath()*/}
+                                mode="inline"
+                            >
+                                <Menu.Item className={styles.item} key="4">
+                                    <Link to="/">
+                                        <AreaChartOutlined className={styles.icon} /> Overview
+                                    </Link>
+                                </Menu.Item>
+                                <Menu.Item key="5" className={styles.item}>
+                                    <Link to="#">
+                                        <TeamOutlined className={styles.icon} /> Student
+                                    </Link>
+                                </Menu.Item>
+                                <Menu.Item key="6" className={styles.item}>
+                                    <Link to="#">
+                                        <FormOutlined className={styles.icon} /> Planning
+                                    </Link>
+                                </Menu.Item>
+                                <Menu.Item key="7" className={styles.item}>
+                                    <Link to="#">
+                                        <BulbOutlined className={styles.icon} /> Learning Outcome
+                                    </Link>
+                                </Menu.Item>
+                                <Menu.Item key="8" className={styles.item}>
+                                    <Link to="#">
+                                        <ExperimentOutlined className={styles.icon} /> Activity
+                                    </Link>
+                                </Menu.Item>
+                                <Menu.Item key="9" className={styles.item}>
+                                    <Link to="#">
+                                        <FileTextOutlined className={styles.icon} /> Report
+                                    </Link>
+                                </Menu.Item>
+                            </Menu>
+                        </>
+                        : <Menu
                             className={styles.menu}
-                            defaultSelectedKeys={"4"/*keyPath()*/}
+                            defaultSelectedKeys={location.pathname}
                             mode="inline"
                         >
-                            <Menu.Item className={styles.item} key="4">
+                            <Menu.Item className={styles.item} key="/curriculum">
+                                <Link to="/curriculum">
+                                    <FileTextOutlined className={styles.icon} /> Curriculum
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item key="/" className={styles.item}>
                                 <Link to="/">
-                                    <AreaChartOutlined className={styles.icon} /> Overview
+                                    <TeamOutlined className={styles.icon} /> Teacher
                                 </Link>
                             </Menu.Item>
-                            <Menu.Item key="5" className={styles.item}>
-                                <Link to="#">
-                                    <TeamOutlined className={styles.icon} /> Student
-                                </Link>
-                            </Menu.Item>
-                            <Menu.Item key="6" className={styles.item}>
-                                <Link to="#">
-                                    <FormOutlined className={styles.icon} /> Planning
-                                </Link>
-                            </Menu.Item>
-                            <Menu.Item key="7" className={styles.item}>
-                                <Link to="#">
-                                    <BulbOutlined className={styles.icon} /> Learning Outcome
-                                </Link>
-                            </Menu.Item>
-                            <Menu.Item key="8" className={styles.item}>
-                                <Link to="#">
-                                    <ExperimentOutlined className={styles.icon} /> Activity
-                                </Link>
-                            </Menu.Item>
-                            <Menu.Item key="9" className={styles.item}>
-                                <Link to="#">
-                                    <FileTextOutlined className={styles.icon} /> Report
+                            <Menu.Item key="/sandbox" className={styles.item}>
+                                <Link to="/sandbox">
+                                    <CalendarOutlined className={styles.icon} /> Semester plan
                                 </Link>
                             </Menu.Item>
                         </Menu>
-                    </>
-                    : <Menu
-                        className={styles.menu}
-                        defaultSelectedKeys={location.pathname}
-                        mode="inline"
-                    >
-                        <Menu.Item className={styles.item} key="/curriculum">
-                            <Link to="/curriculum">
-                                <FileTextOutlined className={styles.icon} /> Curriculum
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="/" className={styles.item}>
-                            <Link to="/">
-                                <TeamOutlined className={styles.icon} /> Teacher
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="/sandbox" className={styles.item}>
-                            <Link to="/sandbox">
-                                <CalendarOutlined className={styles.icon} /> Semester plan
-                            </Link>
-                        </Menu.Item>
-                    </Menu>
-                }
-
+                    }
+                </div>
+                <div className={styles.footer}>
+                    <Avatar size={50} icon={<UserOutlined />} />
+                    <Link to="/profile" className={styles.link}> {userName} </Link>
+                </div>
             </Sider>
         </div>
     )

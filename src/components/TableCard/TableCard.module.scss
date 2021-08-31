@@ -6,6 +6,16 @@
   width: fit-content;
   height: 110px;
   width: 100%;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all ease-in-out 100ms;
+    &:hover {
+      color: $color-turquoise-500;
+    }
+  }
 }
 
 .type1 {
@@ -42,16 +52,6 @@
     flex-flow: column wrap;
     padding: 10px;
     width: 60px;
-
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: all ease-in-out 100ms;
-      &:hover {
-        color: $color-turquoise-500;
-      }
-    }
   }
 }
 
@@ -95,15 +95,5 @@
     flex-flow: column wrap;
     padding: 10px;
     width: 60px;
-
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: all ease-in-out 100ms;
-      &:hover {
-        color: $color-turquoise-500;
-      }
-    }
   }
 }

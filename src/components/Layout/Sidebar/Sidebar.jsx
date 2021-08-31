@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import styles from './Sidebar.module.scss'
-import { Layout, Menu, Avatar } from 'antd';
+import { Layout, Menu, Avatar, Dropdown } from 'antd';
 import {
     AreaChartOutlined,
     FileTextOutlined,
@@ -9,7 +9,9 @@ import {
     FormOutlined,
     BulbOutlined,
     ExperimentOutlined,
-    UserOutlined
+    UserOutlined,
+    LogoutOutlined,
+    SettingOutlined
 } from '@ant-design/icons';
 // import { useRouter } from 'next/router'
 import { useState } from 'react';
@@ -80,9 +82,9 @@ const courses = [
 
 const Sidebar = () => {
 
-    const userName = "username test long name with elipisis"
+    const userName = "username"
 
-    const isAdmin = true;
+    const isAdmin = false;
 
     const [semesterTitle, setSemesterTitle] = useState({
         id: semesters[0].id,
@@ -98,11 +100,25 @@ const Sidebar = () => {
 
     const location = useLocation();
 
+    const userMenu = (
+        <Menu className={styles.usermenu}>
+            <Menu.Item key="1">
+                <UserOutlined /><Link to="/profile"> Profile </Link>
+            </Menu.Item>
+            <Menu.Item key="2">
+                <SettingOutlined /><Link to="#" > Setting </Link>
+            </Menu.Item>
+            <Menu.Item key="3" style={{ color: 'red' }}>
+                <LogoutOutlined /> <Link to="#" > Sign Out </Link>
+            </Menu.Item>
+        </Menu>
+    );
+
     return (
         <div className={styles.sidebar}>
-            <Sider 
-                className={isAdmin ? styles.containerAdmin : styles.container} 
-                width={256} 
+            <Sider
+                className={isAdmin ? styles.containerAdmin : styles.container}
+                width={256}
             >
                 <div>
                     <div className={styles.logo}>
@@ -225,10 +241,12 @@ const Sidebar = () => {
                         </Menu>
                     }
                 </div>
-                <div className={styles.footer}>
-                    <Avatar size={50} icon={<UserOutlined />} />
-                    <Link to="/profile" className={styles.link}> {userName} </Link>
-                </div>
+                <Dropdown overlay={userMenu} placement="topCenter" trigger={['click']} overlayClassName={styles.dropdown}>
+                    <div className={styles.footer}>
+                        <Avatar size={50} icon={<UserOutlined />} />
+                        <Link to="/profile" className={styles.link}> {userName} </Link>
+                    </div>
+                </Dropdown>
             </Sider>
         </div>
     )

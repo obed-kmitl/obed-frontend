@@ -100,7 +100,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     background-color: $color-primary-turquoise;
-    &:global(.ant-layout-sider > .ant-layout-sider-children  ) {
+    &:global(.ant-layout-sider > .ant-layout-sider-children) {
       display: flex;
       justify-content: space-between;
       flex-direction: column;
@@ -154,7 +154,20 @@
   color: $color-white;
   a {
     margin-left: 4px;
-    font-size: 18px;
+    font-weight: 500;
+    font-size: 20px;
     color: inherit;
+  }
+}
+
+.usermenu {
+  border-radius: 5px;
+  margin-bottom: .5rem;
+  li{
+    margin:  8px;
+    a{
+      font-size: 16px;
+      font-weight: 500;
+    }
   }
 }

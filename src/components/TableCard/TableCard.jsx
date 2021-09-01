@@ -11,6 +11,7 @@ export function TableCard({
   course = [{}],
   lo = [{}],
   plo = [{}],
+  index
 }) {
   const [mode, setMode] = useState(edit);
   const prereq = course.find((ele) => ele.id === data.precourse_id);
@@ -116,7 +117,7 @@ export function TableCard({
         mode ? ( // Type 2 EDIT
           <div className={styles.type2}>
             <div className={styles.col1}>
-              <Body level={2}>1</Body>
+              <Body level={2}>{index}</Body>
             </div>
             <div className={styles.col2}>
               <Input placeholder="No." defaultValue={data.no} width="100%" />
@@ -163,7 +164,7 @@ export function TableCard({
           <div className={styles.type2}>
             <div className={styles.col1}>
               <Body level={2} center>
-                1
+                {index}
               </Body>
             </div>
             <div className={styles.col2}>

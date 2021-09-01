@@ -14,4 +14,12 @@
     .avatar {
         margin-left: 16px;
     }
+    .text {
+        color: $color-white;
+        font-weight: 500;
+        font-size: 20px;
+        .a{
+            color:inherit
+        }
+    }
 }

@@ -41,3 +41,14 @@
     gap: 1rem;
   }
 }
+
+.detailTab {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .btn {
+    display: flex;
+    gap: 1rem;
+  }
+}

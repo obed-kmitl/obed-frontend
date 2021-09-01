@@ -1,0 +1,76 @@
+@import "../../styles/color.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tableHead {
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all ease-in-out 100ms;
+    &:hover {
+      color: $color-turquoise-500;
+    }
+  }
+}
+
+.type1 {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  .col1 {
+    padding: 10px;
+    flex: 2;
+  }
+  .col2 {
+    padding: 10px;
+    flex: 4;
+  }
+  .col3 {
+    padding: 10px;
+    flex: 4;
+  }
+  .col4 {
+    padding: 10px;
+    flex: 1;
+  }
+  .col5 {
+    padding: 10px 10px 10px 0;
+    width: 60px;
+  }
+}
+
+.type2 {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  .col1 {
+    padding: 10px;
+    flex: 0.3;
+  }
+  .col2 {
+    padding: 10px;
+    flex: 0.7;
+  }
+  .col3 {
+    padding: 10px;
+    flex: 3;
+  }
+  .col4 {
+    padding: 10px;
+    flex: 2;
+    max-width: 320px;
+  }
+  .col5 {
+    padding: 10px;
+    flex: 0.7;
+  }
+  .col6 {
+    padding: 10px 10px 10px 0;
+    width: 60px;
+  }
+}

@@ -1,5 +1,5 @@
 import {
-  Button, Tabs, TabPane, Header, Body, Select, Input, Collapse, Panel, TableCard
+  Button, Tabs, TabPane, Header, Body, Select, Input, Collapse, Panel, TableCard, Table
 } from '../../components';
 
 import styles from './Sandbox.module.scss';
@@ -27,12 +27,17 @@ export const Sandbox = () => {
     precourse_id: "01076002",
     plos: ["1.1","1.3","2.1"]
   }
-  const mock2 = {
+  const mock2 = [{
     no: "ข้อ 1",
     description: "จงแปลงเลข 127 ฐาน 10 เป็นเลขฐาน 2",
-    point: 4,
+    point: 2,
     los: [1, 2],
-  }
+  },{
+    no: "ข้อ 2",
+    description: "จงแปลงเลข 1101101 ฐาน 2 (ไม่คิดเครื่องหมาย) เป็นเลขฐาน 10",
+    point: 2,
+    los: [1],
+  },]
   const mockLO = [{
     id: 1,
     desc: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 10 ทั้งคิดและไม่คิดเครื่องหมาย"
@@ -75,13 +80,15 @@ export const Sandbox = () => {
       </Helmet>
       <h1><strong>OB</strong>ED SANDBOX</h1>
       <p>TableCard Type 1</p>
+      <Table type={1} col1="Course ID" col2="Course Name" col3="Prerequisite" col4="PLO" col5="Action">
       <TableCard type={1} data={mock} course={mockCourseList} plo={mockPLO} />
-      <p>TableCard Type 1 + Edit</p>
       <TableCard type={1} course={mockCourseList} plo={mockPLO} edit />
+      </Table>
       <p>TableCard Type 2</p>
-      <TableCard type={2} data={mock2} lo={mockLO} />
-      <p>TableCard Type 2 + Edit</p>
+      <Table type={2} col1="No." col2="Title" col3="Detail" col4="Outcome" col5="Point" col6="Action">
+        {mock2.map((ele, i) => <TableCard type={2} data={ele} lo={mockLO} index={i+1} />)}
       <TableCard type={2} data={mock2} lo={mockLO} edit />
+      </Table>
       <p>Button</p>
       <div className={styles.btnContainer}>
         <Button type="primary" onClick={() => alert('Clicked')}>Primary</Button>

@@ -48,31 +48,39 @@ export const CourseTable = ({ course = [{}] }) => {
     children,
     ...restProps
   }) => {
-    const inputNode =
-      inputType === "plo" ? (
-        <Select
-          mode="multiple"
-          showSearch
-          placeholder="Select Learning Outcome"
-        >
-          {mockPLO.map((ele, i) => (
-            <Option key={i} value={ele.id}>
-              {ele.id}
-            </Option>
-          ))}
-        </Select>
-      ) : inputType === "prereq" ? (
-        <Select showSearch placeholder="Select Prerequisite Course">
-          <Option value={null}>None</Option>
-          {course.map((ele) => (
-            <Option key={ele.course_id} value={ele.course_id}>
-              {ele.course_id}&nbsp;{ele.course_name_en}
-            </Option>
-          ))}
-        </Select>
-      ) : (
-        <Input />
-      );
+    let inputNode;
+    switch (inputType) {
+      case "plo":
+        inputNode = (
+          <Select
+            mode="multiple"
+            showSearch
+            placeholder="Select PLO"
+          >
+            {mockPLO.map((ele, i) => (
+              <Option key={i} value={ele.id}>
+                {ele.id}
+              </Option>
+            ))}
+          </Select>
+        );
+        break;
+      case "prereq":
+        inputNode = (
+          <Select showSearch placeholder="Select Prerequisite Course">
+            <Option value={null}>None</Option>
+            {course.map((ele) => (
+              <Option key={ele.course_id} value={ele.course_id}>
+                {ele.course_id}&nbsp;{ele.course_name_en}
+              </Option>
+            ))}
+          </Select>
+        );
+        break;
+      default:
+        inputNode = <Input />;
+        break;
+    }
     return (
       <td {...restProps}>
         {editing ? (

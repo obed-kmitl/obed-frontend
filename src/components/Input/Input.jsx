@@ -10,7 +10,7 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
         return (
             <div className={styles.input}>
                 <Input.Password
-                    style={{ width: width ? width : "240px" }}
+                    style={{ width: width || "100%" }}
                     placeholder={placeholder}
                     iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                     defaultValue={defaultValue}
@@ -22,7 +22,7 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
         return (
             <div className={styles.input}>
                 <Search
-                    style={{ width: width ? width : "240px" }}
+                    style={{ width: width || "100%" }}
                     placeholder={placeholder?placeholder:"Please Input Search"}
                     onSearch={onSearch}
                     defaultValue={defaultValue}
@@ -34,7 +34,7 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
     return (
         <div className={styles.input}>
             <Input
-                style={{ width: width ? width : "100%" }}
+                style={{ width: width || "100%" }}
                 placeholder={placeholder}
                 type={type}
                 addonBefore={addonBefore?

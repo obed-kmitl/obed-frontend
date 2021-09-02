@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Switch, Route as PublicRoute } from "react-router-dom";
-import { Curriculum, Home, Sandbox, Profile } from "./pages";
+import { Curriculum, Home, Sandbox, Profile,Plan } from "./pages";
 import { Layout } from "./components/Layout/Layout"
 
 function App() {
@@ -15,6 +15,9 @@ function App() {
           </PublicRoute>
           <PublicRoute path="/profile">
             <Profile />
+          </PublicRoute>
+          <PublicRoute path="/plan">
+            <Plan />
           </PublicRoute>
           <PublicRoute path="/">
             <Home />

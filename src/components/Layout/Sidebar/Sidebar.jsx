@@ -84,7 +84,7 @@ const Sidebar = () => {
 
     const userName = "username"
 
-    const isAdmin = false;
+    const isAdmin = true;
 
     const [semesterTitle, setSemesterTitle] = useState({
         id: semesters[0].id,
@@ -106,7 +106,7 @@ const Sidebar = () => {
                 <UserOutlined /><Link to="/profile"> Profile </Link>
             </Menu.Item>
             <Menu.Item key="2">
-                <SettingOutlined /><Link to="#" > Setting </Link>
+                <SettingOutlined /><Link to="/sandbox" > Setting </Link>
             </Menu.Item>
             <Menu.Item key="3" style={{ color: 'red' }}>
                 <LogoutOutlined /> <Link to="#" > Sign Out </Link>
@@ -233,8 +233,8 @@ const Sidebar = () => {
                                     <TeamOutlined className={styles.icon} /> Teacher
                                 </Link>
                             </Menu.Item>
-                            <Menu.Item key="/sandbox" className={styles.item}>
-                                <Link to="/sandbox">
+                            <Menu.Item key="/plan" className={styles.item}>
+                                <Link to="/plan">
                                     <CalendarOutlined className={styles.icon} /> Semester plan
                                 </Link>
                             </Menu.Item>
@@ -244,7 +244,7 @@ const Sidebar = () => {
                 <Dropdown overlay={userMenu} placement="topCenter" trigger={['click']} overlayClassName={styles.dropdown}>
                     <div className={styles.footer}>
                         <Avatar size={50} icon={<UserOutlined />} />
-                        <Link to="/profile" className={styles.link}> {userName} </Link>
+                        <Link to="#" className={styles.link}> {userName} </Link>
                     </div>
                 </Dropdown>
             </Sider>

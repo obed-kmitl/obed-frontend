@@ -2,11 +2,11 @@ import { Tabs } from 'antd';
 import styles from './Tabs.module.scss';
 
 function MyTabs({
-  children, onChange, defaultActiveKey,
+  children, onChange, defaultActiveKey, ...props
 }) {
   return (
     <div className={styles.tab}>
-      <Tabs defaultActiveKey={defaultActiveKey} onChange={onChange}>
+      <Tabs defaultActiveKey={defaultActiveKey} onChange={onChange} {...props}>
         {children}
       </Tabs>
     </div>

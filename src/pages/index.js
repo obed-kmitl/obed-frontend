@@ -3,3 +3,4 @@ export { Sandbox } from './Sandbox/Sandbox';
 export { Curriculum } from './Curriculum/Curriculum';
 export { Profile } from './Profile/Profile';
 export { Teacher } from './Teacher/Teacher';
+export { TestTable } from './Test/TestTable';

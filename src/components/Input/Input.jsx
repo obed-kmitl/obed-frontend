@@ -3,16 +3,17 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import styles from './Input.module.scss';
 
 const { Option } = Select
-const { Search } = Input;
-function MyInput({ placeholder, width, type, addonBefore, password , search ,onSearch }) {
+const { Search, TextArea } = Input;
+function MyInput({ placeholder, width, type, addonBefore, password , search ,onSearch, defaultValue }) {
 
     if (password) {
         return (
             <div className={styles.input}>
                 <Input.Password
-                    style={{ width: width ? width : "240px" }}
+                    style={{ width: width || "100%" }}
                     placeholder={placeholder}
                     iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                    defaultValue={defaultValue}
                 />
             </div>
         )
@@ -21,9 +22,10 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
         return (
             <div className={styles.input}>
                 <Search
-                    style={{ width: width ? width : "240px" }}
+                    style={{ width: width || "100%" }}
                     placeholder={placeholder?placeholder:"Please Input Search"}
                     onSearch={onSearch}
+                    defaultValue={defaultValue}
                 />
             </div>
         )
@@ -32,7 +34,7 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
     return (
         <div className={styles.input}>
             <Input
-                style={{ width: width ? width : "240px" }}
+                style={{ width: width || "100%" }}
                 placeholder={placeholder}
                 type={type}
                 addonBefore={addonBefore?
@@ -43,11 +45,11 @@ function MyInput({ placeholder, width, type, addonBefore, password , search ,onS
                     </Select>
                     :null
                 }
-             
+                defaultValue={defaultValue}
             ></Input>
         </div>
     )
 
 }
 
-export {MyInput as Input}
+export {MyInput as Input, TextArea}

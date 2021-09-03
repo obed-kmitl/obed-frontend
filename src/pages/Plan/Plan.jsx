@@ -31,12 +31,15 @@ export const Plan = () => {
         course_name_th: 'วิศวกรรมคอมพิวเตอร์เบื้องต้น',
         course_name_en: 'Introduction to Computer Engineering',
         section: [{
+            key:'1',
             section_id: '101',
             teacher: ["John Tommy", "Michel Danny"]
         }, {
+            key:'2',
             section_id: '102',
             teacher: ["Jack Giant"]
         }, {
+            key:'3',
             section_id: '103',
             teacher: ["John Tommy", "Michel Danny", "Jack Giant"]
         }]
@@ -47,12 +50,15 @@ export const Plan = () => {
         course_name_th: 'พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์',
         course_name_en: 'Programming Fundamental',
         section: [{
+            key:'1',
             section_id: '101',
             teacher: ["Michel Danny"]
         }, {
+            key:'2',
             section_id: '102',
             teacher: ["John Tommy"]
         }, {
+            key:'3',
             section_id: '103',
             teacher: ["John Tommy", "Michel Danny", "Jack Giant"]
         }]
@@ -63,9 +69,11 @@ export const Plan = () => {
         course_name_th: 'วงจรไฟฟ้าและอิเล็กทรอนิกส์',
         course_name_en: 'Curcuits and Electronics',
         section: [{
+            key:'1',
             section_id: '101',
             teacher: ["John Tommy", "Michel Danny", "Jack Giant"]
         }, {
+            key:'2',
             section_id: '102',
             teacher: ["John Tommy", "Michel Danny", "Jack Giant"]
         }]
@@ -82,8 +90,7 @@ export const Plan = () => {
         course_name_th: 'โครงสร้างข้อมูลและอัลกอริทึม',
         course_name_en: 'Data Structures and Algorithm',
     }];
-    console.log(yearSemesters.filter((e) => e.year === selectedYear)[0].semester)
-
+    
     return (
         <div className={styles.container}>
             <Helmet>

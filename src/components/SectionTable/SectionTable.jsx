@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { Select, Option } from "..";
-import { Table, Input, Popconfirm, Form, Typography, Tag, Button} from "antd";
+import { Select, Option ,Button} from "..";
+import { Table, Input, Popconfirm, Form, Typography, Tag} from "antd";
 
-export const SectionTable = ({ section }) => {
+
+export const SectionTable = ({ section=[] }) => {
     const [form] = Form.useForm();
     const [data, setData] = useState(section);
     const [editingKey, setEditingKey] = useState("");
 
-    const isEditing = (record) => record.section_id === editingKey;
+    const isEditing = (record) => record.key === editingKey;
     const mockTeacher = [
         {
             id: 1,
@@ -96,18 +97,18 @@ export const SectionTable = ({ section }) => {
             address: "",
             ...record,
         });
-        setEditingKey(record.section_id);
+        setEditingKey(record.key);
     };
 
     const cancel = () => {
         setEditingKey("");
     };
 
-    const save = async (section_id) => {
+    const save = async (key) => {
         try {
             const row = await form.validateFields();
             const newData = [...data];
-            const index = newData.findIndex((item) => section_id === item.section_id);
+            const index = newData.findIndex((item) => key === item.key);
 
             if (index > -1) {
                 const item = newData[index];
@@ -119,15 +120,22 @@ export const SectionTable = ({ section }) => {
                 setData(newData);
                 setEditingKey("");
             }
+            console.log(data)
         } catch (errInfo) {
             console.log("Validate Failed:", errInfo);
         }
     }
 
     const handleAdd = () => {
-        setData([...data, {section_id:'',teacher:[null]}])
-        setEditingKey('');
-        // console.log(data)
+        const count = data.length + 1 ;
+        const newData = {key:count.toString(),section_id:'',teacher:[null]};
+        setData([...data,newData ]);
+        form.setFieldsValue({
+            section_id:"",
+            teacher:[]
+        });
+        setEditingKey(newData.key);
+       
       };
 
     const columns = [
@@ -147,7 +155,7 @@ export const SectionTable = ({ section }) => {
             render: (teacher) => (
                 <>
                     {teacher?.map((ele) => {
-                        return <Tag style={{ height: '40px', lineHeight: '2.5', fontSize: '14px' }} key={ele}>{ele}</Tag>;
+                        return <Tag style={{ height: '36px', lineHeight: '2.5', fontSize: '14px' }} key={ele}>{ele}</Tag>;
                     })}
                 </>
             ),
@@ -163,7 +171,7 @@ export const SectionTable = ({ section }) => {
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a
                             href="#"
-                            onClick={() => save(record.section_id)}
+                            onClick={() => save(record.key)}
                             style={{
                                 marginRight: 8,
                             }}
@@ -222,7 +230,7 @@ export const SectionTable = ({ section }) => {
                     columns={mergedColumns}
                     rowClassName="editable-row"
                     pagination={false}
-                    rowKey="section_id"
+                    rowKey="key"
                 />
             </Form>
         </>

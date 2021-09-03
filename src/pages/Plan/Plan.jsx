@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import styles from './Plan.module.scss';
 import { Helmet } from 'react-helmet';
-import { Header, Button, Select, Input, Collapse, Panel } from '../../components';
+import { Header, Button, Select, Input, Collapse, Panel , SectionTable } from '../../components';
 import { Divider } from 'antd'
 import {
     DeleteOutlined,
-  } from '@ant-design/icons';
+} from '@ant-design/icons';
 
 export const Plan = () => {
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
@@ -110,27 +110,21 @@ export const Plan = () => {
                 </div>
             </div>
             <div className={styles.plan}>
-                {courses.map((e, i) =>
+               
                     <div className={styles.collapseBox}>
-                        <Collapse>
-                            <Panel header={<Header level={4} >{e.course_id}{' '}{e.course_name_en}</Header>} key="1">
-                                <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end",gap:'1rem' }}>
+                        <Collapse accordion>
+                        {courses.map((e, i) =>
+                            <Panel header={<Header level={4} >{e.course_id}{' '}{e.course_name_en}</Header>} key={i}>
+                                <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
                                     <Button type="secondary" onClick={() => alert('Clicked')}>Add Section</Button>
-                                    <Button danger onClick={() => alert('Clicked')}><DeleteOutlined/></Button>
+                                    <Button danger onClick={() => alert('Clicked')}><DeleteOutlined /></Button>
                                 </div>
+                                <SectionTable section={e.section}></SectionTable>
 
-                            </Panel>
+                            </Panel>  )}
                         </Collapse>
                     </div>
-                )}
-                <Collapse>
-                    <Panel header={<Header level={4} >01076001{' '}subject1</Header>} key="1">
-                        <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end" }}>
-                            <Button type="primary" onClick={() => alert('Clicked')}>Primary</Button>
-                        </div>
-
-                    </Panel>
-                </Collapse>
+              
             </div>
 
         </div>

@@ -115,12 +115,11 @@ export const Plan = () => {
                         <Collapse accordion>
                         {courses.map((e, i) =>
                             <Panel header={<Header level={4} >{e.course_id}{' '}{e.course_name_en}</Header>} key={i}>
-                                <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
+                                {/* <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
                                     <Button type="secondary" onClick={() => alert('Clicked')}>Add Section</Button>
                                     <Button danger onClick={() => alert('Clicked')}><DeleteOutlined /></Button>
-                                </div>
-                                <SectionTable section={e.section}></SectionTable>
-
+                                </div> */}
+                                <SectionTable section={e.section} />
                             </Panel>  )}
                         </Collapse>
                     </div>

@@ -120,15 +120,16 @@ export const SectionTable = ({ section=[] }) => {
                 setData(newData);
                 setEditingKey("");
             }
-            console.log(data)
+            
         } catch (errInfo) {
             console.log("Validate Failed:", errInfo);
         }
     }
 
     const handleAdd = () => {
+        console.log(data)
         const count = data.length + 1 ;
-        const newData = {key:count.toString(),section_id:'',teacher:[null]};
+        const newData = {key:count.toString(),section_id:'',teacher:[]};
         setData([...data,newData ]);
         form.setFieldsValue({
             section_id:"",

@@ -1,4 +1,4 @@
-import { Input, Select } from "antd";
+import { Input, Select, Form } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import styles from "./Input.module.scss";
 
@@ -50,16 +50,18 @@ function MyInput({
         placeholder={placeholder}
         type={type}
         addonBefore={
-          addonBefore ? (
-            <Select defaultValue={addonBefore[0]} className="select-after">
-              {addonBefore.map((item, index) => (
-                <Option key={index} value={item}>
-                  {" "}
-                  {item}
-                </Option>
-              ))}
-            </Select>
-          ) : null
+          addonBefore && (
+            <Form.Item name="prefix" noStyle>
+              <Select defaultValue={null} className="select-after">
+                <Option value={null}>None</Option>
+                {addonBefore.map((item) => (
+                  <Option key={item} value={item}>
+                    {item}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )
         }
         defaultValue={defaultValue}
         {...props}

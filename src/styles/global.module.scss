@@ -1,0 +1,8 @@
+@import "./color.scss";
+
+:global {
+  .ant-dropdown-menu-item:hover,
+  .ant-dropdown-menu-submenu-title:hover {
+    background-color: $color-turquoise-100;
+  }
+}

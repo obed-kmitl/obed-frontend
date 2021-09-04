@@ -1,10 +1,13 @@
+import { createElement } from "react";
+import propTypes from "prop-types";
+import styles from "./Typography.module.scss";
 
-import { createElement } from 'react';
-import propTypes from 'prop-types';
-import styles from './Typography.module.scss';
-
-function Header({ level, children, className }) {
-  return createElement(`h${level}`, { className: `${styles.header} ${className || ''}`, level }, children);
+function Header({ level, children, className, ...props }) {
+  return createElement(
+    `h${level}`,
+    { className: `${styles.header} ${className || ""}`, level, ...props },
+    children
+  );
 }
 
 Header.propTypes = {
@@ -12,4 +15,4 @@ Header.propTypes = {
   children: propTypes.node.isRequired,
 };
 
-export {Header};
+export { Header };

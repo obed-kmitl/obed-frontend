@@ -1,10 +1,18 @@
+import propTypes from "prop-types";
+import css from "classnames";
+import styles from "./Typography.module.scss";
 
-import propTypes from 'prop-types';
-import css from 'classnames';
-import styles from './Typography.module.scss';
-
-function Body({ level, children, className, center }) {
-  return <p className={css(styles.body, className)} level={level} style={center && {textAlign: "center"}}>{children}</p>;
+function Body({ level, children, className, center, ...props }) {
+  return (
+    <p
+      className={css(styles.body, className)}
+      level={level}
+      style={center && { textAlign: "center" }}
+      {...props}
+    >
+      {children}
+    </p>
+  );
 }
 
 Body.propTypes = {
@@ -12,4 +20,4 @@ Body.propTypes = {
   children: propTypes.node.isRequired,
 };
 
-export {Body};
+export { Body };

@@ -5,4 +5,45 @@
   .ant-dropdown-menu-submenu-title:hover {
     background-color: $color-turquoise-100;
   }
+
+  .ant-btn {
+    background-color: $color-white;
+    color: $color-turquoise-500;
+    border-color: $color-turquoise-500;
+    &:focus {
+      background-color: $color-white;
+      color: $color-turquoise-400;
+      border-color: $color-turquoise-400;
+    }
+    &:hover {
+      background-color: $color-white;
+      color: $color-turquoise-400;
+      border-color: $color-turquoise-400;
+    }
+    &:active {
+      background-color: $color-white;
+      color: $color-turquoise-600;
+      border-color: $color-turquoise-600;
+    }
+    &-primary {
+      color: $color-white;
+      background-color: $color-turquoise-500;
+      border-color: $color-turquoise-500;
+      &:focus {
+        color: $color-white;
+        background-color: $color-turquoise-400;
+        border-color: $color-turquoise-400;
+      }
+      &:hover {
+        color: $color-white;
+        background-color: $color-turquoise-400;
+        border-color: $color-turquoise-400;
+      }
+      &:active {
+        color: $color-white;
+        background-color: $color-turquoise-600;
+        border-color: $color-turquoise-600;
+      }
+    }
+  }
 }

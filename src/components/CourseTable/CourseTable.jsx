@@ -52,11 +52,7 @@ export const CourseTable = ({ course = [{}] }) => {
     switch (inputType) {
       case "plo":
         inputNode = (
-          <Select
-            mode="multiple"
-            showSearch
-            placeholder="Select PLO"
-          >
+          <Select mode="multiple" showSearch placeholder="Select PLO">
             {mockPLO.map((ele, i) => (
               <Option key={i} value={ele.id}>
                 {ele.id}
@@ -107,9 +103,6 @@ export const CourseTable = ({ course = [{}] }) => {
 
   const edit = (record) => {
     form.setFieldsValue({
-      name: "",
-      age: "",
-      address: "",
       ...record,
     });
     setEditingKey(record.key);

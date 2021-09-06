@@ -1,3 +1,6 @@
+@import "../../styles/color.scss";
+
+
 .container {
     display: flex;
     flex-direction: column;
@@ -14,21 +17,54 @@
     }
 }
 
-.planHeader{
+.planHeader {
     margin-top: 1.5rem;
     display: flex;
     width: 100%;
     justify-content: space-between;
-    .rightContainer{
+    .rightContainer {
         display: flex;
         gap: 1rem;
         align-items: center;
     }
 }
-.plan{
+.plan {
     margin-top: 1.5rem;
-    .collapseBox{
+    .collapseBox {
         padding: 4px 0;
     }
-    
+}
+.modal {
+    display: flex;
+    height: 600px;
+    justify-content: space-between;
+    .divider{
+        height: 100%;
+    }
+    .left{
+        width: 50%;
+        padding: 0.5rem ;
+        
+        .filter{
+            margin: 1rem 0;
+            display: flex;
+            justify-content: space-between;
+            .searchBox{
+                width: 80%;
+            }
+            .selectAll{
+                margin: 0;
+                width: 20%;
+                line-height: 2.25;
+                text-align: center;
+            }
+        }
+        
+       
+    }
+    .right{
+        width: 50%;
+        padding: 0.5rem ;
+       
+    }
 }

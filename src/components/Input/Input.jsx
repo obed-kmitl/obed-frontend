@@ -38,6 +38,7 @@ function MyInput({
           placeholder={placeholder ? placeholder : "Please Input Search"}
           onSearch={onSearch}
           defaultValue={defaultValue}
+          enterButton
           {...props}
         />
       </div>

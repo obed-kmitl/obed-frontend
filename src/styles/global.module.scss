@@ -1,5 +1,26 @@
 @import "./color.scss";
 
+/* width */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $color-grey-300;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $color-grey-400;
+}
+
 :global {
   .ant-dropdown-menu-item:hover,
   .ant-dropdown-menu-submenu-title:hover {
@@ -25,6 +46,21 @@
       color: $color-turquoise-600;
       border-color: $color-turquoise-600;
     }
+
+    &-link {
+      color: $color-turquoise-500;
+      background-color: transparent;
+      border-color: transparent;
+      &:focus {
+        color: $color-white;
+        background-color: $color-turquoise-400;
+        border-color: $color-turquoise-400;
+      }
+      &:hover {
+        color: $color-turquoise-400;
+        border-color: transparent;
+      }
+    }
     &-primary {
       color: $color-white;
       background-color: $color-turquoise-500;
@@ -45,5 +81,22 @@
         border-color: $color-turquoise-600;
       }
     }
+  }
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: $color-turquoise-500;
+    border-color: $color-turquoise-500;
+    &:focus,
+    :hover {
+      border-color: $color-turquoise-500;
+    }
+  }
+  .ant-dropdown-menu-item-selected,
+  .ant-dropdown-menu-submenu-title-selected {
+    color: $color-turquoise-500;
+  }
+
+  .ant-table {
+    font-size: 16px;
+    font-family: "IBM Plex Sans Thai Looped";
   }
 }

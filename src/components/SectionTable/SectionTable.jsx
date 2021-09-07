@@ -1,40 +1,16 @@
 import { useState } from "react";
-import { Select, Option ,Button} from "..";
-import { Table, Input, Popconfirm, Form, Typography, Tag} from "antd";
+import { Select, Option, Button } from "..";
+import { Table, Input, Popconfirm, Form, Typography, Tag } from "antd";
+import styles from './SectionTable.module.scss'
 
-
-export const SectionTable = ({ section=[] }) => {
+export const SectionTable = ({ section = [], teacher }) => {
     const [form] = Form.useForm();
     const [data, setData] = useState(section);
     const [editingKey, setEditingKey] = useState("");
+    const [isNewAdded, setIsNewAdded] = useState(false);
 
     const isEditing = (record) => record.key === editingKey;
-    const mockTeacher = [
-        {
-            id: 1,
-            name: "Teacher John",
-        },
-        {
-            id: 2,
-            name: "Teacher Jack",
-        },
-        {
-            id: 3,
-            name: "Teacher Bob",
-        },
-        {
-            id: 4,
-            name: "Teacher Alice",
-        },
-        {
-            id: 5,
-            name: "Teacher Amy",
-        },
-        {
-            id: 44,
-            name: "Teacher Tu",
-        },
-    ];
+    const mockTeacher = teacher
     const EditableCell = ({
         editing,
         dataIndex,
@@ -56,7 +32,7 @@ export const SectionTable = ({ section=[] }) => {
                     >
                         {mockTeacher.map((ele, i) => (
                             <Option key={i} value={ele.name}>
-                                {ele.name}
+                                {ele.firstname}{" "}{ele.lastname}
                             </Option>
                         ))}
                     </Select>
@@ -70,15 +46,26 @@ export const SectionTable = ({ section=[] }) => {
             <td {...restProps}>
                 {editing ? (
                     <Form.Item
+                        hasFeedback
                         name={dataIndex}
                         style={{
                             margin: 0,
                         }}
                         rules={[
                             {
-                                required: false,
+                                required: true,
                                 message: `Please Input ${title}!`,
                             },
+                            {
+                                validator: (rule, value, callback) => {
+                                    const alreadyExistSection = data.map((e) => e.section_id)
+                                    console.log(alreadyExistSection)
+                                    if (alreadyExistSection.includes(value)) {
+                                        return Promise.reject("test")
+                                    }
+                                    return Promise.resolve()
+                                }
+                            }
                         ]}
                     >
                         {inputNode}
@@ -102,6 +89,9 @@ export const SectionTable = ({ section=[] }) => {
 
     const cancel = () => {
         setEditingKey("");
+        if(isNewAdded){
+            setData(data.slice(0,data.length-1))
+        }
     };
 
     const save = async (key) => {
@@ -120,38 +110,40 @@ export const SectionTable = ({ section=[] }) => {
                 setData(newData);
                 setEditingKey("");
             }
-            
+
         } catch (errInfo) {
             console.log("Validate Failed:", errInfo);
         }
     }
 
     const handleAdd = () => {
-        console.log(data)
-        const count = data.length + 1 ;
-        const newData = {key:count.toString(),section_id:'',teacher:[]};
-        setData([...data,newData ]);
+        //console.log(data)
+        setIsNewAdded(true)
+        const count = data.length + 1;
+        const newData = { key: count.toString(), section_id: '', teacher: [] };
+        setData([...data, newData]);
         form.setFieldsValue({
-            section_id:"",
-            teacher:[]
+            section_id: "",
+            teacher: []
         });
         setEditingKey(newData.key);
-       
-      };
+
+
+    };
 
     const columns = [
         {
             title: "Section",
             dataIndex: "section_id",
             key: "section_id",
-            width: "10%",
+            width: "12%",
             editable: true,
             //   sorter: (a, b) => a.course_id - b.course_id,
         },
         {
             title: "Teacher",
             dataIndex: "teacher",
-            width: "80%",
+            width: "70%",
             editable: true,
             render: (teacher) => (
                 <>
@@ -164,25 +156,28 @@ export const SectionTable = ({ section=[] }) => {
         {
             title: "Action",
             dataIndex: "action",
-            width: "10%",
+            width: "17%",
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
+                        <Popconfirm title="Save Changes?" onConfirm={() => save(record.key)}>
+                            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                            <a
+                                style={{
+                                    marginRight: 8,
+                                }}
+                            >
+                                Save
+                            </a>
+                        </Popconfirm>
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a
-                            href="#"
-                            onClick={() => save(record.key)}
-                            style={{
-                                marginRight: 8,
-                            }}
+                            onClick={cancel}
                         >
-                            Save
+                            Cancel
                         </a>
-                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                            <a>Cancel</a>
-                        </Popconfirm>
+
                     </span>
                 ) : (
                     <Typography.Link
@@ -217,7 +212,7 @@ export const SectionTable = ({ section=[] }) => {
     return (
         <>
             <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
-                <Button type="secondary"  disabled={editingKey !== ""} onClick={() => handleAdd()}>Add Section</Button>
+                <Button type="secondary" disabled={editingKey !== ""} onClick={() => handleAdd()}>Add Section</Button>
             </div>
             <Form form={form} component={false}>
                 <Table
@@ -232,6 +227,7 @@ export const SectionTable = ({ section=[] }) => {
                     rowClassName="editable-row"
                     pagination={false}
                     rowKey="key"
+                    onRow={()=>({className:styles.editableCell})}
                 />
             </Form>
         </>

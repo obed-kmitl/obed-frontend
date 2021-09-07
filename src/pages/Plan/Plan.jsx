@@ -1,15 +1,13 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import styles from './Plan.module.scss';
 import { Helmet } from 'react-helmet';
 import { Header, Button, Select, Option, Input, Collapse, Panel, SectionTable } from '../../components';
-import { Divider, Modal, Transfer } from 'antd'
+import { Divider, Modal, Popconfirm, Transfer } from 'antd'
 import {
-    DeleteOutlined,
+    DeleteOutlined
 } from '@ant-design/icons';
-import { element } from 'prop-types';
 
 export const Plan = () => {
-    const onSearch = value => console.log(value);
 
     const yearSemesters = [{
         year: "2021",
@@ -22,6 +20,96 @@ export const Plan = () => {
         semester: ["1", "2"]
     }]
 
+    const teacher= [
+        {
+          id: 1,
+          firstname: "สมชาย",
+          lastname: "ใจดี",
+          username: "somchai1234",
+          email: "somchai.ja@kmitl.ac.th",
+          status: 1,
+        },
+        {
+          id: 2,
+          firstname: "สมหญิง",
+          lastname: "จริงใจ",
+          username: "somying1",
+          email: "somying.ji@kmitl.ac.th",
+          status: 1,
+        },
+        {
+          id: 3,
+          firstname: "สมปอง",
+          lastname: "สุขสบาย",
+          username: "sompong1988",
+          email: "sompong.su@kmitl.ac.th",
+          status: 0,
+        },
+        {
+          id: 4,
+          firstname: "สมปราชญ์",
+          lastname: "สดใส",
+          username: "somprach38",
+          email: "somprach.so@kmitl.ac.th",
+          status: 1,
+        },
+        {
+          id: 5,
+          firstname: "สมหมาย",
+          lastname: "สายไทย",
+          username: "sommai55",
+          email: "sommai.sa@kmitl.ac.th",
+          status: 0,
+        },
+        {
+          id: 6,
+          firstname: "สมหมาย",
+          lastname: "รักไทย",
+          username: "sommai1999",
+          email: "sommai.ra@kmitl.ac.th",
+          status: 1,
+        },
+        {
+          id: 7,
+          firstname: "สมศักดิ์",
+          lastname: "ใฝ่รู้",
+          username: "somsak74",
+          email: "somsak.fh@kmitl.ac.th",
+          status: 1,
+        },
+        {
+          id: 8,
+          firstname: "สมศรี",
+          lastname: "ศรีไทย",
+          username: "somsri6854",
+          email: "somsri.sr@kmitl.ac.th",
+          status: 1,
+        },
+        {
+          id: 9,
+          firstname: "สมพงศ์",
+          lastname: "ชัยชนะ",
+          username: "somphong",
+          email: "somphong.ch@kmitl.ac.th",
+          status: 1,
+        },
+        {
+          id: 10,
+          firstname: "สมสง่า",
+          lastname: "ราศี",
+          username: "somsanga34",
+          email: "somsanga.ra@kmitl.ac.th",
+          status: 0,
+        },
+        {
+          id: 11,
+          firstname: "สมเกิน",
+          lastname: "อีกหน้า",
+          username: "somkoen96",
+          email: "somkoen.ei@kmitl.ac.th",
+          status: 1,
+        },
+      ];
     const course = [{
         course_id: '01076001',
         curriculum_id: '01072560',
@@ -31,15 +119,15 @@ export const Plan = () => {
         section: [{
             key: '1',
             section_id: '101',
-            teacher: ["John Tommy", "Michel Danny"]
+            teacher: [1, 2]
         }, {
             key: '2',
             section_id: '102',
-            teacher: ["Jack Giant"]
+            teacher: [3]
         }, {
             key: '3',
             section_id: '103',
-            teacher: ["John Tommy", "Michel Danny", "Jack Giant"]
+            teacher: [4,5,6]
         }]
     }, {
         course_id: '01076002',
@@ -50,15 +138,15 @@ export const Plan = () => {
         section: [{
             key: '1',
             section_id: '101',
-            teacher: ["Michel Danny"]
+            teacher: [1]
         }, {
             key: '2',
             section_id: '102',
-            teacher: ["John Tommy"]
+            teacher: [7]
         }, {
             key: '3',
             section_id: '103',
-            teacher: ["John Tommy", "Michel Danny", "Jack Giant"]
+            teacher: [8]
         }]
     }, {
         course_id: '01076003',
@@ -69,11 +157,11 @@ export const Plan = () => {
         section: [{
             key: '1',
             section_id: '101',
-            teacher: ["John Tommy", "Michel Danny", "Jack Giant"]
+            teacher: [9,10,11]
         }, {
             key: '2',
             section_id: '102',
-            teacher: ["John Tommy", "Michel Danny", "Jack Giant"]
+            teacher: [4,5,6]
         }]
     }, {
         course_id: '01076004',
@@ -81,12 +169,14 @@ export const Plan = () => {
         precourse_id: null,
         course_name_th: 'การเขียนโปรแกรมเชิงวัตถุ',
         course_name_en: 'Object Oriented Programming',
+        section:[]
     }, {
         course_id: '01076005',
         curriculum_id: '01072560',
         precourse_id: '01076004',
         course_name_th: 'โครงสร้างข้อมูลและอัลกอริทึม',
         course_name_en: 'Data Structures and Algorithm',
+        section:[]
     }];
 
     const curlist = [{
@@ -98,7 +188,7 @@ export const Plan = () => {
     }];
 
 
-    const [courses ,setCourses] = useState(course)
+    const [courses, setCourses] = useState(course)
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
     const [selectedSemester, setSelectedSemester] = useState("1");
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -117,23 +207,24 @@ export const Plan = () => {
         }
         return data
     })
-
     const [targetKeys, setTargetKeys] = useState([]);
     const [selectedKeys, setSelectedKeys] = useState([]);
+    const [filterList, setFilterList] = useState(courses);
+    const [searchValue, setSearchValue] = useState('');
 
     const onChange = (nextTargetKeys, direction, moveKeys) => {
         console.log('targetKeys:', nextTargetKeys);
         console.log('direction:', direction);
         console.log('moveKeys:', moveKeys);
         setTargetKeys(nextTargetKeys);
-      };
-    
-      const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+    };
+
+    const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
         console.log('sourceSelectedKeys:', sourceSelectedKeys);
         console.log('targetSelectedKeys:', targetSelectedKeys);
         setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
-      };
-    
+    };
+
     const handleAddCourse = () => {
         setIsModalVisible(true)
 
@@ -142,26 +233,47 @@ export const Plan = () => {
     const handleOk = () => {
         setIsModalVisible(false);
 
-        targetKeys.forEach(element=>{
+        targetKeys.forEach(element => {
             const addItem = {
-                course_id: mockCourse.find(e=>e.key === element).course_id ,
-                curriculum_id: mockCourse.find(e=>e.key === element).curriculum_id,
-                precourse_id: mockCourse.find(e=>e.key === element).precourse_id,
-                course_name_th: mockCourse.find(e=>e.key === element).course_name_th,
-                course_name_en: mockCourse.find(e=>e.key === element).course_name_en,
+                course_id: mockCourse.find(e => e.key === element).course_id,
+                curriculum_id: mockCourse.find(e => e.key === element).curriculum_id,
+                precourse_id: mockCourse.find(e => e.key === element).precourse_id,
+                course_name_th: mockCourse.find(e => e.key === element).course_name_th,
+                course_name_en: mockCourse.find(e => e.key === element).course_name_en,
             }
-            setCourses(courses=>[...courses,addItem])
-            setMockCourse(mockCourse=>mockCourse.filter(e=>e.key !== element))
+            setCourses(courses => [...courses, addItem])
+            setFilterList(courses => [...courses, addItem])
+            setMockCourse(mockCourse => mockCourse.filter(e => e.key !== element))
         }
-       )
-      
-       setTargetKeys([])
+        )
        
+        setTargetKeys([])
     }
 
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+
+    function search(keyword) {
+        if (keyword !== "") {
+          const results = courses.filter((course) => {
+            return (
+              course.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
+              course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
+              course.course_name_th.toLowerCase().includes(keyword.toLowerCase()) 
+            );
+          });
+          setFilterList(results);
+        } else {
+          setFilterList(courses);
+        }
+      }
+
+    useEffect(() => {
+        setSearchValue('');
+        search('');
+    }, [courses])  
+ 
 
 
     return (
@@ -185,21 +297,40 @@ export const Plan = () => {
             <div className={styles.planHeader}>
                 <Header level={2}>{selectedYear}/{selectedSemester}</Header>
                 <div className={styles.rightContainer}>
-                    <Input placeholder="placeholder" search onSearch={onSearch} />
+                    <Input placeholder="placeholder" value={searchValue} onChange={(e)=>{setSearchValue(e.target.value);console.log(e.target.value)}} search onSearch={search} />
                     <Button onClick={() => handleAddCourse()}>Add</Button>
                 </div>
             </div>
             <div className={styles.plan}>
 
-                <div className={styles.collapseBox}>
-                    <Collapse accordion>
-                        {courses.map((e, i) =>
-                            <Panel header={<Header level={4} >{e.course_id}{' '}{e.course_name_en}</Header>} key={i}>
+                <div className={styles.collapseBox} >
+                    <Collapse
+                        accordion
+                    >
+                        {filterList.map((e, i) =>
+                            <Panel
+                                header={
+                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                        <Header level={4} >{e.course_id}{' '}{e.course_name_en}</Header>
+                                        <div style={{display:"flex" ,alignItems: "center"}}>
+                                        {/* {!e.section?<WarningOutlined style={{color:"red" ,margin:"010px"}} />:null} */}
+                                        <Popconfirm
+                                            title="Are you sure to delete this course?"
+                                            onConfirm={(e)=>{alert('Clicked');e.stopPropagation()}}
+                                            onCancel={(e)=> e.stopPropagation()}
+                                        >
+                                            <div  onClick={(e) => { e.stopPropagation() }}><DeleteOutlined /></div>
+                                        </Popconfirm>
+                                        </div>
+                                    </div>}
+                                key={i}
+
+                            >
                                 {/* <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
                                     <Button type="secondary" onClick={() => alert('Clicked')}>Add Section</Button>
                                     <Button danger onClick={() => alert('Clicked')}><DeleteOutlined /></Button>
                                 </div> */}
-                                <SectionTable section={e.section} />
+                                <SectionTable section={e.section} teacher={teacher}/>
                             </Panel>)}
                     </Collapse>
                 </div>
@@ -221,27 +352,27 @@ export const Plan = () => {
                 ]}
                 width={1024}
             >
-                    <Header level={4}>Curriculum</Header>
-                    <Select defaultValue={selectedCurriculum} onChange={(value) => setSelectedCurriculum(value)} width="440px" >
-                        {curlist.map((e, i) => <Option value={e.name} key={i}>{e.name}</Option>)}
-                    </Select>
-                    <Divider/>
-                    <Transfer
-                        dataSource={mockCourse}
-                        titles={['Courses', 'Selected']}
-                        targetKeys={targetKeys}
-                        selectedKeys={selectedKeys}
-                        onChange={onChange}
-                        onSelectChange={onSelectChange}
-                        showSearch
-                        listStyle={{
-                          width: 450,
-                          height: 400,
-                        }}
-                        operations={['Add', 'Remove']}
-                        locale={{ itemUnit: "course", itemsUnit: "course", searchPlaceholder: "Search by Course ID or Name"}}
-                        render={item => `${item.course_id} ${item.course_name_en}`}
-                    />
+                <Header level={4}>Curriculum</Header>
+                <Select defaultValue={selectedCurriculum} onChange={(value) => setSelectedCurriculum(value)} width="440px" >
+                    {curlist.map((e, i) => <Option value={e.name} key={i}>{e.name}</Option>)}
+                </Select>
+                <Divider />
+                <Transfer
+                    dataSource={mockCourse}
+                    titles={['Courses', 'Selected']}
+                    targetKeys={targetKeys}
+                    selectedKeys={selectedKeys}
+                    onChange={onChange}
+                    onSelectChange={onSelectChange}
+                    showSearch
+                    listStyle={{
+                        width: 450,
+                        height: 400,
+                    }}
+                    operations={['Add', 'Remove']}
+                    locale={{ itemUnit: "course", itemsUnit: "course", searchPlaceholder: "Search by Course ID or Name" }}
+                    render={item => `${item.course_id} ${item.course_name_en}`}
+                />
             </Modal>
 
         </div>

@@ -192,7 +192,7 @@ export const SectionTable = ({ section = [], teacher }) => {
                 ) : (
                     <>
                         <Typography.Link
-                            disabled={editingKey !== ""}
+                            disabled={editingKey !== "" || isNewAdded === true}
                             onClick={() => edit(record)}
                             style={{
                                 marginRight: 12,
@@ -202,7 +202,7 @@ export const SectionTable = ({ section = [], teacher }) => {
                         </Typography.Link>
                         <Popconfirm title="Delete this section?" onConfirm={() => deleteSection()}>
                             <Typography.Link
-                                disabled={editingKey !== ""}
+                                disabled={editingKey !== "" || isNewAdded === true}
                                 type="danger"
                             >
                                 <DeleteOutlined />

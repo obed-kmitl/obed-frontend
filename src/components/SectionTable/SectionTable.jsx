@@ -92,6 +92,7 @@ export const SectionTable = ({ section = [], teacher }) => {
         setEditingKey("");
         if (isNewAdded) {
             setData(data.slice(0, data.length - 1))
+            setIsNewAdded(false)
         }
     };
 

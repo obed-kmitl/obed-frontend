@@ -112,6 +112,9 @@ export const SectionTable = ({ section = [], teacher }) => {
                 setData(newData);
                 setEditingKey("");
             }
+            if (isNewAdded) {
+                setIsNewAdded(false);
+            }
 
         } catch (errInfo) {
             console.log("Validate Failed:", errInfo);
@@ -119,7 +122,7 @@ export const SectionTable = ({ section = [], teacher }) => {
     }
 
     const handleAdd = () => {
-        console.log(data)
+        //console.log(data)
         setIsNewAdded(true)
         const newData = { section_id: '', teacher: [] };
         setData([...data, newData]);
@@ -132,8 +135,8 @@ export const SectionTable = ({ section = [], teacher }) => {
 
     };
 
-    const deleteSection = () => {
-        console.log(data)
+    const deleteSection = (record) => {
+        setData(data.filter((section)=>section.section_id!==record.section_id));
     }
 
     const columns = [
@@ -156,8 +159,8 @@ export const SectionTable = ({ section = [], teacher }) => {
                         const teacherFirstName = teacherData[0].firstname
                         const teacherLastName = teacherData[0].lastname
                         const teacherName = `${teacherFirstName} ${teacherLastName}`
-                        console.log(teacherData)
-                        console.log(teacherName)
+                        // console.log(teacherData)
+                        // console.log(teacherName)
                         return <Tag style={{ height: '36px', lineHeight: '2.5', fontSize: '14px' }} key={ele}>{teacherName}</Tag>;
                     })}
                 </>
@@ -200,7 +203,7 @@ export const SectionTable = ({ section = [], teacher }) => {
                         >
                             <EditOutlined />
                         </Typography.Link>
-                        <Popconfirm title="Delete this section?" onConfirm={() => deleteSection()}>
+                        <Popconfirm title="Delete this section?" onConfirm={() => deleteSection(record)}>
                             <Typography.Link
                                 disabled={editingKey !== "" || isNewAdded === true}
                                 type="danger"

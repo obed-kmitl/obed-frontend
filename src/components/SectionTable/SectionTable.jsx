@@ -58,10 +58,11 @@ export const SectionTable = ({ section = [], teacher }) => {
                             },
                             {
                                 validator: (rule, value, callback) => {
-                                    const alreadyExistSection = data.map((e) => e.section_id)
-                                    console.log(alreadyExistSection)
+                                    const alreadyExistSection = data.map((e) => e.section_id).filter((e)=>e!=record.section_id)
+                                    // console.log(alreadyExistSection)
+                                    // console.log(record.section_id)
                                     if (alreadyExistSection.includes(value)) {
-                                        return Promise.reject("test")
+                                        return Promise.reject("Already exist!")
                                     }
                                     return Promise.resolve()
                                 }
@@ -79,9 +80,6 @@ export const SectionTable = ({ section = [], teacher }) => {
 
     const edit = (record) => {
         form.setFieldsValue({
-            name: "",
-            age: "",
-            address: "",
             ...record,
         });
         setEditingKey(record.key);
@@ -117,7 +115,7 @@ export const SectionTable = ({ section = [], teacher }) => {
     }
 
     const handleAdd = () => {
-        //console.log(data)
+        console.log(data)
         setIsNewAdded(true)
         const count = data.length + 1;
         const newData = { key: count.toString(), section_id: '', teacher: [] };

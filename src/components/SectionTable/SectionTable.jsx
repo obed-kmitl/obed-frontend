@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Select, Option, Button } from "..";
 import { Table, Input, Popconfirm, Form, Typography, Tag } from "antd";
 import styles from './SectionTable.module.scss'
+import { is } from "@babel/types";
 
 export const SectionTable = ({ section = [], teacher }) => {
     const [form] = Form.useForm();
@@ -9,8 +10,8 @@ export const SectionTable = ({ section = [], teacher }) => {
     const [editingKey, setEditingKey] = useState("");
     const [isNewAdded, setIsNewAdded] = useState(false);
 
-    const isEditing = (record) => record.key === editingKey;
-    const mockTeacher = teacher
+    const isEditing = (record) => record.section_id === editingKey;
+    const teacherList = teacher
     const EditableCell = ({
         editing,
         dataIndex,
@@ -30,8 +31,8 @@ export const SectionTable = ({ section = [], teacher }) => {
                         showSearch
                         placeholder="Select Teacher"
                     >
-                        {mockTeacher.map((ele, i) => (
-                            <Option key={i} value={ele.name}>
+                        {teacherList.map((ele, i) => (
+                            <Option key={ele.id} value={ele.id}>
                                 {ele.firstname}{" "}{ele.lastname}
                             </Option>
                         ))}
@@ -58,7 +59,7 @@ export const SectionTable = ({ section = [], teacher }) => {
                             },
                             {
                                 validator: (rule, value, callback) => {
-                                    const alreadyExistSection = data.map((e) => e.section_id).filter((e)=>e!=record.section_id)
+                                    const alreadyExistSection = data.map((e) => e.section_id).filter((e)=>e!==record.section_id)
                                     // console.log(alreadyExistSection)
                                     // console.log(record.section_id)
                                     if (alreadyExistSection.includes(value)) {
@@ -82,7 +83,7 @@ export const SectionTable = ({ section = [], teacher }) => {
         form.setFieldsValue({
             ...record,
         });
-        setEditingKey(record.key);
+        setEditingKey(record.section_id);
     };
 
     const cancel = () => {
@@ -92,11 +93,11 @@ export const SectionTable = ({ section = [], teacher }) => {
         }
     };
 
-    const save = async (key) => {
+    const save = async (section_id) => {
         try {
             const row = await form.validateFields();
             const newData = [...data];
-            const index = newData.findIndex((item) => key === item.key);
+            const index = newData.findIndex((item) => section_id === item.section_id);
 
             if (index > -1) {
                 const item = newData[index];
@@ -117,14 +118,13 @@ export const SectionTable = ({ section = [], teacher }) => {
     const handleAdd = () => {
         console.log(data)
         setIsNewAdded(true)
-        const count = data.length + 1;
-        const newData = { key: count.toString(), section_id: '', teacher: [] };
+        const newData = {section_id: '', teacher: [] };
         setData([...data, newData]);
         form.setFieldsValue({
             section_id: "",
             teacher: []
         });
-        setEditingKey(newData.key);
+        setEditingKey(newData.section_id);
 
 
     };
@@ -134,19 +134,25 @@ export const SectionTable = ({ section = [], teacher }) => {
             title: "Section",
             dataIndex: "section_id",
             key: "section_id",
-            width: "12%",
+            width: "15%",
             editable: true,
             //   sorter: (a, b) => a.course_id - b.course_id,
         },
         {
             title: "Teacher",
             dataIndex: "teacher",
-            width: "70%",
+            width: "75%",
             editable: true,
             render: (teacher) => (
                 <>
                     {teacher?.map((ele) => {
-                        return <Tag style={{ height: '36px', lineHeight: '2.5', fontSize: '14px' }} key={ele}>{ele}</Tag>;
+                        const teacherData = teacherList.filter((teacher)=> teacher.id===ele);
+                        const teacherFirstName =  teacherData[0].firstname
+                        const teacherLastName =  teacherData[0].lastname
+                        const teacherName =  `${teacherFirstName} ${teacherLastName}`
+                        console.log(teacherData)
+                        console.log(teacherName)
+                        return <Tag style={{ height: '36px', lineHeight: '2.5', fontSize: '14px' }} key={ele}>{teacherName}</Tag>;
                     })}
                 </>
             ),
@@ -154,12 +160,12 @@ export const SectionTable = ({ section = [], teacher }) => {
         {
             title: "Action",
             dataIndex: "action",
-            width: "17%",
+            width: "10%",
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <Popconfirm title="Save Changes?" onConfirm={() => save(record.key)}>
+                        <Popconfirm title="Save Changes?" onConfirm={() => save(record.section_id)}>
                             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                             <a
                                 style={{
@@ -210,7 +216,7 @@ export const SectionTable = ({ section = [], teacher }) => {
     return (
         <>
             <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
-                <Button type="secondary" disabled={editingKey !== ""} onClick={() => handleAdd()}>Add Section</Button>
+                <Button type="secondary" disabled={editingKey !== ""||isNewAdded===true} onClick={() => handleAdd()}>Add Section</Button>
             </div>
             <Form form={form} component={false}>
                 <Table
@@ -224,7 +230,7 @@ export const SectionTable = ({ section = [], teacher }) => {
                     columns={mergedColumns}
                     rowClassName="editable-row"
                     pagination={false}
-                    rowKey="key"
+                    rowKey="section_id"
                     onRow={()=>({className:styles.editableCell})}
                 />
             </Form>

@@ -117,15 +117,12 @@ export const Plan = () => {
         course_name_th: 'วิศวกรรมคอมพิวเตอร์เบื้องต้น',
         course_name_en: 'Introduction to Computer Engineering',
         section: [{
-            key: '1',
             section_id: '101',
             teacher: [1, 2]
         }, {
-            key: '2',
             section_id: '102',
             teacher: [3]
         }, {
-            key: '3',
             section_id: '103',
             teacher: [4,5,6]
         }]
@@ -136,15 +133,12 @@ export const Plan = () => {
         course_name_th: 'พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์',
         course_name_en: 'Programming Fundamental',
         section: [{
-            key: '1',
             section_id: '101',
             teacher: [1]
         }, {
-            key: '2',
             section_id: '102',
             teacher: [7]
         }, {
-            key: '3',
             section_id: '103',
             teacher: [8]
         }]
@@ -155,11 +149,9 @@ export const Plan = () => {
         course_name_th: 'วงจรไฟฟ้าและอิเล็กทรอนิกส์',
         course_name_en: 'Curcuits and Electronics',
         section: [{
-            key: '1',
             section_id: '101',
             teacher: [9,10,11]
         }, {
-            key: '2',
             section_id: '102',
             teacher: [4,5,6]
         }]
@@ -299,6 +291,7 @@ export const Plan = () => {
                 <div className={styles.rightContainer}>
                     <Input placeholder="placeholder" value={searchValue} onChange={(e)=>{setSearchValue(e.target.value);console.log(e.target.value)}} search onSearch={search} />
                     <Button onClick={() => handleAddCourse()}>Add</Button>
+                    <Button onClick={() => console.log(courses)}>Add</Button>
                 </div>
             </div>
             <div className={styles.plan}>

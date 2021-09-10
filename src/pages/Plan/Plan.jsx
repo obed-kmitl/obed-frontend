@@ -1,4 +1,4 @@
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './Plan.module.scss';
 import { Helmet } from 'react-helmet';
 import { Header, Button, Select, Option, Input, Collapse, Panel, SectionTable } from '../../components';
@@ -20,96 +20,96 @@ export const Plan = () => {
         semester: ["1", "2"]
     }]
 
-    const teacher= [
+    const teacher = [
         {
-          id: 1,
-          firstname: "สมชาย",
-          lastname: "ใจดี",
-          username: "somchai1234",
-          email: "somchai.ja@kmitl.ac.th",
-          status: 1,
+            id: 1,
+            firstname: "สมชาย",
+            lastname: "ใจดี",
+            username: "somchai1234",
+            email: "somchai.ja@kmitl.ac.th",
+            status: 1,
         },
         {
-          id: 2,
-          firstname: "สมหญิง",
-          lastname: "จริงใจ",
-          username: "somying1",
-          email: "somying.ji@kmitl.ac.th",
-          status: 1,
+            id: 2,
+            firstname: "สมหญิง",
+            lastname: "จริงใจ",
+            username: "somying1",
+            email: "somying.ji@kmitl.ac.th",
+            status: 1,
         },
         {
-          id: 3,
-          firstname: "สมปอง",
-          lastname: "สุขสบาย",
-          username: "sompong1988",
-          email: "sompong.su@kmitl.ac.th",
-          status: 0,
+            id: 3,
+            firstname: "สมปอง",
+            lastname: "สุขสบาย",
+            username: "sompong1988",
+            email: "sompong.su@kmitl.ac.th",
+            status: 0,
         },
         {
-          id: 4,
-          firstname: "สมปราชญ์",
-          lastname: "สดใส",
-          username: "somprach38",
-          email: "somprach.so@kmitl.ac.th",
-          status: 1,
+            id: 4,
+            firstname: "สมปราชญ์",
+            lastname: "สดใส",
+            username: "somprach38",
+            email: "somprach.so@kmitl.ac.th",
+            status: 1,
         },
         {
-          id: 5,
-          firstname: "สมหมาย",
-          lastname: "สายไทย",
-          username: "sommai55",
-          email: "sommai.sa@kmitl.ac.th",
-          status: 0,
+            id: 5,
+            firstname: "สมหมาย",
+            lastname: "สายไทย",
+            username: "sommai55",
+            email: "sommai.sa@kmitl.ac.th",
+            status: 0,
         },
         {
-          id: 6,
-          firstname: "สมหมาย",
-          lastname: "รักไทย",
-          username: "sommai1999",
-          email: "sommai.ra@kmitl.ac.th",
-          status: 1,
+            id: 6,
+            firstname: "สมหมาย",
+            lastname: "รักไทย",
+            username: "sommai1999",
+            email: "sommai.ra@kmitl.ac.th",
+            status: 1,
         },
         {
-          id: 7,
-          firstname: "สมศักดิ์",
-          lastname: "ใฝ่รู้",
-          username: "somsak74",
-          email: "somsak.fh@kmitl.ac.th",
-          status: 1,
+            id: 7,
+            firstname: "สมศักดิ์",
+            lastname: "ใฝ่รู้",
+            username: "somsak74",
+            email: "somsak.fh@kmitl.ac.th",
+            status: 1,
         },
         {
-          id: 8,
-          firstname: "สมศรี",
-          lastname: "ศรีไทย",
-          username: "somsri6854",
-          email: "somsri.sr@kmitl.ac.th",
-          status: 1,
+            id: 8,
+            firstname: "สมศรี",
+            lastname: "ศรีไทย",
+            username: "somsri6854",
+            email: "somsri.sr@kmitl.ac.th",
+            status: 1,
         },
         {
-          id: 9,
-          firstname: "สมพงศ์",
-          lastname: "ชัยชนะ",
-          username: "somphong",
-          email: "somphong.ch@kmitl.ac.th",
-          status: 1,
+            id: 9,
+            firstname: "สมพงศ์",
+            lastname: "ชัยชนะ",
+            username: "somphong",
+            email: "somphong.ch@kmitl.ac.th",
+            status: 1,
         },
         {
-          id: 10,
-          firstname: "สมสง่า",
-          lastname: "ราศี",
-          username: "somsanga34",
-          email: "somsanga.ra@kmitl.ac.th",
-          status: 0,
+            id: 10,
+            firstname: "สมสง่า",
+            lastname: "ราศี",
+            username: "somsanga34",
+            email: "somsanga.ra@kmitl.ac.th",
+            status: 0,
         },
         {
-          id: 11,
-          firstname: "สมเกิน",
-          lastname: "อีกหน้า",
-          username: "somkoen96",
-          email: "somkoen.ei@kmitl.ac.th",
-          status: 1,
+            id: 11,
+            firstname: "สมเกิน",
+            lastname: "อีกหน้า",
+            username: "somkoen96",
+            email: "somkoen.ei@kmitl.ac.th",
+            status: 1,
         },
-      ];
+    ];
     const course = [{
         course_id: '01076001',
         curriculum_id: '01072560',
@@ -124,7 +124,7 @@ export const Plan = () => {
             teacher: [3]
         }, {
             section_id: '103',
-            teacher: [4,5,6]
+            teacher: [4, 5, 6]
         }]
     }, {
         course_id: '01076002',
@@ -150,10 +150,10 @@ export const Plan = () => {
         course_name_en: 'Curcuits and Electronics',
         section: [{
             section_id: '101',
-            teacher: [9,10,11]
+            teacher: [9, 10, 11]
         }, {
             section_id: '102',
-            teacher: [4,5,6]
+            teacher: [4, 5, 6]
         }]
     }, {
         course_id: '01076004',
@@ -161,14 +161,14 @@ export const Plan = () => {
         precourse_id: null,
         course_name_th: 'การเขียนโปรแกรมเชิงวัตถุ',
         course_name_en: 'Object Oriented Programming',
-        section:[]
+        section: []
     }, {
         course_id: '01076005',
         curriculum_id: '01072560',
         precourse_id: '01076004',
         course_name_th: 'โครงสร้างข้อมูลและอัลกอริทึม',
         course_name_en: 'Data Structures and Algorithm',
-        section:[]
+        section: []
     }];
 
     const curlist = [{
@@ -180,13 +180,26 @@ export const Plan = () => {
     }];
 
 
-    const [courses, setCourses] = useState(course)
+    const [courses, setCourses] = useState([])
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
     const [selectedSemester, setSelectedSemester] = useState("1");
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedCurriculum, setSelectedCurriculum] = useState(curlist[0].name);
-    const [mockCourse, setMockCourse] = useState(() => {
+    const [courseList, setCourseList] = useState(() => {
         const data = []
+        //key use in Tranfer component
+        course.forEach(element => {
+            data.push({
+                key: element.course_id,
+                course_id:  element.course_id,
+                curriculum_id:  element.curriculum_id,
+                precourse_id:  element.precourse_id,
+                course_name_th:  element.course_name_th,
+                course_name_en: element.course_name_en,
+                section: element.section
+            })
+            
+        });
         for (let i = 0; i < 20; i++) {
             data.push({
                 key: `010760${i + 10}`,
@@ -195,6 +208,7 @@ export const Plan = () => {
                 precourse_id: null,
                 course_name_th: `วิชาตัวอย่างลำดับที่ ${i}`,
                 course_name_en: `Mock Subject -  ${i}`,
+                section: []
             });
         }
         return data
@@ -227,19 +241,29 @@ export const Plan = () => {
 
         targetKeys.forEach(element => {
             const addItem = {
-                course_id: mockCourse.find(e => e.key === element).course_id,
-                curriculum_id: mockCourse.find(e => e.key === element).curriculum_id,
-                precourse_id: mockCourse.find(e => e.key === element).precourse_id,
-                course_name_th: mockCourse.find(e => e.key === element).course_name_th,
-                course_name_en: mockCourse.find(e => e.key === element).course_name_en,
+                key: courseList.find(e => e.key === element).key,
+                course_id: courseList.find(e => e.key === element).course_id,
+                curriculum_id: courseList.find(e => e.key === element).curriculum_id,
+                precourse_id: courseList.find(e => e.key === element).precourse_id,
+                course_name_th: courseList.find(e => e.key === element).course_name_th,
+                course_name_en: courseList.find(e => e.key === element).course_name_en,
+                section: courseList.find(e => e.key === element).section,
             }
             setCourses(courses => [...courses, addItem])
+            setCourses(courses => courses.sort((a,b) => (a.course_id> b.course_id) ? 1 : ((b.course_id > a.course_id) ? -1 : 0)))
             setFilterList(courses => [...courses, addItem])
-            setMockCourse(mockCourse => mockCourse.filter(e => e.key !== element))
+            setCourseList(courseList => courseList.filter(e => e.key !== element))
         }
         )
-       
+
         setTargetKeys([])
+    }
+
+    const handleDeleteCourse = (item) => {
+        setCourseList(courseList=>[...courseList,item])
+        setCourseList(courseList=> courseList.sort((a,b) => (a.course_id> b.course_id) ? 1 : ((b.course_id > a.course_id) ? -1 : 0)))
+        setCourses(courses.filter((course)=>course.course_id!==item.course_id))
+
     }
 
     const handleCancel = () => {
@@ -248,24 +272,24 @@ export const Plan = () => {
 
     function search(keyword) {
         if (keyword !== "") {
-          const results = courses.filter((course) => {
-            return (
-              course.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
-              course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
-              course.course_name_th.toLowerCase().includes(keyword.toLowerCase()) 
-            );
-          });
-          setFilterList(results);
+            const results = courses.filter((course) => {
+                return (
+                    course.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
+                    course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
+                    course.course_name_th.toLowerCase().includes(keyword.toLowerCase())
+                );
+            });
+            setFilterList(results);
         } else {
-          setFilterList(courses);
+            setFilterList(courses);
         }
-      }
+    }
 
     useEffect(() => {
         setSearchValue('');
         search('');
-    }, [courses])  
- 
+    }, [courses])
+
 
 
     return (
@@ -289,9 +313,9 @@ export const Plan = () => {
             <div className={styles.planHeader}>
                 <Header level={2}>{selectedYear}/{selectedSemester}</Header>
                 <div className={styles.rightContainer}>
-                    <Input placeholder="placeholder" value={searchValue} onChange={(e)=>{setSearchValue(e.target.value);console.log(e.target.value)}} search onSearch={search} />
+                    <Input placeholder="placeholder" value={searchValue} onChange={(e) => { setSearchValue(e.target.value); console.log(e.target.value) }} search onSearch={search} />
                     <Button onClick={() => handleAddCourse()}>Add</Button>
-                    <Button onClick={() => console.log(courses)}>Add</Button>
+                    {/* <Button onClick={() => console.log(courses)}>Add</Button> */}
                 </div>
             </div>
             <div className={styles.plan}>
@@ -300,20 +324,20 @@ export const Plan = () => {
                     <Collapse
                         accordion
                     >
-                        {filterList.map((e, i) =>
+                        {filterList.map((item, i) =>
                             <Panel
                                 header={
                                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                        <Header level={4} >{e.course_id}{' '}{e.course_name_en}</Header>
-                                        <div style={{display:"flex" ,alignItems: "center"}}>
-                                        {/* {!e.section?<WarningOutlined style={{color:"red" ,margin:"010px"}} />:null} */}
-                                        <Popconfirm
-                                            title="Are you sure to delete this course?"
-                                            onConfirm={(e)=>{alert('Clicked');e.stopPropagation()}}
-                                            onCancel={(e)=> e.stopPropagation()}
-                                        >
-                                            <div  onClick={(e) => { e.stopPropagation() }}><DeleteOutlined /></div>
-                                        </Popconfirm>
+                                        <Header level={4} >{item.course_id}{' '}{item.course_name_en}</Header>
+                                        <div style={{ display: "flex", alignItems: "center" }}>
+                                            {/* {!e.section?<WarningOutlined style={{color:"red" ,margin:"010px"}} />:null} */}
+                                            <Popconfirm
+                                                title="Are you sure to delete this course?"
+                                                onConfirm={(e) => { handleDeleteCourse(item); e.stopPropagation() }}
+                                                onCancel={(e) => e.stopPropagation()}
+                                            >
+                                                <div onClick={(e) => { e.stopPropagation() }}><DeleteOutlined /></div>
+                                            </Popconfirm>
                                         </div>
                                     </div>}
                                 key={i}
@@ -323,7 +347,7 @@ export const Plan = () => {
                                     <Button type="secondary" onClick={() => alert('Clicked')}>Add Section</Button>
                                     <Button danger onClick={() => alert('Clicked')}><DeleteOutlined /></Button>
                                 </div> */}
-                                <SectionTable section={e.section} teacher={teacher}/>
+                                <SectionTable section={item.section} teacher={teacher} />
                             </Panel>)}
                     </Collapse>
                 </div>
@@ -351,7 +375,7 @@ export const Plan = () => {
                 </Select>
                 <Divider />
                 <Transfer
-                    dataSource={mockCourse}
+                    dataSource={courseList}
                     titles={['Courses', 'Selected']}
                     targetKeys={targetKeys}
                     selectedKeys={selectedKeys}

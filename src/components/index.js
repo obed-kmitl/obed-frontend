@@ -8,3 +8,4 @@ export { Collapse , Panel } from './Collapse/Collapse';
 export { TableCard } from './TableCard/TableCard';
 export { Table } from './Table/Table';
 export { CourseTable } from './CourseTable/CourseTable';
+export { SectionTable } from './SectionTable/SectionTable'

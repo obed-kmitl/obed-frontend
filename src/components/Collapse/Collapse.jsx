@@ -4,11 +4,11 @@ import styles from './Collapse.module.scss';
 const { Panel } = Collapse;
 
 function MyCollapse({
-    children,ghost
+    children,ghost,...props
 }) {
     return (
         <div className={styles.container}>
-            <Collapse className={styles.collapse} ghost={ghost} expandIconPosition="right">{children}</Collapse>
+            <Collapse className={styles.collapse} ghost={ghost} expandIconPosition="right"{...props}>{children}</Collapse>
         </div>
     )
 

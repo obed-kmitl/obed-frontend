@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { Select, Option } from "..";
-import { Table, Input, Popconfirm, Form, Typography, Tag, Tooltip } from "antd";
+import {
+  Table,
+  Input,
+  Popconfirm,
+  Form,
+  Typography,
+  Tag,
+  Tooltip,
+  Space,
+} from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 export const CourseTable = ({ course = [{}] }) => {
   const [form] = Form.useForm();
@@ -138,7 +148,7 @@ export const CourseTable = ({ course = [{}] }) => {
       title: "Course ID",
       dataIndex: "course_id",
       key: "course_id",
-      width: "10%",
+      width: "12%",
       editable: true,
       sorter: (a, b) => a.course_id - b.course_id,
     },
@@ -151,7 +161,7 @@ export const CourseTable = ({ course = [{}] }) => {
       },
       editable: true,
       render: (text) => (
-        <Tooltip className="prereq-data" title={text}>
+        <Tooltip className="prereq-data" title={text} placement="topLeft">
           {text}
         </Tooltip>
       ),
@@ -165,7 +175,7 @@ export const CourseTable = ({ course = [{}] }) => {
       },
       editable: true,
       render: (text) => (
-        <Tooltip className="prereq-data" title={text}>
+        <Tooltip className="prereq-data" title={text} placement="topLeft">
           {text}
         </Tooltip>
       ),
@@ -180,6 +190,7 @@ export const CourseTable = ({ course = [{}] }) => {
       editable: true,
       render: (text) => (
         <Tooltip
+          placement="topLeft"
           className="prereq-data"
           title={
             text &&
@@ -212,7 +223,6 @@ export const CourseTable = ({ course = [{}] }) => {
     {
       title: "Action",
       dataIndex: "action",
-      width: "10%",
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
@@ -233,12 +243,27 @@ export const CourseTable = ({ course = [{}] }) => {
             </Popconfirm>
           </span>
         ) : (
-          <Typography.Link
-            disabled={editingKey !== ""}
-            onClick={() => edit(record)}
-          >
-            Edit
-          </Typography.Link>
+          <Space size="middle">
+            <Tooltip title="Edit">
+              <Typography.Link
+                disabled={editingKey !== ""}
+                onClick={() => edit(record)}
+                style={{ color: "#009FC7", fontSize: "20px" }}
+              >
+                <EditOutlined />
+              </Typography.Link>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <Popconfirm title="Sure to delete?" onConfirm={cancel}>
+                <Typography.Link
+                  disabled={editingKey !== ""}
+                  style={{ color: "#C73535", fontSize: "20px" }}
+                >
+                  <DeleteOutlined />
+                </Typography.Link>
+              </Popconfirm>
+            </Tooltip>
+          </Space>
         );
       },
     },

@@ -22,6 +22,13 @@
 }
 
 :global {
+  a {
+    color: $color-turquoise-500;
+    &:hover {
+      color: $color-turquoise-400;
+    }
+  }
+
   .ant-dropdown-menu-item:hover,
   .ant-dropdown-menu-submenu-title:hover {
     background-color: $color-turquoise-100;
@@ -30,7 +37,6 @@
   .ant-btn {
     background-color: $color-white;
     color: $color-turquoise-500;
-    border-color: $color-turquoise-500;
     &:focus {
       background-color: $color-white;
       color: $color-turquoise-400;
@@ -81,6 +87,26 @@
         border-color: $color-turquoise-600;
       }
     }
+    &-dangerous {
+      background-color: $color-white;
+      color: $color-rose-500;
+      border-color: $color-rose-500;
+      &:focus {
+        background-color: $color-white;
+        color: $color-rose-400;
+        border-color: $color-rose-400;
+      }
+      &:hover {
+        background-color: $color-rose-500;
+        color: $color-white;
+        border-color: $color-rose-500;
+      }
+      &:active {
+        background-color: $color-white;
+        color: $color-rose-600;
+        border-color: $color-rose-600;
+      }
+    }
   }
   .ant-checkbox-checked .ant-checkbox-inner {
     background-color: $color-turquoise-500;
@@ -98,5 +124,39 @@
   .ant-table {
     font-size: 16px;
     font-family: "IBM Plex Sans Thai Looped";
+  }
+
+  .ant-pagination-item {
+    background: #fff;
+
+    &:hover {
+      border-color: $color-turquoise-500;
+      a {
+        color: $color-turquoise-500;
+      }
+    }
+    &:focus-visible {
+      border-color: $color-turquoise-500;
+    }
+
+    &-active {
+      border-color: $color-turquoise-500;
+      a {
+        color: $color-turquoise-500;
+      }
+    }
+  }
+
+  .ant-pagination-prev:focus-visible .ant-pagination-item-link,
+  .ant-pagination-next:focus-visible .ant-pagination-item-link,
+  .ant-pagination-prev:hover .ant-pagination-item-link,
+  .ant-pagination-next:hover .ant-pagination-item-link {
+    color: $color-turquoise-500;
+    border-color: $color-turquoise-500;
+  }
+
+  .ant-table-column-sorter-up.active,
+  .ant-table-column-sorter-down.active {
+    color: $color-turquoise-500;
   }
 }

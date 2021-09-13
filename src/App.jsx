@@ -3,7 +3,7 @@ import {
   Switch,
   Route as PublicRoute,
 } from "react-router-dom";
-import { Curriculum, Home, Sandbox, Profile, Teacher } from "./pages";
+import { Curriculum, Home, Sandbox, Profile, Teacher ,Plan } from "./pages";
 import { Layout } from "./components/Layout/Layout";
 import "./styles/global.module.scss";
 
@@ -23,6 +23,9 @@ function App() {
           </PublicRoute>
           <PublicRoute path="/profile">
             <Profile />
+          </PublicRoute>
+          <PublicRoute path="/plan">
+            <Plan />
           </PublicRoute>
           <PublicRoute path="/">
             <Home />

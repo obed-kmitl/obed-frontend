@@ -142,16 +142,23 @@
         }
       }
     }
+    .footer:hover{
+      background-color: $color-turquoise-100;
+      color: $color-primary-carrot;
+      
+    }
   }
 }
 
 .footer {
   min-height: 50px;
-  margin: 20px 20px 20px 10px;
+  margin: 5px;
+  padding: 10px 20px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: $color-white;
+  border-radius: 5px;
   a {
     margin-left: 4px;
     font-weight: 500;
@@ -159,10 +166,18 @@
     color: inherit;
   }
 }
+.footer:hover{
+  background-color: $color-carrot-100;
+  color: $color-primary-turquoise;
+  
+}
+
+
 
 .usermenu {
   border-radius: 5px;
-  margin-bottom: .5rem;
+  margin:.5rem;
+
   li{
     margin:  8px;
     a{

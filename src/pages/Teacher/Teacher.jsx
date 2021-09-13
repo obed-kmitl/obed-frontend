@@ -145,10 +145,10 @@ export const Teacher = () => {
     </Form.Item>
   );
 
-  const showModal = (record = {}) => {
+  function showModal(record = {}) {
     setSelectedData(record);
     setVisible(true);
-  };
+  }
 
   function search(keyword) {
     if (keyword !== "") {
@@ -226,23 +226,6 @@ export const Teacher = () => {
     console.log(temp);
   }
 
-  // const menu = (record) => (
-  //   <Menu>
-  //     <Menu.Item icon={<MailOutlined />} key="2">
-  //       <a href="#" onClick={() => resendPassword()}>
-  //         Change Password
-  //       </a>
-  //     </Menu.Item>
-  //     <Menu.Item danger icon={<DeleteOutlined />} key="3">
-  //       <Popconfirm
-  //         title="Sure to delete this account?"
-  //         onConfirm={() => deleteAccount(record)}
-  //       >
-  //         <a href="#">Delete Account</a>
-  //       </Popconfirm>
-  //     </Menu.Item>
-  //   </Menu>
-  // );
   return (
     <div className={styles.container}>
       <Helmet>
@@ -378,21 +361,6 @@ export const Teacher = () => {
             </Space>
           )}
         />
-        {/* <Column
-          key="action"
-          width="30px"
-          render={(ele, record) => (
-            <Dropdown overlay={() => menu(record)}>
-              <a
-                className="ant-dropdown-link"
-                onClick={(e) => e.preventDefault()}
-                style={{ fontSize: "20px", color: "#009FC7" }}
-              >
-                <MoreOutlined />
-              </a>
-            </Dropdown>
-          )}
-        /> */}
       </Table>
       <Modal
         title={edit ? "Edit Teacher" : "Add Teacher"}
@@ -413,25 +381,6 @@ export const Teacher = () => {
         onCancel={handleCancel}
         okButtonProps={{ htmlType: "submit" }}
         maskClosable={false}
-        width="700px"
-        // footer={
-        //   [
-        //     <Body level={3} style={{ color: "#8B8B8B", width: "fit-content" }}>
-        //       Teacher can change password by link in email
-        //     </Body>,
-        //     <Button type="secondary" onClick={handleCancel}>
-        //       Cancel
-        //     </Button>,
-        //     <Button
-        //       htmlType="submit"
-        //       type="primary"
-        //       loading={confirmLoading}
-        //       onClick={handleSubmit}
-        //     >
-        //       Add
-        //     </Button>,
-        //   ]
-        // }
       >
         <Form
           form={form}
@@ -441,7 +390,7 @@ export const Teacher = () => {
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
-          requiredMark="optional"
+          requiredMark={"required"}
         >
           <Form.Item
             label="Firstname"

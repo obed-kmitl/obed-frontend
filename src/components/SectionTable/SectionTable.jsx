@@ -169,7 +169,7 @@ export const SectionTable = ({ section = [], teacher }) => {
         {
             title: "Action",
             dataIndex: "action",
-            width: 75,
+            width: 80,
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (

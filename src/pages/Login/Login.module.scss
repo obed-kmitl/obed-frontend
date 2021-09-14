@@ -12,6 +12,7 @@
 .container {
   display: flex;
   height: 80vh;
+  max-height: 900px;
   gap: 3rem;
 
   .logo {

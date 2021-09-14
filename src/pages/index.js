@@ -5,3 +5,4 @@ export { Profile } from './Profile/Profile';
 export { Teacher } from './Teacher/Teacher';
 export { TestTable } from './Test/TestTable';
 export { Plan } from './Plan/Plan';
+export { Login } from './Login/Login';

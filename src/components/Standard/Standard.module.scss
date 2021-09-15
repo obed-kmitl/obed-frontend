@@ -1,0 +1,13 @@
+@import "../../styles/color.scss";
+
+.tabHead {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  
+    div {
+      display: flex;
+      gap: 0.5rem;
+    }
+  }

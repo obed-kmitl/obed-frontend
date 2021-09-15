@@ -2,7 +2,6 @@
 
 @mixin buttonStyle($primaryColor, $lighterColor, $darkerColor) {
   &:global(.ant-btn) {
-    font-weight: 500;
     font-size: 16px;
     background-color: $color-white;
     color: $primaryColor;

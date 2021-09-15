@@ -206,7 +206,7 @@ const Sidebar = () => {
               </Menu>
               <Menu
                 className={styles.menu}
-                defaultSelectedKeys={"4" /*keyPath()*/}
+                defaultSelectedKeys={"4"}
                 mode="inline"
               >
                 <Menu.Item className={styles.item} key="4">
@@ -252,8 +252,8 @@ const Sidebar = () => {
                   <FileTextOutlined className={styles.icon} /> Curriculum
                 </Link>
               </Menu.Item>
-              <Menu.Item key="/" className={styles.item}>
-                <Link to="/">
+              <Menu.Item key="/teacher" className={styles.item}>
+                <Link to="/teacher">
                   <TeamOutlined className={styles.icon} /> Teacher
                 </Link>
               </Menu.Item>

@@ -1,8 +1,7 @@
-import { Input, Select, Form } from "antd";
+import { Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import styles from "./Input.module.scss";
 
-const { Option } = Select;
 const { Search, TextArea } = Input;
 function MyInput({
   placeholder,

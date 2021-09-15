@@ -3,9 +3,18 @@ import { Helmet } from "react-helmet";
 import img from "../../assets/img/login_img.svg";
 import logo from "../../assets/img/login_admin.svg";
 import { Button } from "../../components";
-import { Space, Input } from "antd";
+import { Space, Input, Form } from "antd";
 
 export const Login = () => {
+  const [form] = Form.useForm();
+  function onFinish(values) {
+    console.log("Success:", values);
+  }
+
+  function onFinishFailed(errorInfo) {
+    console.log("Failed:", errorInfo);
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.container}>
@@ -14,17 +23,36 @@ export const Login = () => {
         </Helmet>
         <div className={styles.loginBox}>
           <img src={logo} alt="OBED" className={styles.logo} />
-          <Space direction="vertical" size="middle" className={styles.form}>
-            <Input placeholder="Username" size="large" />
-            <Input.Password
-              placeholder="Password"
-              type="password"
-              size="large"
-            />
-            <Button type="primary" size="large">
-              Login
-            </Button>
-          </Space>
+          <Form
+            form={form}
+            name="login"
+            layout="vertical"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
+            <div className={styles.form}>
+              <Form.Item
+                name="username"
+                rules={[{ required: true, message: "Please input username!" }]}
+              >
+                <Input placeholder="Username" size="large" />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[{ required: true, message: "Please input password!" }]}
+              >
+                <Input.Password
+                  placeholder="Password"
+                  type="password"
+                  size="large"
+                />
+              </Form.Item>
+              <Button type="primary" htmlType="submit" size="large">
+                Login
+              </Button>
+            </div>
+          </Form>
         </div>
         <img src={img} alt="login" className={styles.loginPic} />
       </div>

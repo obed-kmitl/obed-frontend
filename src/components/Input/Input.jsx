@@ -50,20 +50,7 @@ function MyInput({
         style={{ width: width || "100%" }}
         placeholder={placeholder}
         type={type}
-        addonBefore={
-          addonBefore && (
-            <Form.Item name="prefix" noStyle>
-              <Select defaultValue={null} className="select-after">
-                <Option value={null}>None</Option>
-                {addonBefore.map((item) => (
-                  <Option key={item} value={item}>
-                    {item}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          )
-        }
+        addonBefore={addonBefore}
         defaultValue={defaultValue}
         {...props}
       ></Input>

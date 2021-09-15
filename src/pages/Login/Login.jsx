@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import img from "../../assets/img/login_img.svg";
 import logo from "../../assets/img/login_admin.svg";
 import { Button } from "../../components";
-import { Space, Input, Form } from "antd";
+import { Input, Form } from "antd";
 
 export const Login = () => {
   const [form] = Form.useForm();

@@ -327,6 +327,7 @@ export const Plan = () => {
   useEffect(() => {
     setSearchValue("");
     search("");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courses]);
 
   return (

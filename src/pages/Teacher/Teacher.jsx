@@ -119,13 +119,15 @@ export const Teacher = () => {
       status: 1,
     },
   ];
-  const [filterList, setFilterList] = useState(data);
+  const [retrived, setRetrived] = useState(data);
+  const [filterList, setFilterList] = useState(retrived);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const [selectedData, setSelectedData] = useState(null);
   const [edit, setEdit] = useState(false);
+  const [searching, setSearching] = useState(false);
   const selectBefore = (
     <Form.Item name="prefix" noStyle>
       <Select
@@ -152,7 +154,7 @@ export const Teacher = () => {
 
   function search(keyword) {
     if (keyword !== "") {
-      const results = data.filter((teacher) => {
+      const results = retrived.filter((teacher) => {
         return (
           teacher.firstname.toLowerCase().includes(keyword.toLowerCase()) ||
           teacher.lastname.toLowerCase().includes(keyword.toLowerCase()) ||
@@ -161,8 +163,10 @@ export const Teacher = () => {
         );
       });
       setFilterList(results);
+      setSearching(true);
     } else {
-      setFilterList(data);
+      setFilterList(retrived);
+      setSearching(false);
     }
   }
 
@@ -177,7 +181,7 @@ export const Teacher = () => {
     setTimeout(() => {
       setVisible(false);
       setConfirmLoading(false);
-      setFilterList([...data, values]);
+      setRetrived([...retrived, values]);
     }, 2000);
   }
 
@@ -240,7 +244,7 @@ export const Teacher = () => {
       </div>
       <Divider />
       <Table
-        dataSource={filterList}
+        dataSource={searching ? filterList : retrived}
         rowKey="id"
         pagination={{
           onChange(current) {

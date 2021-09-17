@@ -9,7 +9,7 @@ import {
   Collapse,
   Panel,
 } from "..";
-import { Form, Table, Popconfirm, Typography } from 'antd'
+import { Form, Table, Popconfirm, Typography, Modal } from 'antd'
 import {
   DeleteOutlined,
   EditOutlined,
@@ -19,7 +19,7 @@ import {
 
 import styles from "./Standard.module.scss";
 
-const standard = [
+const standardList = [
   {
     standardTitle: "ผลการเรียนรู้ระดับหลักสูตร (PLOs : Program-Level Learning Outcomes)",
     details: [
@@ -189,7 +189,7 @@ const StandardTable = ({ standard = [], standardNo }) => {
             >
               <EditOutlined />
             </Typography.Link>
-            <Popconfirm title="Delete this section?" onConfirm={() => deleteSection(record)}>
+            <Popconfirm title="Delete this standard?" onConfirm={() => deleteSection(record)}>
               <Typography.Link
                 disabled={editingKey !== "" || isNewAdded === true}
                 type="danger"
@@ -222,7 +222,7 @@ const StandardTable = ({ standard = [], standardNo }) => {
     };
   });
 
-  const handleAdd = () => {
+  const handleAddSubStd = () => {
     //console.log(data)
     setIsNewAdded(true)
     const newData = { subStandardNo: '', subStandardName: '' };
@@ -280,8 +280,8 @@ const StandardTable = ({ standard = [], standardNo }) => {
 
   return (
     <>
-      <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
-        <Button type="secondary" disabled={editingKey !== "" || isNewAdded === true} onClick={() => handleAdd()}>Add Section</Button>
+      <div className={styles.topRightBtn}>
+        <Button type="secondary" disabled={editingKey !== "" || isNewAdded === true} onClick={() => handleAddSubStd()}>Add</Button>
       </div>
       <Form form={form} component={false}>
         <Table
@@ -305,20 +305,44 @@ const StandardTable = ({ standard = [], standardNo }) => {
 }
 
 export const Standard = () => {
+  const [standard, setStandard] = useState(standardList);
+  const [newStdVisible, setNewStdVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [createStdForm] = Form.useForm();
+
+  function handleCreateSubmit(value) {
+    console.log("Recieved values of form: ", value);
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setConfirmLoading(false);
+      setNewStdVisible(false);
+    }, 1000);
+    setStandard([...standard,{ standardTitle: value.standardTitle ,details: []}])
+  }
+  function handleCancel() {
+    setNewStdVisible(false);
+    createStdForm.resetFields();
+
+  }
+
+  const handleCreateStdBtn = () => {
+    setNewStdVisible(true)
+
+  }
   return (
     <div>
       <div className={styles.tabHead}>
         <Header level={2}>Education Standard</Header>
         <div>
-          <Button>Create</Button>
+          <Button onClick={() => handleCreateStdBtn()}>Create New Standard</Button>
         </div>
       </div>
-      <Collapse accordtion>
+      <Collapse accordion>
         {standard.map((e, i) =>
           <Panel
             header={
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Header level={4} >{i + 1}{' '}{e.standardTitle}</Header>
+                <Header level={4} >{e.standardTitle}</Header>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   {/* <Popconfirm
                     title="Are you sure to delete this course?"
@@ -331,9 +355,9 @@ export const Standard = () => {
               </div>}
             key={i}
           >
-            <Collapse>
+            <div className={styles.topRightBtn} ><Button>Add</Button></div>
+            <Collapse accordion>
               {e.details.map((e, i) =>
-
                 <Panel
                   header={
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -358,7 +382,46 @@ export const Standard = () => {
 
         )}
       </Collapse>
+      <Modal
+        title="Create New Standard"
+        visible={newStdVisible}
+        okText="Create"
+        onOk={() => {
+          createStdForm
+            .validateFields()
+            .then((value) => {
+              createStdForm.resetFields();
+              handleCreateSubmit(value);
+            })
+            .catch((info) => {
+              console.log("Validate Failed", info);
+            });
+        }}
+        onCancel={handleCancel}
+        okButtonProps={{ htmlType: "submit" }}
+        maskClosable={false}
+        confirmLoading={confirmLoading}
+        width="700px"
+      >
+        <Form
+          form={createStdForm}
+          name="Standard"
+          layout="vertical"
+          autoComplete="off"
+          requiredMark={"required"}
+        >
+          <Form.Item
+            label="New Standard Name"
+            name="standardTitle"
+            rules={[
+              { required: true, message: "Please input Standard Name!" },
+            ]}
+          >
+            <Input placeholder="Standard name" />
+          </Form.Item>
+        </Form>
 
+      </Modal>
     </div>
   )
 }

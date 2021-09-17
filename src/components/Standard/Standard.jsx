@@ -78,7 +78,7 @@ const standard = [
   }
 
 ]
-const StandardTable = ({ standard = [] , standardNo }) => {
+const StandardTable = ({ standard = [], standardNo }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(standard);
   const [editingKey, setEditingKey] = useState("");
@@ -96,23 +96,6 @@ const StandardTable = ({ standard = [] , standardNo }) => {
     children,
     ...restProps
   }) => {
-    let inputNode;
-    switch (inputType) {
-      case "teacher":
-        inputNode = (
-          <Select
-            mode="multiple"
-            showSearch
-            placeholder="Select Teacher"
-          >
-
-          </Select>
-        );
-        break;
-      default:
-        inputNode = <Input />;
-        break;
-    }
     return (
       <td {...restProps}>
         {editing ? (
@@ -126,10 +109,24 @@ const StandardTable = ({ standard = [] , standardNo }) => {
               {
                 required: true,
                 message: `Please Input ${title}!`,
+              },
+              {
+                validator: (rule, value, callback) => {
+                  const alreadyExistNo = data.map((e) => e.subStandardNo).filter((e) => e !== record.subStandardNo)
+                  const valueSplit = value.split(".")
+                  //console.log(valueSplit.length)
+                  if (alreadyExistNo.includes(value)) {
+                    return Promise.reject("Already exist!")
+                  }
+                  // if (valueSplit.length !== 2 || (valueSplit[0]||valueSplit[1])==="") {
+                  //   return Promise.reject("Invalid Value (a.b)")
+                  // }
+                  return Promise.resolve()
+                }
               }
             ]}
           >
-            {inputNode}
+            <Input />
           </Form.Item>
         ) : (
           children
@@ -138,14 +135,14 @@ const StandardTable = ({ standard = [] , standardNo }) => {
     );
   };
   const columns = [
-    
+
     {
       title: "No.",
       dataIndex: "subStandardNo",
       key: "subStandardNo",
-      width: 80,
+      width: 100,
       editable: true,
-    
+
     },
     {
       title: "Description",
@@ -212,16 +209,25 @@ const StandardTable = ({ standard = [] , standardNo }) => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType:
-          col.dataIndex === "teacher"
-            ? "teacher"
-            : "text",
+        inputType: "text",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
       }),
     };
   });
+
+  const handleAdd = () => {
+    //console.log(data)
+    setIsNewAdded(true)
+    const newData = { subStandardNo: '', subStandardName: '' };
+    setData([...data, newData]);
+    form.setFieldsValue({
+      subStandardNo: "",
+      subStandardName: "",
+    });
+    setEditingKey(newData.subStandardNo);
+  };
 
   const edit = (record) => {
     form.setFieldsValue({
@@ -264,26 +270,31 @@ const StandardTable = ({ standard = [] , standardNo }) => {
   }
 
   const deleteSection = (record) => {
-    setData(data.filter((section) => section.section_id !== record.section_id));
+    setData(data.filter((standard) => standard.subStandardNo !== record.subStandardNo));
   }
 
   return (
-    <Form form={form} component={false}>
-      <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        bordered
-        dataSource={data}
-        columns={mergedColumns}
-        rowClassName="editable-row"
-        pagination={false}
-        rowKey="subStandardNo"
-        onRow={() => ({ className: styles.editableCell })}
-      />
-    </Form>
+    <>
+      <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
+        <Button type="secondary" disabled={editingKey !== "" || isNewAdded === true} onClick={() => handleAdd()}>Add Section</Button>
+      </div>
+      <Form form={form} component={false}>
+        <Table
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          bordered
+          dataSource={data}
+          columns={mergedColumns}
+          rowClassName="editable-row"
+          pagination={false}
+          rowKey="subStandardNo"
+          onRow={() => ({ className: styles.editableCell })}
+        />
+      </Form>
+    </>
   )
 
 }
@@ -304,7 +315,6 @@ export const Standard = () => {
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Header level={4} >{i + 1}{' '}{e.standardTitle}</Header>
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  {/* {!e.section?<WarningOutlined style={{color:"red" ,margin:"010px"}} />:null} */}
                   {/* <Popconfirm
                     title="Are you sure to delete this course?"
                     onConfirm={(e) => { handleDeleteCourse(item); e.stopPropagation() }}
@@ -315,15 +325,15 @@ export const Standard = () => {
                 </div>
               </div>}
             key={i}
-          ><Collapse>
-            {e.details.map((e,i) =>
-              
+          >
+            <Collapse>
+              {e.details.map((e, i) =>
+
                 <Panel
                   header={
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                       <Header level={4} >{e.standardNo}{' '}{e.standardName}</Header>
                       <div style={{ display: "flex", alignItems: "center" }}>
-                        {/* {!e.section?<WarningOutlined style={{color:"red" ,margin:"010px"}} />:null} */}
                         {/* <Popconfirm
                     title="Are you sure to delete this course?"
                     onConfirm={(e) => { handleDeleteCourse(item); e.stopPropagation() }}
@@ -337,8 +347,8 @@ export const Standard = () => {
                 >
                   <StandardTable standardNo={e.standardNo} standard={e.subStandard} />
                 </Panel>
-              
-            )}</Collapse>
+
+              )}</Collapse>
           </Panel>
 
         )}

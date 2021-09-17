@@ -67,6 +67,9 @@ export const SectionTable = ({ section = [], teacher }) => {
                                     if (alreadyExistSection.includes(value)) {
                                         return Promise.reject("Already exist!")
                                     }
+                                    if (isNaN(value) || value.includes(".")) {
+                                        return Promise.reject("Enter number!")
+                                      }
                                     return Promise.resolve()
                                 }
                             }
@@ -144,7 +147,7 @@ export const SectionTable = ({ section = [], teacher }) => {
             title: "Section",
             dataIndex: "section_id",
             key: "section_id",
-            width: 150,
+            width: 120,
             editable: true,
             //   sorter: (a, b) => a.course_id - b.course_id,
         },

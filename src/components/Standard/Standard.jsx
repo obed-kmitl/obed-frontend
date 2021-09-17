@@ -28,23 +28,23 @@ const standard = [
         standardName: "ความรู้ทางด้านวิศวกรรม และพื้นฐานทางวิทยาศาสตร์",
         subStandard: [
           {
-            subStandardNo: '1.1',
+            subStandardNo: '1',
             subStandardName: "ประยุกต์ใช้ความรู้ด้านคณิตศาสตร์ วิทยาศาสตร์ สถิติและความน่าจะเป็น รวมทั้งคณิตศาสตร์ไม่ต่อเนื่อง กับงานด้านวิศวกรรมคอมพิวเตอร์",
           },
           {
-            subStandardNo: '1.2',
+            subStandardNo: '2',
             subStandardName: "ประยุกต์ใช้ความรู้ด้านการวิเคราะห์วงจรไฟฟ้าพื้นฐาน วงจรและอุปกรณ์อิเล็กทรอนิกส์กับการเชื่อมต่อไมโครคอนโทรลเลอร์",
           },
           {
-            subStandardNo: '1.3',
+            subStandardNo: '3',
             subStandardName: "ประยุกต์ใช้ภาษาโปรแกรม การโปรแกรมเชิงวัตถุ โครงสร้างข้อมูล การวิเคราะห์อัลกอริทึมเบื้องต้น เพื่อจัดการกับปัญหาโดยวิธีการทางซอฟต์แวร์",
           },
           {
-            subStandardNo: '1.4',
+            subStandardNo: '4',
             subStandardName: "อธิบายโครงสร้าง องค์ประกอบ และการทำงานระดับฮาร์ดแวร์ของคอมพิวเตอร์ รวมถึงวงจรดิจิตอลพื้นฐาน",
           },
           {
-            subStandardNo: '1.5',
+            subStandardNo: '5',
             subStandardName: "อธิบายการส่งข้อมูลทั้งแอนะล็อกและดิจิตอล อุปกรณ์ ตัวกลาง มัลติเพล็กซ์ สวิตซ์ การส่งข้อมูลแบบเฟรม การตรวจสอบและแก้ไขความผิดพลาด การควบคุมการไหลของข้อมูลการหาเส้นทาง รวมทั้งเครือข่ายอีเทอร์เน็ต และเครือข่ายไอพี ทั้งแบบใช้สายและไร้สาย",
           },
         ]
@@ -53,11 +53,11 @@ const standard = [
         standardName: "การวิเคราะห์ปัญหาทางวิศวกรรม",
         subStandard: [
           {
-            subStandardNo: '2.1',
+            subStandardNo: '1',
             subStandardName: "วิเคราะห์ปัญหาทางวิศวกรรมคอมพิวเตอร์ เข้าใจปัญหาและอธิบายความต้องการ และสามารถระบุข้อกำหนดของปัญหา โดยใช้วิธีการทางวิศวกรรม",
           },
           {
-            subStandardNo: '2.2',
+            subStandardNo: '2',
             subStandardName: "ค้นคว้าเพื่อค้นหาแนวทางหรือวิธีการในการแก้ไขปัญหา แสดงข้อเปรียบเทียบระหว่างแนวทางหรือวิธีการในการแก้ไขปัญหา แสดงเหตุผลในการเลือกแนวทางในการแก้ไขปัญหา",
           },
         ]
@@ -113,14 +113,14 @@ const StandardTable = ({ standard = [], standardNo }) => {
               {
                 validator: (rule, value, callback) => {
                   const alreadyExistNo = data.map((e) => e.subStandardNo).filter((e) => e !== record.subStandardNo)
-                  const valueSplit = value.split(".")
-                  //console.log(valueSplit.length)
-                  if (alreadyExistNo.includes(value)) {
-                    return Promise.reject("Already exist!")
+                  if (inputType === "number") {
+                    if (alreadyExistNo.includes(value)) {
+                      return Promise.reject("Already exist!")
+                    }
+                    if (isNaN(value) || value.includes(".")) {
+                      return Promise.reject("Enter number!")
+                    }
                   }
-                  // if (valueSplit.length !== 2 || (valueSplit[0]||valueSplit[1])==="") {
-                  //   return Promise.reject("Invalid Value (a.b)")
-                  // }
                   return Promise.resolve()
                 }
               }
@@ -142,6 +142,9 @@ const StandardTable = ({ standard = [], standardNo }) => {
       key: "subStandardNo",
       width: 100,
       editable: true,
+      render: (subStandardNo) => {
+        return standardNo + '.' + subStandardNo
+      }
 
     },
     {
@@ -209,7 +212,9 @@ const StandardTable = ({ standard = [], standardNo }) => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: "text",
+        inputType: col.dataIndex === "subStandardNo"
+          ? "number"
+          : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),

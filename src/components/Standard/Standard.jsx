@@ -317,7 +317,7 @@ export const Standard = () => {
       setConfirmLoading(false);
       setNewStdVisible(false);
     }, 1000);
-    setStandard([...standard,{ standardTitle: value.standardTitle ,details: []}])
+    setStandard([...standard, { standardTitle: value.standardTitle, details: [] }])
   }
   function handleCancel() {
     setNewStdVisible(false);
@@ -327,8 +327,29 @@ export const Standard = () => {
 
   const handleCreateStdBtn = () => {
     setNewStdVisible(true)
-
   }
+  // ...prev,
+  // details: {...prev, 
+  //   standardNo: '6',
+  //   standardName: "",
+  //   subStandard: []
+  // }
+  const handleAddStdBtn = (i) => {
+    setStandard(prev => {
+      return [
+        ...prev.slice(0, i),
+        {
+          ...prev[i], details: [...prev[i].details, {
+            standardNo: '6',
+            standardName: "ppp",
+            subStandard: []
+          }]
+        },
+        ...prev.slice(i + 1)]
+    });
+    console.log(standard)
+  }
+
   return (
     <div>
       <div className={styles.tabHead}>
@@ -355,7 +376,9 @@ export const Standard = () => {
               </div>}
             key={i}
           >
-            <div className={styles.topRightBtn} ><Button>Add</Button></div>
+            <div className={styles.topRightBtn} >
+              <Button onClick={() => handleAddStdBtn(i)}>Add</Button>
+            </div>
             <Collapse accordion>
               {e.details.map((e, i) =>
                 <Panel

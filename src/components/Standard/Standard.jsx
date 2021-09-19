@@ -1,15 +1,12 @@
 import { useState } from 'react'
 import {
   Header,
-  Body,
   Button,
-  Option,
-  Select,
   Input,
   Collapse,
   Panel,
 } from "..";
-import { Form, Table, Popconfirm, Typography, Modal } from 'antd'
+import { Form, Table, Popconfirm, Typography, Modal,InputNumber } from 'antd'
 import {
   DeleteOutlined,
   EditOutlined,
@@ -307,48 +304,53 @@ const StandardTable = ({ standard = [], standardNo }) => {
 export const Standard = () => {
   const [standard, setStandard] = useState(standardList);
   const [newStdVisible, setNewStdVisible] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [addStdVisible, setAddStdVisible] = useState(false);
+  const [editingStdId, setEditingStdId] = useState();
   const [createStdForm] = Form.useForm();
+  const [addStdForm] = Form.useForm();
 
   function handleCreateSubmit(value) {
     console.log("Recieved values of form: ", value);
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setConfirmLoading(false);
-      setNewStdVisible(false);
-    }, 1000);
+    setNewStdVisible(false);
     setStandard([...standard, { standardTitle: value.standardTitle, details: [] }])
   }
+
   function handleCancel() {
     setNewStdVisible(false);
+    setAddStdVisible(false)
     createStdForm.resetFields();
+    addStdForm.resetFields();
 
   }
 
   const handleCreateStdBtn = () => {
     setNewStdVisible(true)
   }
-  // ...prev,
-  // details: {...prev, 
-  //   standardNo: '6',
-  //   standardName: "",
-  //   subStandard: []
-  // }
+
   const handleAddStdBtn = (i) => {
+    setAddStdVisible(true)
+    setEditingStdId(i)
+  }
+
+  function handleAddSubmit(value) {
+    console.log("Recieved values of form: ", value);
+    const i = editingStdId;
     setStandard(prev => {
       return [
         ...prev.slice(0, i),
         {
           ...prev[i], details: [...prev[i].details, {
-            standardNo: '6',
-            standardName: "ppp",
+            standardNo: value.standardNo,
+            standardName: value.standardName,
             subStandard: []
           }]
         },
         ...prev.slice(i + 1)]
     });
-    console.log(standard)
+    setAddStdVisible(false);
+    //setStandard([...standard, { standardTitle: value.standardTitle, details: [] }])
   }
+
 
   return (
     <div>
@@ -364,7 +366,8 @@ export const Standard = () => {
             header={
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Header level={4} >{e.standardTitle}</Header>
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <div onClick={(e) => { e.stopPropagation() }}><EditOutlined /></div>
                   {/* <Popconfirm
                     title="Are you sure to delete this course?"
                     onConfirm={(e) => { handleDeleteCourse(item); e.stopPropagation() }}
@@ -384,8 +387,9 @@ export const Standard = () => {
                 <Panel
                   header={
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <Header level={4} >{e.standardNo}{' '}{e.standardName}</Header>
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      <Header level={5} >{e.standardNo}{' '}{e.standardName}</Header>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <div onClick={(e) => { e.stopPropagation() }}><EditOutlined /></div>
                         {/* <Popconfirm
                     title="Are you sure to delete this course?"
                     onConfirm={(e) => { handleDeleteCourse(item); e.stopPropagation() }}
@@ -410,7 +414,7 @@ export const Standard = () => {
         visible={newStdVisible}
         okText="Create"
         onOk={() => {
-          createStdForm
+         createStdForm
             .validateFields()
             .then((value) => {
               createStdForm.resetFields();
@@ -423,7 +427,6 @@ export const Standard = () => {
         onCancel={handleCancel}
         okButtonProps={{ htmlType: "submit" }}
         maskClosable={false}
-        confirmLoading={confirmLoading}
         width="700px"
       >
         <Form
@@ -441,6 +444,68 @@ export const Standard = () => {
             ]}
           >
             <Input placeholder="Standard name" />
+          </Form.Item>
+        </Form>
+
+      </Modal>
+
+      <Modal
+        title="Add Standard"
+        visible={addStdVisible}
+        okText="Add"
+        onOk={() => {
+          addStdForm
+            .validateFields()
+            .then((value) => {
+              addStdForm.resetFields();
+              handleAddSubmit(value);
+            })
+            .catch((info) => {
+              console.log("Validate Failed", info);
+            });
+        }}
+        onCancel={handleCancel}
+        okButtonProps={{ htmlType: "submit" }}
+        maskClosable={false}
+        width="700px"
+      >
+        <Form
+          form={addStdForm}
+          name="theStandard"
+          layout="vertical"
+          autoComplete="off"
+          requiredMark={"required"}
+        >
+          <Form.Item
+            label="Standard No."
+            name="standardNo"
+            rules={[
+              { required: true, message: "Please input Standard No.!" },
+              {
+                validator: (rule, value, callback) => {
+                  const alreadyExistNo = standard[editingStdId].details.map((e) => e.standardNo)
+                  console.log(alreadyExistNo)
+                    if (alreadyExistNo.includes(value)) {
+                      return Promise.reject("Already exist!")
+                    }
+                    
+                   
+                  
+                  return Promise.resolve()
+                }
+              }
+            ]}
+          >
+            <InputNumber stringMode min={1} width={100} placeholder="ex. 1,2,3,..." />
+          </Form.Item>
+          <Form.Item
+            label="Standard Name"
+            name="standardName"
+            rules={[
+              { required: true, message: "Please input Standard No.!" },
+            ]}
+          >
+            <Input placeholder=" standard name" />
           </Form.Item>
         </Form>
 

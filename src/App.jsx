@@ -16,6 +16,7 @@ import { Layout } from "./components/Layout/Layout";
 import "./styles/global.module.scss";
 
 function App() {
+  // window.location.host.split(".")[0] === "admin"
   return (
     <Router>
       <Switch>

@@ -6,7 +6,7 @@ import {
   Collapse,
   Panel,
 } from "..";
-import { Form, Table, Popconfirm, Typography, Modal,InputNumber } from 'antd'
+import { Form, Table, Popconfirm, Typography, Modal, InputNumber } from 'antd'
 import {
   DeleteOutlined,
   EditOutlined,
@@ -18,6 +18,7 @@ import styles from "./Standard.module.scss";
 
 const standardList = [
   {
+    id: 1,
     standardTitle: "ผลการเรียนรู้ระดับหลักสูตร (PLOs : Program-Level Learning Outcomes)",
     details: [
       {
@@ -43,6 +44,14 @@ const standardList = [
           {
             subStandardNo: '5',
             subStandardName: "อธิบายการส่งข้อมูลทั้งแอนะล็อกและดิจิตอล อุปกรณ์ ตัวกลาง มัลติเพล็กซ์ สวิตซ์ การส่งข้อมูลแบบเฟรม การตรวจสอบและแก้ไขความผิดพลาด การควบคุมการไหลของข้อมูลการหาเส้นทาง รวมทั้งเครือข่ายอีเทอร์เน็ต และเครือข่ายไอพี ทั้งแบบใช้สายและไร้สาย",
+          },
+          {
+            subStandardNo: '6',
+            subStandardName: "อธิบายหลักการพื้นฐานของความปลอดภัยของข้อมูล การเข้ารหัสข้อมูล",
+          },
+          {
+            subStandardNo: '7',
+            subStandardName: "อธิบายโครงสร้างและการทำงานของระบบปฏิบัติการ การจัดการทรัพยากรในระบบคอมพิวเตอร์ การทำงานระหว่างโพรเซส ระบบไฟล์ การทำงานแบบเครื่องจักรเสมือน (Virtualization) และการประมวลผลแบบคลาวด์ (Cloud Computing)",
           },
         ]
       }, {
@@ -305,14 +314,25 @@ export const Standard = () => {
   const [standard, setStandard] = useState(standardList);
   const [newStdVisible, setNewStdVisible] = useState(false);
   const [addStdVisible, setAddStdVisible] = useState(false);
-  const [editingStdId, setEditingStdId] = useState();
+  const [addingStandardId, setAddingStandardId] = useState();
   const [createStdForm] = Form.useForm();
   const [addStdForm] = Form.useForm();
 
   function handleCreateSubmit(value) {
     console.log("Recieved values of form: ", value);
     setNewStdVisible(false);
-    setStandard([...standard, { standardTitle: value.standardTitle, details: [] }])
+    const genId = () => {
+      var i = 1;
+      const existId = standard.map((e) => e.id)
+      console.log(existId);
+      while (true) {
+        if (existId.includes(i)) {
+          i++;
+        } else return i
+      }
+    }
+    setStandard([...standard, { id: genId(), standardTitle: value.standardTitle, details: [] }])
+    console.log(standard);
   }
 
   function handleCancel() {
@@ -329,12 +349,12 @@ export const Standard = () => {
 
   const handleAddStdBtn = (i) => {
     setAddStdVisible(true)
-    setEditingStdId(i)
+    setAddingStandardId(i)
   }
 
   function handleAddSubmit(value) {
-    console.log("Recieved values of form: ", value);
-    const i = editingStdId;
+    const i = addingStandardId;
+    console.log("Recieved values of form: ", value, i);
     setStandard(prev => {
       return [
         ...prev.slice(0, i),
@@ -347,8 +367,31 @@ export const Standard = () => {
         },
         ...prev.slice(i + 1)]
     });
+    // setStandard(standard => {
+    //   const sortedStandard = standard[].details.sort((a,b) => (a.standardNo> b.standardNo) ? 1 : ((b.standardNo > a.standardNo) ? -1 : 0))
+    //   console.log(sortedStandard)
+    // })
+    console.log(standard)
+    setAddingStandardId(null)
     setAddStdVisible(false);
     //setStandard([...standard, { standardTitle: value.standardTitle, details: [] }])
+  }
+
+  function handleDeleteTitle(id) {
+    setStandard(standard.filter(item => item.id !== id))
+  }
+  function handleDeleteStandard(stdNo ,id) {
+    const index = standard.findIndex((item)=>{
+      return item.id === id
+    })
+    setStandard(prev => {
+      return [
+        ...prev.slice(0, index),
+        {
+          ...prev[index], details: prev[index].details.filter(item=>item.standardNo!==stdNo)
+        },
+        ...prev.slice(index + 1)]
+    });
   }
 
 
@@ -361,20 +404,20 @@ export const Standard = () => {
         </div>
       </div>
       <Collapse accordion>
-        {standard.map((e, i) =>
+        {standard.map((item, i) =>
           <Panel
             header={
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Header level={4} >{e.standardTitle}</Header>
+                <Header level={4} >{item.standardTitle}</Header>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <div onClick={(e) => { e.stopPropagation() }}><EditOutlined /></div>
-                  {/* <Popconfirm
-                    title="Are you sure to delete this course?"
-                    onConfirm={(e) => { handleDeleteCourse(item); e.stopPropagation() }}
+                  <Popconfirm
+                    title="Are you sure to delete ?"
+                    onConfirm={(e) => { handleDeleteTitle(item.id); e.stopPropagation() }}
                     onCancel={(e) => e.stopPropagation()}
-                  > */}
-                  <div onClick={(e) => { e.stopPropagation() }}><DeleteOutlined /></div>
-                  {/* </Popconfirm> */}
+                  >
+                    <div onClick={(e) => { e.stopPropagation() }}><DeleteOutlined /></div>
+                  </Popconfirm>
                 </div>
               </div>}
             key={i}
@@ -383,25 +426,25 @@ export const Standard = () => {
               <Button onClick={() => handleAddStdBtn(i)}>Add</Button>
             </div>
             <Collapse accordion>
-              {e.details.map((e, i) =>
+              {item.details.map((ele, i) =>
                 <Panel
                   header={
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <Header level={5} >{e.standardNo}{' '}{e.standardName}</Header>
+                      <Header level={5} >{ele.standardNo}{' '}{ele.standardName}</Header>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                         <div onClick={(e) => { e.stopPropagation() }}><EditOutlined /></div>
-                        {/* <Popconfirm
-                    title="Are you sure to delete this course?"
-                    onConfirm={(e) => { handleDeleteCourse(item); e.stopPropagation() }}
-                    onCancel={(e) => e.stopPropagation()}
-                  > */}
+                        <Popconfirm
+                          title="Are you sure to delete ?"
+                          onConfirm={(e) => { handleDeleteStandard(ele.standardNo,item.id); e.stopPropagation() }}
+                          onCancel={(e) => e.stopPropagation()}
+                        >
                         <div onClick={(e) => { e.stopPropagation() }}><DeleteOutlined /></div>
-                        {/* </Popconfirm> */}
+                      </Popconfirm>
                       </div>
                     </div>}
                   key={i}
                 >
-                  <StandardTable standardNo={e.standardNo} standard={e.subStandard} />
+                  <StandardTable standardNo={ele.standardNo} standard={ele.subStandard} />
                 </Panel>
 
               )}</Collapse>
@@ -414,7 +457,7 @@ export const Standard = () => {
         visible={newStdVisible}
         okText="Create"
         onOk={() => {
-         createStdForm
+          createStdForm
             .validateFields()
             .then((value) => {
               createStdForm.resetFields();
@@ -483,14 +526,11 @@ export const Standard = () => {
               { required: true, message: "Please input Standard No.!" },
               {
                 validator: (rule, value, callback) => {
-                  const alreadyExistNo = standard[editingStdId].details.map((e) => e.standardNo)
+                  const alreadyExistNo = standard[addingStandardId].details.map((e) => e.standardNo)
                   console.log(alreadyExistNo)
-                    if (alreadyExistNo.includes(value)) {
-                      return Promise.reject("Already exist!")
-                    }
-                    
-                   
-                  
+                  if (alreadyExistNo.includes(value)) {
+                    return Promise.reject("Already exist!")
+                  }
                   return Promise.resolve()
                 }
               }

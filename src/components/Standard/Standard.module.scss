@@ -26,13 +26,21 @@
   padding: 10px 0;
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 0.5rem;
+  :global(.ant-upload-list-text-container){
+    visibility: hidden;
+    height: 0;
+  }
 }
 
-// .titleColapse{
-//   margin:0;
-//   font-size:18px ;
-//   font-weight:500; 
-//   width:90% 
-
+// .customfileinput::-webkit-file-upload-button {
+//   visibility: hidden;
+// }
+// .customfileinput::before {
+//   width: 0.1px;
+// 	height: 0.1px;
+// 	opacity: 0;
+// 	overflow: hidden;
+// 	position: absolute;
+// 	z-index: -1;
 // }

@@ -6,15 +6,18 @@ import {
   Collapse,
   Panel,
 } from "..";
-import { Form, Table, Popconfirm, Typography, Modal, InputNumber } from 'antd'
+import { Form, Table, Popconfirm, Typography, Modal, InputNumber, Upload, message } from 'antd'
 import {
   DeleteOutlined,
   EditOutlined,
   SaveOutlined,
   CloseCircleTwoTone,
+  UploadOutlined,
+  DownloadOutlined
 } from '@ant-design/icons';
 
 import styles from "./Standard.module.scss";
+import excelReader from "../../utils/excelReader"
 
 const standardList = [
   {
@@ -82,7 +85,6 @@ const standardList = [
       }
     ]
   }
-
 ]
 const StandardTable = ({ standard = [], standardNo }) => {
   const [form] = Form.useForm();
@@ -317,6 +319,7 @@ export const Standard = () => {
   const [addingStandardId, setAddingStandardId] = useState();
   const [createStdForm] = Form.useForm();
   const [addStdForm] = Form.useForm();
+  const [fileUpLoadStdId, setFileUpLoadStdId] = useState()
 
   function handleCreateSubmit(value) {
     console.log("Recieved values of form: ", value);
@@ -380,26 +383,95 @@ export const Standard = () => {
   function handleDeleteTitle(id) {
     setStandard(standard.filter(item => item.id !== id))
   }
-  function handleDeleteStandard(stdNo ,id) {
-    const index = standard.findIndex((item)=>{
+  function handleDeleteStandard(stdNo, id) {
+    const index = standard.findIndex((item) => {
       return item.id === id
     })
     setStandard(prev => {
       return [
         ...prev.slice(0, index),
         {
-          ...prev[index], details: prev[index].details.filter(item=>item.standardNo!==stdNo)
+          ...prev[index], details: prev[index].details.filter(item => item.standardNo !== stdNo)
         },
         ...prev.slice(index + 1)]
     });
   }
 
+  const uploadProps = {
+    name: 'file',
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    maxCount: 1,
+    accept: ".xlsx,.xls",
+    async onChange(info) {
+      if (info.file.status === 'done') {
+        const datafromExcel = await excelReader(info.file.originFileObj)
+        getDetailsfromExcel(datafromExcel)
+        console.log(datafromExcel)
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    }
+  };
+
+  const getDetailsfromExcel = (data) => {
+
+    const getMainStandard = () => {
+      const newArray = []
+      const duplicate = []
+      data.forEach(std => {
+        if (!duplicate.includes(std.standardNo)) {
+          newArray.push({ standardNo: std.standardNo.toString(), standardName: std.description, subStandard: [] })
+          duplicate.push(std.standardNo)
+          //console.log(newArray)
+        }
+      })
+      return newArray;
+    }
+    const mainStandard = getMainStandard()
+
+    const getSubStandard = () => {
+      const newArray = []
+      data.forEach(std => {
+        newArray.push({ standardNo: std.standardNo.toString(), subStandardNo: std.subStdNo.toString(), subStandardName: std.subDescription })
+      })
+      return newArray;
+    }
+    const subStandards = getSubStandard()
+
+    mainStandard.forEach(element => {
+      const subStdList = subStandards.filter((item) => item.standardNo === element.standardNo)
+      console.log(subStdList)
+      subStdList.forEach(subStd => {
+        element.subStandard.push({
+          subStandardNo: subStd.subStandardNo,
+          subStandardName: subStd.subStandardName,
+        })
+      })
+      console.log(element)
+    });
+    console.log(mainStandard, subStandards)
+    setStandard(prev => {
+      return [
+        ...prev.slice(0, fileUpLoadStdId),
+        {
+          ...prev[fileUpLoadStdId], details: mainStandard
+        },
+        ...prev.slice(fileUpLoadStdId + 1)]
+    });
+    console.log(standard)
+
+  }
 
   return (
     <div>
       <div className={styles.tabHead}>
         <Header level={2}>Education Standard</Header>
         <div>
+          {/* <Button onClick={() => console.log(standard)}>test</Button> */}
           <Button onClick={() => handleCreateStdBtn()}>Create New Standard</Button>
         </div>
       </div>
@@ -423,6 +495,10 @@ export const Standard = () => {
             key={i}
           >
             <div className={styles.topRightBtn} >
+              <Button icon={<DownloadOutlined />} onClick={() => message.error(`ยังไม่มีให้โหลดนะจ๊ะ`)}>Download Template</Button>
+              <Upload {...uploadProps} >
+                <Button icon={<UploadOutlined />} onClick={() => setFileUpLoadStdId(i)} >Upload Data</Button>
+              </Upload>
               <Button onClick={() => handleAddStdBtn(i)}>Add</Button>
             </div>
             <Collapse accordion>
@@ -435,11 +511,11 @@ export const Standard = () => {
                         <div onClick={(e) => { e.stopPropagation() }}><EditOutlined /></div>
                         <Popconfirm
                           title="Are you sure to delete ?"
-                          onConfirm={(e) => { handleDeleteStandard(ele.standardNo,item.id); e.stopPropagation() }}
+                          onConfirm={(e) => { handleDeleteStandard(ele.standardNo, item.id); e.stopPropagation() }}
                           onCancel={(e) => e.stopPropagation()}
                         >
-                        <div onClick={(e) => { e.stopPropagation() }}><DeleteOutlined /></div>
-                      </Popconfirm>
+                          <div onClick={(e) => { e.stopPropagation() }}><DeleteOutlined /></div>
+                        </Popconfirm>
                       </div>
                     </div>}
                   key={i}

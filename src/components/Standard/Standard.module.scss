@@ -33,14 +33,14 @@
   }
 }
 
-// .customfileinput::-webkit-file-upload-button {
-//   visibility: hidden;
-// }
-// .customfileinput::before {
-//   width: 0.1px;
-// 	height: 0.1px;
-// 	opacity: 0;
-// 	overflow: hidden;
-// 	position: absolute;
-// 	z-index: -1;
-// }
+.customfileinput::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.customfileinput::before {
+  width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}

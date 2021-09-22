@@ -62,8 +62,6 @@ export const SectionTable = ({ section = [], teacher }) => {
                             {
                                 validator: (rule, value, callback) => {
                                     const alreadyExistSection = data.map((e) => e.section_id).filter((e) => e !== record.section_id)
-                                    // console.log(alreadyExistSection)
-                                    // console.log(record.section_id)
                                     if (alreadyExistSection.includes(value)) {
                                         return Promise.reject("Already exist!")
                                     }
@@ -191,7 +189,7 @@ export const SectionTable = ({ section = [], teacher }) => {
                         <a
                             onClick={cancel}
                         >
-                            <CloseCircleTwoTone twoToneColor="#FE0000"/>
+                            <CloseCircleTwoTone twoToneColor="#C73535"/>
                         </a>
 
                     </span>
@@ -202,6 +200,7 @@ export const SectionTable = ({ section = [], teacher }) => {
                             onClick={() => edit(record)}
                             style={{
                                 marginRight: 12,
+                               
                             }}
                         >
                             <EditOutlined />

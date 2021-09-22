@@ -403,6 +403,7 @@ export const Standard = () => {
     headers: {
       authorization: 'authorization-text',
     },
+    showUploadList:false,
     maxCount: 1,
     accept: ".xlsx,.xls",
     async onChange(info) {

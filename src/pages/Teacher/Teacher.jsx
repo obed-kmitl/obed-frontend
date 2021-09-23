@@ -369,7 +369,7 @@ export const Teacher = () => {
       <Modal
         title={edit ? "Edit Teacher" : "Add Teacher"}
         visible={visible}
-        okText="Add"
+        okText={edit ? "Save" : "Add"}
         onOk={() => {
           form
             .validateFields()

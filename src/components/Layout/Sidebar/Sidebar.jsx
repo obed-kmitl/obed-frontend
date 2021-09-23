@@ -77,7 +77,7 @@ const courses = [
 const Sidebar = () => {
   const userName = "username";
 
-  const isAdmin = true;
+  const isAdmin = window.location.host.split(".")[0] === "admin";
 
   const [semesterTitle, setSemesterTitle] = useState({
     id: semesters[0].id,
@@ -215,27 +215,27 @@ const Sidebar = () => {
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="5" className={styles.item}>
-                  <Link to="#">
+                  <Link to="/student">
                     <TeamOutlined className={styles.icon} /> Student
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="6" className={styles.item}>
-                  <Link to="#">
+                  <Link to="/planning">
                     <FormOutlined className={styles.icon} /> Planning
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="7" className={styles.item}>
-                  <Link to="#">
+                  <Link to="/lo">
                     <BulbOutlined className={styles.icon} /> Learning Outcome
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="8" className={styles.item}>
-                  <Link to="#">
+                  <Link to="/activity">
                     <ExperimentOutlined className={styles.icon} /> Activity
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="9" className={styles.item}>
-                  <Link to="#">
+                  <Link to="/report">
                     <FileTextOutlined className={styles.icon} /> Report
                   </Link>
                 </Menu.Item>

@@ -108,10 +108,11 @@ export const Student = () => {
   const [filterList, setFilterList] = useState(retrived);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
+  const [editVisible, setEditVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
+  const [editForm] = Form.useForm();
   const [selectedData, setSelectedData] = useState(null);
-  const [edit, setEdit] = useState(false);
   const [searching, setSearching] = useState(false);
   const [importVisible, setImportVisible] = useState(false);
   const [addList, setAddList] = useState([]);
@@ -133,11 +134,6 @@ export const Student = () => {
       </Select>
     </Form.Item>
   );
-
-  function showModal(record = {}) {
-    setSelectedData(record);
-    setVisible(true);
-  }
 
   function search(keyword) {
     if (keyword !== "") {
@@ -174,8 +170,7 @@ export const Student = () => {
     setConfirmLoading(true);
     openNotificationWithIcon("success", "Student " + values.id + " saved");
     setTimeout(() => {
-      setVisible(false);
-      setEdit(false);
+      setEditVisible(false);
       setConfirmLoading(false);
       setAddList([]);
     }, 2000);
@@ -183,18 +178,19 @@ export const Student = () => {
 
   function handleCancel() {
     setVisible(false);
+    setEditVisible(false);
     setImportVisible(false);
     form.resetFields();
+    editForm.resetFields();
     setSelectedData(null);
     setAddList([]);
-    setEdit(false);
   }
 
   function onFinish(values) {
     setAddList([...addList, values]);
     form.resetFields();
+    editForm.resetFields();
     console.log("Success:", values);
-    console.log("Success:", addList);
   }
 
   function onFinishFailed(errorInfo) {
@@ -236,7 +232,7 @@ export const Student = () => {
         <div>
           <Input search placeholder="Search" onSearch={search} allowClear />
           <Button onClick={() => setImportVisible(true)}>Import</Button>
-          <Button onClick={showModal}>Add</Button>
+          <Button onClick={() => setVisible(true)}>Add</Button>
         </div>
       </div>
       <Divider />
@@ -285,9 +281,9 @@ export const Student = () => {
                 <a
                   href="#"
                   onClick={() => {
-                    setEdit(true);
-                    form.setFieldsValue(record);
-                    showModal();
+                    editForm.setFieldsValue(record);
+                    setSelectedData(record);
+                    setEditVisible(true);
                   }}
                   style={{
                     fontSize: "20px",
@@ -318,24 +314,23 @@ export const Student = () => {
         />
       </Table>
       <Modal
-        title={edit ? "Edit Student" : "Add Student"}
+        title={"Add Student"}
         visible={visible}
-        okText={edit ? "Save" : "Add"}
+        okText={"Add"}
         onOk={() => {
-          edit ? handleEdit(form.getFieldsValue()) : handleSubmit(addList);
+          handleSubmit(addList);
         }}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
-        okButtonProps={{ disabled: addList.length === 0 && !edit }}
+        okButtonProps={{ disabled: addList.length === 0 }}
         maskClosable={false}
-        width={!edit ? 700 : 420}
+        width={700}
       >
         <div className={styles.modalWrap}>
           <Form
             form={form}
             name="student"
             layout="vertical"
-            initialValues={selectedData}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
@@ -344,7 +339,23 @@ export const Student = () => {
             <Form.Item
               label="Student ID"
               name="id"
-              rules={[{ required: true, message: "Please input student id!" }]}
+              rules={[
+                { required: true, message: "Please input student id!" },
+                {
+                  validator: (rule, value, callback) => {
+                    let alreadyExistId = retrived.map((e) => e.id.toString());
+                    // console.log(selectedData.id);
+                    // console.log(alreadyExistId);
+                    if (
+                      alreadyExistId.includes(value) ||
+                      addList.find((item) => item.id === value)
+                    ) {
+                      return Promise.reject("Already exist!");
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             >
               <Input placeholder="Student ID" />
             </Form.Item>
@@ -368,55 +379,150 @@ export const Student = () => {
               rules={[
                 { required: true, message: "Please input email!" },
                 { type: "email" },
+                {
+                  validator: (rule, value, callback) => {
+                    const alreadyExistEmail = data.find(
+                      (e) => e.email === value
+                    );
+                    if (
+                      alreadyExistEmail ||
+                      addList.find((item) => item.email === value)
+                    ) {
+                      return Promise.reject("Already exist!");
+                    }
+                    return Promise.resolve();
+                  },
+                },
               ]}
             >
               <Input placeholder="Email" />
             </Form.Item>
-            {!edit && (
-              <Button htmlType="submit" style={{ width: "100%" }}>
-                Add to List <RightOutlined />
-              </Button>
-            )}
+            <Button htmlType="submit" style={{ width: "100%" }}>
+              Add to List <RightOutlined />
+            </Button>
           </Form>
-          {!edit && (
-            <>
-              <div className={styles.divider} />
-              <div className={styles.listWrap}>
-                <div className={styles.head}>
-                  <Header level={4}>Added List ({addList.length})</Header>
-                  <Popconfirm
-                    title="Sure to clear list?"
-                    onConfirm={() => setAddList([])}
-                  >
-                    <a href="#">Clear All</a>
-                  </Popconfirm>
-                </div>
-                <div className={styles.addList}>
-                  <ul>
-                    {addList.map((ele) => (
-                      <li key={ele.id}>
-                        {ele.id} - {ele.firstname} {ele.lastname}
-                        <Space className={styles.btn}>
-                          <Tooltip title="Edit">
-                            <EditOutlined
-                              style={{ color: "#009FC7" }}
-                              onClick={() => editFromList(ele.id)}
-                            />
-                          </Tooltip>
-                          <Tooltip title="Remove">
-                            <MinusCircleOutlined
-                              style={{ color: "#C73535" }}
-                              onClick={() => removeFromList(ele.id)}
-                            />
-                          </Tooltip>
-                        </Space>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </>
-          )}
+          <div className={styles.divider} />
+          <div className={styles.listWrap}>
+            <div className={styles.head}>
+              <Header level={4}>Added List ({addList.length})</Header>
+              <Popconfirm
+                title="Sure to clear list?"
+                onConfirm={() => setAddList([])}
+              >
+                <a href="#">Clear All</a>
+              </Popconfirm>
+            </div>
+            <div className={styles.addList}>
+              <ul>
+                {addList.map((ele) => (
+                  <li key={ele.id}>
+                    {ele.id} - {ele.firstname} {ele.lastname}
+                    <Space className={styles.btn}>
+                      <Tooltip title="Edit">
+                        <EditOutlined
+                          style={{ color: "#009FC7" }}
+                          onClick={() => editFromList(ele.id)}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Remove">
+                        <MinusCircleOutlined
+                          style={{ color: "#C73535" }}
+                          onClick={() => removeFromList(ele.id)}
+                        />
+                      </Tooltip>
+                    </Space>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        title={"Edit Student"}
+        visible={editVisible}
+        okText={"Save"}
+        onOk={() => {
+          editForm
+            .validateFields()
+            .then((values) => {
+              handleEdit(editForm.getFieldsValue());
+              editForm.resetFields();
+            })
+            .catch((info) => {
+              console.log("Validate Failed", info);
+            });
+        }}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        maskClosable={false}
+      >
+        <div className={styles.modalWrap}>
+          <Form
+            form={editForm}
+            name="student"
+            layout="vertical"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+            requiredMark={"required"}
+          >
+            <Form.Item
+              label="Student ID"
+              name="id"
+              rules={[
+                { required: true, message: "Please input student id!" },
+                {
+                  validator: (rule, value, callback) => {
+                    let alreadyExistId = retrived
+                      .map((e) => e.id.toString())
+                      .filter((e) => e !== selectedData.id.toString());
+                    if (alreadyExistId.includes(value)) {
+                      return Promise.reject("Already exist!");
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            >
+              <Input placeholder="Student ID" />
+            </Form.Item>
+            <Form.Item
+              label="Firstname"
+              name="firstname"
+              rules={[{ required: true, message: "Please input firstname!" }]}
+            >
+              <Input placeholder="Firstname" addonBefore={selectBefore} />
+            </Form.Item>
+            <Form.Item
+              label="Lastname"
+              name="lastname"
+              rules={[{ required: true, message: "Please input lastname!" }]}
+            >
+              <Input placeholder="Lastname" />
+            </Form.Item>
+            <Form.Item
+              label="Google Account Email"
+              name="email"
+              rules={[
+                { required: true, message: "Please input email!" },
+                { type: "email" },
+                {
+                  validator: (rule, value, callback) => {
+                    const alreadyExistEmail = retrived
+                      .map((e) => e.email)
+                      .filter((e) => e !== selectedData.email);
+                    if (alreadyExistEmail.includes(value)) {
+                      return Promise.reject("Already exist!");
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            >
+              <Input placeholder="Email" />
+            </Form.Item>
+          </Form>
         </div>
       </Modal>
       <Modal

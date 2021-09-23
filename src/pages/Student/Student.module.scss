@@ -12,3 +12,60 @@
     gap: 1rem;
   }
 }
+
+.modalWrap {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+
+  .divider {
+    min-height: 100%;
+    width: 1px;
+    background-color: $color-grey-200;
+  }
+
+  .listWrap {
+    display: flex;
+    flex-flow: column;
+    height: 400px;
+  }
+
+  .addList {
+    min-width: 330px;
+    min-height: 93%;
+    background-color: white;
+    border: 1px solid $color-grey-200;
+    overflow: auto;
+
+    ul {
+      margin: 0;
+      padding: 0 !important;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      list-style: none;
+      padding: 5px 10px;
+      transition: all ease-in-out 100ms;
+
+      &:hover {
+        background-color: $color-turquoise-100;
+      }
+      &:nth-child(even) {
+        background-color: $color-grey-100;
+        &:hover {
+          background-color: $color-turquoise-100;
+        }
+      }
+
+      .btn {
+        span {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

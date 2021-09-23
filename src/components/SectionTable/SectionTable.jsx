@@ -3,7 +3,7 @@ import { Select, Option, Button } from "..";
 import { Table, Input, Popconfirm, Form, Typography, Tag } from "antd";
 import styles from './SectionTable.module.scss'
 import {
-    EditOutlined, DeleteOutlined,SaveOutlined,CloseCircleTwoTone
+    EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleTwoTone
 } from '@ant-design/icons';
 
 export const SectionTable = ({ section = [], teacher }) => {
@@ -65,9 +65,9 @@ export const SectionTable = ({ section = [], teacher }) => {
                                     if (alreadyExistSection.includes(value)) {
                                         return Promise.reject("Already exist!")
                                     }
-                                    if (isNaN(value) || value.includes(".")) {
+                                    if ((isNaN(value) || value.includes(".")) && inputType !== "teacher") {
                                         return Promise.reject("Enter number!")
-                                      }
+                                    }
                                     return Promise.resolve()
                                 }
                             }
@@ -137,7 +137,7 @@ export const SectionTable = ({ section = [], teacher }) => {
     };
 
     const deleteSection = (record) => {
-        setData(data.filter((section)=>section.section_id!==record.section_id));
+        setData(data.filter((section) => section.section_id !== record.section_id));
     }
 
     const columns = [
@@ -175,22 +175,26 @@ export const SectionTable = ({ section = [], teacher }) => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <Popconfirm title="Save Changes?" onConfirm={() => save(record.section_id)}>
-                            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                            <a
-                                style={{
-                                    marginRight: 14,
-                                }}
-                            >
-                                <SaveOutlined />
-                            </a>
-                        </Popconfirm>
+
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a
-                            onClick={cancel}
+                            onClick={()=>save(record.section_id)}
+                            
+                            style={{
+                                marginRight: 14,
+                            }}
                         >
-                            <CloseCircleTwoTone twoToneColor="#C73535"/>
+                            <SaveOutlined />
                         </a>
+
+                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                        <Popconfirm title="Discard Changes?" onConfirm={()=>cancel()}>
+                            <a
+                                
+                            >
+                                <CloseCircleTwoTone twoToneColor="#C73535" />
+                            </a>
+                        </Popconfirm>
 
                     </span>
                 ) : (
@@ -200,7 +204,7 @@ export const SectionTable = ({ section = [], teacher }) => {
                             onClick={() => edit(record)}
                             style={{
                                 marginRight: 12,
-                               
+
                             }}
                         >
                             <EditOutlined />

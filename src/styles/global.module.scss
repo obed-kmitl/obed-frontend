@@ -126,6 +126,10 @@
     font-family: "IBM Plex Sans Thai Looped";
   }
 
+  .ant-typography {
+    font-family: "IBM Plex Sans Thai Looped";
+  }
+
   .ant-pagination-item {
     background: #fff;
 
@@ -159,4 +163,10 @@
   .ant-table-column-sorter-down.active {
     color: $color-turquoise-500;
   }
+  a.ant-typography, .ant-typography a{
+    color: $color-turquoise-500;
+  }
+  .ant-typography.ant-typography-danger {
+    color: $color-rose-500;
+}
 }

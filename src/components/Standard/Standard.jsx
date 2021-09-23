@@ -501,7 +501,7 @@ export const Standard = () => {
           <Button onClick={() => handleCreateStdBtn()} disabled={isEditing}>Create New Standard</Button>
         </div>
       </div>
-      <Collapse accordion>
+      <Collapse accordion collapsible={isEditing&&"disabled"}>
         {standard.map((item, i) =>
           <Panel
             header={
@@ -528,9 +528,6 @@ export const Standard = () => {
                         <Input defaultValue={item.standardTitle} />
                       </Form.Item>
                     </Form>
-                    {/* <Button type="primary" htmlType="submit" key="save">
-                      Save
-                    </Button> */}
                   </>
                   : <Header level={4} >{item.standardTitle}</Header>
                 }

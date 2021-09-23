@@ -187,11 +187,10 @@ export const SectionTable = ({ section = [], teacher }) => {
                             <SaveOutlined />
                         </a>
 
-                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                      
                         <Popconfirm title="Discard Changes?" onConfirm={()=>cancel()}>
-                            <a
-                                
-                            >
+                            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                            <a >
                                 <CloseCircleTwoTone twoToneColor="#C73535" />
                             </a>
                         </Popconfirm>

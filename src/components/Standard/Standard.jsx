@@ -168,23 +168,23 @@ const StandardTable = ({ standard = [], standardNo }) => {
         const editable = isEditing(record);
         return editable ? (
           <span>
-            <Popconfirm title="Save Changes?" onConfirm={() => save(record.subStandardNo)}>
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a
-                style={{
-                  marginRight: 14,
-                }}
-              >
-                <SaveOutlined />
-              </a>
-            </Popconfirm>
+
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
-              onClick={cancel}
+              onClick={() => save(record.subStandardNo)}
+              style={{
+                marginRight: 14,
+              }}
             >
-              <CloseCircleTwoTone twoToneColor="#FE0000" />
+              <SaveOutlined />
             </a>
-
+            <Popconfirm title="Discard Changes?" onConfirm={() => cancel()} >
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a
+              >
+                <CloseCircleTwoTone twoToneColor="#FE0000" />
+              </a>
+            </Popconfirm>
           </span>
         ) : (
           <>
@@ -316,10 +316,15 @@ export const Standard = () => {
   const [standard, setStandard] = useState(standardList);
   const [newStdVisible, setNewStdVisible] = useState(false);
   const [addStdVisible, setAddStdVisible] = useState(false);
+  //const [editStdTitleVisible, setEditStdTitleVisible] = useState(false);
+  // const [editingTitle, setEditingTitle] = useState()
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingTitleIndex, setEditingTitleIndex] = useState();
   const [addingStandardId, setAddingStandardId] = useState();
+  const [fileUpLoadStdId, setFileUpLoadStdId] = useState();
   const [createStdForm] = Form.useForm();
   const [addStdForm] = Form.useForm();
-  const [fileUpLoadStdId, setFileUpLoadStdId] = useState()
+  const [editTitleForm] = Form.useForm();
 
   function handleCreateSubmit(value) {
     console.log("Recieved values of form: ", value);
@@ -340,10 +345,9 @@ export const Standard = () => {
 
   function handleCancel() {
     setNewStdVisible(false);
-    setAddStdVisible(false)
+    setAddStdVisible(false);
     createStdForm.resetFields();
     addStdForm.resetFields();
-
   }
 
   const handleCreateStdBtn = () => {
@@ -403,7 +407,7 @@ export const Standard = () => {
     headers: {
       authorization: 'authorization-text',
     },
-    showUploadList:false,
+    showUploadList: false,
     maxCount: 1,
     accept: ".xlsx,.xls",
     async onChange(info) {
@@ -467,13 +471,34 @@ export const Standard = () => {
 
   }
 
+  const handleEditTitle = (title, i) => {
+    setIsEditing(true)
+    setEditingTitleIndex(i)
+
+    console.log(title, i)
+  }
+  const handleEditTitleSubmit = (value) => {
+    console.log(value)
+    const i = editingTitleIndex
+    setStandard(prev => {
+      return [
+        ...prev.slice(0, i),
+        {
+          ...prev[i], standardTitle: value.standardTitle
+        },
+        ...prev.slice(i + 1)]
+    });
+    setEditingTitleIndex(null);
+    setIsEditing(false)
+    editTitleForm.resetFields();
+  }
+
   return (
     <div>
       <div className={styles.tabHead}>
         <Header level={2}>Education Standard</Header>
         <div>
-          {/* <Button onClick={() => console.log(standard)}>test</Button> */}
-          <Button onClick={() => handleCreateStdBtn()}>Create New Standard</Button>
+          <Button onClick={() => handleCreateStdBtn()} disabled={isEditing}>Create New Standard</Button>
         </div>
       </div>
       <Collapse accordion>
@@ -481,15 +506,55 @@ export const Standard = () => {
           <Panel
             header={
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Header level={4} >{item.standardTitle}</Header>
+                {editingTitleIndex === i ?
+                  <>
+                    <Form
+                      form={editTitleForm}
+                      name="editTitle"
+                      autoComplete="off"
+                      requiredMark="optional"
+                      style={{ width: "100%", marginRight: "0.5rem" }}
+                      onFinish={handleEditTitleSubmit}
+                      initialValue={item.standardTitle}
+                      onClick={(e) => { e.stopPropagation() }}
+                      
+                    >
+                      <Form.Item
+                        initialValue={item.standardTitle}
+                        name="standardTitle"
+                        style={{ width: "100%", marginBottom: 0 }}
+                        rules={[{ required: true, message: "Please input name!" }]}
+                      >
+                        <Input defaultValue={item.standardTitle} />
+                      </Form.Item>
+                    </Form>
+                    {/* <Button type="primary" htmlType="submit" key="save">
+                      Save
+                    </Button> */}
+                  </>
+                  : <Header level={4} >{item.standardTitle}</Header>
+                }
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <div onClick={(e) => { e.stopPropagation() }}><EditOutlined /></div>
+
+                  <Typography.Link
+                    disabled={isEditing}
+                    onClick={(e) => { e.stopPropagation(); handleEditTitle(item.standardTitle, i) }}
+                  >
+                    <EditOutlined />
+                  </Typography.Link>
+
                   <Popconfirm
                     title="Are you sure to delete ?"
                     onConfirm={(e) => { handleDeleteTitle(item.id); e.stopPropagation() }}
                     onCancel={(e) => e.stopPropagation()}
                   >
-                    <div onClick={(e) => { e.stopPropagation() }}><DeleteOutlined /></div>
+                    <Typography.Link
+                      onClick={(e) => { e.stopPropagation() }}
+                      disabled={isEditing}
+                      type="danger"
+                    >
+                      <DeleteOutlined />
+                    </Typography.Link>
                   </Popconfirm>
                 </div>
               </div>}
@@ -627,6 +692,7 @@ export const Standard = () => {
         </Form>
 
       </Modal>
+
     </div>
   )
 }

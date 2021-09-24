@@ -316,15 +316,16 @@ export const Standard = () => {
   const [standard, setStandard] = useState(standardList);
   const [newStdVisible, setNewStdVisible] = useState(false);
   const [addStdVisible, setAddStdVisible] = useState(false);
-  //const [editStdTitleVisible, setEditStdTitleVisible] = useState(false);
-  // const [editingTitle, setEditingTitle] = useState()
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
   const [editingTitleIndex, setEditingTitleIndex] = useState();
+  const [editingNameIndex, setEditingNameIndex] = useState();
   const [addingStandardId, setAddingStandardId] = useState();
   const [fileUpLoadStdId, setFileUpLoadStdId] = useState();
   const [createStdForm] = Form.useForm();
   const [addStdForm] = Form.useForm();
   const [editTitleForm] = Form.useForm();
+  const [editNameForm] = Form.useForm();
 
   function handleCreateSubmit(value) {
     console.log("Recieved values of form: ", value);
@@ -474,9 +475,9 @@ export const Standard = () => {
   const handleEditTitle = (title, i) => {
     setIsEditing(true)
     setEditingTitleIndex(i)
-
     console.log(title, i)
   }
+
   const handleEditTitleSubmit = (value) => {
     console.log(value)
     const i = editingTitleIndex
@@ -493,6 +494,43 @@ export const Standard = () => {
     editTitleForm.resetFields();
   }
 
+  const handleEditName = (index, id) => {
+    setIsEditingName(true)
+    setEditingTitleIndex(index)
+    setEditingNameIndex(id)
+  }
+
+  const handleEditNameSubmit = (values) => {
+    // console.log(values)
+    // const index = editingTitleIndex
+    // const id = parseInt(standard[index].details.findIndex((item) => {
+    //   return item.standardNo = editingNameIndex
+    // }))
+    // console.log(id)
+    // // setStandard(prev => {
+    // //   return [
+    // //     ...prev.slice(0, index),
+    // //     {
+    // //       ...prev[index], details: [
+    // //         ...prev[id].details.slice(0, id), {
+    // //           standardNo: '1',
+    // //           standardName: "ความรู้ทางด้านวิศวกรรม และพื้นฐานทางวิทยาศาสตร์",
+    // //           subStandard: []
+    // //         }
+    // //         ,
+    // //         ...prev.details.slice(0, id),
+    // //       ]
+    // //     },
+    // //     ...prev.slice(index + 1)]
+    // // });
+    setEditingTitleIndex(null);
+    setIsEditingName(false)
+    setEditingNameIndex(null);
+    editNameForm.resetFields();
+    // console.log(standard)
+  }
+
+
   return (
     <div>
       <div className={styles.tabHead}>
@@ -501,32 +539,38 @@ export const Standard = () => {
           <Button onClick={() => handleCreateStdBtn()} disabled={isEditing}>Create New Standard</Button>
         </div>
       </div>
-      <Collapse accordion collapsible={isEditing&&"disabled"}>
-        {standard.map((item, i) =>
+      <Collapse accordion collapsible={isEditing && "disabled"}>
+        {standard.map((item, index) =>
           <Panel
             header={
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                {editingTitleIndex === i ?
+                {editingTitleIndex === index &&isEditing ?
                   <>
                     <Form
                       form={editTitleForm}
                       name="editTitle"
                       autoComplete="off"
                       requiredMark="optional"
+                      layout="inline"
                       style={{ width: "100%", marginRight: "0.5rem" }}
                       onFinish={handleEditTitleSubmit}
-                      initialValue={item.standardTitle}
                       onClick={(e) => { e.stopPropagation() }}
-                      
+
                     >
                       <Form.Item
                         initialValue={item.standardTitle}
                         name="standardTitle"
-                        style={{ width: "100%", marginBottom: 0 }}
+                        style={{ width: "90%", marginBottom: 0, marginRight: "5px", alignItems: "center" }}
                         rules={[{ required: true, message: "Please input name!" }]}
                       >
                         <Input defaultValue={item.standardTitle} />
                       </Form.Item>
+                      <Button
+                        type="secondary"
+                        htmlType="submit"
+                      >
+                        save
+                      </Button>
                     </Form>
                   </>
                   : <Header level={4} >{item.standardTitle}</Header>
@@ -535,7 +579,7 @@ export const Standard = () => {
 
                   <Typography.Link
                     disabled={isEditing}
-                    onClick={(e) => { e.stopPropagation(); handleEditTitle(item.standardTitle, i) }}
+                    onClick={(e) => { e.stopPropagation(); handleEditTitle(item.standardTitle, index) }}
                   >
                     <EditOutlined />
                   </Typography.Link>
@@ -555,23 +599,75 @@ export const Standard = () => {
                   </Popconfirm>
                 </div>
               </div>}
-            key={i}
+            key={index}
           >
             <div className={styles.topRightBtn} >
               <Button icon={<DownloadOutlined />} onClick={() => message.error(`ยังไม่มีให้โหลดนะจ๊ะ`)}>Download Template</Button>
               <Upload {...uploadProps} >
-                <Button icon={<UploadOutlined />} onClick={() => setFileUpLoadStdId(i)} >Upload Data</Button>
+                <Button icon={<UploadOutlined />} onClick={() => setFileUpLoadStdId(index)} >Upload Data</Button>
               </Upload>
-              <Button onClick={() => handleAddStdBtn(i)}>Add</Button>
+              <Button onClick={() => handleAddStdBtn(index)}>Add</Button>
             </div>
             <Collapse accordion>
               {item.details.map((ele, i) =>
                 <Panel
                   header={
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <Header level={5} >{ele.standardNo}{' '}{ele.standardName}</Header>
+                      <div style={{ width: "100%", display: "flex", alignItems: "center", gap: "1rem" }}>
+                        {editingTitleIndex === index &&editingNameIndex === i &&isEditingName?
+                          <>
+                            <Form
+                              form={editNameForm}
+                              name="editName"
+                              autoComplete="off"
+                              requiredMark="optional"
+                              layout="inline"
+                              style={{ width: "100%", marginRight: "0.5rem" }}
+                              onFinish={handleEditNameSubmit}
+                              onClick={(e) => { e.stopPropagation() }}
+
+                            >
+                              <Form.Item
+                                initialValue={ele.standardNo}
+                                name="standardNo"
+                                style={{ width: "60px", marginBottom: 0, marginRight: "5px" }}
+                                rules={[{ required: true, message: "Please input name!" }]}
+                              >
+                                <Input defaultValue={ele.standardNo} />
+                              </Form.Item>
+                              <Form.Item
+                                initialValue={ele.standardName}
+                                name="standardName"
+                                style={{ width: "75%", marginBottom: 0 }}
+                                rules={[{ required: true, message: "Please input name!" }]}
+                              >
+                                <Input defaultValue={ele.standardName} />
+                              </Form.Item>
+                              <Form.Item >
+                                <Button
+                                  type="secondary"
+                                  htmlType="submit"
+                                >
+                                  save
+                                </Button>
+                              </Form.Item>
+                            </Form>
+                          </>
+                          :
+                          <>
+                            <Header level={5} >{ele.standardNo}{' '}</Header>
+                            <Header level={5} >{ele.standardName}</Header>
+                          </>
+                        }
+
+                      </div>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                        <div onClick={(e) => { e.stopPropagation() }}><EditOutlined /></div>
+                        <Typography.Link
+                          disabled={isEditingName || isEditing}
+                          onClick={(e) => { e.stopPropagation(); handleEditName( index, i) }}
+                        >
+                          <EditOutlined />
+                        </Typography.Link>
                         <Popconfirm
                           title="Are you sure to delete ?"
                           onConfirm={(e) => { handleDeleteStandard(ele.standardNo, item.id); e.stopPropagation() }}

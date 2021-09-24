@@ -424,6 +424,15 @@ export const Standard = () => {
   };
 
   const getDetailsfromExcel = (data) => {
+    //clear details to prevent confict
+    setStandard(prev => {
+      return [
+        ...prev.slice(0, fileUpLoadStdId),
+        {
+          ...prev[fileUpLoadStdId], details: []
+        },
+        ...prev.slice(fileUpLoadStdId + 1)]
+    });
 
     const getMainStandard = () => {
       const newArray = []
@@ -544,7 +553,7 @@ export const Standard = () => {
           <Panel
             header={
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                {editingTitleIndex === index &&isEditing ?
+                {editingTitleIndex === index && isEditing ?
                   <>
                     <Form
                       form={editTitleForm}
@@ -552,7 +561,7 @@ export const Standard = () => {
                       autoComplete="off"
                       requiredMark="optional"
                       layout="inline"
-                      style={{ width: "100%", marginRight: "0.5rem" }}
+                      style={{ width: "100%", marginRight: "0.5rem", alignItems: "center" }}
                       onFinish={handleEditTitleSubmit}
                       onClick={(e) => { e.stopPropagation() }}
 
@@ -560,7 +569,7 @@ export const Standard = () => {
                       <Form.Item
                         initialValue={item.standardTitle}
                         name="standardTitle"
-                        style={{ width: "90%", marginBottom: 0, marginRight: "5px", alignItems: "center" }}
+                        style={{ width: "80%", marginBottom: 0, marginRight: "5px", alignItems: "center" }}
                         rules={[{ required: true, message: "Please input name!" }]}
                       >
                         <Input defaultValue={item.standardTitle} />
@@ -568,37 +577,51 @@ export const Standard = () => {
                       <Button
                         type="secondary"
                         htmlType="submit"
+                        style={{ marginRight: "5px" }}
                       >
                         save
+                      </Button>
+                      <Button
+                        danger
+                        onClick={() => {
+                          setEditingTitleIndex(null);
+                          setIsEditing(false)
+                          editTitleForm.resetFields();
+                        }}
+                      >
+                        cancel
                       </Button>
                     </Form>
                   </>
                   : <Header level={4} >{item.standardTitle}</Header>
                 }
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                {!(editingTitleIndex === index && isEditing) &&
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
 
-                  <Typography.Link
-                    disabled={isEditing}
-                    onClick={(e) => { e.stopPropagation(); handleEditTitle(item.standardTitle, index) }}
-                  >
-                    <EditOutlined />
-                  </Typography.Link>
-
-                  <Popconfirm
-                    title="Are you sure to delete ?"
-                    onConfirm={(e) => { handleDeleteTitle(item.id); e.stopPropagation() }}
-                    onCancel={(e) => e.stopPropagation()}
-                  >
                     <Typography.Link
-                      onClick={(e) => { e.stopPropagation() }}
                       disabled={isEditing}
-                      type="danger"
+                      onClick={(e) => { e.stopPropagation(); handleEditTitle(item.standardTitle, index) }}
                     >
-                      <DeleteOutlined />
+                      <EditOutlined />
                     </Typography.Link>
-                  </Popconfirm>
-                </div>
-              </div>}
+
+                    <Popconfirm
+                      title="Are you sure to delete ?"
+                      onConfirm={(e) => { handleDeleteTitle(item.id); e.stopPropagation() }}
+                      onCancel={(e) => e.stopPropagation()}
+                    >
+                      <Typography.Link
+                        onClick={(e) => { e.stopPropagation() }}
+                        disabled={isEditing}
+                        type="danger"
+                      >
+                        <DeleteOutlined />
+                      </Typography.Link>
+                    </Popconfirm>
+                  </div>
+                }
+              </div>
+            }
             key={index}
           >
             <div className={styles.topRightBtn} >
@@ -614,7 +637,7 @@ export const Standard = () => {
                   header={
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                       <div style={{ width: "100%", display: "flex", alignItems: "center", gap: "1rem" }}>
-                        {editingTitleIndex === index &&editingNameIndex === i &&isEditingName?
+                        {editingTitleIndex === index && editingNameIndex === i && isEditingName ?
                           <>
                             <Form
                               form={editNameForm}
@@ -664,7 +687,7 @@ export const Standard = () => {
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                         <Typography.Link
                           disabled={isEditingName || isEditing}
-                          onClick={(e) => { e.stopPropagation(); handleEditName( index, i) }}
+                          onClick={(e) => { e.stopPropagation(); handleEditName(index, i) }}
                         >
                           <EditOutlined />
                         </Typography.Link>
@@ -673,7 +696,13 @@ export const Standard = () => {
                           onConfirm={(e) => { handleDeleteStandard(ele.standardNo, item.id); e.stopPropagation() }}
                           onCancel={(e) => e.stopPropagation()}
                         >
-                          <div onClick={(e) => { e.stopPropagation() }}><DeleteOutlined /></div>
+                          <Typography.Link
+                            onClick={(e) => { e.stopPropagation() }}
+                            disabled={isEditing || isEditingName}
+                            type="danger"
+                          >
+                            <DeleteOutlined />
+                          </Typography.Link>
                         </Popconfirm>
                       </div>
                     </div>}

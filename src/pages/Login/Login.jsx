@@ -1,14 +1,38 @@
+import { useState } from "react";
 import styles from "./Login.module.scss";
+import { useHistory } from "react-router";
 import { Helmet } from "react-helmet";
 import img from "../../assets/img/login_img.svg";
 import logo from "../../assets/img/login_admin.svg";
 import { Button } from "../../components";
-import { Input, Form } from "antd";
+import { Input, Form, Alert } from "antd";
+
+import AuthService from "../../services/auth.service";
 
 export const Login = () => {
+  const history = useHistory();
   const [form] = Form.useForm();
-  function onFinish(values) {
-    console.log("Success:", values);
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  function handleLogin(values) {
+    setLoading(true);
+    AuthService.login(values.username, values.password).then(
+      () => {
+        history.push("/");
+        window.location.reload();
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setMessage(resMessage);
+        setLoading(false);
+      }
+    );
   }
 
   function onFinishFailed(errorInfo) {
@@ -27,11 +51,18 @@ export const Login = () => {
             form={form}
             name="login"
             layout="vertical"
-            onFinish={onFinish}
+            onFinish={handleLogin}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
             <div className={styles.form}>
+              {message !== "" && (
+                <Alert
+                  className={styles.alert}
+                  message={message}
+                  type="error"
+                />
+              )}
               <Form.Item
                 name="username"
                 rules={[{ required: true, message: "Please input username!" }]}
@@ -48,7 +79,12 @@ export const Login = () => {
                   size="large"
                 />
               </Form.Item>
-              <Button type="primary" htmlType="submit" size="large">
+              <Button
+                type="primary"
+                htmlType="submit"
+                size="large"
+                loading={loading}
+              >
                 Login
               </Button>
             </div>

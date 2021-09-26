@@ -161,7 +161,7 @@ export const Standard = () => {
         ...prev.slice(index + 1)]
     });
   }
-  
+
   const handleEditTitle = (i) => {
     setIsEditing(true)
     setEditingTitleIndex(i)
@@ -256,14 +256,12 @@ export const Standard = () => {
 
     mainStandard.forEach(element => {
       const subStdList = subStandards.filter((item) => item.standardNo === element.standardNo)
-      console.log(subStdList)
       subStdList.forEach(subStd => {
         element.subStandard.push({
           subStandardNo: subStd.subStandardNo,
           subStandardName: subStd.subStandardName,
         })
       })
-      console.log(element)
     });
     console.log(mainStandard, subStandards)
     setStandard(prev => {
@@ -310,7 +308,7 @@ export const Standard = () => {
                         style={{ flex: "1 1 auto", marginBottom: 0, marginRight: "5px", alignItems: "center" }}
                         rules={[{ required: true, message: "Please input name!" }]}
                       >
-                        <Input defaultValue={item.standardTitle} />
+                        <Input initialValue={item.standardTitle} />
                       </Form.Item>
                       <Button
                         type="secondary"
@@ -406,7 +404,7 @@ export const Standard = () => {
                                   }
                                 ]}
                               >
-                                <InputNumber style={{ width: "60px", height: "35px" }} min={1} defaultValue={ele.standardNo} />
+                                <InputNumber style={{ width: "60px", height: "35px" }} min={1} initialValue={ele.standardNo} />
                               </Form.Item>
                               <Form.Item
                                 initialValue={ele.standardName}
@@ -414,7 +412,7 @@ export const Standard = () => {
                                 style={{ flex: "1 1 auto", marginBottom: 0, marginRight: 5 }}
                                 rules={[{ required: true, message: "Please input name!" }]}
                               >
-                                <Input defaultValue={ele.standardName} />
+                                <Input initialValue={ele.standardName} />
                               </Form.Item>
                               <Button
                                 type="secondary"

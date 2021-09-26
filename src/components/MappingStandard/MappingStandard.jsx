@@ -6,9 +6,7 @@ export const MappingStandard = () => {
         <div>
             <div className={styles.tabHead}>
                 <Header level={2}>Mapping Standard</Header>
-               
                     <Button>Edit</Button>
-                
             </div>
         </div>
     )

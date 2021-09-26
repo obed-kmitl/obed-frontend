@@ -15,7 +15,7 @@ export default async function excelReader(file) {
           const ws = wb.Sheets[wsname];
   
           const data = XLSX.utils.sheet_to_json(ws);
-  
+          
           resolve(data);
         };
   

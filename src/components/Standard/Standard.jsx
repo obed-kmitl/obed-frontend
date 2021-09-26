@@ -1,11 +1,5 @@
 import { useState } from 'react'
-import {
-  Header,
-  Button,
-  Input,
-  Collapse,
-  Panel,
-} from "..";
+import { Header, Button, Input, Collapse, Panel } from "..";
 import { Form, Popconfirm, Typography, Modal, InputNumber, Upload, message } from 'antd'
 import {
   DeleteOutlined,
@@ -14,7 +8,6 @@ import {
   DownloadOutlined
 } from '@ant-design/icons';
 import { StandardTable } from './StandardTable';
-
 import styles from "./Standard.module.scss";
 import excelReader from "../../utils/excelReader"
 
@@ -87,35 +80,33 @@ const standardList = [
 ]
 
 export const Standard = () => {
-  const [standard, setStandard] = useState(standardList);
-  const [newStdVisible, setNewStdVisible] = useState(false);
-  const [addStdVisible, setAddStdVisible] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [editingTitleIndex, setEditingTitleIndex] = useState();
-  const [editingNameIndex, setEditingNameIndex] = useState();
-  const [addingStandardId, setAddingStandardId] = useState();
-  const [fileUpLoadStdId, setFileUpLoadStdId] = useState();
+  const [standard, setStandard] = useState(standardList);   // state of standard
+  const [newStdVisible, setNewStdVisible] = useState(false); //  modal visible
+  const [addStdVisible, setAddStdVisible] = useState(false); //  modal visible
+  const [isEditing, setIsEditing] = useState(false); //state check if standard title editing
+  const [isEditingName, setIsEditingName] = useState(false); //state check if standard name editing
+  const [editingTitleIndex, setEditingTitleIndex] = useState(); //index of editing Standard Title 
+  const [editingNameIndex, setEditingNameIndex] = useState(); //index of editing Standard Name
+  const [addingStandardId, setAddingStandardId] = useState(); //index of adding Standard
+  const [fileUpLoadStdId, setFileUpLoadStdId] = useState(); //index of uploading standard
+  
   const [createStdForm] = Form.useForm();
   const [addStdForm] = Form.useForm();
   const [editTitleForm] = Form.useForm();
   const [editNameForm] = Form.useForm();
 
-  function handleCreateSubmit(value) {
-    console.log("Recieved values of form: ", value);
-    setNewStdVisible(false);
+  function handleCreateSubmit(value) {   
     const genId = () => {
       var i = 1;
       const existId = standard.map((e) => e.id)
-      console.log(existId);
       while (true) {
         if (existId.includes(i)) {
           i++;
         } else return i
       }
     }
+    setNewStdVisible(false);
     setStandard([...standard, { id: genId(), standardTitle: value.standardTitle, details: [] }])
-    console.log(standard);
   }
 
   function handleCancel() {
@@ -125,8 +116,8 @@ export const Standard = () => {
     addStdForm.resetFields();
   }
 
-  const handleCreateStdBtn = () => {
-    setNewStdVisible(true)
+  const handleCreateStdBtn = () => { 
+    setNewStdVisible(true) 
   }
 
   const handleAddStdBtn = (i) => {
@@ -136,7 +127,6 @@ export const Standard = () => {
 
   function handleAddSubmit(value) {
     const i = addingStandardId;
-    console.log("Recieved values of form: ", value, i);
     setStandard(prev => {
       return [
         ...prev.slice(0, i),
@@ -149,19 +139,15 @@ export const Standard = () => {
         },
         ...prev.slice(i + 1)]
     });
-    // setStandard(standard => {
-    //   const sortedStandard = standard[].details.sort((a,b) => (a.standardNo> b.standardNo) ? 1 : ((b.standardNo > a.standardNo) ? -1 : 0))
-    //   console.log(sortedStandard)
-    // })
     console.log(standard)
     setAddingStandardId(null)
     setAddStdVisible(false);
-    //setStandard([...standard, { standardTitle: value.standardTitle, details: [] }])
   }
 
   function handleDeleteTitle(id) {
     setStandard(standard.filter(item => item.id !== id))
   }
+
   function handleDeleteStandard(stdNo, id) {
     const index = standard.findIndex((item) => {
       return item.id === id
@@ -189,7 +175,6 @@ export const Standard = () => {
       if (info.file.status === 'done') {
         const datafromExcel = await excelReader(info.file.originFileObj)
         getDetailsfromExcel(datafromExcel)
-        console.log(datafromExcel)
         message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
@@ -208,6 +193,8 @@ export const Standard = () => {
         ...prev.slice(fileUpLoadStdId + 1)]
     });
 
+    console.log(data)
+
     const getMainStandard = () => {
       const newArray = []
       const duplicate = []
@@ -215,7 +202,6 @@ export const Standard = () => {
         if (!duplicate.includes(std.standardNo)) {
           newArray.push({ standardNo: std.standardNo.toString(), standardName: std.description, subStandard: [] })
           duplicate.push(std.standardNo)
-          //console.log(newArray)
         }
       })
       return newArray;
@@ -252,17 +238,14 @@ export const Standard = () => {
         ...prev.slice(fileUpLoadStdId + 1)]
     });
     console.log(standard)
-
   }
 
-  const handleEditTitle = (title, i) => {
+  const handleEditTitle = (i) => {
     setIsEditing(true)
     setEditingTitleIndex(i)
-    console.log(title, i)
   }
 
   const handleEditTitleSubmit = (value) => {
-    console.log(value)
     const i = editingTitleIndex
     setStandard(prev => {
       return [
@@ -284,35 +267,15 @@ export const Standard = () => {
   }
 
   const handleEditNameSubmit = (values) => {
-    // console.log(values)
-    // const index = editingTitleIndex
-    // const id = parseInt(standard[index].details.findIndex((item) => {
-    //   return item.standardNo = editingNameIndex
-    // }))
-    // console.log(id)
-    // // setStandard(prev => {
-    // //   return [
-    // //     ...prev.slice(0, index),
-    // //     {
-    // //       ...prev[index], details: [
-    // //         ...prev[id].details.slice(0, id), {
-    // //           standardNo: '1',
-    // //           standardName: "ความรู้ทางด้านวิศวกรรม และพื้นฐานทางวิทยาศาสตร์",
-    // //           subStandard: []
-    // //         }
-    // //         ,
-    // //         ...prev.details.slice(0, id),
-    // //       ]
-    // //     },
-    // //     ...prev.slice(index + 1)]
-    // // });
+    let newStandard = [...standard]
+    newStandard[editingTitleIndex].details[editingNameIndex].standardName = values.standardName
+    newStandard[editingTitleIndex].details[editingNameIndex].standardNo = values.standardNo
+    setStandard(newStandard)
     setEditingTitleIndex(null);
     setIsEditingName(false)
     setEditingNameIndex(null);
     editNameForm.resetFields();
-    // console.log(standard)
   }
-
 
   return (
     <div>
@@ -374,7 +337,7 @@ export const Standard = () => {
 
                     <Typography.Link
                       disabled={isEditing}
-                      onClick={(e) => { e.stopPropagation(); handleEditTitle(item.standardTitle, index) }}
+                      onClick={(e) => { e.stopPropagation(); handleEditTitle(index) }}
                     >
                       <EditOutlined />
                     </Typography.Link>
@@ -435,22 +398,31 @@ export const Standard = () => {
                               <Form.Item
                                 initialValue={ele.standardName}
                                 name="standardName"
-                                style={{ width: "75%", marginBottom: 0 }}
+                                style={{ width: "80%", marginBottom: 0 }}
                                 rules={[{ required: true, message: "Please input name!" }]}
                               >
                                 <Input defaultValue={ele.standardName} />
                               </Form.Item>
-                              <Form.Item >
-                                <Button
-                                  type="secondary"
-                                  htmlType="submit"
-                                >
-                                  save
-                                </Button>
-                              </Form.Item>
+                              <Button
+                                type="secondary"
+                                htmlType="submit"
+                                style={{ marginRight: "5px" }}
+                              >
+                                save
+                              </Button>
+                              <Button
+                                danger
+                                onClick={() => {
+                                  setEditingTitleIndex(null);
+                                  setIsEditingName(false)
+                                  setEditingNameIndex(null);
+                                  editNameForm.resetFields();
+                                }}
+                              >
+                                cancel
+                              </Button>
                             </Form>
-                          </>
-                          :
+                          </>:
                           <>
                             <Header level={5} >{ele.standardNo}{' '}</Header>
                             <Header level={5} >{ele.standardName}</Header>
@@ -458,36 +430,36 @@ export const Standard = () => {
                         }
 
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                        <Typography.Link
-                          disabled={isEditingName || isEditing}
-                          onClick={(e) => { e.stopPropagation(); handleEditName(index, i) }}
-                        >
-                          <EditOutlined />
-                        </Typography.Link>
-                        <Popconfirm
-                          title="Are you sure to delete ?"
-                          onConfirm={(e) => { handleDeleteStandard(ele.standardNo, item.id); e.stopPropagation() }}
-                          onCancel={(e) => e.stopPropagation()}
-                        >
+                      {!isEditingName &&
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                           <Typography.Link
-                            onClick={(e) => { e.stopPropagation() }}
-                            disabled={isEditing || isEditingName}
-                            type="danger"
+                            disabled={isEditingName || isEditing}
+                            onClick={(e) => { e.stopPropagation(); handleEditName(index, i) }}
                           >
-                            <DeleteOutlined />
+                            <EditOutlined />
                           </Typography.Link>
-                        </Popconfirm>
-                      </div>
+                          <Popconfirm
+                            title="Are you sure to delete ?"
+                            onConfirm={(e) => { handleDeleteStandard(ele.standardNo, item.id); e.stopPropagation() }}
+                            onCancel={(e) => e.stopPropagation()}
+                          >
+                            <Typography.Link
+                              onClick={(e) => { e.stopPropagation() }}
+                              disabled={isEditing || isEditingName}
+                              type="danger"
+                            >
+                              <DeleteOutlined />
+                            </Typography.Link>
+                          </Popconfirm>
+                        </div>
+                      }
                     </div>}
                   key={i}
                 >
                   <StandardTable standardNo={ele.standardNo} standard={ele.subStandard} />
                 </Panel>
-
               )}</Collapse>
           </Panel>
-
         )}
       </Collapse>
       <Modal
@@ -527,7 +499,6 @@ export const Standard = () => {
             <Input placeholder="Standard name" />
           </Form.Item>
         </Form>
-
       </Modal>
 
       <Modal
@@ -586,9 +557,7 @@ export const Standard = () => {
             <Input placeholder=" standard name" />
           </Form.Item>
         </Form>
-
       </Modal>
-
     </div>
   )
 }

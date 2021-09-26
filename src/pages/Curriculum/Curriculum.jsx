@@ -11,7 +11,8 @@ import {
   CourseTable,
   Option,
   Input,
-  Standard
+  Standard,
+  MappingStandard
 } from "../../components";
 import styles from "./Curriculum.module.scss";
 import { Helmet } from "react-helmet";
@@ -445,22 +446,10 @@ export function Curriculum() {
               </Modal>
             </TabPane>
             <TabPane tab="Standard" key="2">
-              {/* <div className={styles.tabHead}>
-                <Header level={2}>Educational Standard</Header>
-                <div>
-                  <Button>Create</Button>
-                </div>
-              </div>
-              <div>dddd</div> */}
               <Standard/>
             </TabPane>
             <TabPane tab="Mapping" key="3">
-              <div className={styles.tabHead}>
-                <Header level={2}>Standard Mapping</Header>
-                <div>
-                  <Button>Save</Button>
-                </div>
-              </div>
+              <MappingStandard/>
             </TabPane>
             <TabPane tab="Details" key="4">
               <Form

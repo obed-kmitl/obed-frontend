@@ -3,7 +3,7 @@ import {
   Button,
   Input,
 } from "..";
-import { Form, Table, Popconfirm, Typography} from 'antd'
+import { Form, Table, Popconfirm, Typography, InputNumber } from 'antd'
 import {
   DeleteOutlined,
   EditOutlined,
@@ -53,16 +53,16 @@ export const StandardTable = ({ standard = [], standardNo }) => {
                     if (alreadyExistNo.includes(value)) {
                       return Promise.reject("Already exist!")
                     }
-                    if (isNaN(value) || value.includes(".")) {
-                      return Promise.reject("Enter number!")
-                    }
                   }
                   return Promise.resolve()
                 }
               }
             ]}
           >
-            <Input />
+            {inputType === "number" ?
+              <InputNumber min={1}/> :
+              <Input />
+            }
           </Form.Item>
         ) : (
           children

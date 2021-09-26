@@ -17,61 +17,61 @@ const standardList = [
     standardTitle: "ผลการเรียนรู้ระดับหลักสูตร (PLOs : Program-Level Learning Outcomes)",
     details: [
       {
-        standardNo: '1',
+        standardNo: 1,
         standardName: "ความรู้ทางด้านวิศวกรรม และพื้นฐานทางวิทยาศาสตร์",
         subStandard: [
           {
-            subStandardNo: '1',
+            subStandardNo: 1,
             subStandardName: "ประยุกต์ใช้ความรู้ด้านคณิตศาสตร์ วิทยาศาสตร์ สถิติและความน่าจะเป็น รวมทั้งคณิตศาสตร์ไม่ต่อเนื่อง กับงานด้านวิศวกรรมคอมพิวเตอร์",
           },
           {
-            subStandardNo: '2',
+            subStandardNo: 2,
             subStandardName: "ประยุกต์ใช้ความรู้ด้านการวิเคราะห์วงจรไฟฟ้าพื้นฐาน วงจรและอุปกรณ์อิเล็กทรอนิกส์กับการเชื่อมต่อไมโครคอนโทรลเลอร์",
           },
           {
-            subStandardNo: '3',
+            subStandardNo: 3,
             subStandardName: "ประยุกต์ใช้ภาษาโปรแกรม การโปรแกรมเชิงวัตถุ โครงสร้างข้อมูล การวิเคราะห์อัลกอริทึมเบื้องต้น เพื่อจัดการกับปัญหาโดยวิธีการทางซอฟต์แวร์",
           },
           {
-            subStandardNo: '4',
+            subStandardNo: 4,
             subStandardName: "อธิบายโครงสร้าง องค์ประกอบ และการทำงานระดับฮาร์ดแวร์ของคอมพิวเตอร์ รวมถึงวงจรดิจิตอลพื้นฐาน",
           },
           {
-            subStandardNo: '5',
+            subStandardNo: 5,
             subStandardName: "อธิบายการส่งข้อมูลทั้งแอนะล็อกและดิจิตอล อุปกรณ์ ตัวกลาง มัลติเพล็กซ์ สวิตซ์ การส่งข้อมูลแบบเฟรม การตรวจสอบและแก้ไขความผิดพลาด การควบคุมการไหลของข้อมูลการหาเส้นทาง รวมทั้งเครือข่ายอีเทอร์เน็ต และเครือข่ายไอพี ทั้งแบบใช้สายและไร้สาย",
           },
           {
-            subStandardNo: '6',
+            subStandardNo: 6,
             subStandardName: "อธิบายหลักการพื้นฐานของความปลอดภัยของข้อมูล การเข้ารหัสข้อมูล",
           },
           {
-            subStandardNo: '7',
+            subStandardNo: 7,
             subStandardName: "อธิบายโครงสร้างและการทำงานของระบบปฏิบัติการ การจัดการทรัพยากรในระบบคอมพิวเตอร์ การทำงานระหว่างโพรเซส ระบบไฟล์ การทำงานแบบเครื่องจักรเสมือน (Virtualization) และการประมวลผลแบบคลาวด์ (Cloud Computing)",
           },
         ]
       }, {
-        standardNo: '2',
+        standardNo: 2,
         standardName: "การวิเคราะห์ปัญหาทางวิศวกรรม",
         subStandard: [
           {
-            subStandardNo: '1',
+            subStandardNo: 1,
             subStandardName: "วิเคราะห์ปัญหาทางวิศวกรรมคอมพิวเตอร์ เข้าใจปัญหาและอธิบายความต้องการ และสามารถระบุข้อกำหนดของปัญหา โดยใช้วิธีการทางวิศวกรรม",
           },
           {
-            subStandardNo: '2',
+            subStandardNo: 2,
             subStandardName: "ค้นคว้าเพื่อค้นหาแนวทางหรือวิธีการในการแก้ไขปัญหา แสดงข้อเปรียบเทียบระหว่างแนวทางหรือวิธีการในการแก้ไขปัญหา แสดงเหตุผลในการเลือกแนวทางในการแก้ไขปัญหา",
           },
         ]
       }, {
-        standardNo: '3',
+        standardNo: 3,
         standardName: "การออกแบบและพัฒนาเพื่อหาคำตอบของปัญหา",
         subStandard: []
       }, {
-        standardNo: '4',
+        standardNo: 4,
         standardName: "การพิจารณาตรวจสอบ",
         subStandard: []
       }, {
-        standardNo: '5',
+        standardNo: 5,
         standardName: "การใช้อุปกรณ์เครื่องมือทันสมัย",
         subStandard: []
       }
@@ -89,13 +89,13 @@ export const Standard = () => {
   const [editingNameIndex, setEditingNameIndex] = useState(); //index of editing Standard Name
   const [addingStandardId, setAddingStandardId] = useState(); //index of adding Standard
   const [fileUpLoadStdId, setFileUpLoadStdId] = useState(); //index of uploading standard
-  
+
   const [createStdForm] = Form.useForm();
   const [addStdForm] = Form.useForm();
   const [editTitleForm] = Form.useForm();
   const [editNameForm] = Form.useForm();
 
-  function handleCreateSubmit(value) {   
+  function handleCreateSubmit(value) {
     const genId = () => {
       var i = 1;
       const existId = standard.map((e) => e.id)
@@ -116,8 +116,8 @@ export const Standard = () => {
     addStdForm.resetFields();
   }
 
-  const handleCreateStdBtn = () => { 
-    setNewStdVisible(true) 
+  const handleCreateStdBtn = () => {
+    setNewStdVisible(true)
   }
 
   const handleAddStdBtn = (i) => {
@@ -161,6 +161,43 @@ export const Standard = () => {
         ...prev.slice(index + 1)]
     });
   }
+  
+  const handleEditTitle = (i) => {
+    setIsEditing(true)
+    setEditingTitleIndex(i)
+  }
+
+  const handleEditTitleSubmit = (value) => {
+    const i = editingTitleIndex
+    setStandard(prev => {
+      return [
+        ...prev.slice(0, i),
+        {
+          ...prev[i], standardTitle: value.standardTitle
+        },
+        ...prev.slice(i + 1)]
+    });
+    setEditingTitleIndex(null);
+    setIsEditing(false)
+    editTitleForm.resetFields();
+  }
+
+  const handleEditName = (index, id) => {
+    setIsEditingName(true)
+    setEditingTitleIndex(index)
+    setEditingNameIndex(id)
+  }
+
+  const handleEditNameSubmit = (values) => {
+    let newStandard = [...standard]
+    newStandard[editingTitleIndex].details[editingNameIndex].standardName = values.standardName
+    newStandard[editingTitleIndex].details[editingNameIndex].standardNo = values.standardNo
+    setStandard(newStandard)
+    setEditingTitleIndex(null);
+    setIsEditingName(false)
+    setEditingNameIndex(null);
+    editNameForm.resetFields();
+  }
 
   const uploadProps = {
     name: 'file',
@@ -200,7 +237,7 @@ export const Standard = () => {
       const duplicate = []
       data.forEach(std => {
         if (!duplicate.includes(std.standardNo)) {
-          newArray.push({ standardNo: std.standardNo.toString(), standardName: std.description, subStandard: [] })
+          newArray.push({ standardNo: std.standardNo, standardName: std.description, subStandard: [] })
           duplicate.push(std.standardNo)
         }
       })
@@ -211,7 +248,7 @@ export const Standard = () => {
     const getSubStandard = () => {
       const newArray = []
       data.forEach(std => {
-        newArray.push({ standardNo: std.standardNo.toString(), subStandardNo: std.subStdNo.toString(), subStandardName: std.subDescription })
+        newArray.push({ standardNo: std.standardNo, subStandardNo: std.subStdNo, subStandardName: std.subDescription })
       })
       return newArray;
     }
@@ -240,42 +277,6 @@ export const Standard = () => {
     console.log(standard)
   }
 
-  const handleEditTitle = (i) => {
-    setIsEditing(true)
-    setEditingTitleIndex(i)
-  }
-
-  const handleEditTitleSubmit = (value) => {
-    const i = editingTitleIndex
-    setStandard(prev => {
-      return [
-        ...prev.slice(0, i),
-        {
-          ...prev[i], standardTitle: value.standardTitle
-        },
-        ...prev.slice(i + 1)]
-    });
-    setEditingTitleIndex(null);
-    setIsEditing(false)
-    editTitleForm.resetFields();
-  }
-
-  const handleEditName = (index, id) => {
-    setIsEditingName(true)
-    setEditingTitleIndex(index)
-    setEditingNameIndex(id)
-  }
-
-  const handleEditNameSubmit = (values) => {
-    let newStandard = [...standard]
-    newStandard[editingTitleIndex].details[editingNameIndex].standardName = values.standardName
-    newStandard[editingTitleIndex].details[editingNameIndex].standardNo = values.standardNo
-    setStandard(newStandard)
-    setEditingTitleIndex(null);
-    setIsEditingName(false)
-    setEditingNameIndex(null);
-    editNameForm.resetFields();
-  }
 
   return (
     <div>
@@ -306,7 +307,7 @@ export const Standard = () => {
                       <Form.Item
                         initialValue={item.standardTitle}
                         name="standardTitle"
-                        style={{ width: "80%", marginBottom: 0, marginRight: "5px", alignItems: "center" }}
+                        style={{ flex: "1 1 auto", marginBottom: 0, marginRight: "5px", alignItems: "center" }}
                         rules={[{ required: true, message: "Please input name!" }]}
                       >
                         <Input defaultValue={item.standardTitle} />
@@ -332,7 +333,7 @@ export const Standard = () => {
                   </>
                   : <Header level={4} >{item.standardTitle}</Header>
                 }
-                {!(editingTitleIndex === index && isEditing) &&
+                {!((editingTitleIndex === index && isEditing) || isEditingName) &&
                   <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
 
                     <Typography.Link
@@ -390,15 +391,27 @@ export const Standard = () => {
                               <Form.Item
                                 initialValue={ele.standardNo}
                                 name="standardNo"
-                                style={{ width: "60px", marginBottom: 0, marginRight: "5px" }}
-                                rules={[{ required: true, message: "Please input name!" }]}
+                                style={{ width: "60px", marginBottom: 0, marginRight: "5px", alignItems: "center" }}
+                                rules={[
+                                  { required: true, message: "Please input name!" },
+                                  {
+                                    validator: (rule, value, callback) => {
+                                      const alreadyExistNo = standard[index].details.map((e) => e.standardNo).filter((e) => e !== ele.standardNo)
+                                      console.log(alreadyExistNo)
+                                      if (alreadyExistNo.includes(value)) {
+                                        return Promise.reject("Already exist!")
+                                      }
+                                      return Promise.resolve()
+                                    }
+                                  }
+                                ]}
                               >
-                                <Input defaultValue={ele.standardNo} />
+                                <InputNumber style={{ width: "60px", height: "35px" }} min={1} defaultValue={ele.standardNo} />
                               </Form.Item>
                               <Form.Item
                                 initialValue={ele.standardName}
                                 name="standardName"
-                                style={{ width: "80%", marginBottom: 0 }}
+                                style={{ flex: "1 1 auto", marginBottom: 0, marginRight: 5 }}
                                 rules={[{ required: true, message: "Please input name!" }]}
                               >
                                 <Input defaultValue={ele.standardName} />
@@ -422,7 +435,7 @@ export const Standard = () => {
                                 cancel
                               </Button>
                             </Form>
-                          </>:
+                          </> :
                           <>
                             <Header level={5} >{ele.standardNo}{' '}</Header>
                             <Header level={5} >{ele.standardName}</Header>
@@ -545,7 +558,7 @@ export const Standard = () => {
               }
             ]}
           >
-            <InputNumber stringMode min={1} width={100} placeholder="ex. 1,2,3,..." />
+            <InputNumber min={1} width={100} placeholder="ex. 1,2,3,..." />
           </Form.Item>
           <Form.Item
             label="Standard Name"

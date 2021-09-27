@@ -1,4 +1,4 @@
-const mockStandardI = [
+const mockStandard = [
     {
         "id": 1,
         "standardTitle": "ผลการเรียนรู้ระดับหลักสูตร (PLOs : Program-Level Learning Outcomes)",
@@ -170,13 +170,10 @@ const mockStandardI = [
                 ]
             }
         ]
-    }
-]
-
-const mockStandardII = [
+    },
     {
-        "id": 1,
-        "standardTitle": "ผลการเรียนรู้ระดับหลักสูตร (PLOs : Program-Level Learning Outcomes)",
+        "id": 2,
+        "standardTitle": "กรอบมาตรฐานคุณวุฒิระดับอุดมศึกษาแห่งชาติ (TQF : Thai Qualifications Framework for Higher Education)",
         "details": [
             {
                 "standardNo": 1,
@@ -325,7 +322,24 @@ const mockStandardII = [
                 ]
             }
         ]
-    }
+    }, 
+    //test swap
+    // {
+    //     "id": 3,
+    //     "standardTitle": "aaaa",
+    //     "details": []
+    // },
+    // {
+    //     "id": 4,
+    //     "standardTitle": "bbbb",
+    //     "details": []
+    // },
+    // {
+    //     "id": 5,
+    //     "standardTitle": "cccc",
+    //     "details": []
+    // }
 ]
 
-export {mockStandardI,mockStandardII}
+
+export { mockStandard }

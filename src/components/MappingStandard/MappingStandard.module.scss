@@ -4,3 +4,25 @@
     justify-content: space-between;
     margin-bottom: 1rem;
 }
+.content {
+    margin-top: 1rem;
+    width: 100%;
+    .standardSelect {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .select {
+            flex-direction: column;
+            width: 48%;
+            .selectLabel {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        }       
+        .swapIcon {
+            padding: 2rem 0 0 0;
+            font-size: 18px;
+        }
+    }
+}

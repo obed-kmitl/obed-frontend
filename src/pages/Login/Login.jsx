@@ -2,9 +2,12 @@ import { useState } from "react";
 import styles from "./Login.module.scss";
 import { useHistory } from "react-router";
 import { Helmet } from "react-helmet";
+import css from "classnames";
 import img from "../../assets/img/login_img.svg";
-import logo from "../../assets/img/login_admin.svg";
-import { Button } from "../../components";
+import img2 from "../../assets/img/login_img2.svg";
+import logo from "../../assets/img/logo_admin.svg";
+import logo2 from "../../assets/img/logo_teacher.svg";
+import { Button, Body } from "../../components";
 import { Input, Form, Alert } from "antd";
 
 import AuthService from "../../services/auth.service";
@@ -39,14 +42,24 @@ export const Login = () => {
     console.log("Failed:", errorInfo);
   }
 
+  const isAdmin = window.location.host.split(".")[0] === "admin";
+
   return (
-    <div className={styles.page}>
-      <div className={styles.container}>
-        <Helmet>
-          <title>Login - OBED</title>
-        </Helmet>
+    <div className={isAdmin ? styles.page : css(styles.page, styles.teacher)}>
+      <Helmet>
+        <title>Login - OBED</title>
+      </Helmet>
+      <div
+        className={
+          isAdmin ? styles.container : css(styles.container, styles.teacher)
+        }
+      >
         <div className={styles.loginBox}>
-          <img src={logo} alt="OBED" className={styles.logo} />
+          <img
+            src={isAdmin ? logo : logo2}
+            alt="OBED"
+            className={styles.logo}
+          />
           <Form
             form={form}
             name="login"
@@ -87,10 +100,23 @@ export const Login = () => {
               >
                 Login
               </Button>
+              {!isAdmin && (
+                <Body level={2} className={styles.infoText}>
+                  To get the account please contact to OBCE Administrator{" "}
+                  <a href="mailto:administrator@obce.com">
+                    administrator@obce.com
+                  </a>{" "}
+                  or <a href="tel:08X-XXX-XXXX">08X-XXX-XXXX</a>
+                </Body>
+              )}
             </div>
           </Form>
         </div>
-        <img src={img} alt="login" className={styles.loginPic} />
+        <img
+          src={isAdmin ? img : img2}
+          alt="login"
+          className={styles.loginPic}
+        />
       </div>
     </div>
   );

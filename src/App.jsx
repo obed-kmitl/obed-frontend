@@ -53,6 +53,9 @@ function App() {
     return (
       <Router>
         <Switch>
+          <PublicRoute path="/login">
+            <Login />
+          </PublicRoute>
           <Layout>
             <Switch>
               <PublicRoute path="/student">

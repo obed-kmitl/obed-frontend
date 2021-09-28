@@ -408,6 +408,7 @@ export const Student = () => {
               <Popconfirm
                 title="Sure to clear list?"
                 onConfirm={() => setAddList([])}
+                disabled={addList.length === 0 ? true : false}
               >
                 <a href="#">Clear All</a>
               </Popconfirm>

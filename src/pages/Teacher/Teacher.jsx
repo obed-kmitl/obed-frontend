@@ -14,7 +14,9 @@ import {
   Space,
 } from "antd";
 import { DeleteOutlined, MailOutlined, EditOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useGetAllUsers } from "../../hooks/user";
 
 export const Teacher = () => {
   const { Column } = Table;
@@ -119,7 +121,8 @@ export const Teacher = () => {
       status: 1,
     },
   ];
-  const [retrived, setRetrived] = useState(data);
+  // const [retrived, setRetrived] = useState(data);
+  const [retrived, setRetrived] = useGetAllUsers();
   const [filterList, setFilterList] = useState(retrived);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
@@ -135,14 +138,15 @@ export const Teacher = () => {
         style={{ width: "85px" }}
         placeholder="Prefix"
       >
-        <Option value="ศ.ดร.">ศ.ดร.</Option>
-        <Option value="ศ.">ศ.</Option>
-        <Option value="รศ.ดร.">รศ.ดร.</Option>
-        <Option value="รศ.">รศ.</Option>
-        <Option value="ผศ.ดร.">ผศ.ดร.</Option>
-        <Option value="ผศ.">ผศ.</Option>
-        <Option value="ดร.">ดร.</Option>
-        <Option value="อ.">อ.</Option>
+        <Option value='PROF_DR'>ศ.ดร.</Option>
+        <Option value='PROF'>ศ.</Option>
+        <Option value='ASSOC_PROF_DR'>รศ.ดร.</Option>
+        <Option value='ASSOC_PROF'>รศ.</Option>
+        <Option value='ASST_PROF_DR'>ผศ.ดร.</Option>
+        <Option value='ASST_PROF'>ผศ.</Option>
+        <Option value='DR'>ดร.</Option>
+        <Option value='INSTRUCTOR'>อ.</Option>
+
       </Select>
     </Form.Item>
   );

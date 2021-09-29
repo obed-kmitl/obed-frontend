@@ -1,9 +1,10 @@
 import { useState } from "react";
 import styles from "./MappingStandard.module.scss"
-import { Header, Body, Button, Select, Option, Standard } from ".."
+import { Header, Body, Button, Select, Option, Collapse, Panel } from ".."
 import { Empty, Typography } from "antd";
 import { SwapOutlined } from '@ant-design/icons';
 import { mockStandard } from "./mockStandard";
+import { MappingTable } from "./MappingTable";
 
 
 export const MappingStandard = () => {
@@ -77,22 +78,32 @@ export const MappingStandard = () => {
                     </div>
                 </div>
                 {mainStandard && relativeStandard ?
-                    <div>you select {mainStandard.standardTitle} and {relativeStandard.standardTitle}</div>
-                    :
+                    <>
+                    <Collapse accordion>
+                        {mainStandard.details.map((standard,index)=>
+                            <Panel 
+                                header={<Header level={5}>{standard.standardNo}{" "}{standard.standardName}</Header> }
+                                key={index}
+                            >
+                                <MappingTable standard={standard.subStandard} standardNo={standard.standardNo} relativeStandard={relativeStandard}/>    
+                            </Panel>
+                        )}
                     
+                    </Collapse>
+                    </>
+                    :
                     <Empty
-                        style={{ marginTop: "100px",color:"#c3c3c4" ,fontSize:"20px",fontWeight:"500" }}
+                        style={{ marginTop: "100px", color: "#c3c3c4", fontSize: "20px", fontWeight: "500" }}
                         //image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
                         imageStyle={{
                             height: 100,
                         }}
                         description={
                             <span>
-                                Please Select 2 Standards 
+                                Please Select 2 Standards
                             </span>
                         }
                     />
-
                 }
             </div>
         </div>

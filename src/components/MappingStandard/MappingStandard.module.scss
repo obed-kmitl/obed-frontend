@@ -5,12 +5,12 @@
     margin-bottom: 1rem;
 }
 .content {
-    margin-top: 1rem;
     width: 100%;
     .standardSelect {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin:1rem 0 2rem 0;
         .select {
             flex-direction: column;
             width: 48%;

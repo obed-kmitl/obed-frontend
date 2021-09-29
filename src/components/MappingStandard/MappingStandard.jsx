@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./MappingStandard.module.scss"
 import { Header, Body, Button, Select, Option, Collapse, Panel } from ".."
-import { Empty, Typography } from "antd";
+import { Empty, Popconfirm, Typography } from "antd";
 import { SwapOutlined } from '@ant-design/icons';
 import { mockStandard } from "./mockStandard";
 import { MappingTable } from "./MappingTable";
@@ -11,6 +11,7 @@ export const MappingStandard = () => {
     const [standardList, setStandardList] = useState(mockStandard)
     const [mainStandard, setMainStandard] = useState(null)
     const [relativeStandard, setRelativeStandard] = useState(null)
+    const [isEditing, setIsEditing] = useState(false)
 
     function onMainSelectChange(value) {
         const i = standardList.findIndex((e) => e.standardTitle === value)
@@ -33,7 +34,7 @@ export const MappingStandard = () => {
         <div>
             <div className={styles.tabHead}>
                 <Header level={2}>Mapping Standard</Header>
-                <Button>Edit</Button>
+                {!isEditing ? <Button onClick={() => setIsEditing(true)}>Edit</Button> : <Button onClick={() => setIsEditing(false)}>Save</Button>}
             </div>
             <div className={styles.content}>
                 <div className={styles.standardSelect}>
@@ -54,11 +55,14 @@ export const MappingStandard = () => {
                             ))}
                         </Select>
                     </div>
-                    <Typography.Link
-                        onClick={() => swapStandard()}
-                    >
-                        <SwapOutlined className={styles.swapIcon} />
-                    </Typography.Link>
+                    <Popconfirm title="When swap Standard,All Mapping will reset" onConfirm={() => swapStandard()} >
+                        <Typography.Link
+                            //onClick={() => swapStandard()}
+                            disabled={!isEditing}
+                        >
+                            <SwapOutlined className={styles.swapIcon} />
+                        </Typography.Link>
+                    </Popconfirm>
                     <div className={styles.select}>
                         <div className={styles.selectLabel}>
                             <Header level={4}>Relative Standard</Header>
@@ -79,30 +83,27 @@ export const MappingStandard = () => {
                 </div>
                 {mainStandard && relativeStandard ?
                     <>
-                    <Collapse accordion>
-                        {mainStandard.details.map((standard,index)=>
-                            <Panel 
-                                header={<Header level={5}>{standard.standardNo}{" "}{standard.standardName}</Header> }
-                                key={index}
-                            >
-                                <MappingTable standard={standard.subStandard} standardNo={standard.standardNo} relativeStandard={relativeStandard}/>    
-                            </Panel>
-                        )}
-                    
-                    </Collapse>
+                        <Collapse accordion>
+                            {mainStandard.details.map((standard, index) =>
+                                <Panel
+                                    header={<Header level={5}>{standard.standardNo}{" "}{standard.standardName}</Header>}
+                                    key={index}
+                                >
+                                    <MappingTable
+                                        standard={standard.subStandard}
+                                        standardNo={standard.standardNo}
+                                        relativeStandard={relativeStandard}
+                                        isEdit={isEditing}
+                                    />
+                                </Panel>
+                            )}
+                        </Collapse>
                     </>
                     :
                     <Empty
                         style={{ marginTop: "100px", color: "#c3c3c4", fontSize: "20px", fontWeight: "500" }}
-                        //image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                        imageStyle={{
-                            height: 100,
-                        }}
-                        description={
-                            <span>
-                                Please Select 2 Standards
-                            </span>
-                        }
+                        imageStyle={{ height: 100 }}
+                        description="Please Select 2 Standards"
                     />
                 }
             </div>

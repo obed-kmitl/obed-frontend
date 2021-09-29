@@ -14,10 +14,11 @@ import styles from "./MappingStandard.module.scss";
 const { TreeNode } = TreeSelect;
 
 
-export const MappingTable = ({ standard = [], standardNo, relativeStandard }) => {
+export const MappingTable = ({ standard = [], standardNo, relativeStandard ,isEdit}) => {
     const [form] = Form.useForm();
     const [data, setData] = useState(standard);
     const [editingKey, setEditingKey] = useState("");
+    const [editing, setEditing] = useState(isEdit)
    
     const isEditing = (record) => record.subStandardNo === editingKey;
 
@@ -140,6 +141,7 @@ export const MappingTable = ({ standard = [], standardNo, relativeStandard }) =>
                             style={{
                                 fontSize:"14px",
                             }}
+                            disabled={!isEdit}
                         >
                             <EditOutlined />&nbsp;Edit
                         </Typography.Link>
@@ -176,6 +178,9 @@ export const MappingTable = ({ standard = [], standardNo, relativeStandard }) =>
     useEffect(() => {
         setData(standard);
     }, [standard])
+    useEffect(() => {
+        setEditing(isEdit);
+    }, [isEdit])
 
     const save = async (subStandardNo) => {
         try {

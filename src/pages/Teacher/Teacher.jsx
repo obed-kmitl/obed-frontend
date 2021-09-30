@@ -16,7 +16,7 @@ import {
 import { DeleteOutlined, MailOutlined, EditOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useGetAllUsers } from "../../hooks/user";
+import { useGetAllUsers } from "./hooks/user";
 
 export const Teacher = () => {
   const { Column } = Table;
@@ -131,6 +131,9 @@ export const Teacher = () => {
   const [selectedData, setSelectedData] = useState(null);
   const [edit, setEdit] = useState(false);
   const [searching, setSearching] = useState(false);
+  const [editingIndex, setEditingIndex] = useState();
+  const [lastKeyword, setLastKeyword] = useState("");
+
   const selectBefore = (
     <Form.Item name="prefix" noStyle>
       <Select
@@ -157,13 +160,15 @@ export const Teacher = () => {
   }
 
   function search(keyword) {
+    setLastKeyword(keyword)
     if (keyword !== "") {
       const results = retrived.filter((teacher) => {
         return (
           teacher.firstname.toLowerCase().includes(keyword.toLowerCase()) ||
           teacher.lastname.toLowerCase().includes(keyword.toLowerCase()) ||
           teacher.username.toLowerCase().includes(keyword.toLowerCase()) ||
-          teacher.email.toLowerCase().includes(keyword.toLowerCase())
+          teacher.email.split(/[\.\@]/)[0].toLowerCase().includes(keyword.toLowerCase()) || // xxx@yyy.zzz (split to [xxx,yyy,zzz])
+          teacher.email.split(/[\.\@]/)[1].toLowerCase().includes(keyword.toLowerCase())
         );
       });
       setFilterList(results);
@@ -188,6 +193,65 @@ export const Teacher = () => {
       setRetrived([...retrived, values]);
     }, 2000);
   }
+
+  async function handleEdit(values) {
+    console.log("Recieved values of form: ", values);
+    const getEnPrefix = {
+      "ศ.ดร.": "PROF_DR",
+      "ศ.": "PROF",
+      "รศ.ดร.": "ASSOC_PROF_DR",
+      "รศ.": "ASSOC_PROF",
+      "ผศ.ดร.": "ASST_PROF_DR",
+      "ผศ.": "ASST_PROF",
+      "ดร.": "DR",
+      "อ.": "INSTRUCTOR"
+    }
+    const getThPrefix = {
+      PROF_DR: "ศ.ดร.",
+      PROF: "ศ.",
+      ASSOC_PROF_DR: "รศ.ดร.",
+      ASSOC_PROF: "รศ.",
+      ASST_PROF_DR: "ผศ.ดร.",
+      ASST_PROF: "ผศ.",
+      DR: "ดร.",
+      INSTRUCTOR: "อ."
+    }
+    setConfirmLoading(true);
+    console.log(values.id)
+    const res = await axios.put(`http://localhost:3001/obed/api/user/update/${values.id}`, {
+      email: values.email,
+      username: values.username,
+      prefix: getEnPrefix[values.prefix],
+      firstname: values.firstname,
+      lastname: values.lastname
+    }, {
+      headers: {
+        ["x-access-token"]: 'Bearer ' + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzMDA5MzMyLCJleHAiOjE2MzMwMTI5MzJ9.5_HULSOVR-umzzLKFxaBWJi2Vn8CfDeRP9v0omfcCCQ"
+      },
+    })
+    setVisible(false);
+    setConfirmLoading(false);
+    let newTeacher = [...retrived]
+    newTeacher = newTeacher.map((value) => {
+      if (value.id === values.id) {
+        return {
+          id: res.data.data.user_id,
+          email: res.data.data.email,
+          username: res.data.data.username,
+          prefix: getThPrefix[res.data.data.prefix],
+          firstname: res.data.data.firstname,
+          lastname: res.data.data.lastname
+        }
+      }
+      return value
+    })
+    setRetrived(()=>newTeacher)
+   
+  }
+
+  useEffect(() => {
+    search(lastKeyword)
+  }, [retrived])
 
   function handleCancel() {
     setVisible(false);
@@ -320,13 +384,14 @@ export const Teacher = () => {
           title="Action"
           key="action"
           width="30px"
-          render={(ele, record) => (
+          render={(ele, record, index) => (
             <Space size="large">
               <Tooltip title="Edit">
                 <a
                   href="#"
                   onClick={() => {
                     setEdit(true);
+                    setEditingIndex(index)
                     form.setFieldsValue(record);
                     showModal();
                   }}
@@ -379,7 +444,7 @@ export const Teacher = () => {
             .validateFields()
             .then((values) => {
               form.resetFields();
-              handleSubmit(values);
+              edit ? handleEdit(values) : handleSubmit(values);
             })
             .catch((info) => {
               console.log("Validate Failed", info);
@@ -400,6 +465,12 @@ export const Teacher = () => {
           autoComplete="off"
           requiredMark={"required"}
         >
+          <Form.Item
+            name="id"
+            hidden
+          >
+            <Input />
+          </Form.Item>
           <Form.Item
             label="Firstname"
             name="firstname"

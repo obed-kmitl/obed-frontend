@@ -163,10 +163,14 @@
   .ant-table-column-sorter-down.active {
     color: $color-turquoise-500;
   }
-  a.ant-typography, .ant-typography a{
+  a.ant-typography,
+  .ant-typography a {
     color: $color-turquoise-500;
   }
   .ant-typography.ant-typography-danger {
     color: $color-rose-500;
-}
+  }
+  .ant-select{
+    font-size: 16px;
+  }
 }

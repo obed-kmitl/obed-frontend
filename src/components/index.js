@@ -10,3 +10,4 @@ export { Table } from './Table/Table';
 export { CourseTable } from './CourseTable/CourseTable';
 export { SectionTable } from './SectionTable/SectionTable'
 export { Standard } from './Standard/Standard'
+export { MappingStandard } from './MappingStandard/MappingStandard'

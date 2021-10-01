@@ -19,6 +19,7 @@ import axios from "axios";
 import { useGetAllUsers } from "./hooks/user";
 
 export const Teacher = () => {
+  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzMDcwODc2LCJleHAiOjE2MzMwNzQ0NzZ9.0oQFAFTgS3oghvcYRh_wh4XpR9w_kD0LN7my7QHnv-Q"
   const { Column } = Table;
   const data = [
     {
@@ -122,7 +123,7 @@ export const Teacher = () => {
     },
   ];
   // const [retrived, setRetrived] = useState(data);
-  const [retrived, setRetrived] = useGetAllUsers();
+  const [retrived, setRetrived] = useGetAllUsers(accessToken);
   const [filterList, setFilterList] = useState(retrived);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
@@ -141,14 +142,14 @@ export const Teacher = () => {
         style={{ width: "85px" }}
         placeholder="Prefix"
       >
-        <Option value='PROF_DR'>ศ.ดร.</Option>
-        <Option value='PROF'>ศ.</Option>
-        <Option value='ASSOC_PROF_DR'>รศ.ดร.</Option>
-        <Option value='ASSOC_PROF'>รศ.</Option>
-        <Option value='ASST_PROF_DR'>ผศ.ดร.</Option>
-        <Option value='ASST_PROF'>ผศ.</Option>
-        <Option value='DR'>ดร.</Option>
-        <Option value='INSTRUCTOR'>อ.</Option>
+        <Option value='ศ.ดร.'>ศ.ดร.</Option>
+        <Option value='ศ.'>ศ.</Option>
+        <Option value='รศ.ดร.'>รศ.ดร.</Option>
+        <Option value='รศ.'>รศ.</Option>
+        <Option value='ผศ.ดร'>ผศ.ดร.</Option>
+        <Option value='ผศ.'>ผศ.</Option>
+        <Option value='ดร.'>ดร.</Option>
+        <Option value='อ.'>อ.</Option>
 
       </Select>
     </Form.Item>
@@ -167,7 +168,7 @@ export const Teacher = () => {
           teacher.firstname.toLowerCase().includes(keyword.toLowerCase()) ||
           teacher.lastname.toLowerCase().includes(keyword.toLowerCase()) ||
           teacher.username.toLowerCase().includes(keyword.toLowerCase()) ||
-          teacher.email.split(/[\.\@]/)[0].toLowerCase().includes(keyword.toLowerCase()) || // xxx@yyy.zzz (split to [xxx,yyy,zzz])
+          teacher.email.split(/[\.\@]/)[0].toLowerCase().includes(keyword.toLowerCase()) || // xxx@yyy.com (split to [xxx,yyy,com])
           teacher.email.split(/[\.\@]/)[1].toLowerCase().includes(keyword.toLowerCase())
         );
       });
@@ -226,7 +227,7 @@ export const Teacher = () => {
       lastname: values.lastname
     }, {
       headers: {
-        ["x-access-token"]: 'Bearer ' + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzMDA5MzMyLCJleHAiOjE2MzMwMTI5MzJ9.5_HULSOVR-umzzLKFxaBWJi2Vn8CfDeRP9v0omfcCCQ"
+        ["x-access-token"]: 'Bearer ' + accessToken
       },
     })
     setVisible(false);
@@ -292,9 +293,14 @@ export const Teacher = () => {
       );
   }
 
-  function deleteAccount(record) {
-    let temp = filterList.filter((e) => e.id !== record.id);
-    setFilterList(temp);
+  async function deleteAccount(record) {
+    let temp = retrived.filter((e) => e.id !== record.id);
+    setRetrived(temp);
+    await axios.delete(`http://localhost:3001/obed/api/user/remove/${record.id}`, {
+      headers: {
+        ["x-access-token"]: 'Bearer ' + accessToken
+      },
+    })
     console.log(temp);
   }
 

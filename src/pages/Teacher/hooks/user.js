@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 
-export const useGetAllUsers = () => {
+export const useGetAllUsers = (accessToken) => {
     const [retrived, setRetrived] = useState();
 
     async function fetchAllUsers() {
         const result = await axios.get('http://localhost:3001/obed/api/user/getAll',
             {
                 headers: {
-                    ["x-access-token"]: 'Bearer ' + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzMDA5MzMyLCJleHAiOjE2MzMwMTI5MzJ9.5_HULSOVR-umzzLKFxaBWJi2Vn8CfDeRP9v0omfcCCQ"
+                    ["x-access-token"]: 'Bearer ' + accessToken
                 }
             })
         const getThPrefix = {

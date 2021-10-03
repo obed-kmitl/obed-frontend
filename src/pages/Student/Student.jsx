@@ -104,7 +104,7 @@ export const Student = () => {
       email: "61010011@kmitl.ac.th",
     },
   ];
-  const [retrived, setRetrived] = useState(data);
+  const [retrived] = useState(data);
   const [filterList, setFilterList] = useState(retrived);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);

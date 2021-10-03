@@ -1,6 +1,4 @@
-import { useState } from "react";
 import styles from "./Login.module.scss";
-import { useHistory } from "react-router";
 import { Helmet } from "react-helmet";
 import css from "classnames";
 import img from "../../assets/img/login_img.svg";
@@ -13,7 +11,7 @@ import useAuthen from "../../hooks/useAuthen";
 
 export const Login = () => {
   const [form] = Form.useForm();
-  const { onLogin, message, loading } = useAuthen();
+  const { onLogin, onAdminLogin, message, loading } = useAuthen();
 
   function onFinishFailed(errorInfo) {
     console.log("Failed:", errorInfo);
@@ -41,7 +39,11 @@ export const Login = () => {
             form={form}
             name="login"
             layout="vertical"
-            onFinish={(values) => onLogin(values.username, values.password)}
+            onFinish={(values) =>
+              isAdmin
+                ? onAdminLogin(values.username, values.password)
+                : onLogin(values.username, values.password)
+            }
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >

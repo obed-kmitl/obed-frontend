@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Layout, Menu, Avatar, Dropdown } from "antd";
 import {
@@ -17,6 +17,7 @@ import { Header } from "../../../components";
 import styles from "./Sidebar.module.scss";
 import logo from "../../../assets/img/Logo.png";
 import useAuthen from "../../../hooks/useAuthen";
+import UserContext from "../../../contexts/UserContext";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -76,10 +77,10 @@ const courses = [
 ];
 
 const Sidebar = () => {
-  const userName = "username";
   const location = useLocation();
   const { onLogout } = useAuthen();
   const isAdmin = window.location.host.split(".")[0] === "admin";
+  const { user } = useContext(UserContext);
   const [semesterTitle, setSemesterTitle] = useState({
     id: semesters[0].id,
     semester: semesters[0].semester,
@@ -278,7 +279,7 @@ const Sidebar = () => {
             <Avatar size={50} icon={<UserOutlined />} />
             <Link to="#" className={styles.link}>
               {" "}
-              {userName}{" "}
+              {user.username}{" "}
             </Link>
           </div>
         </Dropdown>

@@ -20,7 +20,7 @@ import "./styles/global.module.scss";
 import UserContext from "./contexts/UserContext";
 
 function App() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   if (window.location.host.split(".")[0] === "admin") {
     return (

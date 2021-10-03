@@ -23,6 +23,10 @@ const useAuthen = () => {
           if (response.data.data.accessToken) {
             localStorage.setItem("atk", response.data.data.accessToken);
             localStorage.setItem("rtk", response.data.data.refreshToken);
+            localStorage.setItem(
+              "user",
+              JSON.stringify(response.data.data.userProfile)
+            );
             setUser(response.data.data.userProfile);
           }
           history.push("/");
@@ -52,6 +56,10 @@ const useAuthen = () => {
           if (response.data.data.accessToken) {
             localStorage.setItem("atk", response.data.data.accessToken);
             localStorage.setItem("rtk", response.data.data.refreshToken);
+            localStorage.setItem(
+              "user",
+              JSON.stringify(response.data.data.userProfile)
+            );
             setUser(response.data.data.userProfile);
           }
           history.push("/");

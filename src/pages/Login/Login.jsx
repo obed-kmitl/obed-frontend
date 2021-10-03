@@ -79,7 +79,7 @@ export const Login = () => {
               </Button>
               {!isAdmin && (
                 <Body level={2} className={styles.infoText}>
-                  To get the account please contact to OBCE Administrator{" "}
+                  To get the account please contact to OBED Administrator{" "}
                   <a href="mailto:administrator@obce.com">
                     administrator@obce.com
                   </a>{" "}

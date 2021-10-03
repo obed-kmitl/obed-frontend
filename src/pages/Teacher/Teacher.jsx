@@ -132,7 +132,7 @@ export const Teacher = () => {
   const [selectedData, setSelectedData] = useState(null);
   const [edit, setEdit] = useState(false);
   const [searching, setSearching] = useState(false);
-  const [editingIndex, setEditingIndex] = useState();
+  const [editingData, setEditingData] = useState();
   const [lastKeyword, setLastKeyword] = useState("");
   const getEnPrefix = {
     "ศ.ดร.": "PROF_DR",
@@ -202,7 +202,6 @@ export const Teacher = () => {
 
   async function handleSubmit(values) {
     console.log("Recieved values of form: ", values);
-    // setConfirmLoading(true);
     await axios.post(`http://localhost:3001/obed/api/auth/register`, {
       email: values.email,
       username: values.username,
@@ -406,7 +405,7 @@ export const Teacher = () => {
                   href="#"
                   onClick={() => {
                     setEdit(true);
-                    setEditingIndex(index)
+                    setEditingData(record)
                     form.setFieldsValue(record);
                     showModal();
                   }}
@@ -503,7 +502,25 @@ export const Teacher = () => {
           <Form.Item
             label="Username"
             name="username"
-            rules={[{ required: true, message: "Please input username!" }]}
+            rules={[
+              { required: true, message: "Please input username!" },
+              {
+                validator: (rule, value, callback) => {
+                  if (edit) {
+                    const alreadyExistUsername = retrived.map((e) => e.username).filter((e) => e !== editingData.username)
+                    if (alreadyExistUsername.includes(value)) {
+                      return Promise.reject("Already exist!")
+                    }
+                    return Promise.resolve()
+                  }else{
+                    const alreadyExistUsername = retrived.map((e) => e.username)
+                    if (alreadyExistUsername.includes(value)) {
+                      return Promise.reject("Already exist!")
+                    }
+                    return Promise.resolve()
+                  }
+                }
+              }]}
           >
             <Input placeholder="Username" />
           </Form.Item>
@@ -513,6 +530,24 @@ export const Teacher = () => {
             rules={[
               { required: true, message: "Please input email!" },
               { type: "email" },
+              {
+                validator: (rule, value, callback) => {
+                  if (edit) {
+                    const alreadyExistEmail = retrived.map((e) => e.email).filter((e) => e !== editingData.email)
+                    if (alreadyExistEmail.includes(value)) {
+                      return Promise.reject("Already exist!")
+                    }
+                    return Promise.resolve()
+                  }else{
+                    const alreadyExistEmail = retrived.map((e) => e.email)
+                    if (alreadyExistEmail.includes(value)) {
+                      return Promise.reject("Already exist!")
+                    }
+                    return Promise.resolve()
+                  }
+                }
+              }
+
             ]}
           >
             <Input placeholder="Email" />

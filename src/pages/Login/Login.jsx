@@ -9,34 +9,11 @@ import logo from "../../assets/img/logo_admin.svg";
 import logo2 from "../../assets/img/logo_teacher.svg";
 import { Button, Body } from "../../components";
 import { Input, Form, Alert } from "antd";
-
-import AuthService from "../../services/auth.service";
+import useAuthen from "../../hooks/useAuthen";
 
 export const Login = () => {
-  const history = useHistory();
   const [form] = Form.useForm();
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  function handleLogin(values) {
-    setLoading(true);
-    AuthService.login(values.username, values.password).then(
-      () => {
-        history.push("/");
-        window.location.reload();
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setMessage(resMessage);
-        setLoading(false);
-      }
-    );
-  }
+  const { onLogin, message, loading } = useAuthen();
 
   function onFinishFailed(errorInfo) {
     console.log("Failed:", errorInfo);
@@ -64,7 +41,7 @@ export const Login = () => {
             form={form}
             name="login"
             layout="vertical"
-            onFinish={handleLogin}
+            onFinish={(values) => onLogin(values.username, values.password)}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >

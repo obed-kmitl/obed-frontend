@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import styles from "./Sidebar.module.scss";
 import { Layout, Menu, Avatar, Dropdown } from "antd";
 import {
   AreaChartOutlined,
@@ -13,9 +13,10 @@ import {
   LogoutOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
 import { Header } from "../../../components";
+import styles from "./Sidebar.module.scss";
 import logo from "../../../assets/img/Logo.png";
+import useAuthen from "../../../hooks/useAuthen";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -76,9 +77,9 @@ const courses = [
 
 const Sidebar = () => {
   const userName = "username";
-
+  const location = useLocation();
+  const { onLogout } = useAuthen();
   const isAdmin = window.location.host.split(".")[0] === "admin";
-
   const [semesterTitle, setSemesterTitle] = useState({
     id: semesters[0].id,
     semester: semesters[0].semester,
@@ -91,8 +92,6 @@ const Sidebar = () => {
     section: courses[0].section,
   });
 
-  const location = useLocation();
-
   const userMenu = (
     <Menu className={styles.usermenu}>
       <Menu.Item key="1">
@@ -104,7 +103,11 @@ const Sidebar = () => {
         <Link to="/sandbox"> Setting </Link>
       </Menu.Item>
       <Menu.Item key="3" style={{ color: "red" }}>
-        <LogoutOutlined /> <Link to="#"> Sign Out </Link>
+        <LogoutOutlined />{" "}
+        <Link to="#" onClick={onLogout}>
+          {" "}
+          Sign Out{" "}
+        </Link>
       </Menu.Item>
     </Menu>
   );

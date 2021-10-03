@@ -14,114 +14,112 @@ import {
   Space,
 } from "antd";
 import { DeleteOutlined, MailOutlined, EditOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { useGetAllUsers } from "../../hooks/user";
 
 export const Teacher = () => {
   const { Column } = Table;
-  const data = [
-    {
-      id: 1,
-      prefix: "ผศ.ดร.",
-      firstname: "สมชาย",
-      lastname: "ใจดี",
-      username: "somchai1234",
-      email: "somchai.ja@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 2,
-      prefix: "รศ.ดร.",
-      firstname: "สมหญิง",
-      lastname: "จริงใจ",
-      username: "somying1",
-      email: "somying.ji@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 3,
-      prefix: "อ.",
-      firstname: "สมปอง",
-      lastname: "สุขสบาย",
-      username: "sompong1988",
-      email: "sompong.su@kmitl.ac.th",
-      status: 0,
-    },
-    {
-      id: 4,
-      prefix: "ดร.",
-      firstname: "สมปราชญ์",
-      lastname: "สดใส",
-      username: "somprach38",
-      email: "somprach.so@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 5,
-      prefix: "ผศ.",
-      firstname: "สมหมาย",
-      lastname: "สายไทย",
-      username: "sommai55",
-      email: "sommai.sa@kmitl.ac.th",
-      status: 0,
-    },
-    {
-      id: 6,
-      prefix: "ผศ.ดร.",
-      firstname: "สมหมาย",
-      lastname: "รักไทย",
-      username: "sommai1999",
-      email: "sommai.ra@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 7,
-      prefix: "รศ.",
-      firstname: "สมศักดิ์",
-      lastname: "ใฝ่รู้",
-      username: "somsak74",
-      email: "somsak.fh@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 8,
-      prefix: "อ.",
-      firstname: "กมลชนก",
-      lastname: "ศรีไทย",
-      username: "kamol123",
-      email: "kamolchanok.sr@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 9,
-      prefix: "ดร.",
-      firstname: "สมพงศ์",
-      lastname: "ชัยชนะ",
-      username: "somphong",
-      email: "somphong.ch@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 10,
-      prefix: "รศ.",
-      firstname: "สมสง่า",
-      lastname: "ราศี",
-      username: "somsanga34",
-      email: "somsanga.ra@kmitl.ac.th",
-      status: 0,
-    },
-    {
-      id: 11,
-      prefix: "อ.",
-      firstname: "ธนวัฒน์",
-      lastname: "สมมุติ",
-      username: "thanawat88",
-      email: "thanawat.so@kmitl.ac.th",
-      status: 1,
-    },
-  ];
-  // const [retrived, setRetrived] = useState(data);
+  // const data = [
+  //   {
+  //     id: 1,
+  //     prefix: "ผศ.ดร.",
+  //     firstname: "สมชาย",
+  //     lastname: "ใจดี",
+  //     username: "somchai1234",
+  //     email: "somchai.ja@kmitl.ac.th",
+  //     status: 1,
+  //   },
+  //   {
+  //     id: 2,
+  //     prefix: "รศ.ดร.",
+  //     firstname: "สมหญิง",
+  //     lastname: "จริงใจ",
+  //     username: "somying1",
+  //     email: "somying.ji@kmitl.ac.th",
+  //     status: 1,
+  //   },
+  //   {
+  //     id: 3,
+  //     prefix: "อ.",
+  //     firstname: "สมปอง",
+  //     lastname: "สุขสบาย",
+  //     username: "sompong1988",
+  //     email: "sompong.su@kmitl.ac.th",
+  //     status: 0,
+  //   },
+  //   {
+  //     id: 4,
+  //     prefix: "ดร.",
+  //     firstname: "สมปราชญ์",
+  //     lastname: "สดใส",
+  //     username: "somprach38",
+  //     email: "somprach.so@kmitl.ac.th",
+  //     status: 1,
+  //   },
+  //   {
+  //     id: 5,
+  //     prefix: "ผศ.",
+  //     firstname: "สมหมาย",
+  //     lastname: "สายไทย",
+  //     username: "sommai55",
+  //     email: "sommai.sa@kmitl.ac.th",
+  //     status: 0,
+  //   },
+  //   {
+  //     id: 6,
+  //     prefix: "ผศ.ดร.",
+  //     firstname: "สมหมาย",
+  //     lastname: "รักไทย",
+  //     username: "sommai1999",
+  //     email: "sommai.ra@kmitl.ac.th",
+  //     status: 1,
+  //   },
+  //   {
+  //     id: 7,
+  //     prefix: "รศ.",
+  //     firstname: "สมศักดิ์",
+  //     lastname: "ใฝ่รู้",
+  //     username: "somsak74",
+  //     email: "somsak.fh@kmitl.ac.th",
+  //     status: 1,
+  //   },
+  //   {
+  //     id: 8,
+  //     prefix: "อ.",
+  //     firstname: "กมลชนก",
+  //     lastname: "ศรีไทย",
+  //     username: "kamol123",
+  //     email: "kamolchanok.sr@kmitl.ac.th",
+  //     status: 1,
+  //   },
+  //   {
+  //     id: 9,
+  //     prefix: "ดร.",
+  //     firstname: "สมพงศ์",
+  //     lastname: "ชัยชนะ",
+  //     username: "somphong",
+  //     email: "somphong.ch@kmitl.ac.th",
+  //     status: 1,
+  //   },
+  //   {
+  //     id: 10,
+  //     prefix: "รศ.",
+  //     firstname: "สมสง่า",
+  //     lastname: "ราศี",
+  //     username: "somsanga34",
+  //     email: "somsanga.ra@kmitl.ac.th",
+  //     status: 0,
+  //   },
+  //   {
+  //     id: 11,
+  //     prefix: "อ.",
+  //     firstname: "ธนวัฒน์",
+  //     lastname: "สมมุติ",
+  //     username: "thanawat88",
+  //     email: "thanawat.so@kmitl.ac.th",
+  //     status: 1,
+  //   },
+  // ];
   const [retrived, setRetrived] = useGetAllUsers();
   const [filterList, setFilterList] = useState(retrived);
   const [page, setPage] = useState(1);
@@ -138,15 +136,14 @@ export const Teacher = () => {
         style={{ width: "85px" }}
         placeholder="Prefix"
       >
-        <Option value='PROF_DR'>ศ.ดร.</Option>
-        <Option value='PROF'>ศ.</Option>
-        <Option value='ASSOC_PROF_DR'>รศ.ดร.</Option>
-        <Option value='ASSOC_PROF'>รศ.</Option>
-        <Option value='ASST_PROF_DR'>ผศ.ดร.</Option>
-        <Option value='ASST_PROF'>ผศ.</Option>
-        <Option value='DR'>ดร.</Option>
-        <Option value='INSTRUCTOR'>อ.</Option>
-
+        <Option value="PROF_DR">ศ.ดร.</Option>
+        <Option value="PROF">ศ.</Option>
+        <Option value="ASSOC_PROF_DR">รศ.ดร.</Option>
+        <Option value="ASSOC_PROF">รศ.</Option>
+        <Option value="ASST_PROF_DR">ผศ.ดร.</Option>
+        <Option value="ASST_PROF">ผศ.</Option>
+        <Option value="DR">ดร.</Option>
+        <Option value="INSTRUCTOR">อ.</Option>
       </Select>
     </Form.Item>
   );

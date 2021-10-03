@@ -19,7 +19,7 @@ import axios from "axios";
 import { useGetAllUsers } from "./hooks/user";
 
 export const Teacher = () => {
-  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzMDcwODc2LCJleHAiOjE2MzMwNzQ0NzZ9.0oQFAFTgS3oghvcYRh_wh4XpR9w_kD0LN7my7QHnv-Q"
+  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzMjQ2OTc0LCJleHAiOjE2MzMyNTA1NzR9.md0v2aJmWUXkkmBe3ty-Q0rM4jjcR2acAw59vDWgVK4"
   const { Column } = Table;
   const data = [
     {
@@ -134,6 +134,26 @@ export const Teacher = () => {
   const [searching, setSearching] = useState(false);
   const [editingIndex, setEditingIndex] = useState();
   const [lastKeyword, setLastKeyword] = useState("");
+  const getEnPrefix = {
+    "ศ.ดร.": "PROF_DR",
+    "ศ.": "PROF",
+    "รศ.ดร.": "ASSOC_PROF_DR",
+    "รศ.": "ASSOC_PROF",
+    "ผศ.ดร.": "ASST_PROF_DR",
+    "ผศ.": "ASST_PROF",
+    "ดร.": "DR",
+    "อ.": "INSTRUCTOR"
+  }
+  const getThPrefix = {
+    PROF_DR: "ศ.ดร.",
+    PROF: "ศ.",
+    ASSOC_PROF_DR: "รศ.ดร.",
+    ASSOC_PROF: "รศ.",
+    ASST_PROF_DR: "ผศ.ดร.",
+    ASST_PROF: "ผศ.",
+    DR: "ดร.",
+    INSTRUCTOR: "อ."
+  }
 
   const selectBefore = (
     <Form.Item name="prefix" noStyle>
@@ -146,7 +166,7 @@ export const Teacher = () => {
         <Option value='ศ.'>ศ.</Option>
         <Option value='รศ.ดร.'>รศ.ดร.</Option>
         <Option value='รศ.'>รศ.</Option>
-        <Option value='ผศ.ดร'>ผศ.ดร.</Option>
+        <Option value='ผศ.ดร.'>ผศ.ดร.</Option>
         <Option value='ผศ.'>ผศ.</Option>
         <Option value='ดร.'>ดร.</Option>
         <Option value='อ.'>อ.</Option>
@@ -180,43 +200,32 @@ export const Teacher = () => {
     }
   }
 
-  function handleSubmit(values) {
+  async function handleSubmit(values) {
     console.log("Recieved values of form: ", values);
-    setConfirmLoading(true);
+    // setConfirmLoading(true);
+    await axios.post(`http://localhost:3001/obed/api/auth/register`, {
+      email: values.email,
+      username: values.username,
+      prefix: getEnPrefix[values.prefix],
+      firstname: values.firstname,
+      lastname: values.lastname
+    }, {
+      headers: {
+        ["x-access-token"]: 'Bearer ' + accessToken
+      },
+    })
     openNotificationWithIcon(
       "success",
       "Teacher added",
       "Please check user " + values.email + " inbox to change password."
     );
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-      setRetrived([...retrived, values]);
-    }, 2000);
+    setVisible(false);
+    setRetrived([...retrived, values]);
+
   }
 
   async function handleEdit(values) {
     console.log("Recieved values of form: ", values);
-    const getEnPrefix = {
-      "ศ.ดร.": "PROF_DR",
-      "ศ.": "PROF",
-      "รศ.ดร.": "ASSOC_PROF_DR",
-      "รศ.": "ASSOC_PROF",
-      "ผศ.ดร.": "ASST_PROF_DR",
-      "ผศ.": "ASST_PROF",
-      "ดร.": "DR",
-      "อ.": "INSTRUCTOR"
-    }
-    const getThPrefix = {
-      PROF_DR: "ศ.ดร.",
-      PROF: "ศ.",
-      ASSOC_PROF_DR: "รศ.ดร.",
-      ASSOC_PROF: "รศ.",
-      ASST_PROF_DR: "ผศ.ดร.",
-      ASST_PROF: "ผศ.",
-      DR: "ดร.",
-      INSTRUCTOR: "อ."
-    }
     setConfirmLoading(true);
     console.log(values.id)
     const res = await axios.put(`http://localhost:3001/obed/api/user/update/${values.id}`, {
@@ -246,8 +255,8 @@ export const Teacher = () => {
       }
       return value
     })
-    setRetrived(()=>newTeacher)
-   
+    setRetrived(() => newTeacher)
+
   }
 
   useEffect(() => {

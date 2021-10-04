@@ -13,6 +13,7 @@ const useAuthen = () => {
   const { setUser } = useContext(UserContext);
 
   function onLogin(username, password) {
+    setLoading(true);
     return axios
       .post(config.apiUrl + "/auth/login", {
         username,
@@ -23,10 +24,6 @@ const useAuthen = () => {
           if (response.data.data.accessToken) {
             localStorage.setItem("atk", response.data.data.accessToken);
             localStorage.setItem("rtk", response.data.data.refreshToken);
-            localStorage.setItem(
-              "user",
-              JSON.stringify(response.data.data.userProfile)
-            );
             setUser(response.data.data.userProfile);
           }
           history.push("/");
@@ -46,6 +43,7 @@ const useAuthen = () => {
   }
 
   function onAdminLogin(username, password) {
+    setLoading(true);
     return axios
       .post(config.apiUrl + "/auth/adminLogin", {
         username,
@@ -56,10 +54,6 @@ const useAuthen = () => {
           if (response.data.data.accessToken) {
             localStorage.setItem("atk", response.data.data.accessToken);
             localStorage.setItem("rtk", response.data.data.refreshToken);
-            localStorage.setItem(
-              "user",
-              JSON.stringify(response.data.data.userProfile)
-            );
             setUser(response.data.data.userProfile);
           }
           history.push("/");
@@ -82,6 +76,7 @@ const useAuthen = () => {
     return httpClient.post("/auth/logout").then(() => {
       history.push("/login");
       localStorage.clear();
+      setUser({});
     });
   }
 

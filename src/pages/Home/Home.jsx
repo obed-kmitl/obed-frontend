@@ -19,6 +19,9 @@ export const Home = () => {
         <li>
           <Link to="/teacher">Teacher</Link>
         </li>
+        <li>
+          <Link to="/login">Login</Link>
+        </li>
       </ul>
     </div>
   );

@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route as PublicRoute,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 import {
   Curriculum,
   Home,
@@ -14,13 +10,14 @@ import {
   Login,
   Student,
 } from "./pages";
+import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
 import "./styles/global.module.scss";
 
 import UserContext from "./contexts/UserContext";
 
 function App() {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [user, setUser] = useState({});
 
   if (window.location.host.split(".")[0] === "admin") {
     return (
@@ -32,24 +29,24 @@ function App() {
             </PublicRoute>
             <Layout>
               <Switch>
-                <PublicRoute path="/teacher">
+                <PrivateRoute path="/teacher">
                   <Teacher />
-                </PublicRoute>
-                <PublicRoute path="/curriculum">
+                </PrivateRoute>
+                <PrivateRoute path="/curriculum">
                   <Curriculum />
-                </PublicRoute>
-                <PublicRoute path="/sandbox">
+                </PrivateRoute>
+                <PrivateRoute path="/sandbox">
                   <Sandbox />
-                </PublicRoute>
-                <PublicRoute path="/profile">
+                </PrivateRoute>
+                <PrivateRoute path="/profile">
                   <Profile />
-                </PublicRoute>
-                <PublicRoute path="/plan">
+                </PrivateRoute>
+                <PrivateRoute path="/plan">
                   <Plan />
-                </PublicRoute>
-                <PublicRoute exact path="/">
+                </PrivateRoute>
+                <PrivateRoute exact path="/">
                   <Home />
-                </PublicRoute>
+                </PrivateRoute>
               </Switch>
             </Layout>
           </Switch>
@@ -58,20 +55,25 @@ function App() {
     );
   } else
     return (
-      <Router>
-        <Switch>
-          <PublicRoute path="/login">
-            <Login />
-          </PublicRoute>
-          <Layout>
-            <Switch>
-              <PublicRoute path="/student">
-                <Student />
-              </PublicRoute>
-            </Switch>
-          </Layout>
-        </Switch>
-      </Router>
+      <UserContext.Provider value={{ user, setUser }}>
+        <Router>
+          <Switch>
+            <PublicRoute path="/login">
+              <Login />
+            </PublicRoute>
+            <Layout>
+              <Switch>
+                <PrivateRoute path="/student">
+                  <Student />
+                </PrivateRoute>
+                <PrivateRoute exact path="/">
+                  <Home />
+                </PrivateRoute>
+              </Switch>
+            </Layout>
+          </Switch>
+        </Router>
+      </UserContext.Provider>
     );
 }
 

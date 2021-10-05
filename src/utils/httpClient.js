@@ -20,8 +20,8 @@ function RefreshAccessToken() {
         return response.data.data.accessToken;
       },
       () => {
-        localStorage.clear();
-        return (window.location.href = "/login"); // #TODO: Change to Session Expire page
+        // Raise Session expired flag
+        localStorage.setItem("sessionStatus", "expired");
       }
     );
 }
@@ -33,6 +33,7 @@ httpClient.interceptors.request.use((request) => {
       "x-access-token": "Bearer " + token,
     };
   } else {
+    localStorage.clear();
     return (window.location.href = "/login");
   }
   return request;

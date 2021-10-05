@@ -12,7 +12,7 @@ function PublicRoute({ children, path, ...props }) {
 
   useEffect(() => {
     checkSession();
-  }, [checkSession]);
+  }, []);
 
   return (
     <Route path={path} {...props}>

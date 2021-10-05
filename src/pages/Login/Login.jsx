@@ -7,11 +7,18 @@ import logo from "../../assets/img/logo_admin.svg";
 import logo2 from "../../assets/img/logo_teacher.svg";
 import { Button, Body } from "../../components";
 import { Input, Form, Alert } from "antd";
+import { useLocation } from "react-router";
 import useAuthen from "../../hooks/useAuthen";
 
 export const Login = () => {
   const [form] = Form.useForm();
   const { onLogin, onAdminLogin, message, loading } = useAuthen();
+
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+
+  const query = useQuery();
 
   function onFinishFailed(errorInfo) {
     console.log("Failed:", errorInfo);
@@ -41,8 +48,16 @@ export const Login = () => {
             layout="vertical"
             onFinish={(values) =>
               isAdmin
-                ? onAdminLogin(values.username, values.password)
-                : onLogin(values.username, values.password)
+                ? onAdminLogin(
+                    values.username,
+                    values.password,
+                    query.get("nextpage") || ""
+                  )
+                : onLogin(
+                    values.username,
+                    values.password,
+                    query.get("nextpage") || ""
+                  )
             }
             onFinishFailed={onFinishFailed}
             autoComplete="off"

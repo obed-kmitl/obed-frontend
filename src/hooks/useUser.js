@@ -13,8 +13,6 @@ const useUser = () => {
   function getProfile() {
     return httpClient.get("/user/getProfile").then(
       (response) => {
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-        console.log("useUser", response.data.data);
         setUser(response.data.data);
         return response.data.data;
       },

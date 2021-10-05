@@ -12,7 +12,7 @@ const useAuthen = () => {
   const [loading, setLoading] = useState(false);
   const { setUser } = useContext(UserContext);
 
-  function onLogin(username, password) {
+  function onLogin(username, password, next = "") {
     setLoading(true);
     return axios
       .post(config.apiUrl + "/auth/login", {
@@ -26,7 +26,7 @@ const useAuthen = () => {
             localStorage.setItem("rtk", response.data.data.refreshToken);
             setUser(response.data.data.userProfile);
           }
-          history.push("/");
+          history.push(next === "" ? "/" : next);
           return response.data;
         },
         (error) => {
@@ -42,7 +42,7 @@ const useAuthen = () => {
       );
   }
 
-  function onAdminLogin(username, password) {
+  function onAdminLogin(username, password, next = "") {
     setLoading(true);
     return axios
       .post(config.apiUrl + "/auth/adminLogin", {
@@ -56,7 +56,7 @@ const useAuthen = () => {
             localStorage.setItem("rtk", response.data.data.refreshToken);
             setUser(response.data.data.userProfile);
           }
-          history.push("/");
+          history.push(next === "" ? "/" : next);
           return response.data;
         },
         (error) => {

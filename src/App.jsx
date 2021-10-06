@@ -58,6 +58,9 @@ function App() {
               <PublicRoute path="/student">
                 <Student />
               </PublicRoute>
+              <PublicRoute path="/profile">
+                <Profile />
+              </PublicRoute>
             </Switch>
           </Layout>
         </Switch>

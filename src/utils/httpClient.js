@@ -21,6 +21,7 @@ function RefreshAccessToken() {
       },
       () => {
         // Raise Session expired flag
+        // ## Comment this to DEV without back-end ##
         localStorage.setItem("sessionStatus", "expired");
       }
     );
@@ -33,8 +34,9 @@ httpClient.interceptors.request.use((request) => {
       "x-access-token": "Bearer " + token,
     };
   } else {
-    localStorage.clear();
-    return (window.location.href = "/login");
+    // ## Comment this else{} to DEV without back-end ##
+    // localStorage.clear();
+    // return (window.location.href = "/login");
   }
   return request;
 });

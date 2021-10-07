@@ -11,4 +11,9 @@
     display: flex;
     gap: 1rem;
   }
+
+  :global(.ant-form-item-with-help){
+    margin-bottom: 1rem;
+
+  }
 }

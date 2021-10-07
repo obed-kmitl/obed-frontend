@@ -14,8 +14,9 @@ import {
   Space,
 } from "antd";
 import { DeleteOutlined, MailOutlined, EditOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import { useGetAllUsers } from "../../hooks/user";
+import { useState, useEffect } from "react";
+import { useGetAllUsers } from "./hooks/user";
+import axios from "axios";
 
 export const Teacher = () => {
   const accessToken =

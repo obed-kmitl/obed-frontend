@@ -206,7 +206,7 @@ export function Curriculum() {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.curriculum}>
       <Helmet>
         <title>Curriculum - OBED</title>
       </Helmet>

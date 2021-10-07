@@ -3,7 +3,7 @@ import { Header } from "..";
 
 export function Table({ children, type, col1, col2, col3, col4, col5, col6 }) {
   return (
-    <div className={styles.container}>
+    <div className={styles.table}>
       <div className={styles.tableHead}>
         {type === 1 ? (
           <div className={styles.type1}>

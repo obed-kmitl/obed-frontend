@@ -104,7 +104,7 @@ export const Student = () => {
       email: "61010011@kmitl.ac.th",
     },
   ];
-  const [retrived, setRetrived] = useState(data);
+  const [retrived] = useState(data);
   const [filterList, setFilterList] = useState(retrived);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
@@ -223,7 +223,7 @@ export const Student = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.student}>
       <Helmet>
         <title>Student - OBED</title>
       </Helmet>
@@ -408,6 +408,7 @@ export const Student = () => {
               <Popconfirm
                 title="Sure to clear list?"
                 onConfirm={() => setAddList([])}
+                disabled={addList.length === 0 ? true : false}
               >
                 <a href="#">Clear All</a>
               </Popconfirm>

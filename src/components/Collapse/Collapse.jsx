@@ -5,7 +5,7 @@ const { Panel } = Collapse;
 
 function MyCollapse({ children, ghost, ...props }) {
   return (
-    <div className={styles.container}>
+    <div className={styles.wrapper}>
       <Collapse
         className={styles.collapse}
         ghost={ghost}

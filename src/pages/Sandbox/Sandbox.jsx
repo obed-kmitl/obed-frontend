@@ -82,7 +82,7 @@ export const Sandbox = () => {
 
 
   return (
-    <div className={styles.container}>
+    <div className={styles.sandbox}>
       <Helmet>
         <title>Sandbox - OBED</title>
       </Helmet>

@@ -9,7 +9,7 @@
   background-color: $color-turquoise-500;
 }
 
-.container {
+.login {
   display: flex;
   height: 80vh;
   max-height: 900px;
@@ -38,11 +38,24 @@
   width: 450px;
 
   .form {
-    width: 280px;
+    width: 320px;
+
+    .alert {
+      margin-bottom: 2rem;
+    }
   }
 
   input,
   button {
     width: 100%;
   }
+
+  .infoText {
+    margin-top: 1rem;
+  }
+}
+
+.teacher {
+  background-color: $color-carrot-500;
+  flex-direction: row-reverse;
 }

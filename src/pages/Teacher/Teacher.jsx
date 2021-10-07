@@ -14,12 +14,12 @@ import {
   Space,
 } from "antd";
 import { DeleteOutlined, MailOutlined, EditOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useGetAllUsers } from "./hooks/user";
+import { useState } from "react";
+import { useGetAllUsers } from "../../hooks/user";
 
 export const Teacher = () => {
-  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzMjQ2OTc0LCJleHAiOjE2MzMyNTA1NzR9.md0v2aJmWUXkkmBe3ty-Q0rM4jjcR2acAw59vDWgVK4"
+  const accessToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzMjQ2OTc0LCJleHAiOjE2MzMyNTA1NzR9.md0v2aJmWUXkkmBe3ty-Q0rM4jjcR2acAw59vDWgVK4";
   const { Column } = Table;
   const data = [
     {
@@ -142,8 +142,8 @@ export const Teacher = () => {
     "ผศ.ดร.": "ASST_PROF_DR",
     "ผศ.": "ASST_PROF",
     "ดร.": "DR",
-    "อ.": "INSTRUCTOR"
-  }
+    "อ.": "INSTRUCTOR",
+  };
   const getThPrefix = {
     PROF_DR: "ศ.ดร.",
     PROF: "ศ.",
@@ -152,8 +152,8 @@ export const Teacher = () => {
     ASST_PROF_DR: "ผศ.ดร.",
     ASST_PROF: "ผศ.",
     DR: "ดร.",
-    INSTRUCTOR: "อ."
-  }
+    INSTRUCTOR: "อ.",
+  };
 
   const selectBefore = (
     <Form.Item name="prefix" noStyle>
@@ -162,15 +162,14 @@ export const Teacher = () => {
         style={{ width: "85px" }}
         placeholder="Prefix"
       >
-        <Option value='ศ.ดร.'>ศ.ดร.</Option>
-        <Option value='ศ.'>ศ.</Option>
-        <Option value='รศ.ดร.'>รศ.ดร.</Option>
-        <Option value='รศ.'>รศ.</Option>
-        <Option value='ผศ.ดร.'>ผศ.ดร.</Option>
-        <Option value='ผศ.'>ผศ.</Option>
-        <Option value='ดร.'>ดร.</Option>
-        <Option value='อ.'>อ.</Option>
-
+        <Option value="PROF_DR">ศ.ดร.</Option>
+        <Option value="PROF">ศ.</Option>
+        <Option value="ASSOC_PROF_DR">รศ.ดร.</Option>
+        <Option value="ASSOC_PROF">รศ.</Option>
+        <Option value="ASST_PROF_DR">ผศ.ดร.</Option>
+        <Option value="ASST_PROF">ผศ.</Option>
+        <Option value="DR">ดร.</Option>
+        <Option value="INSTRUCTOR">อ.</Option>
       </Select>
     </Form.Item>
   );
@@ -181,15 +180,21 @@ export const Teacher = () => {
   }
 
   function search(keyword) {
-    setLastKeyword(keyword)
+    setLastKeyword(keyword);
     if (keyword !== "") {
       const results = retrived.filter((teacher) => {
         return (
           teacher.firstname.toLowerCase().includes(keyword.toLowerCase()) ||
           teacher.lastname.toLowerCase().includes(keyword.toLowerCase()) ||
           teacher.username.toLowerCase().includes(keyword.toLowerCase()) ||
-          teacher.email.split(/[\.\@]/)[0].toLowerCase().includes(keyword.toLowerCase()) || // xxx@yyy.com (split to [xxx,yyy,com])
-          teacher.email.split(/[\.\@]/)[1].toLowerCase().includes(keyword.toLowerCase())
+          teacher.email
+            .split(/[\.\@]/)[0]
+            .toLowerCase()
+            .includes(keyword.toLowerCase()) || // xxx@yyy.com (split to [xxx,yyy,com])
+          teacher.email
+            .split(/[\.\@]/)[1]
+            .toLowerCase()
+            .includes(keyword.toLowerCase())
         );
       });
       setFilterList(results);
@@ -202,17 +207,21 @@ export const Teacher = () => {
 
   async function handleSubmit(values) {
     console.log("Recieved values of form: ", values);
-    await axios.post(`http://localhost:3001/obed/api/auth/register`, {
-      email: values.email,
-      username: values.username,
-      prefix: getEnPrefix[values.prefix],
-      firstname: values.firstname,
-      lastname: values.lastname
-    }, {
-      headers: {
-        ["x-access-token"]: 'Bearer ' + accessToken
+    await axios.post(
+      `http://localhost:3001/obed/api/auth/register`,
+      {
+        email: values.email,
+        username: values.username,
+        prefix: getEnPrefix[values.prefix],
+        firstname: values.firstname,
+        lastname: values.lastname,
       },
-    })
+      {
+        headers: {
+          ["x-access-token"]: "Bearer " + accessToken,
+        },
+      }
+    );
     openNotificationWithIcon(
       "success",
       "Teacher added",
@@ -220,27 +229,30 @@ export const Teacher = () => {
     );
     setVisible(false);
     setRetrived([...retrived, values]);
-
   }
 
   async function handleEdit(values) {
     console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
-    console.log(values.id)
-    const res = await axios.put(`http://localhost:3001/obed/api/user/update/${values.id}`, {
-      email: values.email,
-      username: values.username,
-      prefix: getEnPrefix[values.prefix],
-      firstname: values.firstname,
-      lastname: values.lastname
-    }, {
-      headers: {
-        ["x-access-token"]: 'Bearer ' + accessToken
+    console.log(values.id);
+    const res = await axios.put(
+      `http://localhost:3001/obed/api/user/update/${values.id}`,
+      {
+        email: values.email,
+        username: values.username,
+        prefix: getEnPrefix[values.prefix],
+        firstname: values.firstname,
+        lastname: values.lastname,
       },
-    })
+      {
+        headers: {
+          ["x-access-token"]: "Bearer " + accessToken,
+        },
+      }
+    );
     setVisible(false);
     setConfirmLoading(false);
-    let newTeacher = [...retrived]
+    let newTeacher = [...retrived];
     newTeacher = newTeacher.map((value) => {
       if (value.id === values.id) {
         return {
@@ -249,18 +261,17 @@ export const Teacher = () => {
           username: res.data.data.username,
           prefix: getThPrefix[res.data.data.prefix],
           firstname: res.data.data.firstname,
-          lastname: res.data.data.lastname
-        }
+          lastname: res.data.data.lastname,
+        };
       }
-      return value
-    })
-    setRetrived(() => newTeacher)
-
+      return value;
+    });
+    setRetrived(() => newTeacher);
   }
 
   useEffect(() => {
-    search(lastKeyword)
-  }, [retrived])
+    search(lastKeyword);
+  }, [retrived]);
 
   function handleCancel() {
     setVisible(false);
@@ -304,16 +315,19 @@ export const Teacher = () => {
   async function deleteAccount(record) {
     let temp = retrived.filter((e) => e.id !== record.id);
     setRetrived(temp);
-    await axios.delete(`http://localhost:3001/obed/api/user/remove/${record.id}`, {
-      headers: {
-        ["x-access-token"]: 'Bearer ' + accessToken
-      },
-    })
+    await axios.delete(
+      `http://localhost:3001/obed/api/user/remove/${record.id}`,
+      {
+        headers: {
+          ["x-access-token"]: "Bearer " + accessToken,
+        },
+      }
+    );
     console.log(temp);
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.teacher}>
       <Helmet>
         <title>Teacher - OBED</title>
       </Helmet>
@@ -405,7 +419,7 @@ export const Teacher = () => {
                   href="#"
                   onClick={() => {
                     setEdit(true);
-                    setEditingData(record)
+                    setEditingData(record);
                     form.setFieldsValue(record);
                     showModal();
                   }}
@@ -479,10 +493,7 @@ export const Teacher = () => {
           autoComplete="off"
           requiredMark={"required"}
         >
-          <Form.Item
-            name="id"
-            hidden
-          >
+          <Form.Item name="id" hidden>
             <Input />
           </Form.Item>
           <Form.Item
@@ -507,20 +518,25 @@ export const Teacher = () => {
               {
                 validator: (rule, value, callback) => {
                   if (edit) {
-                    const alreadyExistUsername = retrived.map((e) => e.username).filter((e) => e !== editingData.username)
+                    const alreadyExistUsername = retrived
+                      .map((e) => e.username)
+                      .filter((e) => e !== editingData.username);
                     if (alreadyExistUsername.includes(value)) {
-                      return Promise.reject("Already exist!")
+                      return Promise.reject("Already exist!");
                     }
-                    return Promise.resolve()
-                  }else{
-                    const alreadyExistUsername = retrived.map((e) => e.username)
+                    return Promise.resolve();
+                  } else {
+                    const alreadyExistUsername = retrived.map(
+                      (e) => e.username
+                    );
                     if (alreadyExistUsername.includes(value)) {
-                      return Promise.reject("Already exist!")
+                      return Promise.reject("Already exist!");
                     }
-                    return Promise.resolve()
+                    return Promise.resolve();
                   }
-                }
-              }]}
+                },
+              },
+            ]}
           >
             <Input placeholder="Username" />
           </Form.Item>
@@ -533,21 +549,22 @@ export const Teacher = () => {
               {
                 validator: (rule, value, callback) => {
                   if (edit) {
-                    const alreadyExistEmail = retrived.map((e) => e.email).filter((e) => e !== editingData.email)
+                    const alreadyExistEmail = retrived
+                      .map((e) => e.email)
+                      .filter((e) => e !== editingData.email);
                     if (alreadyExistEmail.includes(value)) {
-                      return Promise.reject("Already exist!")
+                      return Promise.reject("Already exist!");
                     }
-                    return Promise.resolve()
-                  }else{
-                    const alreadyExistEmail = retrived.map((e) => e.email)
+                    return Promise.resolve();
+                  } else {
+                    const alreadyExistEmail = retrived.map((e) => e.email);
                     if (alreadyExistEmail.includes(value)) {
-                      return Promise.reject("Already exist!")
+                      return Promise.reject("Already exist!");
                     }
-                    return Promise.resolve()
+                    return Promise.resolve();
                   }
-                }
-              }
-
+                },
+              },
             ]}
           >
             <Input placeholder="Email" />

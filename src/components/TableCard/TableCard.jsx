@@ -17,7 +17,7 @@ export function TableCard({
   const prereq = course.find((ele) => ele.id === data.precourse_id);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.tableCard}>
       {type === 1 ? (
         mode ? ( // Type 1 EDIT
           <div className={styles.type1}>

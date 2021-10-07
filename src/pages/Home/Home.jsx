@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export const Home = () => {
   return (
-    <div className={styles.container}>
+    <div className={styles.home}>
       <Helmet>
         <title>Home - OBED</title>
       </Helmet>
@@ -18,6 +18,9 @@ export const Home = () => {
         </li>
         <li>
           <Link to="/teacher">Teacher</Link>
+        </li>
+        <li>
+          <Link to="/login">Login</Link>
         </li>
       </ul>
     </div>

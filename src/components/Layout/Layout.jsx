@@ -1,5 +1,6 @@
 import styles from "./Layout.module.scss";
-import Sidebar from "./Sidebar/Sidebar";
+import Navbar from "./Navbar/Navbar";
+
 import { Layout } from "antd";
 
 const { Content } = Layout;
@@ -8,9 +9,9 @@ function MyLayout({ children }) {
   return (
     <div className={styles.layout}>
       <Layout>
-        <Sidebar />
+        <Navbar />
         <Layout>
-          <Content className={styles.content}>{children}</Content>
+          <Content className={styles.container}>{children}</Content>
         </Layout>
       </Layout>
     </div>

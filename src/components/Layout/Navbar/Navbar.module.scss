@@ -1,0 +1,103 @@
+@import "../../../styles/color.scss";
+
+.navbar {
+  height: 60px;
+  display: flex;
+  background-color: $color-turquoise-500;
+  &[admin="false"] {
+    background-color: $color-carrot-500;
+  }
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+  width: 1140px;
+  max-width: 80vw;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    transition: all ease-in-out 100ms;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .l {
+    display: flex;
+  }
+
+  .linkWrap {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+  }
+
+  .linkWrap .link {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    padding: 0 15px;
+    font-weight: 500;
+    color: white;
+    transition: all ease-in-out 100ms;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .activeLink {
+    position: relative;
+    transition: all ease-in-out 250ms;
+    &::after {
+      content: "";
+      transform: translate(-50%, 0);
+      position: absolute;
+      top: 55px;
+      left: 50%;
+      width: 50px;
+      height: 5px;
+      background-color: white;
+      transition: all ease-in-out 300ms;
+    }
+
+    &:hover {
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+
+  .userBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0);
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0 10px;
+    height: 40px;
+    transition: all ease-in-out 150ms;
+
+    &:hover {
+      background-color: white;
+      color: $color-turquoise-500;
+    }
+
+    &[admin="false"] {
+      &:hover {
+        color: $color-carrot-500;
+      }
+    }
+  }
+}

@@ -33,6 +33,11 @@
   .ant-dropdown-menu-submenu-title:hover {
     background-color: $color-turquoise-100;
   }
+  .ant-dropdown-menu-item-disabled:hover,
+  .ant-dropdown-menu-submenu-title-disabled:hover {
+    background-color: $color-white;
+    cursor: default !important;
+  }
 
   .ant-btn {
     background-color: $color-white;
@@ -170,10 +175,13 @@
   .ant-typography.ant-typography-danger {
     color: $color-rose-500;
   }
-  .ant-select{
+  .ant-select {
     font-size: 16px;
   }
-  .ant-form-item-with-help{
+  .ant-form-item-with-help {
     margin-bottom: 1.5rem;
+  }
+  .ant-layout {
+    background-color: $color-white;
   }
 }

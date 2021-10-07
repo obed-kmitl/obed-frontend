@@ -223,7 +223,7 @@ export const Student = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.student}>
       <Helmet>
         <title>Student - OBED</title>
       </Helmet>

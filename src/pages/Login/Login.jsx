@@ -33,7 +33,7 @@ export const Login = () => {
       </Helmet>
       <div
         className={
-          isAdmin ? styles.container : css(styles.container, styles.teacher)
+          isAdmin ? styles.login : css(styles.login, styles.teacher)
         }
       >
         <div className={styles.loginBox}>

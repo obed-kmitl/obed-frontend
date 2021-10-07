@@ -232,7 +232,7 @@ export const Teacher = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.teacher}>
       <Helmet>
         <title>Teacher - OBED</title>
       </Helmet>

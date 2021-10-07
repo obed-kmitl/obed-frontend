@@ -327,11 +327,11 @@ export const Plan = () => {
   useEffect(() => {
     setSearchValue("");
     search("");
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courses]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.plan}>
       <Helmet>
         <title>Semester Plan - OBED</title>
       </Helmet>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export const Home = () => {
   return (
-    <div className={styles.container}>
+    <div className={styles.home}>
       <Helmet>
         <title>Home - OBED</title>
       </Helmet>

@@ -4,7 +4,7 @@ import { Modal } from "antd";
 
 import useUser from "../../hooks/useUser";
 
-function PrivateRoute({ children, path, ...props }) {
+const PrivateRoute = ({ children, path, ...props }) => {
   const history = useHistory();
   const { getProfile } = useUser();
 
@@ -41,6 +41,6 @@ function PrivateRoute({ children, path, ...props }) {
       {children}
     </Route>
   );
-}
+};
 
 export { PrivateRoute };

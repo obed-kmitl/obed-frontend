@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 
-export const useProfileFrom = (retrived,setRetrived,profileForm) => {
+export const useProfileFrom = (retrived, profileForm, accessToken) => {
     const [isProfileEditing, setIsProfileEditing] = useState(false);
     const [record, setRecord] = useState()
 
@@ -13,9 +13,19 @@ export const useProfileFrom = (retrived,setRetrived,profileForm) => {
         setIsProfileEditing(false);
         profileForm.setFieldsValue(record);
     }
-    function handleSaveProfile() {
+    async function handleSaveProfile(value) {
         setIsProfileEditing(false);
+        console.log(value)
+        const res = await axios.put('http://localhost:3001/obed/api/user/updateProfile',
+            value,
+            {
+                headers: {
+                    ["x-access-token"]: 'Bearer ' + accessToken
+                }
+            }
+        )
+        console.log(res)
     }
 
-    return [isProfileEditing, setIsProfileEditing ,handleEdit, handleCancelProfile,handleSaveProfile]
+    return [isProfileEditing, handleEdit, handleCancelProfile, handleSaveProfile]
 }

@@ -17,16 +17,9 @@ import { useState, useEffect } from "react";
 import { useProfileFrom } from './hooks/useProfileFrom';
 
 export const Profile = () => {
-  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzNTE2MzM5LCJleHAiOjE2MzM1MTk5Mzl9.m_TMkq5WBHLJZ-nYKJH4pZAkPBvwHPUlu1p1n0SdDOM"
+  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzNTg5ODk2LCJleHAiOjE2MzM1OTM0OTZ9.RC43BFTffeKuaISkTJkYlVzAIncPALpkekCsSkT6zgA"
   const [retrived, setRetrived, profileForm] = useGetProfile(accessToken);
-  const [isProfileEditing, setIsProfileEditing ,handleEdit,handleCancelProfile,handleSaveProfile] = useProfileFrom(retrived,setRetrived,profileForm);
-
-  const saveProfileEdit =(value)=>{
-    console.log(value);
-    
-  }
-
-  console.log(isProfileEditing)
+  const [isProfileEditing, handleEdit, handleCancelProfile, handleSaveProfile] = useProfileFrom(retrived, profileForm,accessToken);
 
   const selectBefore = (
     <Form.Item name="prefix" noStyle>
@@ -64,8 +57,7 @@ export const Profile = () => {
           name="profile"
           layout="vertical"
           style={{ width: "100%" }}
-          onFinish={saveProfileEdit()}
-          //  onFinishFailed={onFinishFailed}
+          onFinish={handleSaveProfile}
           autoComplete="off"
           requiredMark={"required"}
 
@@ -106,7 +98,7 @@ export const Profile = () => {
             <Form.Item>
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
                 <Button onClick={() => handleCancelProfile()}>Cancel</Button>
-                <Button type="primary" htmlType="submit" onClick={() => handleSaveProfile()}>Save</Button>
+                <Button type="primary" htmlType="submit" >Save</Button>
               </div>
             </Form.Item>
             : null

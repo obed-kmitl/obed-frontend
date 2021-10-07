@@ -1,18 +1,9 @@
 import { useState, useEffect } from "react";
 import styles from './Profile.module.scss';
 import { Helmet } from 'react-helmet';
-import { Header, Button, Input, Option } from "../../components";
-import {
-  Divider,
-  Table,
-  Modal,
-  Form,
-  Select,
-  Tooltip,
-  Popconfirm,
-  notification,
-  Space,
-} from "antd";
+import { Header, Button, Input, Option,Body } from "../../components";
+import { Divider, Form, Select } from "antd";
+import { LinkOutlined } from '@ant-design/icons';
 import { useGetProfile } from './hooks/useGetProfile';
 import { useProfileFrom } from './hooks/useProfileFrom';
 import { usePassword } from './hooks/usePassword';
@@ -21,7 +12,7 @@ export const Profile = () => {
   const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzNTkzODE4LCJleHAiOjE2MzM1OTc0MTh9.OF9zajq0YdWLRubxXFhSUIMkcq3B2DeRh8L6QvE7Xfc"
   const [retrived, setRetrived, profileForm] = useGetProfile(accessToken);
   const [isProfileEditing, handleEdit, handleCancelProfile, handleSaveProfile] = useProfileFrom(retrived, profileForm, accessToken);
-  const [passwordForm,isChangePassword,setIsChangePassword,handleCancelPassword,handleChangePassword] = usePassword(accessToken);
+  const [passwordForm, isChangePassword, setIsChangePassword, handleCancelPassword, handleChangePassword] = usePassword(accessToken);
 
   const selectBefore = (
     <Form.Item name="prefix" noStyle>
@@ -125,7 +116,7 @@ export const Profile = () => {
               style={{ width: "100%" }}
               rules={[{ required: true, message: "Please input New Password!" }]}
             >
-              <Input placeholder="New Password" />
+              <Input placeholder="New Password" password />
             </Form.Item>
             <Form.Item
               label="Confirm New Password"
@@ -141,10 +132,10 @@ export const Profile = () => {
                     return Promise.reject(new Error('The Confirm Password does not match!'));
                   },
                 }),
-              
+
               ]}
             >
-              <Input placeholder="New Password" />
+              <Input placeholder="New Password" password />
             </Form.Item>
           </div>
           <div className={styles.flexrow}>
@@ -154,7 +145,7 @@ export const Profile = () => {
               style={{ width: "100%" }}
               rules={[{ required: true, message: "Please input Old Password!" }]}
             >
-              <Input placeholder="Old Password" />
+              <Input placeholder="Old Password" password />
             </Form.Item>
             <Form.Item
               style={{ width: "100%" }}
@@ -175,6 +166,11 @@ export const Profile = () => {
         <Header level={1}>Google Account</Header>
       </div>
       <Divider />
+      <Button style={{ marginBottom: "2rem" }} type="primary">Link with Google Account<LinkOutlined /></Button>
+      <div className={styles.flexrow}>
+      <Body>Linked with john.doe@kmitl.ac.th</Body>
+      <Button  type="primary">Unlink</Button>
+      </div>
     </div>
   )
 }

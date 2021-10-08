@@ -11,8 +11,11 @@
 
 .login {
   display: flex;
+  justify-content: center;
   height: 80vh;
   max-height: 900px;
+  width: 1140px;
+  max-width: 80vw;
   gap: 3rem;
 
   .logo {

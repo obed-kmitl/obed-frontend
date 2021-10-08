@@ -7,6 +7,7 @@ import {
   DownOutlined,
 } from "@ant-design/icons";
 import { Menu, Dropdown } from "antd";
+import css from "classnames";
 
 import UserContext from "../../../contexts/UserContext";
 import styles from "./Navbar.module.scss";
@@ -20,7 +21,7 @@ const Navbar = () => {
 
   const menu = (
     <Menu>
-      <Menu.Item disabled>
+      <Menu.Item disabled style={{ color: "#252629" }}>
         Logged in as <strong>{user?.username}</strong>
       </Menu.Item>
       <Menu.Divider />
@@ -83,6 +84,7 @@ const Navbar = () => {
               to="/"
               className={styles.link}
               activeClassName={styles.activeLink}
+              exact
             >
               Overview
             </NavLink>

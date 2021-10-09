@@ -1,6 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useState } from "react";
-import { Divider, Modal, Space, Form, InputNumber, Select, Upload } from "antd";
+import {
+  Divider,
+  Modal,
+  Space,
+  Form,
+  InputNumber,
+  Select,
+  Upload,
+  Tooltip,
+} from "antd";
 import { EditFilled } from "@ant-design/icons";
 import {
   Header,
@@ -12,7 +21,7 @@ import {
   Option,
   Input,
   Standard,
-  MappingStandard
+  MappingStandard,
 } from "../../components";
 import styles from "./Curriculum.module.scss";
 import { Helmet } from "react-helmet";
@@ -319,10 +328,12 @@ export function Curriculum() {
             ) : (
               <Header level={2}>
                 {curDetail.name + " " + curDetail.year}&nbsp;
-                <EditFilled
-                  className={styles.editBtn}
-                  onClick={() => setEditCurVisible(true)}
-                />
+                <Tooltip title="Edit Curriculum Info">
+                  <EditFilled
+                    className={styles.editBtn}
+                    onClick={() => setEditCurVisible(true)}
+                  />
+                </Tooltip>
               </Header>
             )}
             <Button danger onClick={() => showArchiveConfirm(selected)}>
@@ -446,10 +457,10 @@ export function Curriculum() {
               </Modal>
             </TabPane>
             <TabPane tab="Standard" key="2">
-              <Standard/>
+              <Standard />
             </TabPane>
             <TabPane tab="Mapping" key="3">
-              <MappingStandard/>
+              <MappingStandard />
             </TabPane>
             <TabPane tab="Details" key="4">
               <Form

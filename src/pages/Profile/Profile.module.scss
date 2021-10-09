@@ -1,4 +1,4 @@
-.container{
+.container {
   .head {
     display: flex;
     flex-direction: row;
@@ -6,12 +6,10 @@
     align-items: center;
     width: 100%;
   }
-  .flexrow{
+  .flexrow {
     display: flex;
     width: 100%;
     gap: 1rem;
     align-items: center;
   }
-
-
 }

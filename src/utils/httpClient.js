@@ -35,8 +35,8 @@ httpClient.interceptors.request.use((request) => {
     };
   } else {
     // ## Comment this else{} to DEV without back-end ##
-    // localStorage.clear();
-    // return (window.location.href = "/login");
+    localStorage.clear();
+    return (window.location.href = "/login");
   }
   return request;
 });

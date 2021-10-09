@@ -32,9 +32,7 @@ export const Login = () => {
         <title>Login - OBED</title>
       </Helmet>
       <div
-        className={
-          isAdmin ? styles.login : css(styles.login, styles.teacher)
-        }
+        className={isAdmin ? styles.login : css(styles.login, styles.teacher)}
       >
         <div className={styles.loginBox}>
           <img
@@ -68,6 +66,7 @@ export const Login = () => {
                   className={styles.alert}
                   message={message}
                   type="error"
+                  showIcon
                 />
               )}
               <Form.Item

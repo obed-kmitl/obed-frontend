@@ -1,11 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
-import { Route, useHistory } from "react-router-dom";
+import { Route, useHistory, useLocation } from "react-router-dom";
 import { Modal } from "antd";
 
 import useUser from "../../hooks/useUser";
 
 const PrivateRoute = ({ children, path, ...props }) => {
   const history = useHistory();
+  const location = useLocation();
   const { getProfile } = useUser();
 
   useEffect(() => {
@@ -34,7 +36,7 @@ const PrivateRoute = ({ children, path, ...props }) => {
 
   useEffect(() => {
     checkSession();
-  }, []);
+  }, [location]);
 
   return (
     <Route path={path} {...props}>

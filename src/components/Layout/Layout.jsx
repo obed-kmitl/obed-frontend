@@ -1,18 +1,11 @@
 import styles from "./Layout.module.scss";
-import Sidebar from "./Sidebar/Sidebar";
-import { Layout } from "antd";
-
-const { Content } = Layout;
+import Navbar from "./Navbar/Navbar";
 
 function MyLayout({ children }) {
   return (
     <div className={styles.layout}>
-      <Layout>
-        <Sidebar />
-        <Layout>
-          <Content className={styles.content}>{children}</Content>
-        </Layout>
-      </Layout>
+      <Navbar />
+      <div className={styles.container}>{children}</div>
     </div>
   );
 }

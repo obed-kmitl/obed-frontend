@@ -8,7 +8,7 @@ import { MappingTable } from "./MappingTable";
 
 
 export const MappingStandard = () => {
-    const [standardList, setStandardList] = useState(mockStandard)
+    const [standardList] = useState(mockStandard)
     const [mainStandard, setMainStandard] = useState(null)
     const [relativeStandard, setRelativeStandard] = useState(null)
     const [isEditing, setIsEditing] = useState(false)

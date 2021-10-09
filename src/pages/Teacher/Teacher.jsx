@@ -3,6 +3,7 @@ import styles from "./Teacher.module.scss";
 import { Helmet } from "react-helmet";
 import { Header, Button, Input, Option } from "../../components";
 import {
+  Alert,
   Divider,
   Table,
   Modal,
@@ -15,146 +16,29 @@ import {
 } from "antd";
 import { DeleteOutlined, MailOutlined, EditOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
-import { useGetAllUsers } from "./hooks/user";
-import axios from "axios";
+import { useTeacher } from "../../hooks/useTeacher";
 
 export const Teacher = () => {
-  const accessToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzMjQ2OTc0LCJleHAiOjE2MzMyNTA1NzR9.md0v2aJmWUXkkmBe3ty-Q0rM4jjcR2acAw59vDWgVK4";
   const { Column } = Table;
-  const data = [
-    {
-      id: 1,
-      prefix: "ผศ.ดร.",
-      firstname: "สมชาย",
-      lastname: "ใจดี",
-      username: "somchai1234",
-      email: "somchai.ja@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 2,
-      prefix: "รศ.ดร.",
-      firstname: "สมหญิง",
-      lastname: "จริงใจ",
-      username: "somying1",
-      email: "somying.ji@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 3,
-      prefix: "อ.",
-      firstname: "สมปอง",
-      lastname: "สุขสบาย",
-      username: "sompong1988",
-      email: "sompong.su@kmitl.ac.th",
-      status: 0,
-    },
-    {
-      id: 4,
-      prefix: "ดร.",
-      firstname: "สมปราชญ์",
-      lastname: "สดใส",
-      username: "somprach38",
-      email: "somprach.so@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 5,
-      prefix: "ผศ.",
-      firstname: "สมหมาย",
-      lastname: "สายไทย",
-      username: "sommai55",
-      email: "sommai.sa@kmitl.ac.th",
-      status: 0,
-    },
-    {
-      id: 6,
-      prefix: "ผศ.ดร.",
-      firstname: "สมหมาย",
-      lastname: "รักไทย",
-      username: "sommai1999",
-      email: "sommai.ra@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 7,
-      prefix: "รศ.",
-      firstname: "สมศักดิ์",
-      lastname: "ใฝ่รู้",
-      username: "somsak74",
-      email: "somsak.fh@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 8,
-      prefix: "อ.",
-      firstname: "กมลชนก",
-      lastname: "ศรีไทย",
-      username: "kamol123",
-      email: "kamolchanok.sr@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 9,
-      prefix: "ดร.",
-      firstname: "สมพงศ์",
-      lastname: "ชัยชนะ",
-      username: "somphong",
-      email: "somphong.ch@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 10,
-      prefix: "รศ.",
-      firstname: "สมสง่า",
-      lastname: "ราศี",
-      username: "somsanga34",
-      email: "somsanga.ra@kmitl.ac.th",
-      status: 0,
-    },
-    {
-      id: 11,
-      prefix: "อ.",
-      firstname: "ธนวัฒน์",
-      lastname: "สมมุติ",
-      username: "thanawat88",
-      email: "thanawat.so@kmitl.ac.th",
-      status: 1,
-    },
-  ];
-  // const [retrived, setRetrived] = useState(data);
-  const [retrived, setRetrived] = useGetAllUsers(accessToken);
-  const [filterList, setFilterList] = useState(retrived);
+  const [form] = Form.useForm();
+  const [
+    teachers,
+    setTeachers,
+    register,
+    editTeacher,
+    deleteTeacher,
+    message,
+    setMessage,
+  ] = useTeacher(form);
+  const [filterList, setFilterList] = useState(teachers);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [form] = Form.useForm();
   const [selectedData, setSelectedData] = useState(null);
   const [edit, setEdit] = useState(false);
   const [searching, setSearching] = useState(false);
   const [editingData, setEditingData] = useState();
   const [lastKeyword, setLastKeyword] = useState("");
-  const getEnPrefix = {
-    "ศ.ดร.": "PROF_DR",
-    "ศ.": "PROF",
-    "รศ.ดร.": "ASSOC_PROF_DR",
-    "รศ.": "ASSOC_PROF",
-    "ผศ.ดร.": "ASST_PROF_DR",
-    "ผศ.": "ASST_PROF",
-    "ดร.": "DR",
-    "อ.": "INSTRUCTOR",
-  };
-  const getThPrefix = {
-    PROF_DR: "ศ.ดร.",
-    PROF: "ศ.",
-    ASSOC_PROF_DR: "รศ.ดร.",
-    ASSOC_PROF: "รศ.",
-    ASST_PROF_DR: "ผศ.ดร.",
-    ASST_PROF: "ผศ.",
-    DR: "ดร.",
-    INSTRUCTOR: "อ.",
-  };
 
   const selectBefore = (
     <Form.Item name="prefix" noStyle>
@@ -183,102 +67,76 @@ export const Teacher = () => {
   function search(keyword) {
     setLastKeyword(keyword);
     if (keyword !== "") {
-      const results = retrived.filter((teacher) => {
+      const results = teachers.filter((teacher) => {
         return (
           teacher.firstname.toLowerCase().includes(keyword.toLowerCase()) ||
           teacher.lastname.toLowerCase().includes(keyword.toLowerCase()) ||
           teacher.username.toLowerCase().includes(keyword.toLowerCase()) ||
-          teacher.email
-            .split(/[\.\@]/)[0]
-            .toLowerCase()
-            .includes(keyword.toLowerCase()) || // xxx@yyy.com (split to [xxx,yyy,com])
-          teacher.email
-            .split(/[\.\@]/)[1]
-            .toLowerCase()
-            .includes(keyword.toLowerCase())
+          teacher.email.toLowerCase().includes(keyword.toLowerCase())
         );
       });
       setFilterList(results);
       setSearching(true);
     } else {
-      setFilterList(retrived);
+      setFilterList(teachers);
       setSearching(false);
     }
   }
 
-  async function handleSubmit(values) {
+  function handleSubmit(values) {
     console.log("Recieved values of form: ", values);
-    await axios.post(
-      `http://localhost:3001/obed/api/auth/register`,
-      {
-        email: values.email,
-        username: values.username,
-        prefix: getEnPrefix[values.prefix],
-        firstname: values.firstname,
-        lastname: values.lastname,
-      },
-      {
-        headers: {
-          ["x-access-token"]: "Bearer " + accessToken,
-        },
-      }
-    );
-    openNotificationWithIcon(
-      "success",
-      "Teacher added",
-      "Please check user " + values.email + " inbox to change password."
-    );
-    setVisible(false);
-    setRetrived([...retrived, values]);
+    register(values)
+      .then(() => {
+        openNotificationWithIcon(
+          "success",
+          "Teacher added",
+          "Please check user " + values.email + " inbox to change password."
+        );
+        setVisible(false);
+        setTeachers([...teachers, values]);
+      })
+      .catch(() => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot register user",
+          "Unexpected error occured, Please try again."
+        );
+      });
   }
 
-  async function handleEdit(values) {
+  function handleEdit(values) {
     console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
-    console.log(values.id);
-    const res = await axios.put(
-      `http://localhost:3001/obed/api/user/update/${values.id}`,
-      {
-        email: values.email,
-        username: values.username,
-        prefix: getEnPrefix[values.prefix],
-        firstname: values.firstname,
-        lastname: values.lastname,
-      },
-      {
-        headers: {
-          ["x-access-token"]: "Bearer " + accessToken,
-        },
-      }
-    );
-    setVisible(false);
-    setConfirmLoading(false);
-    let newTeacher = [...retrived];
-    newTeacher = newTeacher.map((value) => {
-      if (value.id === values.id) {
-        return {
-          id: res.data.data.user_id,
-          email: res.data.data.email,
-          username: res.data.data.username,
-          prefix: getThPrefix[res.data.data.prefix],
-          firstname: res.data.data.firstname,
-          lastname: res.data.data.lastname,
-        };
-      }
-      return value;
-    });
-    setRetrived(() => newTeacher);
+    editTeacher(values)
+      .then(() => {
+        openNotificationWithIcon(
+          "success",
+          "Teacher edited",
+          "User " + values.email + " has been saved."
+        );
+        setVisible(false);
+        setConfirmLoading(false);
+      })
+      .catch(() => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot edit user",
+          "Unexpected error occured, Please try again."
+        );
+      });
   }
 
   useEffect(() => {
     search(lastKeyword);
-  }, [retrived]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teachers]);
 
   function handleCancel() {
-    setVisible(false);
     form.resetFields();
+    setVisible(false);
     setSelectedData(null);
     setEdit(false);
+    setMessage("");
   }
 
   function onFinish(values) {
@@ -313,18 +171,24 @@ export const Teacher = () => {
       );
   }
 
-  async function deleteAccount(record) {
-    let temp = retrived.filter((e) => e.id !== record.id);
-    setRetrived(temp);
-    await axios.delete(
-      `http://localhost:3001/obed/api/user/remove/${record.id}`,
-      {
-        headers: {
-          ["x-access-token"]: "Bearer " + accessToken,
-        },
-      }
-    );
-    console.log(temp);
+  function deleteAccount(record) {
+    deleteTeacher(record)
+      .then(() => {
+        let newList = teachers.filter((e) => e.id !== record.id);
+        setTeachers(newList);
+        openNotificationWithIcon(
+          "success",
+          "User deleted",
+          "User " + record.username + " has been deleted."
+        );
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot delete user",
+          "Unexpected error occured, Please try again."
+        );
+      });
   }
 
   return (
@@ -341,7 +205,7 @@ export const Teacher = () => {
       </div>
       <Divider />
       <Table
-        dataSource={searching ? filterList : retrived}
+        dataSource={searching ? filterList : teachers}
         rowKey="id"
         pagination={{
           onChange(current) {
@@ -472,7 +336,6 @@ export const Teacher = () => {
           form
             .validateFields()
             .then((values) => {
-              form.resetFields();
               edit ? handleEdit(values) : handleSubmit(values);
             })
             .catch((info) => {
@@ -484,6 +347,14 @@ export const Teacher = () => {
         okButtonProps={{ htmlType: "submit" }}
         maskClosable={false}
       >
+        {message !== "" && (
+          <Alert
+            className={styles.alert}
+            message={message}
+            type="error"
+            showIcon
+          />
+        )}
         <Form
           form={form}
           name="teacher"
@@ -519,18 +390,18 @@ export const Teacher = () => {
               {
                 validator: (rule, value, callback) => {
                   if (edit) {
-                    const alreadyExistUsername = retrived
-                      .map((e) => e.username)
+                    const alreadyExistUsername = teachers
+                      ?.map((e) => e.username)
                       .filter((e) => e !== editingData.username);
-                    if (alreadyExistUsername.includes(value)) {
+                    if (alreadyExistUsername?.includes(value)) {
                       return Promise.reject("Already exist!");
                     }
                     return Promise.resolve();
                   } else {
-                    const alreadyExistUsername = retrived.map(
+                    const alreadyExistUsername = teachers?.map(
                       (e) => e.username
                     );
-                    if (alreadyExistUsername.includes(value)) {
+                    if (alreadyExistUsername?.includes(value)) {
                       return Promise.reject("Already exist!");
                     }
                     return Promise.resolve();
@@ -550,16 +421,16 @@ export const Teacher = () => {
               {
                 validator: (rule, value, callback) => {
                   if (edit) {
-                    const alreadyExistEmail = retrived
-                      .map((e) => e.email)
+                    const alreadyExistEmail = teachers
+                      ?.map((e) => e.email)
                       .filter((e) => e !== editingData.email);
-                    if (alreadyExistEmail.includes(value)) {
+                    if (alreadyExistEmail?.includes(value)) {
                       return Promise.reject("Already exist!");
                     }
                     return Promise.resolve();
                   } else {
-                    const alreadyExistEmail = retrived.map((e) => e.email);
-                    if (alreadyExistEmail.includes(value)) {
+                    const alreadyExistEmail = teachers?.map((e) => e.email);
+                    if (alreadyExistEmail?.includes(value)) {
                       return Promise.reject("Already exist!");
                     }
                     return Promise.resolve();

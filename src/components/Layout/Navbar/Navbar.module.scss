@@ -7,6 +7,7 @@
   z-index: 999;
   height: 60px;
   display: flex;
+  flex-direction: column;
   background-color: $color-turquoise-500;
   &[admin="false"] {
     background-color: $color-carrot-500;

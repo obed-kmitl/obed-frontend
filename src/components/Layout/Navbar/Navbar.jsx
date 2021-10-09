@@ -1,13 +1,7 @@
 import { useContext } from "react";
 import { NavLink, Link } from "react-router-dom";
-import {
-  HomeTwoTone,
-  UserOutlined,
-  LogoutOutlined,
-  DownOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, LogoutOutlined, DownOutlined } from "@ant-design/icons";
 import { Menu, Dropdown } from "antd";
-import css from "classnames";
 
 import UserContext from "../../../contexts/UserContext";
 import styles from "./Navbar.module.scss";

@@ -1,13 +1,12 @@
 import { message } from "antd";
-import { useState,useEffect } from "react"
+import { useState } from "react"
 
 
-export const useImportExcel = (standard, setStandard) => {
+export const useImportExcel = ( setStandard) => {
     const [importModalVisible, setImportModalVisible] = useState(false);
     const [fileUpLoadStdId, setFileUpLoadStdId] = useState();
     const [importStandard, setImportStandard] = useState();
-    const [previewStandard,setPreviewStandard] =useState();
-
+  
     function handleImportBtnClick(index) {
         setImportModalVisible(true);
         setFileUpLoadStdId(index);

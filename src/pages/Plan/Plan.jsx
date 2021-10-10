@@ -452,6 +452,8 @@ export const Plan = () => {
           </Button>,
         ]}
         width={1024}
+        maskClosable={false}
+        centered
       >
         <Header level={4}>Curriculum</Header>
         <Select

@@ -1,17 +1,12 @@
 @import "../../styles/color.scss";
 
-.layout {
-  background: $color-white;
-  height: 100vh;
-}
 .container {
   background: $color-white;
   padding: 30px 0;
-  height: calc(100vh - 60px);
   width: 1140px;
   max-width: 80vw;
-  padding-right: var(--bs-gutter-x, 0.75rem);
-  padding-left: var(--bs-gutter-x, 0.75rem);
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
   margin-right: auto;
   margin-left: auto;
 }

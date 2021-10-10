@@ -376,6 +376,7 @@ export function Curriculum() {
                 maskClosable={false}
                 confirmLoading={confirmLoading}
                 width="700px"
+                centered
               >
                 <Form
                   form={newCourseForm}

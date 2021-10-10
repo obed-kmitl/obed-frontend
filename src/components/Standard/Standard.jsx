@@ -1,15 +1,15 @@
 import { useState } from 'react'
-import { Header, Button, Input, Collapse, Panel } from "..";
-import { Form, Popconfirm, Typography, Modal, InputNumber, Upload, message } from 'antd'
+import { Header, Button, Input, Collapse, Panel, Body } from "..";
+import { Form, Popconfirm, Typography, Modal, InputNumber, Upload, message, Divider, Empty } from 'antd'
 import {
   DeleteOutlined,
   EditOutlined,
-  UploadOutlined,
-  DownloadOutlined
+  UploadOutlined
 } from '@ant-design/icons';
 import { StandardTable } from './StandardTable';
 import styles from "./Standard.module.scss";
 import excelReader from "../../utils/excelReader"
+import { useImportExcel } from './hooks/useImportExcel';
 
 const standardList = [
   {
@@ -88,7 +88,9 @@ export const Standard = () => {
   const [editingTitleIndex, setEditingTitleIndex] = useState(); //index of editing Standard Title 
   const [editingNameIndex, setEditingNameIndex] = useState(); //index of editing Standard Name
   const [addingStandardId, setAddingStandardId] = useState(); //index of adding Standard
-  const [fileUpLoadStdId, setFileUpLoadStdId] = useState(); //index of uploading standard
+  //const [fileUpLoadStdId, setFileUpLoadStdId] = useState(); //index of uploading standard
+
+  const [importModalVisible, handleImportBtnClick, importModalCancel, getDetailsfromExcel, confirmImport, importStandard] = useImportExcel(standard, setStandard)
 
   const [createStdForm] = Form.useForm();
   const [addStdForm] = Form.useForm();
@@ -205,7 +207,7 @@ export const Standard = () => {
     headers: {
       authorization: 'authorization-text',
     },
-    showUploadList: false,
+    showUploadList: { showRemoveIcon: false },
     maxCount: 1,
     accept: ".xlsx,.xls",
     async onChange(info) {
@@ -217,64 +219,8 @@ export const Standard = () => {
         message.error(`${info.file.name} file upload failed.`);
       }
     }
+
   };
-
-  const getDetailsfromExcel = (data) => {
-    //clear details to prevent confict
-    setStandard(prev => {
-      return [
-        ...prev.slice(0, fileUpLoadStdId),
-        {
-          ...prev[fileUpLoadStdId], details: []
-        },
-        ...prev.slice(fileUpLoadStdId + 1)]
-    });
-
-    console.log(data)
-
-    const getMainStandard = () => {
-      const newArray = []
-      const duplicate = []
-      data.forEach(std => {
-        if (!duplicate.includes(std.standardNo)) {
-          newArray.push({ standardNo: std.standardNo, standardName: std.description, subStandard: [] })
-          duplicate.push(std.standardNo)
-        }
-      })
-      return newArray;
-    }
-    const mainStandard = getMainStandard()
-
-    const getSubStandard = () => {
-      const newArray = []
-      data.forEach(std => {
-        newArray.push({ standardNo: std.standardNo, subStandardNo: std.subStdNo, subStandardName: std.subDescription })
-      })
-      return newArray;
-    }
-    const subStandards = getSubStandard()
-
-    mainStandard.forEach(element => {
-      const subStdList = subStandards.filter((item) => item.standardNo === element.standardNo)
-      subStdList.forEach(subStd => {
-        element.subStandard.push({
-          subStandardNo: subStd.subStandardNo,
-          subStandardName: subStd.subStandardName,
-        })
-      })
-    });
-    console.log(mainStandard, subStandards)
-    setStandard(prev => {
-      return [
-        ...prev.slice(0, fileUpLoadStdId),
-        {
-          ...prev[fileUpLoadStdId], details: mainStandard
-        },
-        ...prev.slice(fileUpLoadStdId + 1)]
-    });
-    console.log(standard)
-  }
-
 
   return (
     <div>
@@ -361,10 +307,10 @@ export const Standard = () => {
             key={index}
           >
             <div className={styles.topRightBtn} >
-              <Button icon={<DownloadOutlined />} onClick={() => message.error(`ยังไม่มีให้โหลดนะจ๊ะ`)}>Download Template</Button>
-              <Upload {...uploadProps} >
+              <Button onClick={() => handleImportBtnClick(index)}>Import</Button>
+              {/* <Upload {...uploadProps} >
                 <Button icon={<UploadOutlined />} onClick={() => setFileUpLoadStdId(index)} >Upload Data</Button>
-              </Upload>
+              </Upload> */}
               <Button onClick={() => handleAddStdBtn(index)}>Add</Button>
             </div>
             <Collapse accordion>
@@ -568,6 +514,61 @@ export const Standard = () => {
             <Input placeholder=" standard name" />
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title={<Header level={3}>Import Standard</Header>}
+        visible={importModalVisible}
+        okText="Add"
+        onOk={() => confirmImport()}
+        onCancel={() => importModalCancel()}
+        okButtonProps={{ htmlType: "submit" }}
+        maskClosable={false}
+        width="700px"
+      >
+        <div className={styles.importModal}>
+          <div className={styles.upload}>
+            <Header level={4} >Upload File</Header>
+            <Body level={4} style={{ marginBottom: "1rem" }}>Existing data will be override</Body>
+            <div className={styles.uploadBtn}>
+              <Upload {...uploadProps} >
+                <Button icon={<UploadOutlined />} type="primary">Upload</Button>
+              </Upload>
+            </div>
+          </div>
+          <Divider type="vertical" style={{ height: "100%" }} />
+          <div className={styles.download}>
+            <Body level={3} >To Import Standard Data, You can download template and upload complete file to OBED. </Body>
+            <Typography.Link>Download Template</Typography.Link>
+          </div>
+        </div>
+        <Header level={4} >Preview</Header>
+        {importStandard ?
+          <div className={styles.preview}>
+            <Collapse accordion >
+              {importStandard.map((std, index) =>
+                <Panel header={std.standardNo + " " + std.standardName} key={index}>
+                  {std.subStandard.map((substd, index) =>
+                    <>
+                      <div style={{ display: "flex",fontSize:"14px" }}>
+                        <div>{substd.subStandardNo}</div>
+                        <Divider type="vertical" style={{ height: "100%" }} />
+                        <div>{substd.subStandardName}</div>
+                      </div>
+                      <Divider style={{ margin: "0.5rem 0" }} />
+                    </>
+                  )}
+                </Panel>)
+              }
+            </Collapse>
+          </div>
+          :
+          <Empty
+            style={{ margin: "50px", color: "#c3c3c4", fontSize: "16px", fontWeight: "500" }}
+            imageStyle={{ height: 100 }}
+            description="Please Upload File"
+          />
+        }
       </Modal>
     </div>
   )

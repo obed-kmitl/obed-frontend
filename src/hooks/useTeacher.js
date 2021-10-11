@@ -97,17 +97,17 @@ export const useTeacher = (form) => {
         newTeacher = newTeacher.map((value) => {
           if (value.id === values.id) {
             return {
-              id: res.data.data.user_id,
-              email: res.data.data.email,
-              username: res.data.data.username,
-              prefix: getThPrefix[res.data.data.prefix],
-              firstname: res.data.data.firstname,
-              lastname: res.data.data.lastname,
+              id: response.data.data.user_id,
+              email: response.data.data.email,
+              username: response.data.data.username,
+              prefix: getThPrefix[response.data.data.prefix],
+              firstname: response.data.data.firstname,
+              lastname: response.data.data.lastname,
             };
           }
           return value;
         });
-        setTeachers(() => newTeacher);
+        setTeachers(newTeacher);
         return response;
       })
       .catch((error) => {

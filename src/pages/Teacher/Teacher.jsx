@@ -112,7 +112,7 @@ export const Teacher = () => {
         openNotificationWithIcon(
           "success",
           "Teacher edited",
-          "User " + values.email + " has been saved."
+          "User " + values.username + " has been saved."
         );
         setVisible(false);
         setConfirmLoading(false);

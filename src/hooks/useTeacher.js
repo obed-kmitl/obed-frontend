@@ -70,7 +70,7 @@ export const useTeacher = (form) => {
       .post(`/auth/register`, {
         email: values.email,
         username: values.username,
-        prefix: values.prefix,
+        prefix: getEnPrefix[values.prefix],
         firstname: values.firstname,
         lastname: values.lastname,
       })

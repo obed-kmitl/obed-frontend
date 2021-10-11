@@ -44,17 +44,17 @@ export const Teacher = () => {
     <Form.Item name="prefix" noStyle>
       <Select
         className="select-before"
-        style={{ width: "85px" }}
+        style={{ width: "100px" }}
         placeholder="Prefix"
       >
-        <Option value="PROF_DR">ศ.ดร.</Option>
-        <Option value="PROF">ศ.</Option>
-        <Option value="ASSOC_PROF_DR">รศ.ดร.</Option>
-        <Option value="ASSOC_PROF">รศ.</Option>
-        <Option value="ASST_PROF_DR">ผศ.ดร.</Option>
-        <Option value="ASST_PROF">ผศ.</Option>
-        <Option value="DR">ดร.</Option>
-        <Option value="INSTRUCTOR">อ.</Option>
+        <Option value="ศ.ดร.">ศ.ดร.</Option>
+        <Option value="ศ.">ศ.</Option>
+        <Option value="รศ.ดร.">รศ.ดร.</Option>
+        <Option value="รศ.">รศ.</Option>
+        <Option value="ผศ.ดร.">ผศ.ดร.</Option>
+        <Option value="ผศ.">ผศ.</Option>
+        <Option value="ดร.">ดร.</Option>
+        <Option value="อ.">อ.</Option>
       </Select>
     </Form.Item>
   );

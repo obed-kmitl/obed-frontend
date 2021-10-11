@@ -270,7 +270,11 @@ export const Student = () => {
             record.prefix + " " + text + " " + record.lastname
           }
         />
-        <Column title="Google Classroom Acount" dataIndex="email" key="email" />
+        <Column
+          title="Google Classroom Account"
+          dataIndex="email"
+          key="email"
+        />
         <Column
           title="Action"
           key="action"

@@ -90,7 +90,7 @@ export const Standard = () => {
   const [addingStandardId, setAddingStandardId] = useState(); //index of adding Standard
   //const [fileUpLoadStdId, setFileUpLoadStdId] = useState(); //index of uploading standard
 
-  const [importModalVisible, handleImportBtnClick, importModalCancel, getDetailsfromExcel, confirmImport, importStandard] = useImportExcel(standard, setStandard)
+  const [importModalVisible, handleImportBtnClick, importModalCancel, getDetailsfromExcel, confirmImport, importStandard] = useImportExcel(setStandard)
 
   const [createStdForm] = Form.useForm();
   const [addStdForm] = Form.useForm();

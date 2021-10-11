@@ -3,15 +3,12 @@ import { Helmet } from 'react-helmet';
 import { Header, Button, Input, Option,Body } from "../../components";
 import { Divider, Form, Select } from "antd";
 import { LinkOutlined } from '@ant-design/icons';
-import { useGetProfile } from './hooks/useGetProfile';
-import { useProfileFrom } from './hooks/useProfileFrom';
+import { useProfileFrom } from './hooks/useProfile';
 import { usePassword } from './hooks/usePassword';
 
 export const Profile = () => {
-  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMzNTkzODE4LCJleHAiOjE2MzM1OTc0MTh9.OF9zajq0YdWLRubxXFhSUIMkcq3B2DeRh8L6QvE7Xfc"
-  const [retrived, setRetrived, profileForm] = useGetProfile(accessToken);
-  const [isProfileEditing, handleEdit, handleCancelProfile, handleSaveProfile] = useProfileFrom(retrived, profileForm, accessToken);
-  const [passwordForm, isChangePassword, setIsChangePassword, handleCancelPassword, handleChangePassword] = usePassword(accessToken);
+  const [profileForm,isProfileEditing, handleEdit, handleCancelProfile, handleSaveProfile] = useProfileFrom();
+  const [passwordForm, handleChangePassword] = usePassword();
 
   const selectBefore = (
     <Form.Item name="prefix" noStyle>
@@ -98,7 +95,7 @@ export const Profile = () => {
         <Header level={1}>Password</Header>
       </div>
       <Divider />
-      {isChangePassword ?
+      {/* {isChangePassword ? */}
         <Form
           form={passwordForm}
           name="password"
@@ -139,12 +136,12 @@ export const Profile = () => {
           </div>
           <div className={styles.flexrow}>
             <Form.Item
-              label="Old Password"
+              label="Current Password"
               name="oldPassword"
               style={{ width: "100%" }}
-              rules={[{ required: true, message: "Please input Old Password!" }]}
+              rules={[{ required: true, message: "Please input Current Password!" }]}
             >
-              <Input placeholder="Old Password" password />
+              <Input placeholder="Current Password" password />
             </Form.Item>
             <Form.Item
               style={{ width: "100%" }}
@@ -153,14 +150,15 @@ export const Profile = () => {
           </div>
           <Form.Item>
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
-              <Button onClick={() => handleCancelPassword()}>Cancel</Button>
-              <Button type="primary" htmlType="submit" >Save</Button>
+              {/* <Button onClick={() => handleCancelPassword()}>Cancel</Button> */}
+              <Button type="primary" htmlType="submit" >Change Password</Button>
             </div>
           </Form.Item>
-        </Form> :
+        </Form> 
+        {/*  :
         <Button style={{ marginBottom: "2rem" }} type="primary" onClick={() => setIsChangePassword(true)}>Change Password</Button>
 
-      }
+      } */}
       <div className={styles.head}>
         <Header level={1}>Google Account</Header>
       </div>

@@ -1,3 +1,11 @@
-.title {
-  font-size: 20px;
+.home{
+  .cards{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap:3rem;
+    .card{
+      cursor: pointer;
+    }
+  }
 }

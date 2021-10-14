@@ -1,7 +1,8 @@
 import styles from "./Home.module.scss";
 import { Helmet } from "react-helmet";
-import { CourseCard, Header } from "../../components";
-import { Divider, message ,Typography} from "antd"
+import { Body, CourseCard, Header, Select, Option, Input } from "../../components";
+import { Divider, message } from "antd"
+import { useState } from "react";
 const courseList = [
   {
     year: "2021",
@@ -114,16 +115,76 @@ const courseList = [
 
 ];
 export const Home = () => {
+  const [filterSelected, setFilterSelected] = useState()
+  const [filteredCourse, setFilteredCourse] = useState(courseList)
+
+  function search(keyword) {
+    if (keyword !== "") {
+      // const results = courseList.filter((course) => {
+      //   return (
+      //     course.courses.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
+      //     course.courses.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
+      //     course.courses.course_name_th.includes(keyword)
+      //   );
+      // });
+      const results = courseList.map((element) => {
+        return {
+          ...element,
+          courses: element.courses.filter((subElement) => {
+            return (
+              subElement.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
+              subElement.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
+              subElement.course_name_th.includes(keyword)
+            )
+          })
+        }
+      })
+      setFilteredCourse(results);
+      console.log(results);
+    } else {
+      setFilteredCourse(courseList);
+    }
+  }
+
   return (
     <div className={styles.home}>
       <Helmet>
-        <title>Home - OBED</title>
+        <title>Course - OBED</title>
       </Helmet>
       <div className={styles.head}>
         <Header level={1}>Course</Header>
-
+        <div className={styles.filterbox}>
+          <Body level={2}>Semester</Body>
+          <Select
+            placeholder="Semester"
+            onChange={(value) => setFilterSelected(value ? [value.split("/")[0], value.split("/")[1]] : value)}
+            style={{ width: "100px" }}
+            defaultValue={"All"}
+          >
+            <Option value={undefined}>
+              All
+            </Option>
+            {courseList.map((e) => (
+              <Option value={e.semester + "/" + e.year} key={e.semester + "/" + e.year}>
+                {e.semester + "/" + e.year}
+              </Option>
+            ))}
+          </Select>
+          <Input
+            search
+            placeholder="Search"
+            onSearch={search}
+            allowClear
+          />
+        </div>
       </div>
-      {courseList.map((semesterCourse) =>
+      {filteredCourse.filter((item) => {
+        if (filterSelected) {
+          return item.semester === filterSelected[0] && item.year === filterSelected[1]
+        } else {
+          return item
+        }
+      }).map((semesterCourse) =>
         <div>
           <div style={{ display: "flex", alignItems: "center", margin: "1rem 0" }}>
             <Header level={2}>{semesterCourse.semester}{"/"}{semesterCourse.year}</Header>
@@ -132,7 +193,7 @@ export const Home = () => {
           <div className={styles.cards}>
             {semesterCourse.courses.map((course) =>
               <div
-                onClick={() => message.success("click"+course.course_id)}
+                onClick={() => message.success("click" + course.course_id)}
                 className={styles.card}
               >
                 <CourseCard details={course} />

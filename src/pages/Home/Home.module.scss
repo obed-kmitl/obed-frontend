@@ -1,4 +1,17 @@
 .home{
+  .head{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .filterbox{
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+  }
+
   .cards{
     width: 100%;
     display: flex;

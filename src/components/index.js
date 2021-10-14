@@ -13,3 +13,4 @@ export { Standard } from "./Standard/Standard";
 export { MappingStandard } from "./MappingStandard/MappingStandard";
 export { PrivateRoute } from "./Routes/PrivateRoute";
 export { PublicRoute } from "./Routes/PublicRoute";
+export { CourseCard } from "./CourseCard/CourseCard"

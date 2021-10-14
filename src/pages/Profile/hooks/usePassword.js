@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
 import { Form ,message} from "antd"
 import httpClient from '../../../utils/httpClient';
 
-export const usePassword = (accessToken) => {
+export const usePassword = () => {
     const [passwordForm] = Form.useForm()
     // const [isChangePassword, setIsChangePassword] = useState(false)
 
@@ -17,11 +16,6 @@ export const usePassword = (accessToken) => {
                 oldPassword: value.oldPassword,
                 newPassword: value.newPassword
 
-            },
-            {
-                headers: {
-                    ["x-access-token"]: 'Bearer ' + accessToken
-                }
             }
         ).catch(function (error) {
             if (error.response) {
@@ -37,7 +31,6 @@ export const usePassword = (accessToken) => {
         } else {
             message.success('Your password has been changed successfully');
             passwordForm.resetFields()
-            // setIsChangePassword(false)
         }
 
     }

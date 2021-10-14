@@ -120,13 +120,6 @@ export const Home = () => {
 
   function search(keyword) {
     if (keyword !== "") {
-      // const results = courseList.filter((course) => {
-      //   return (
-      //     course.courses.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
-      //     course.courses.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
-      //     course.courses.course_name_th.includes(keyword)
-      //   );
-      // });
       const results = courseList.map((element) => {
         return {
           ...element,
@@ -140,7 +133,6 @@ export const Home = () => {
         }
       })
       setFilteredCourse(results);
-      console.log(results);
     } else {
       setFilteredCourse(courseList);
     }

@@ -74,9 +74,9 @@ const useAuthen = () => {
 
   function onLogout() {
     return httpClient.post("/auth/logout").then(() => {
-      history.push("/login");
       localStorage.clear();
       setUser({});
+      history.push("/login");
     });
   }
 

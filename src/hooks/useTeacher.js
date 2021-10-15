@@ -84,7 +84,7 @@ export const useTeacher = (form) => {
   }
 
   async function editTeacher(values) {
-    let res = await httpClient
+    return await httpClient
       .put(`/user/update/${values.id}`, {
         email: values.email,
         username: values.username,

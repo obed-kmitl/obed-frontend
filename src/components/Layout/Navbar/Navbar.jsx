@@ -14,7 +14,7 @@ const Navbar = () => {
   const isAdmin = window.location.host.split(".")[0] === "admin";
 
   const menu = (
-    <Menu>
+    <Menu style={{ minWidth: "200px" }}>
       <Menu.Item disabled style={{ color: "#252629" }}>
         Logged in as <strong>{user?.username}</strong>
       </Menu.Item>

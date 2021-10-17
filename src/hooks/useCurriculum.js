@@ -13,7 +13,7 @@ export const useCurriculum = () => {
       })
       .then((response) => {
         getAll();
-        return response;
+        return response.data.data;
       })
       .catch((error) => {
         const resMessage = error.message || error.toString();

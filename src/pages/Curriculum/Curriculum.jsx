@@ -1,14 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  Alert,
   Divider,
   Modal,
-  Space,
   Form,
-  InputNumber,
   Select,
   Upload,
   Tooltip,
+  notification,
 } from "antd";
 import { EditFilled } from "@ant-design/icons";
 import {
@@ -26,11 +26,13 @@ import {
 import styles from "./Curriculum.module.scss";
 import { Helmet } from "react-helmet";
 import { ExclamationCircleOutlined, UploadOutlined } from "@ant-design/icons";
+import { useCurriculum } from "../../hooks/useCurriculum";
 
 export function Curriculum() {
+  const { create, getAll, update, remove, curriculum, message, setMessage } =
+    useCurriculum();
   const [selected, setSelected] = useState(null);
   const [editDetail, setEditDetail] = useState(false);
-  const [nameEdit, setNameEdit] = useState(false);
   const [editCurVisible, setEditCurVisible] = useState(false);
   const [newCurVisible, setNewCurVisible] = useState(false);
   const [newCourseVisible, setNewCourseVisible] = useState(false);
@@ -40,20 +42,7 @@ export function Curriculum() {
   const [newForm] = Form.useForm();
   const [newCourseForm] = Form.useForm();
   const { confirm } = Modal;
-  const curlist = [
-    {
-      name: "วิศวกรรมคอมพิวเตอร์ 2560",
-      curriculum_id: "01072560",
-    },
-    {
-      name: "วิศวกรรมคอมพิวเตอร์(ต่อเนื่อง) 2560",
-      curriculum_id: "01072560",
-    },
-    {
-      name: "วิศวกรรมคอมพิวเตอร์ 2557",
-      curriculum_id: "01072557",
-    },
-  ];
+
   const courses = [
     {
       key: "1",
@@ -101,14 +90,7 @@ export function Curriculum() {
       plo: [2.1, 2.2],
     },
   ];
-  const curDetail = {
-    id: "01072560",
-    name: "วิศวกรรมคอมพิวเตอร์",
-    year: 2560,
-    university: "สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง",
-    faculty: "วิศวกรรมศาสตร์",
-    department: "วิศวกรรมคอมพิวเตอร์",
-  };
+
   const mockPLO = [
     {
       id: 1.1,
@@ -141,20 +123,17 @@ export function Curriculum() {
   ];
   const [filteredCourse, setFilteredCourse] = useState(courses);
 
-  function showArchiveConfirm(curriculum) {
+  function showArchiveConfirm() {
     confirm({
-      title: "Archive " + curriculum + " ?",
+      title: "Archive " + selected.title + " ?",
       icon: <ExclamationCircleOutlined />,
-      content: "Are you sure to archive this curriculum?",
-      okText: "Archive",
+      content: "Are you sure to remove this curriculum?",
+      okText: "Remove",
       okType: "danger",
       cancelText: "Cancel",
       onOk() {
-        console.log("OK");
+        remove(selected.curriculum_id);
         setSelected(null);
-      },
-      onCancel() {
-        console.log("Cancel");
       },
     });
   }
@@ -175,13 +154,42 @@ export function Curriculum() {
     }
   }
 
-  function handleSubmit(values) {
+  function handleCreateSubmit(values) {
     console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
+    create(values)
+      .then((data) => {
+        setSelected(data);
+        setConfirmLoading(false);
+        setNewCurVisible(false);
+        newForm.resetFields();
+      })
+      .catch(() => {
+        console.log(message);
+      });
+  }
+
+  function handleEditSubmit(values) {
+    console.log("Recieved values of form: ", values);
+    setConfirmLoading(true);
+    update(selected.curriculum_id, values)
+      .then((data) => {
+        setSelected(data);
+        setConfirmLoading(false);
+        setEditCurVisible(false);
+        editForm.resetFields();
+      })
+      .catch(() => {
+        console.log(message);
+      });
+  }
+
+  function handleCourseSubmit(values) {
+    console.log("Recieved values of form: ", values);
+    setConfirmLoading(true);
+    // TODO
     setTimeout(() => {
-      setEditCurVisible(false);
       setConfirmLoading(false);
-      setNewCurVisible(false);
       setNewCourseVisible(false);
       setImportVisible(false);
     }, 2000);
@@ -195,6 +203,7 @@ export function Curriculum() {
     editForm.resetFields();
     newForm.resetFields();
     newCourseForm.resetFields();
+    setMessage("");
   }
 
   function onFinish(values) {
@@ -214,6 +223,19 @@ export function Curriculum() {
     console.log("Failed:", errorInfo);
   }
 
+  function openNotificationWithIcon(type, message, desc) {
+    notification[type]({
+      message: message,
+      description: desc,
+      duration: 5,
+    });
+  }
+
+  useEffect(() => {
+    getAll();
+    //eslint-disable-next-line
+  }, []);
+
   return (
     <div className={styles.curriculum}>
       <Helmet>
@@ -224,16 +246,19 @@ export function Curriculum() {
         <Header level={2}>Select Curriculum</Header>
         <Select
           placeholder="Curriculum"
-          onChange={(value) => setSelected(value)}
+          onChange={(value) =>
+            setSelected(curriculum.find((ele) => ele.curriculum_id === value))
+          }
           style={{ width: "320px" }}
           defaultValue={null}
+          value={selected?.curriculum_id}
         >
           <Option value={null} disabled>
             None
           </Option>
-          {curlist.map((e) => (
-            <Option value={e.name} key={e.curriculum_id}>
-              {e.name}
+          {curriculum.map((e) => (
+            <Option value={e.curriculum_id} key={e.curriculum_id}>
+              {e.title}
             </Option>
           ))}
         </Select>
@@ -243,15 +268,14 @@ export function Curriculum() {
         </Button>
       </div>
       <Modal
-        title="New Curriculum"
+        title="Create Curriculum"
         visible={newCurVisible}
         okText="Create"
         onOk={() => {
           newForm
             .validateFields()
             .then((values) => {
-              newForm.resetFields();
-              handleSubmit(values);
+              handleCreateSubmit(values);
             })
             .catch((info) => {
               console.log("Validate Failed", info);
@@ -273,23 +297,11 @@ export function Curriculum() {
           requiredMark={"required"}
         >
           <Form.Item
-            label="Name (ไม่ต้องระบุปีในชื่อ)"
-            name="name"
+            label="Name"
+            name="title"
             rules={[{ required: true, message: "Please input name!" }]}
           >
             <Input placeholder="Curriculum Name" />
-          </Form.Item>
-          <Form.Item
-            label="Year (พุทธศักราช)"
-            name="year"
-            rules={[{ required: true, message: "Please input year!" }]}
-          >
-            <InputNumber
-              placeholder="Year"
-              style={{ fontSize: "17px", height: "35px" }}
-              min={2500}
-              width="100%"
-            />
           </Form.Item>
           <Divider />
           <Form.Item
@@ -299,9 +311,9 @@ export function Curriculum() {
           >
             <Select defaultValue="0">
               <Option value="0">None</Option>
-              {curlist.map((e) => (
-                <Option value={e.name} key={e.curriculum_id}>
-                  {e.name}
+              {curriculum.map((e) => (
+                <Option value={e.curriculum_id} key={e.curriculum_id}>
+                  {e.title}
                 </Option>
               ))}
             </Select>
@@ -312,32 +324,17 @@ export function Curriculum() {
       {selected && (
         <>
           <div className={styles.curriculumMenu}>
-            {nameEdit ? (
-              <Space>
-                <Input
-                  placeholder="Curriculum Name"
-                  allowClear
-                  width="400px"
-                  defaultValue={selected}
+            <Header level={2}>
+              {selected.title}&nbsp;
+              <Tooltip title="Edit Curriculum Info">
+                <EditFilled
+                  className={styles.editBtn}
+                  onClick={() => setEditCurVisible(true)}
                 />
-                <a href="#">Save</a>
-                <a href="#" onClick={() => setNameEdit(false)}>
-                  Cancel
-                </a>
-              </Space>
-            ) : (
-              <Header level={2}>
-                {curDetail.name + " " + curDetail.year}&nbsp;
-                <Tooltip title="Edit Curriculum Info">
-                  <EditFilled
-                    className={styles.editBtn}
-                    onClick={() => setEditCurVisible(true)}
-                  />
-                </Tooltip>
-              </Header>
-            )}
-            <Button danger onClick={() => showArchiveConfirm(selected)}>
-              Archive Curriculum
+              </Tooltip>
+            </Header>
+            <Button danger onClick={() => showArchiveConfirm()}>
+              Remove Curriculum
             </Button>
           </div>
           <Tabs defaultActiveKey="1">
@@ -365,7 +362,7 @@ export function Curriculum() {
                     .validateFields()
                     .then((values) => {
                       newCourseForm.resetFields();
-                      handleSubmit(values);
+                      handleCourseSubmit(values);
                     })
                     .catch((info) => {
                       console.log("Validate Failed", info);
@@ -454,7 +451,9 @@ export function Curriculum() {
                   <Header level={4}>Upload</Header>
                   <Button icon={<UploadOutlined />}>Click to Upload</Button>
                 </Upload>
-                <Body level={2} className={styles.uploadWarning}></Body>
+                <Body level={2} className={styles.uploadWarning}>
+                  Warning Message
+                </Body>
               </Modal>
             </TabPane>
             <TabPane tab="Standard" key="2">
@@ -466,7 +465,7 @@ export function Curriculum() {
             <TabPane tab="Details" key="4">
               <Form
                 name="detail"
-                initialValues={curDetail}
+                initialValues={selected}
                 onFinish={onFinishDetail}
                 onFinishFailed={onFinishDetailFailed}
               >
@@ -510,7 +509,9 @@ export function Curriculum() {
                         <Input placeholder="University or Institue Name" />
                       </Form.Item>
                     ) : (
-                      <Body level={1}>{curDetail.university}</Body>
+                      <Body level={1}>
+                        {selected.university || "No data, Please input."}
+                      </Body>
                     )}
                   </Header>
                   <Header level={4}>
@@ -528,7 +529,9 @@ export function Curriculum() {
                         <Input placeholder="Faculty" />
                       </Form.Item>
                     ) : (
-                      <Body level={1}>{curDetail.faculty}</Body>
+                      <Body level={1}>
+                        {selected.faculty || "No data, Please input."}
+                      </Body>
                     )}
                   </Header>
                   <Header level={4}>
@@ -546,7 +549,9 @@ export function Curriculum() {
                         <Input placeholder="Department" />
                       </Form.Item>
                     ) : (
-                      <Body level={1}>{curDetail.department}</Body>
+                      <Body level={1}>
+                        {selected.department || "No data, Please input."}
+                      </Body>
                     )}
                   </Header>
                 </div>
@@ -561,8 +566,7 @@ export function Curriculum() {
               editForm
                 .validateFields()
                 .then((values) => {
-                  editForm.resetFields();
-                  handleSubmit(values);
+                  handleEditSubmit(values);
                 })
                 .catch((info) => {
                   console.log("Validate Failed", info);
@@ -582,21 +586,14 @@ export function Curriculum() {
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               requiredMark="optional"
-              initialValues={curDetail}
+              initialValues={selected}
             >
               <Form.Item
                 label="Name"
-                name="name"
+                name="title"
                 rules={[{ required: true, message: "Please input name!" }]}
               >
                 <Input placeholder="Curriculum Name" />
-              </Form.Item>
-              <Form.Item
-                label="Year (พุทธศักราช)"
-                name="year"
-                rules={[{ required: true, message: "Please input year!" }]}
-              >
-                <InputNumber placeholder="Year" />
               </Form.Item>
             </Form>
           </Modal>

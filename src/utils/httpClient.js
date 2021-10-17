@@ -13,17 +13,10 @@ function RefreshAccessToken() {
       // Hardcoded as userId is 1
       refreshToken: rtk,
     })
-    .then(
-      (response) => {
-        localStorage.setItem("atk", response.data.data.accessToken);
-        return response.data.data.accessToken;
-      },
-      () => {
-        // Raise Session expired flag
-        // ## Comment this to DEV without back-end ##
-        localStorage.setItem("sessionStatus", "expired");
-      }
-    );
+    .then((response) => {
+      localStorage.setItem("atk", response.data.data.accessToken);
+      return response.data.data.accessToken;
+    });
 }
 
 httpClient.interceptors.request.use((request) => {
@@ -52,9 +45,17 @@ httpClient.interceptors.response.use(
     }
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const accessToken = await RefreshAccessToken();
-      axios.defaults.headers.common["x-access-token"] = "Bearer " + accessToken;
-      return httpClient(originalRequest);
+      try {
+        const accessToken = await RefreshAccessToken();
+        axios.defaults.headers.common["x-access-token"] =
+          "Bearer " + accessToken;
+        return httpClient(originalRequest);
+      } catch {
+        // ## Comment this catch{} to DEV without back-end ##
+        localStorage.clear();
+        return (window.location.href =
+          "/login?sessionExpired=true&nextpage=" + window.location.pathname);
+      }
     }
 
     return Promise.reject(error);

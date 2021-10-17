@@ -47,6 +47,9 @@ httpClient.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
+    if (!error.response) {
+      console.log("Please check your connection.");
+    }
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const accessToken = await RefreshAccessToken();

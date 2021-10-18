@@ -14,15 +14,15 @@ const Navbar = () => {
   const isAdmin = window.location.host.split(".")[0] === "admin";
 
   const menu = (
-    <Menu>
-      <Menu.Item disabled style={{ color: "#252629" }}>
-        Logged in as <strong>{user?.username}</strong>
+    <Menu style={{ minWidth: "200px" }}>
+      <Menu.Item disabled style={{ color: "#252629" }} key="1">
+        Logged in as <strong>{user?.username || "N/A"}</strong>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item icon={<UserOutlined />}>
+      <Menu.Item icon={<UserOutlined />} key="2">
         <Link to="/profile">Profile</Link>
       </Menu.Item>
-      <Menu.Item icon={<LogoutOutlined />} danger onClick={onLogout}>
+      <Menu.Item icon={<LogoutOutlined />} danger onClick={onLogout} key="3">
         Logout
       </Menu.Item>
     </Menu>

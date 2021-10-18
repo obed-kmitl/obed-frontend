@@ -29,7 +29,7 @@ export const Teacher = () => {
     deleteTeacher,
     message,
     setMessage,
-  ] = useTeacher(form);
+  ] = useTeacher();
   const [filterList, setFilterList] = useState(teachers);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
@@ -94,6 +94,7 @@ export const Teacher = () => {
         );
         setVisible(false);
         setTeachers([...teachers, values]);
+        form.resetFields();
       })
       .catch(() => {
         openNotificationWithIcon(
@@ -116,6 +117,7 @@ export const Teacher = () => {
         );
         setVisible(false);
         setConfirmLoading(false);
+        form.resetFields();
       })
       .catch(() => {
         openNotificationWithIcon(
@@ -296,7 +298,7 @@ export const Teacher = () => {
                   <EditOutlined />
                 </a>
               </Tooltip>
-              <Tooltip title="Change Password">
+              <Tooltip title="Request Password Change">
                 <a
                   href="#"
                   style={{

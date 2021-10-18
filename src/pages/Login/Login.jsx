@@ -6,9 +6,10 @@ import img2 from "../../assets/img/login_img2.svg";
 import logo from "../../assets/img/logo_admin.svg";
 import logo2 from "../../assets/img/logo_teacher.svg";
 import { Button, Body } from "../../components";
-import { Input, Form, Alert } from "antd";
+import { Input, Form, Alert, notification } from "antd";
 import { useLocation } from "react-router";
 import useAuthen from "../../hooks/useAuthen";
+import { useEffect } from "react";
 
 export const Login = () => {
   const [form] = Form.useForm();
@@ -25,6 +26,27 @@ export const Login = () => {
   }
 
   const isAdmin = window.location.host.split(".")[0] === "admin";
+
+  function openNotificationWithIcon(type, message, desc) {
+    notification[type]({
+      message: message,
+      description: desc,
+      duration: 0,
+    });
+  }
+
+  useEffect(() => {
+    if (query.get("sessionExpired") === "true") {
+      openNotificationWithIcon(
+        "warning",
+        "Session Expired",
+        "Please log in again."
+      );
+    }
+    return () => {
+      notification.destroy();
+    };
+  }, []);
 
   return (
     <div className={isAdmin ? styles.page : css(styles.page, styles.teacher)}>

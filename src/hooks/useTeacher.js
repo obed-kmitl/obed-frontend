@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import httpClient from "../utils/httpClient";
 
-export const useTeacher = (form) => {
+export const useTeacher = () => {
   const [teachers, setTeachers] = useState();
   const [message, setMessage] = useState("");
 
@@ -75,7 +75,6 @@ export const useTeacher = (form) => {
         lastname: values.lastname,
       })
       .then((response) => {
-        form.resetFields();
         return response;
       })
       .catch((error) => {
@@ -84,7 +83,7 @@ export const useTeacher = (form) => {
   }
 
   async function editTeacher(values) {
-    let res = await httpClient
+    return await httpClient
       .put(`/user/update/${values.id}`, {
         email: values.email,
         username: values.username,

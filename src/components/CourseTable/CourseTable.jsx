@@ -11,13 +11,15 @@ import {
   Space,
 } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { useCourse } from "../../hooks/useCourse";
 
-export const CourseTable = ({ course = [{}] }) => {
+export const CourseTable = ({ course = [{}], setFilteredCourse }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(course);
   const [editingKey, setEditingKey] = useState("");
+  const { updateCourse, removeCourse } = useCourse();
 
-  const isEditing = (record) => record.key === editingKey;
+  const isEditing = (record) => record.course_id === editingKey;
   const mockPLO = [
     {
       id: 1.1,
@@ -75,11 +77,15 @@ export const CourseTable = ({ course = [{}] }) => {
         inputNode = (
           <Select showSearch placeholder="Select Prerequisite Course">
             <Option value={null}>None</Option>
-            {course.map((ele) => (
-              <Option key={ele.course_id} value={ele.course_id}>
-                {ele.course_id}&nbsp;{ele.course_name_en}
-              </Option>
-            ))}
+            {data.map((ele) => {
+              if (ele.course_id !== editingKey)
+                return (
+                  <Option key={ele.course_id} value={ele.course_id}>
+                    {ele.course_id}&nbsp;{ele.course_name_en}
+                  </Option>
+                );
+              return null;
+            })}
           </Select>
         );
         break;
@@ -100,6 +106,19 @@ export const CourseTable = ({ course = [{}] }) => {
                 required: false,
                 message: `Please Input ${title}!`,
               },
+              {
+                validator: (rule, value, callback) => {
+                  const alreadyExistNo = data
+                    .map((e) => e.course_id)
+                    .filter((e) => e !== record.course_id);
+                  if (inputType === "course_id") {
+                    if (alreadyExistNo.includes(value)) {
+                      return Promise.reject("Already exist!");
+                    }
+                  }
+                  return Promise.resolve();
+                },
+              },
             ]}
           >
             {inputNode}
@@ -115,7 +134,7 @@ export const CourseTable = ({ course = [{}] }) => {
     form.setFieldsValue({
       ...record,
     });
-    setEditingKey(record.key);
+    setEditingKey(record.course_id);
   };
 
   const cancel = () => {
@@ -126,8 +145,8 @@ export const CourseTable = ({ course = [{}] }) => {
     try {
       const row = await form.validateFields();
       const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
-
+      const index = newData.findIndex((item) => key === item.course_id);
+      updateCourse(editingKey, row);
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, { ...item, ...row });
@@ -143,6 +162,17 @@ export const CourseTable = ({ course = [{}] }) => {
     }
   };
 
+  const remove = (record) => {
+    let newData = [...data];
+    newData = newData
+      .filter((ele) => ele.course_id !== record.course_id)
+      .filter((ele) => ele.pre_course_id !== record.course_id);
+    removeCourse(record.course_id).then(() => {
+      setData(newData);
+      setFilteredCourse(newData);
+    });
+  };
+
   const columns = [
     {
       title: "Course ID",
@@ -151,6 +181,7 @@ export const CourseTable = ({ course = [{}] }) => {
       width: "12%",
       editable: true,
       sorter: (a, b) => a.course_id - b.course_id,
+      defaultSortOrder: "ascend",
     },
     {
       title: "Course Name (EN)",
@@ -182,7 +213,7 @@ export const CourseTable = ({ course = [{}] }) => {
     },
     {
       title: "Prerequisite",
-      dataIndex: "precourse_id",
+      dataIndex: "pre_course_id",
       width: "20%",
       ellipsis: {
         showTitle: false,
@@ -196,14 +227,14 @@ export const CourseTable = ({ course = [{}] }) => {
             text &&
             text +
               " " +
-              course.find((ele) => text === ele.course_id)?.course_name_en
+              data.find((ele) => text === ele.course_id)?.course_name_en
           }
         >
           {text
             ? text +
               " " +
-              course.find((ele) => text === ele.course_id)?.course_name_en
-            : "None"}
+              data.find((ele) => text === ele.course_id)?.course_name_en
+            : "-"}
         </Tooltip>
       ),
     },
@@ -230,7 +261,7 @@ export const CourseTable = ({ course = [{}] }) => {
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
               href="#"
-              onClick={() => save(record.key)}
+              onClick={() => save(record.course_id)}
               style={{
                 marginRight: 8,
               }}
@@ -254,7 +285,10 @@ export const CourseTable = ({ course = [{}] }) => {
               </Typography.Link>
             </Tooltip>
             <Tooltip title="Delete">
-              <Popconfirm title="Sure to delete?" onConfirm={cancel}>
+              <Popconfirm
+                title="Sure to delete? This may also delete course that prerequire this course."
+                onConfirm={() => remove(record)}
+              >
                 <Typography.Link
                   disabled={editingKey !== ""}
                   style={{ color: "#C73535", fontSize: "20px" }}
@@ -280,8 +314,10 @@ export const CourseTable = ({ course = [{}] }) => {
         inputType:
           col.dataIndex === "plo"
             ? "plo"
-            : col.dataIndex === "precourse_id"
+            : col.dataIndex === "pre_course_id"
             ? "prereq"
+            : col.dataIndex === "course_id"
+            ? "course_id"
             : "text",
         dataIndex: col.dataIndex,
         title: col.title,

@@ -27,10 +27,12 @@ import styles from "./Curriculum.module.scss";
 import { Helmet } from "react-helmet";
 import { ExclamationCircleOutlined, UploadOutlined } from "@ant-design/icons";
 import { useCurriculum } from "../../hooks/useCurriculum";
+import { useCourse } from "../../hooks/useCourse";
 
 export function Curriculum() {
   const { create, getAll, update, remove, curriculum, message, setMessage } =
     useCurriculum();
+  const { createCourse, getCourseByCurriculum, courses } = useCourse();
   const [selected, setSelected] = useState(null);
   const [editDetail, setEditDetail] = useState(false);
   const [editCurVisible, setEditCurVisible] = useState(false);
@@ -42,54 +44,6 @@ export function Curriculum() {
   const [newForm] = Form.useForm();
   const [newCourseForm] = Form.useForm();
   const { confirm } = Modal;
-
-  const courses = [
-    {
-      key: "1",
-      course_id: "01076001",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-      course_name_en: "Introduction to Computer Engineering",
-      plo: [1.2, 1.3],
-    },
-    {
-      key: "2",
-      course_id: "01076002",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์",
-      course_name_en: "Programming Fundamental",
-      plo: [1.1, 1.2],
-    },
-    {
-      key: "3",
-      course_id: "01076003",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "วงจรไฟฟ้าและอิเล็กทรอนิกส์",
-      course_name_en: "Circuits and Electronics",
-      plo: [2.1, 2.2, 2.4],
-    },
-    {
-      key: "4",
-      course_id: "01076004",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "การเขียนโปรแกรมเชิงวัตถุ",
-      course_name_en: "Object Oriented Programming",
-      plo: [1.1, 1.3],
-    },
-    {
-      key: "5",
-      course_id: "01076005",
-      curriculum_id: "01072560",
-      precourse_id: "01076004",
-      course_name_th: "โครงสร้างข้อมูลและอัลกอริทึม",
-      course_name_en: "Data Structures and Algorithm",
-      plo: [2.1, 2.2],
-    },
-  ];
 
   const mockPLO = [
     {
@@ -121,11 +75,11 @@ export function Curriculum() {
       desc: "PLO 2.1",
     },
   ];
-  const [filteredCourse, setFilteredCourse] = useState(courses);
+  const [filteredCourse, setFilteredCourse] = useState([]);
 
-  function showArchiveConfirm() {
+  function showRemoveConfirm() {
     confirm({
-      title: "Archive " + selected.title + " ?",
+      title: "Remove " + selected.title + " ?",
       icon: <ExclamationCircleOutlined />,
       content: "Are you sure to remove this curriculum?",
       okText: "Remove",
@@ -155,7 +109,6 @@ export function Curriculum() {
   }
 
   function handleCreateSubmit(values) {
-    console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
     create(values)
       .then((data) => {
@@ -170,7 +123,6 @@ export function Curriculum() {
   }
 
   function handleEditSubmit(values) {
-    console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
     update(selected.curriculum_id, values)
       .then((data) => {
@@ -185,14 +137,17 @@ export function Curriculum() {
   }
 
   function handleCourseSubmit(values) {
-    console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
-    // TODO
-    setTimeout(() => {
-      setConfirmLoading(false);
-      setNewCourseVisible(false);
-      setImportVisible(false);
-    }, 2000);
+    createCourse(selected.curriculum_id, values)
+      .then((data) => {
+        setFilteredCourse([...courses, data]);
+        setConfirmLoading(false);
+        setNewCourseVisible(false);
+        newCourseForm.resetFields();
+      })
+      .catch(() => {
+        console.log(message);
+      });
   }
 
   function handleCancel() {
@@ -246,9 +201,12 @@ export function Curriculum() {
         <Header level={2}>Select Curriculum</Header>
         <Select
           placeholder="Curriculum"
-          onChange={(value) =>
-            setSelected(curriculum.find((ele) => ele.curriculum_id === value))
-          }
+          onChange={(value) => {
+            setSelected(curriculum.find((ele) => ele.curriculum_id === value));
+            getCourseByCurriculum(value).then((data) => {
+              setFilteredCourse(data);
+            });
+          }}
           style={{ width: "320px" }}
           defaultValue={null}
           value={selected?.curriculum_id}
@@ -333,7 +291,7 @@ export function Curriculum() {
                 />
               </Tooltip>
             </Header>
-            <Button danger onClick={() => showArchiveConfirm()}>
+            <Button danger onClick={() => showRemoveConfirm()}>
               Remove Curriculum
             </Button>
           </div>
@@ -349,10 +307,21 @@ export function Curriculum() {
                     allowClear
                   />
                   <Button onClick={() => setImportVisible(true)}>Import</Button>
-                  <Button onClick={() => setNewCourseVisible(true)}>New</Button>
+                  <Button
+                    onClick={() => {
+                      setNewCourseVisible(true);
+                      getCourseByCurriculum(selected.curriculum_id);
+                    }}
+                  >
+                    New
+                  </Button>
                 </div>
               </div>
-              <CourseTable course={filteredCourse} key={filteredCourse} />
+              <CourseTable
+                course={filteredCourse}
+                key={filteredCourse}
+                setFilteredCourse={setFilteredCourse}
+              />
               <Modal
                 title="New Course"
                 visible={newCourseVisible}
@@ -389,6 +358,21 @@ export function Curriculum() {
                     name="course_id"
                     rules={[
                       { required: true, message: "Please input course id!" },
+                      {
+                        validator: (rule, value, callback) => {
+                          const alreadyExistNo = courses.map(
+                            (e) => e.course_id
+                          );
+                          if (alreadyExistNo.includes(value)) {
+                            return Promise.reject("Already exist!");
+                          } else if (value.length !== 8) {
+                            return Promise.reject(
+                              "Course id must have 8 digits."
+                            );
+                          }
+                          return Promise.resolve();
+                        },
+                      },
                     ]}
                   >
                     <Input placeholder="Course ID" />
@@ -417,14 +401,32 @@ export function Curriculum() {
                   >
                     <Input placeholder="Course Name in Thai" />
                   </Form.Item>
-                  <Form.Item label="Prerequisite" name="precourse_id">
+                  <Form.Item
+                    label="Prerequisite"
+                    name="pre_course_id"
+                    rules={[
+                      {
+                        validator: (rule, value, callback) => {
+                          const alreadyExistNo = courses.map(
+                            (e) => e.course_id
+                          );
+                          if (
+                            alreadyExistNo.includes(value) ||
+                            value === "" ||
+                            value === undefined
+                          ) {
+                            return Promise.resolve();
+                          } else
+                            return Promise.reject(
+                              "Not exist! Please create prerequisite course before."
+                            );
+                        },
+                      },
+                    ]}
+                  >
                     <Input placeholder="Prerequisite Course ID" />
                   </Form.Item>
-                  <Form.Item
-                    label="PLOs"
-                    name="plo"
-                    rules={[{ required: true, message: "Please input plo!" }]}
-                  >
+                  <Form.Item label="PLOs" name="plo">
                     <Select mode="multiple" placeholder="PLO">
                       {mockPLO.map((e) => (
                         <Option value={e.id} key={e.id}>

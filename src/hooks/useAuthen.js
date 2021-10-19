@@ -30,12 +30,23 @@ const useAuthen = () => {
           return response.data;
         },
         (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
+          let resMessage = "";
+          switch (error.response.data.error.code) {
+            case "UNAUTHORIZED":
+              resMessage = "Wrong username or password.";
+              break;
+            case "INTERNAL_SERVER_ERROR":
+              resMessage = "Something went wrong, Please check and try again.";
+              break;
+            default:
+              resMessage =
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.message) ||
+                error.message ||
+                error.toString();
+              break;
+          }
           setMessage(resMessage);
           setLoading(false);
         }
@@ -60,12 +71,23 @@ const useAuthen = () => {
           return response.data;
         },
         (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
+          let resMessage = "";
+          switch (error.response.data.error.code) {
+            case "UNAUTHORIZED":
+              resMessage = "Wrong username or password.";
+              break;
+            case "INTERNAL_SERVER_ERROR":
+              resMessage = "Something went wrong, Please check and try again.";
+              break;
+            default:
+              resMessage =
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.message) ||
+                error.message ||
+                error.toString();
+              break;
+          }
           setMessage(resMessage);
           setLoading(false);
         }

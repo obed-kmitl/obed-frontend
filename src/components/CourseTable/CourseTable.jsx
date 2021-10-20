@@ -10,7 +10,12 @@ import {
   Tooltip,
   Space,
 } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SaveOutlined,
+  CloseCircleTwoTone,
+} from "@ant-design/icons";
 import { useCourse } from "../../hooks/useCourse";
 
 export const CourseTable = ({ course = [{}], setFilteredCourse }) => {
@@ -257,22 +262,25 @@ export const CourseTable = ({ course = [{}], setFilteredCourse }) => {
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
-          <span>
+          <Space size="middle">
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <a
-              href="#"
-              onClick={() => save(record.course_id)}
-              style={{
-                marginRight: 8,
-              }}
-            >
-              Save
-            </a>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+            <Tooltip title="Save">
+              <Typography.Link href="#" onClick={() => save(record.course_id)}>
+                <SaveOutlined style={{ fontSize: "20px" }} />
+              </Typography.Link>
+            </Tooltip>
+            <Popconfirm title="Discard changes?" onConfirm={cancel}>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a>Cancel</a>
+              <Tooltip title="Cancel">
+                <Typography.Link>
+                  <CloseCircleTwoTone
+                    twoToneColor="#C73535"
+                    style={{ fontSize: "20px" }}
+                  />
+                </Typography.Link>
+              </Tooltip>
             </Popconfirm>
-          </span>
+          </Space>
         ) : (
           <Space size="middle">
             <Tooltip title="Edit">

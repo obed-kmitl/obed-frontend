@@ -5,8 +5,8 @@ import {
   Divider,
   Modal,
   Form,
+  Input,
   Select,
-  Upload,
   Tooltip,
   notification,
 } from "antd";
@@ -19,63 +19,25 @@ import {
   TabPane,
   CourseTable,
   Option,
-  Input,
   Standard,
   MappingStandard,
 } from "../../components";
 import styles from "./Curriculum.module.scss";
 import { Helmet } from "react-helmet";
-import { ExclamationCircleOutlined, UploadOutlined } from "@ant-design/icons";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useCurriculum } from "../../hooks/useCurriculum";
-import { useCourse } from "../../hooks/useCourse";
 
 export function Curriculum() {
   const { create, getAll, update, remove, curriculum, message, setMessage } =
     useCurriculum();
-  const { createCourse, getCourseByCurriculum, courses } = useCourse();
   const [selected, setSelected] = useState(null);
   const [editDetail, setEditDetail] = useState(false);
   const [editCurVisible, setEditCurVisible] = useState(false);
   const [newCurVisible, setNewCurVisible] = useState(false);
-  const [newCourseVisible, setNewCourseVisible] = useState(false);
-  const [importVisible, setImportVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [editForm] = Form.useForm();
   const [newForm] = Form.useForm();
-  const [newCourseForm] = Form.useForm();
   const { confirm } = Modal;
-
-  const mockPLO = [
-    {
-      id: 1.1,
-      desc: "PLO 1.1",
-    },
-    {
-      id: 1.2,
-      desc: "PLO 1.2",
-    },
-    {
-      id: 1.3,
-      desc: "PLO 1.3",
-    },
-    {
-      id: 2.1,
-      desc: "PLO 2.1",
-    },
-    {
-      id: 2.2,
-      desc: "PLO 2.1",
-    },
-    {
-      id: 2.3,
-      desc: "PLO 2.1",
-    },
-    {
-      id: 2.4,
-      desc: "PLO 2.1",
-    },
-  ];
-  const [filteredCourse, setFilteredCourse] = useState([]);
 
   function showRemoveConfirm() {
     confirm({
@@ -104,21 +66,6 @@ export function Curriculum() {
           });
       },
     });
-  }
-
-  function search(keyword) {
-    if (keyword !== "") {
-      const results = courses.filter((course) => {
-        return (
-          course.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
-          course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
-          course.course_name_th.includes(keyword)
-        );
-      });
-      setFilteredCourse(results);
-    } else {
-      setFilteredCourse(courses);
-    }
   }
 
   function handleCreateSubmit(values) {
@@ -161,29 +108,11 @@ export function Curriculum() {
       });
   }
 
-  function handleCourseSubmit(values) {
-    setConfirmLoading(true);
-    createCourse(selected.curriculum_id, values)
-      .then((data) => {
-        setFilteredCourse([...courses, data]);
-        setConfirmLoading(false);
-        setNewCourseVisible(false);
-        newCourseForm.resetFields();
-      })
-      .catch((message) => {
-        setConfirmLoading(false);
-        openNotificationWithIcon("error", "Cannot create course", message);
-      });
-  }
-
   function handleCancel() {
     setEditCurVisible(false);
     setNewCurVisible(false);
-    setNewCourseVisible(false);
-    setImportVisible(false);
     editForm.resetFields();
     newForm.resetFields();
-    newCourseForm.resetFields();
     setMessage("");
   }
 
@@ -208,7 +137,7 @@ export function Curriculum() {
     notification[type]({
       message: message,
       description: desc,
-      duration: type === "error" ? 0 : 5,
+      duration: type === "error" ? 15 : 5,
     });
   }
 
@@ -235,9 +164,6 @@ export function Curriculum() {
           placeholder="Curriculum"
           onChange={(value) => {
             setSelected(curriculum.find((ele) => ele.curriculum_id === value));
-            getCourseByCurriculum(value).then((data) => {
-              setFilteredCourse(data);
-            });
           }}
           style={{ width: "320px" }}
           defaultValue={null}
@@ -337,174 +263,7 @@ export function Curriculum() {
           </div>
           <Tabs defaultActiveKey="1">
             <TabPane tab="Course" key="1">
-              <div className={styles.tabHead}>
-                <Header level={2}>Course</Header>
-                <div>
-                  <Input
-                    search
-                    placeholder="Search"
-                    onSearch={search}
-                    allowClear
-                  />
-                  <Button onClick={() => setImportVisible(true)}>Import</Button>
-                  <Button
-                    onClick={() => {
-                      setNewCourseVisible(true);
-                      getCourseByCurriculum(selected.curriculum_id);
-                    }}
-                  >
-                    New
-                  </Button>
-                </div>
-              </div>
-              <CourseTable
-                course={filteredCourse}
-                key={filteredCourse}
-                setFilteredCourse={setFilteredCourse}
-              />
-              <Modal
-                title="New Course"
-                visible={newCourseVisible}
-                okText="Create"
-                onOk={() => {
-                  newCourseForm
-                    .validateFields()
-                    .then((values) => {
-                      newCourseForm.resetFields();
-                      handleCourseSubmit(values);
-                    })
-                    .catch((info) => {
-                      console.log("Validate Failed", info);
-                    });
-                }}
-                onCancel={handleCancel}
-                okButtonProps={{ htmlType: "submit" }}
-                maskClosable={false}
-                confirmLoading={confirmLoading}
-                width="700px"
-                centered
-              >
-                {message !== "" && (
-                  <Alert
-                    style={{ marginBottom: "1rem" }}
-                    message={message}
-                    type="error"
-                    showIcon
-                  />
-                )}
-                <Form
-                  form={newCourseForm}
-                  name="course"
-                  layout="vertical"
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
-                  autoComplete="off"
-                  requiredMark={"required"}
-                >
-                  <Form.Item
-                    label="Course ID"
-                    name="course_id"
-                    rules={[
-                      { required: true, message: "Please input course id!" },
-                      {
-                        validator: (rule, value, callback) => {
-                          const alreadyExistNo = courses.map(
-                            (e) => e.course_id
-                          );
-                          if (alreadyExistNo.includes(value)) {
-                            return Promise.reject("Already exist!");
-                          } else if (value.length !== 8) {
-                            return Promise.reject(
-                              "Course id must have 8 digits."
-                            );
-                          }
-                          return Promise.resolve();
-                        },
-                      },
-                    ]}
-                  >
-                    <Input placeholder="Course ID" />
-                  </Form.Item>
-                  <Form.Item
-                    label="Course Name (EN)"
-                    name="course_name_en"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input course name (en)!",
-                      },
-                    ]}
-                  >
-                    <Input placeholder="Course Name in English" />
-                  </Form.Item>
-                  <Form.Item
-                    label="Course Name (TH)"
-                    name="course_name_th"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input course name (th)!",
-                      },
-                    ]}
-                  >
-                    <Input placeholder="Course Name in Thai" />
-                  </Form.Item>
-                  <Form.Item
-                    label="Prerequisite"
-                    name="pre_course_id"
-                    rules={[
-                      {
-                        validator: (rule, value, callback) => {
-                          const alreadyExistNo = courses.map(
-                            (e) => e.course_id
-                          );
-                          if (
-                            alreadyExistNo.includes(value) ||
-                            value === "" ||
-                            value === undefined
-                          ) {
-                            return Promise.resolve();
-                          } else
-                            return Promise.reject(
-                              "Not exist! Please create prerequisite course before."
-                            );
-                        },
-                      },
-                    ]}
-                  >
-                    <Input placeholder="Prerequisite Course ID" />
-                  </Form.Item>
-                  <Form.Item label="PLOs" name="plo">
-                    <Select mode="multiple" placeholder="PLO">
-                      {mockPLO.map((e) => (
-                        <Option value={e.id} key={e.id}>
-                          {e.id}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Form>
-              </Modal>
-              <Modal
-                title="Import Course"
-                visible={importVisible}
-                okText="OK"
-                onOk={() => {}}
-                onCancel={handleCancel}
-                maskClosable={false}
-                confirmLoading={confirmLoading}
-              >
-                <Header level={4}>Download Excel Template</Header>
-                <Button>Download</Button>
-                <Divider />
-                <Upload accept=".xlsx, .xls, .csv">
-                  <Header level={4}>Upload</Header>
-                  <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                </Upload>
-                <Body level={2} className={styles.uploadWarning}>
-                  Warning Message
-                </Body>
-              </Modal>
+              <CourseTable selectedCur={selected} />
             </TabPane>
             <TabPane tab="Standard" key="2">
               <Standard />

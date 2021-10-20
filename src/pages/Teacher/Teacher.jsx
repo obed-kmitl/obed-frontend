@@ -23,6 +23,7 @@ export const Teacher = () => {
   const [form] = Form.useForm();
   const [
     teachers,
+    fetchAllUsers,
     setTeachers,
     register,
     editTeacher,
@@ -30,7 +31,7 @@ export const Teacher = () => {
     message,
     setMessage,
   ] = useTeacher();
-  const [filterList, setFilterList] = useState(teachers);
+  const [filterList, setFilterList] = useState([]);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -178,7 +179,7 @@ export const Teacher = () => {
     notification[type]({
       message: message,
       description: desc,
-      duration: 5,
+      duration: type === "error" ? 0 : 5,
     });
   }
 
@@ -217,6 +218,17 @@ export const Teacher = () => {
         );
       });
   }
+
+  useEffect(() => {
+    fetchAllUsers()
+      .then((data) => {
+        setFilterList(data);
+      })
+      .catch((message) => {
+        openNotificationWithIcon("error", "Cannot fetch teacher data", message);
+      });
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <div className={styles.teacher}>

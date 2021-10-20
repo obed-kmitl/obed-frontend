@@ -86,8 +86,22 @@ export function Curriculum() {
       okType: "danger",
       cancelText: "Cancel",
       onOk() {
-        remove(selected.curriculum_id);
-        setSelected(null);
+        remove(selected.curriculum_id)
+          .then(() => {
+            openNotificationWithIcon(
+              "success",
+              "Curriculum removed",
+              selected.title + " have been removed."
+            );
+            setSelected(null);
+          })
+          .catch((message) => {
+            openNotificationWithIcon(
+              "error",
+              "Cannot remove curriculum",
+              message
+            );
+          });
       },
     });
   }
@@ -102,7 +116,6 @@ export function Curriculum() {
         );
       });
       setFilteredCourse(results);
-      console.log(results);
     } else {
       setFilteredCourse(courses);
     }
@@ -116,9 +129,15 @@ export function Curriculum() {
         setConfirmLoading(false);
         setNewCurVisible(false);
         newForm.resetFields();
+        openNotificationWithIcon(
+          "success",
+          "Curriculum created",
+          data.title + " have been created."
+        );
       })
-      .catch(() => {
-        console.log(message);
+      .catch((message) => {
+        setConfirmLoading(false);
+        openNotificationWithIcon("error", "Cannot create curriculum", message);
       });
   }
 
@@ -130,9 +149,15 @@ export function Curriculum() {
         setConfirmLoading(false);
         setEditCurVisible(false);
         editForm.resetFields();
+        openNotificationWithIcon(
+          "success",
+          "Curriculum edited",
+          "Changes have been saved."
+        );
       })
-      .catch(() => {
-        console.log(message);
+      .catch((message) => {
+        setConfirmLoading(false);
+        openNotificationWithIcon("error", "Cannot edit curriculum", message);
       });
   }
 
@@ -145,8 +170,9 @@ export function Curriculum() {
         setNewCourseVisible(false);
         newCourseForm.resetFields();
       })
-      .catch(() => {
-        console.log(message);
+      .catch((message) => {
+        setConfirmLoading(false);
+        openNotificationWithIcon("error", "Cannot create course", message);
       });
   }
 
@@ -182,12 +208,18 @@ export function Curriculum() {
     notification[type]({
       message: message,
       description: desc,
-      duration: 5,
+      duration: type === "error" ? 0 : 5,
     });
   }
 
   useEffect(() => {
-    getAll();
+    getAll().catch((message) => {
+      openNotificationWithIcon(
+        "error",
+        "Cannot fetch curriculum data",
+        message
+      );
+    });
     //eslint-disable-next-line
   }, []);
 
@@ -245,6 +277,14 @@ export function Curriculum() {
         confirmLoading={confirmLoading}
         width="700px"
       >
+        {message !== "" && (
+          <Alert
+            style={{ marginBottom: "1rem" }}
+            message={message}
+            type="error"
+            showIcon
+          />
+        )}
         <Form
           form={newForm}
           name="curriculum_name"
@@ -344,6 +384,14 @@ export function Curriculum() {
                 width="700px"
                 centered
               >
+                {message !== "" && (
+                  <Alert
+                    style={{ marginBottom: "1rem" }}
+                    message={message}
+                    type="error"
+                    showIcon
+                  />
+                )}
                 <Form
                   form={newCourseForm}
                   name="course"

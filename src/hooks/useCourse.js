@@ -1,8 +1,10 @@
 import { useState } from "react";
 import httpClient from "../utils/httpClient";
+import errorTranslate from "../utils/errorTranslate";
 
 export const useCourse = () => {
   const [courses, setCourses] = useState([]);
+  const [message, setMessage] = useState("");
 
   async function getCourseByCurriculum(id) {
     return await httpClient
@@ -12,8 +14,8 @@ export const useCourse = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        const resMessage = error.message || error.toString();
-        return Promise.reject(resMessage);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
@@ -28,12 +30,12 @@ export const useCourse = () => {
           values.pre_course_id === "" ? null : values.pre_course_id,
       })
       .then((response) => {
-        setCourses([...courses, response]);
+        setCourses([...courses, response.data.data]);
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        const resMessage = error.message || error.toString();
-        return Promise.reject(resMessage);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
@@ -58,12 +60,13 @@ export const useCourse = () => {
           }
           return ele;
         });
+        console.log(newCourses);
         setCourses(newCourses);
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        const resMessage = error.message || error.toString();
-        return Promise.reject(resMessage);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
@@ -79,8 +82,8 @@ export const useCourse = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        const resMessage = error.message || error.toString();
-        return Promise.reject(resMessage);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
@@ -90,5 +93,7 @@ export const useCourse = () => {
     removeCourse,
     getCourseByCurriculum,
     courses,
+    message,
+    setMessage,
   };
 };

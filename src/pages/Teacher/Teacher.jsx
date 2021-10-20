@@ -179,7 +179,7 @@ export const Teacher = () => {
     notification[type]({
       message: message,
       description: desc,
-      duration: type === "error" ? 0 : 5,
+      duration: type === "error" ? 15 : 5,
     });
   }
 

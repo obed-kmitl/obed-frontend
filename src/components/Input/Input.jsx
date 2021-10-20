@@ -34,7 +34,7 @@ function MyInput({
       <div className={styles.input}>
         <Search
           style={{ width: width || "100%" }}
-          placeholder={placeholder ? placeholder : "Please Input Search"}
+          placeholder={placeholder ? placeholder : "Search"}
           onSearch={onSearch}
           defaultValue={defaultValue}
           enterButton

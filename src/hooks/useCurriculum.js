@@ -13,12 +13,13 @@ export const useCurriculum = () => {
       })
       .then((response) => {
         getAll();
-        return response.data.data;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         const resMessage = error.message || error.toString();
         setMessage(resMessage);
-        return resMessage;
+        console.log(error);
+        return Promise.reject(resMessage);
       });
   }
 
@@ -26,12 +27,12 @@ export const useCurriculum = () => {
     return await httpClient
       .get(`/curriculum/get/${id}`)
       .then((response) => {
-        return response.data.data;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         const resMessage = error.message || error.toString();
         setMessage(resMessage);
-        return resMessage;
+        return Promise.reject(resMessage);
       });
   }
 
@@ -40,12 +41,12 @@ export const useCurriculum = () => {
       .get(`/curriculum/getAll`)
       .then((response) => {
         setCurriculum(response.data.data);
-        return response.data.data;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         const resMessage = error.message || error.toString();
         setMessage(resMessage);
-        return resMessage;
+        return Promise.reject(resMessage);
       });
   }
 
@@ -56,12 +57,12 @@ export const useCurriculum = () => {
       })
       .then((response) => {
         getAll();
-        return response.data.data;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         const resMessage = error.message || error.toString();
         setMessage(resMessage);
-        return resMessage;
+        return Promise.reject(resMessage);
       });
   }
 
@@ -70,12 +71,12 @@ export const useCurriculum = () => {
       .delete(`/curriculum/remove/${id}`)
       .then((response) => {
         getAll();
-        return response.data.data;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         const resMessage = error.message || error.toString();
         setMessage(resMessage);
-        return resMessage;
+        return Promise.reject(resMessage);
       });
   }
 

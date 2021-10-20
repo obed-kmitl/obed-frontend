@@ -9,11 +9,11 @@ export const useCourse = () => {
       .get(`/course/getAllByCurriculum/${id}`)
       .then((response) => {
         setCourses(response.data.data);
-        return response.data.data;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         const resMessage = error.message || error.toString();
-        return resMessage;
+        return Promise.reject(resMessage);
       });
   }
 
@@ -29,11 +29,11 @@ export const useCourse = () => {
       })
       .then((response) => {
         setCourses([...courses, response]);
-        return response.data.data;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         const resMessage = error.message || error.toString();
-        return resMessage;
+        return Promise.reject(resMessage);
       });
   }
 
@@ -59,11 +59,11 @@ export const useCourse = () => {
           return ele;
         });
         setCourses(newCourses);
-        return response.data.data;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         const resMessage = error.message || error.toString();
-        return resMessage;
+        return Promise.reject(resMessage);
       });
   }
 
@@ -76,11 +76,11 @@ export const useCourse = () => {
           .filter((ele) => ele.course_id !== id)
           .filter((ele) => ele.pre_course_id !== id);
         setCourses(newCourses);
-        return response.data.data;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         const resMessage = error.message || error.toString();
-        return resMessage;
+        return Promise.reject(resMessage);
       });
   }
 

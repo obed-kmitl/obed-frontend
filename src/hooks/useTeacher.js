@@ -26,11 +26,24 @@ export const useTeacher = () => {
     INSTRUCTOR: "อ.",
   };
 
-  function setErrorMessage(error) {
-    const resMessage =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+  function errorTranslate(error) {
+    let resMessage = "";
+    switch (error.response.data.error.code) {
+      case "UNAUTHORIZED":
+        resMessage = "Wrong username or password.";
+        break;
+      case "INTERNAL_SERVER_ERROR":
+        resMessage = "Something went wrong, Please check and try again.";
+        break;
+      default:
+        resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        break;
+    }
     setMessage(resMessage);
   }
 
@@ -59,9 +72,11 @@ export const useTeacher = () => {
             email: user.email,
           }))
         );
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        setErrorMessage(error);
+        errorTranslate(error);
+        return Promise.reject(message);
       });
   }
 
@@ -75,10 +90,11 @@ export const useTeacher = () => {
         lastname: values.lastname,
       })
       .then((response) => {
-        return response;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        setErrorMessage(error);
+        errorTranslate(error);
+        return Promise.reject(message);
       });
   }
 
@@ -107,15 +123,24 @@ export const useTeacher = () => {
           return value;
         });
         setTeachers(newTeacher);
-        return response;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        setErrorMessage(error);
+        errorTranslate(error);
+        return Promise.reject(message);
       });
   }
 
   async function deleteTeacher(values) {
-    return await httpClient.delete(`/user/remove/${values.id}`);
+    return await httpClient
+      .delete(`/user/remove/${values.id}`)
+      .then((response) => {
+        return Promise.resolve(response.data.data);
+      })
+      .catch((error) => {
+        errorTranslate(error);
+        return Promise.reject(message);
+      });
   }
 
   useEffect(() => {

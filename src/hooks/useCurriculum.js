@@ -1,4 +1,5 @@
 import { useState } from "react";
+import errorTranslate from "../utils/errorTranslate";
 import httpClient from "../utils/httpClient";
 
 export const useCurriculum = () => {
@@ -16,10 +17,8 @@ export const useCurriculum = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        const resMessage = error.message || error.toString();
-        setMessage(resMessage);
-        console.log(error);
-        return Promise.reject(resMessage);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
@@ -30,9 +29,8 @@ export const useCurriculum = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        const resMessage = error.message || error.toString();
-        setMessage(resMessage);
-        return Promise.reject(resMessage);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
@@ -44,9 +42,8 @@ export const useCurriculum = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        const resMessage = error.message || error.toString();
-        setMessage(resMessage);
-        return Promise.reject(resMessage);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
@@ -60,9 +57,8 @@ export const useCurriculum = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        const resMessage = error.message || error.toString();
-        setMessage(resMessage);
-        return Promise.reject(resMessage);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
@@ -74,9 +70,8 @@ export const useCurriculum = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        const resMessage = error.message || error.toString();
-        setMessage(resMessage);
-        return Promise.reject(resMessage);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 

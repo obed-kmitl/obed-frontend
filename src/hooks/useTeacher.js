@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import httpClient from "../utils/httpClient";
+import errorTranslate from "../utils/errorTranslate";
 
 export const useTeacher = () => {
   const [teachers, setTeachers] = useState();
@@ -25,27 +26,6 @@ export const useTeacher = () => {
     DR: "ดร.",
     INSTRUCTOR: "อ.",
   };
-
-  function errorTranslate(error) {
-    let resMessage = "";
-    switch (error.response.data.error.code) {
-      case "UNAUTHORIZED":
-        resMessage = "Wrong username or password.";
-        break;
-      case "INTERNAL_SERVER_ERROR":
-        resMessage = "Something went wrong, Please check and try again.";
-        break;
-      default:
-        resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        break;
-    }
-    setMessage(resMessage);
-  }
 
   async function fetchAllUsers() {
     const getThPrefix = {
@@ -75,7 +55,7 @@ export const useTeacher = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        errorTranslate(error);
+        errorTranslate(error, setMessage);
         return Promise.reject(message);
       });
   }
@@ -93,7 +73,7 @@ export const useTeacher = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        errorTranslate(error);
+        errorTranslate(error, setMessage);
         return Promise.reject(message);
       });
   }
@@ -126,7 +106,7 @@ export const useTeacher = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        errorTranslate(error);
+        errorTranslate(error, setMessage);
         return Promise.reject(message);
       });
   }
@@ -138,7 +118,7 @@ export const useTeacher = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        errorTranslate(error);
+        errorTranslate(error, setMessage);
         return Promise.reject(message);
       });
   }
@@ -150,6 +130,7 @@ export const useTeacher = () => {
 
   return [
     teachers,
+    fetchAllUsers,
     setTeachers,
     register,
     editTeacher,

@@ -263,14 +263,12 @@ export const CourseTable = ({ course = [{}], setFilteredCourse }) => {
         const editable = isEditing(record);
         return editable ? (
           <Space size="middle">
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <Tooltip title="Save">
               <Typography.Link href="#" onClick={() => save(record.course_id)}>
                 <SaveOutlined style={{ fontSize: "20px" }} />
               </Typography.Link>
             </Tooltip>
             <Popconfirm title="Discard changes?" onConfirm={cancel}>
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <Tooltip title="Cancel">
                 <Typography.Link>
                   <CloseCircleTwoTone

@@ -10,6 +10,7 @@ import { StandardTable } from './StandardTable';
 import styles from "./Standard.module.scss";
 import excelReader from "../../utils/excelReader"
 import { useImportExcel } from './hooks/useImportExcel';
+import { useStandard } from './hooks/useStandard';
 
 const standardList = [
   {
@@ -79,9 +80,9 @@ const standardList = [
   }
 ]
 
-export const Standard = () => {
-  const [standard, setStandard] = useState(standardList);   // state of standard
-  const [newStdVisible, setNewStdVisible] = useState(false); //  modal visible
+export const Standard = ({ selectedCurriculum }) => {
+  //const [standard, setStandard] = useState(standardList);   // state of standard
+  //const [newStdVisible, setNewStdVisible] = useState(false); //  modal visible
   const [addStdVisible, setAddStdVisible] = useState(false); //  modal visible
   const [isEditing, setIsEditing] = useState(false); //state check if standard title editing
   const [isEditingName, setIsEditingName] = useState(false); //state check if standard name editing
@@ -90,6 +91,15 @@ export const Standard = () => {
   const [addingStandardId, setAddingStandardId] = useState(); //index of adding Standard
   //const [fileUpLoadStdId, setFileUpLoadStdId] = useState(); //index of uploading standard
 
+  const [
+    standard,
+    setStandard,
+    handleCreateStdBtn,
+    handleCancel,
+    newStdVisible,
+    handleCreateSubmit,
+    handleDeleteTitle,
+  ] = useStandard(selectedCurriculum)
   const [importModalVisible, handleImportBtnClick, importModalCancel, getDetailsfromExcel, confirmImport, importStandard] = useImportExcel(setStandard)
 
   const [createStdForm] = Form.useForm();
@@ -97,30 +107,32 @@ export const Standard = () => {
   const [editTitleForm] = Form.useForm();
   const [editNameForm] = Form.useForm();
 
-  function handleCreateSubmit(value) {
-    const genId = () => {
-      var i = 1;
-      const existId = standard.map((e) => e.id)
-      while (true) {
-        if (existId.includes(i)) {
-          i++;
-        } else return i
-      }
-    }
-    setNewStdVisible(false);
-    setStandard([...standard, { id: genId(), standardTitle: value.standardTitle, details: [] }])
-  }
 
-  function handleCancel() {
-    setNewStdVisible(false);
-    setAddStdVisible(false);
-    createStdForm.resetFields();
-    addStdForm.resetFields();
-  }
 
-  const handleCreateStdBtn = () => {
-    setNewStdVisible(true)
-  }
+  // function handleCreateSubmit(value) {
+  //   const genId = () => {
+  //     var i = 1;
+  //     const existId = standard.map((e) => e.id)
+  //     while (true) {
+  //       if (existId.includes(i)) {
+  //         i++;
+  //       } else return i
+  //     }
+  //   }
+  //   setNewStdVisible(false);
+  //   setStandard([...standard, { id: genId(), standardTitle: value.standardTitle, details: [] }])
+  // }
+
+  // function handleCancel() {
+  //   setNewStdVisible(false);
+  //   setAddStdVisible(false);
+  //   createStdForm.resetFields();
+  //   addStdForm.resetFields();
+  // }
+
+  // const handleCreateStdBtn = () => {
+  //   setNewStdVisible(true)
+  // }
 
   const handleAddStdBtn = (i) => {
     setAddStdVisible(true)
@@ -146,9 +158,9 @@ export const Standard = () => {
     setAddStdVisible(false);
   }
 
-  function handleDeleteTitle(id) {
-    setStandard(standard.filter(item => item.id !== id))
-  }
+  // function handleDeleteTitle(id) {
+  //   setStandard(standard.filter(item => item.id !== id))
+  // }
 
   function handleDeleteStandard(stdNo, id) {
     const index = standard.findIndex((item) => {
@@ -550,7 +562,7 @@ export const Standard = () => {
                 <Panel header={std.standardNo + " " + std.standardName} key={index}>
                   {std.subStandard.map((substd, index) =>
                     <>
-                      <div style={{ display: "flex",fontSize:"14px" }}>
+                      <div style={{ display: "flex", fontSize: "14px" }}>
                         <div>{substd.subStandardNo}</div>
                         <Divider type="vertical" style={{ height: "100%" }} />
                         <div>{substd.subStandardName}</div>

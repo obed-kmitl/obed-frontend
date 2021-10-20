@@ -83,12 +83,12 @@ import { useStandard } from './hooks/useStandard';
 export const Standard = ({ selectedCurriculum }) => {
   //const [standard, setStandard] = useState(standardList);   // state of standard
   //const [newStdVisible, setNewStdVisible] = useState(false); //  modal visible
-  const [addStdVisible, setAddStdVisible] = useState(false); //  modal visible
+  //const [addStdVisible, setAddStdVisible] = useState(false); //  modal visible
   //const [isEditing, setIsEditing] = useState(false); //state check if standard title editing
-  const [isEditingName, setIsEditingName] = useState(false); //state check if standard name editing
+  //const [isEditingName, setIsEditingName] = useState(false); //state check if standard name editing
   //const [editingTitleIndex, setEditingTitleIndex] = useState(); //index of editing Standard Title 
-  const [editingNameIndex, setEditingNameIndex] = useState(); //index of editing Standard Name
-  const [addingStandardId, setAddingStandardId] = useState(); //index of adding Standard
+  //const [editingNameIndex, setEditingNameIndex] = useState(); //index of editing Standard Name
+  //const [addingStandardId, setAddingStandardId] = useState(); //index of adding Standard
   //const [fileUpLoadStdId, setFileUpLoadStdId] = useState(); //index of uploading standard
 
   const [
@@ -96,7 +96,6 @@ export const Standard = ({ selectedCurriculum }) => {
     setStandard,
     handleCreateStdBtn,
     handleCancel,
-    newStdVisible,
     handleCreateSubmit,
     handleDeleteTitle,
     handleEditTitle,
@@ -105,15 +104,30 @@ export const Standard = ({ selectedCurriculum }) => {
     setIsEditing,
     editingTitleIndex,
     setEditingTitleIndex,
+    handleAddStdBtn,
+    handleAddSubmit,
+    addingStandardId,
+    handleDeleteStandard,
+    handleEditName,
+    handleEditNameSubmit,
+    isEditingName,
+    setIsEditingName,
+    editingNameIndex, 
+    setEditingNameIndex,
+    setEditingGroupStdId,
     createStdForm,
     editTitleForm,
+    addStdForm,
+    editNameForm,
+    newStdVisible,
+    addStdVisible,
 ] = useStandard(selectedCurriculum)
   const [importModalVisible, handleImportBtnClick, importModalCancel, getDetailsfromExcel, confirmImport, importStandard] = useImportExcel(setStandard)
 
   //const [createStdForm] = Form.useForm();
-  const [addStdForm] = Form.useForm();
+  //const [addStdForm] = Form.useForm();
   //const [editTitleForm] = Form.useForm();
-  const [editNameForm] = Form.useForm();
+  //const [editNameForm] = Form.useForm();
 
 
 
@@ -142,47 +156,47 @@ export const Standard = ({ selectedCurriculum }) => {
   //   setNewStdVisible(true)
   // }
 
-  const handleAddStdBtn = (i) => {
-    setAddStdVisible(true)
-    setAddingStandardId(i)
-  }
+  // const handleAddStdBtn = (i) => {
+  //   setAddStdVisible(true)
+  //   setAddingStandardId(i)
+  // }
 
-  function handleAddSubmit(value) {
-    const i = addingStandardId;
-    setStandard(prev => {
-      return [
-        ...prev.slice(0, i),
-        {
-          ...prev[i], details: [...prev[i].details, {
-            standardNo: value.standardNo,
-            standardName: value.standardName,
-            subStandard: []
-          }]
-        },
-        ...prev.slice(i + 1)]
-    });
-    console.log(standard)
-    setAddingStandardId(null)
-    setAddStdVisible(false);
-  }
+  // function handleAddSubmit(value) {
+  //   const i = addingStandardId;
+  //   setStandard(prev => {
+  //     return [
+  //       ...prev.slice(0, i),
+  //       {
+  //         ...prev[i], details: [...prev[i].details, {
+  //           standardNo: value.standardNo,
+  //           standardName: value.standardName,
+  //           subStandard: []
+  //         }]
+  //       },
+  //       ...prev.slice(i + 1)]
+  //   });
+  //   console.log(standard)
+  //   setAddingStandardId(null)
+  //   setAddStdVisible(false);
+  // }
 
   // function handleDeleteTitle(id) {
   //   setStandard(standard.filter(item => item.id !== id))
   // }
 
-  function handleDeleteStandard(stdNo, id) {
-    const index = standard.findIndex((item) => {
-      return item.id === id
-    })
-    setStandard(prev => {
-      return [
-        ...prev.slice(0, index),
-        {
-          ...prev[index], details: prev[index].details.filter(item => item.standardNo !== stdNo)
-        },
-        ...prev.slice(index + 1)]
-    });
-  }
+  // function handleDeleteStandard(stdNo, id) {
+  //   const index = standard.findIndex((item) => {
+  //     return item.id === id
+  //   })
+  //   setStandard(prev => {
+  //     return [
+  //       ...prev.slice(0, index),
+  //       {
+  //         ...prev[index], details: prev[index].details.filter(item => item.standardNo !== stdNo)
+  //       },
+  //       ...prev.slice(index + 1)]
+  //   });
+  // }
 
   // const handleEditTitle = (i) => {
   //   setIsEditing(true)
@@ -204,22 +218,22 @@ export const Standard = ({ selectedCurriculum }) => {
   //   editTitleForm.resetFields();
   // }
 
-  const handleEditName = (index, id) => {
-    setIsEditingName(true)
-    setEditingTitleIndex(index)
-    setEditingNameIndex(id)
-  }
+  // const handleEditName = (index, id) => {
+  //   setIsEditingName(true)
+  //   setEditingTitleIndex(index)
+  //   setEditingNameIndex(id)
+  // }
 
-  const handleEditNameSubmit = (values) => {
-    let newStandard = [...standard]
-    newStandard[editingTitleIndex].details[editingNameIndex].standardName = values.standardName
-    newStandard[editingTitleIndex].details[editingNameIndex].standardNo = values.standardNo
-    setStandard(newStandard)
-    setEditingTitleIndex(null);
-    setIsEditingName(false)
-    setEditingNameIndex(null);
-    editNameForm.resetFields();
-  }
+  // const handleEditNameSubmit = (values) => {
+  //   let newStandard = [...standard]
+  //   newStandard[editingTitleIndex].details[editingNameIndex].standardName = values.standardName
+  //   newStandard[editingTitleIndex].details[editingNameIndex].standardNo = values.standardNo
+  //   setStandard(newStandard)
+  //   setEditingTitleIndex(null);
+  //   setIsEditingName(false)
+  //   setEditingNameIndex(null);
+  //   editNameForm.resetFields();
+  // }
 
   const uploadProps = {
     name: 'file',
@@ -394,6 +408,7 @@ export const Standard = ({ selectedCurriculum }) => {
                                   setIsEditingName(false)
                                   setEditingNameIndex(null);
                                   editNameForm.resetFields();
+                                  setEditingGroupStdId(null);
                                 }}
                               >
                                 cancel
@@ -411,13 +426,13 @@ export const Standard = ({ selectedCurriculum }) => {
                         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                           <Typography.Link
                             disabled={isEditingName || isEditing}
-                            onClick={(e) => { e.stopPropagation(); handleEditName(index, i) }}
+                            onClick={(e) => { e.stopPropagation(); handleEditName(index, i ,ele.groupSubStdId) }}
                           >
                             <EditOutlined />
                           </Typography.Link>
                           <Popconfirm
                             title="Are you sure to delete ?"
-                            onConfirm={(e) => { handleDeleteStandard(ele.standardNo, item.id); e.stopPropagation() }}
+                            onConfirm={(e) => { handleDeleteStandard(ele.standardNo, ele.groupSubStdId, item.id); e.stopPropagation() }}
                             onCancel={(e) => e.stopPropagation()}
                           >
                             <Typography.Link

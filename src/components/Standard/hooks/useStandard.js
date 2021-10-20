@@ -76,9 +76,17 @@ export const useStandard = (selectedCurriculum) => {
     const [newStdVisible, setNewStdVisible] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editingTitleIndex, setEditingTitleIndex] = useState();
-
+    //Standard 
+    const [addStdVisible, setAddStdVisible] = useState(false);
+    const [addingStandardId, setAddingStandardId] = useState();
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [editingNameIndex, setEditingNameIndex] = useState();
+    const [editingGroupStdId, setEditingGroupStdId] = useState();
+    //Forms
     const [createStdForm] = Form.useForm();
     const [editTitleForm] = Form.useForm();
+    const [addStdForm] = Form.useForm();
+    const [editNameForm] = Form.useForm();
 
     async function fetchAllStandards() {
         return await httpClient
@@ -92,12 +100,12 @@ export const useStandard = (selectedCurriculum) => {
                         groupSubStdId: groupSubStd.group_sub_std_id,
                         standardId: groupSubStd.standard_id,
                         standardNo: groupSubStd.order_number,
-                        standatdName: groupSubStd.title,
+                        standardName: groupSubStd.title,
                         subStandard: groupSubStd.sub_standards.map((subStd) => ({
                             groupSubStdId: subStd.group_sub_std_id,
                             subStandardId: subStd.sub_standard_id,
                             subStandardNo: subStd.order_number,
-                            subSstandatdName: subStd.title,
+                            subStandardName: subStd.title,
                         }))
                     }))
                 }))
@@ -111,9 +119,9 @@ export const useStandard = (selectedCurriculum) => {
 
     function handleCancel() {
         setNewStdVisible(false);
-        //setAddStdVisible(false);
+        setAddStdVisible(false);
         createStdForm.resetFields();
-        //addStdForm.resetFields();
+        addStdForm.resetFields();
     }
 
     // Title Add,Delete,Update
@@ -161,7 +169,7 @@ export const useStandard = (selectedCurriculum) => {
 
     async function handleEditTitleSubmit(value) {
         const i = editingTitleIndex
-        await httpClient.put(`/standard/update/${standard[editingTitleIndex].id}`, {
+        return await httpClient.put(`/standard/update/${standard[editingTitleIndex].id}`, {
             title: value.standardTitle
         }).then(() => {
             setStandard(prev => {
@@ -180,17 +188,93 @@ export const useStandard = (selectedCurriculum) => {
         });
     }
 
+    //Standard Add,Delete,Update
+    function handleAddStdBtn(i) {
+        setAddStdVisible(true)
+        setAddingStandardId(i)
+    }
+
+    async function handleAddSubmit(value) {
+        const i = addingStandardId;
+        return await httpClient.post(`/standard/createGroupSubStandard`, {
+            standard_id: standard[addingStandardId].id,
+            order_number: value.standardNo,
+            title: value.standardName
+        }).then(() => {
+            setStandard(prev => {
+                return [
+                    ...prev.slice(0, i),
+                    {
+                        ...prev[i], details: [...prev[i].details, {
+                            standardNo: value.standardNo,
+                            standardName: value.standardName,
+                            subStandard: []
+                        }]
+                    },
+                    ...prev.slice(i + 1)]
+            });
+            //console.log(standard)
+            setAddingStandardId(null)
+            setAddStdVisible(false);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+    async function handleDeleteStandard(stdNo, groupSubStdId, id) {
+        const index = standard.findIndex((item) => {
+            return item.id === id
+        })
+        return await httpClient
+            .delete(`/standard/removeGroupSubStandard/${groupSubStdId}`)
+            .then(() => {
+                setStandard(prev => {
+                    return [
+                        ...prev.slice(0, index),
+                        {
+                            ...prev[index], details: prev[index].details.filter(item => item.standardNo !== stdNo)
+                        },
+                        ...prev.slice(index + 1)]
+                });
+            }).catch((error) => {
+                console.log(error);
+            })
+    }
+    function handleEditName(index, id, groupStdId) {
+        setIsEditingName(true)
+        setEditingTitleIndex(index)
+        setEditingNameIndex(id)
+        setEditingGroupStdId(groupStdId)
+    }
+
+    async function handleEditNameSubmit(values) {
+        let newStandard = [...standard]
+        newStandard[editingTitleIndex].details[editingNameIndex].standardName = values.standardName
+        newStandard[editingTitleIndex].details[editingNameIndex].standardNo = values.standardNo
+        return await httpClient.put(`/standard/updateGroupSubStandard/${editingGroupStdId}`, {
+            order_number: values.standardNo,
+            title: values.standardName
+        }).then(() => {
+            setStandard(newStandard)
+            setEditingTitleIndex(null);
+            setIsEditingName(false)
+            setEditingNameIndex(null);
+            editNameForm.resetFields();
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
     useEffect(() => {
         fetchAllStandards();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [selectedCurriculum]);
+
 
     return [
         standard,
         setStandard,
         handleCreateStdBtn,
         handleCancel,
-        newStdVisible,
         handleCreateSubmit,
         handleDeleteTitle,
         handleEditTitle,
@@ -199,7 +283,22 @@ export const useStandard = (selectedCurriculum) => {
         setIsEditing,
         editingTitleIndex,
         setEditingTitleIndex,
+        handleAddStdBtn,
+        handleAddSubmit,
+        addingStandardId,
+        handleDeleteStandard,
+        handleEditName,
+        handleEditNameSubmit,
+        isEditingName,
+        setIsEditingName,
+        editingNameIndex,
+        setEditingNameIndex,
+        setEditingGroupStdId,
         createStdForm,
         editTitleForm,
+        addStdForm,
+        editNameForm,
+        newStdVisible,
+        addStdVisible,
     ]
 }

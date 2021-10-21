@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  Body,
   Button,
   Input,
 } from "..";
@@ -12,13 +13,11 @@ import {
 } from '@ant-design/icons';
 
 import styles from "./Standard.module.scss";
-
+import { useSubStandard } from './hooks/useSubStandard'
 
 export const StandardTable = ({ standard = [], standardNo }) => {
-  const [form] = Form.useForm();
-  const [data, setData] = useState(standard);
-  const [editingKey, setEditingKey] = useState("");
-  const [isNewAdded, setIsNewAdded] = useState(false);
+
+  const [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection] = useSubStandard(standard)
 
   const isEditing = (record) => record.subStandardNo === editingKey;
 
@@ -35,11 +34,14 @@ export const StandardTable = ({ standard = [], standardNo }) => {
     return (
       <td {...restProps}>
         {editing ? (
+          <div style={{ display: "flex", gap: "5px", alignItems: "center",width:"100%" }}>
+          {inputType==="number"&&<Body>{standardNo}.</Body>}
           <Form.Item
-            hasFeedback
+            //hasFeedback
             name={dataIndex}
             style={{
               margin: 0,
+              width:"100%"
             }}
             rules={[
               {
@@ -53,6 +55,10 @@ export const StandardTable = ({ standard = [], standardNo }) => {
                     if (alreadyExistNo.includes(value)) {
                       return Promise.reject("Already exist!")
                     }
+                    if ((isNaN(value) || value.includes("."))) {
+                      return Promise.reject("Enter number!")
+                    }
+
                   }
                   return Promise.resolve()
                 }
@@ -60,10 +66,16 @@ export const StandardTable = ({ standard = [], standardNo }) => {
             ]}
           >
             {inputType === "number" ?
-              <InputNumber min={1}/> :
+                <InputNumber
+                  style={{ width: "80% " }}
+                // formatter={(val) => val.replace(/[^0-9]/g, '')}
+                // parser={(val) => val.replace(/[^0-9]/g, '')}
+                />
+               :
               <Input />
             }
           </Form.Item>
+          </div>
         ) : (
           children
         )}
@@ -157,62 +169,6 @@ export const StandardTable = ({ standard = [], standardNo }) => {
       }),
     };
   });
-
-  const handleAddSubStd = () => {
-    //console.log(data)
-    setIsNewAdded(true)
-    const newData = { subStandardNo: '', subStandardName: '' };
-    setData([...data, newData]);
-    form.setFieldsValue({
-      subStandardNo: "",
-      subStandardName: "",
-    });
-    setEditingKey(newData.subStandardNo);
-  };
-
-  const edit = (record) => {
-    form.setFieldsValue({
-      ...record,
-    });
-    setEditingKey(record.subStandardNo);
-  };
-
-  const cancel = () => {
-    setEditingKey("");
-    if (isNewAdded) {
-      setData(data.slice(0, data.length - 1))
-      setIsNewAdded(false)
-    }
-  };
-
-  const save = async (subStandardNo) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...data];
-      const index = newData.findIndex((item) => subStandardNo === item.subStandardNo);
-
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setData(newData);
-        setEditingKey("");
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey("");
-      }
-      if (isNewAdded) {
-        setIsNewAdded(false);
-      }
-
-    } catch (errInfo) {
-      console.log("Validate Failed:", errInfo);
-    }
-  }
-
-  const deleteSection = (record) => {
-    setData(data.filter((standard) => standard.subStandardNo !== record.subStandardNo));
-  }
 
   return (
     <>

@@ -96,7 +96,7 @@ export const Standard = ({ selectedCurriculum }) => {
                         htmlType="submit"
                         style={{ marginRight: "5px" }}
                       >
-                        save
+                        Save
                       </Button>
                       <Button
                         danger
@@ -106,7 +106,7 @@ export const Standard = ({ selectedCurriculum }) => {
                           editTitleForm.resetFields();
                         }}
                       >
-                        cancel
+                        Cancel
                       </Button>
                     </Form>
                   </>
@@ -195,7 +195,7 @@ export const Standard = ({ selectedCurriculum }) => {
                                 htmlType="submit"
                                 style={{ marginRight: "5px" }}
                               >
-                                save
+                                Save
                               </Button>
                               <Button
                                 danger
@@ -207,7 +207,7 @@ export const Standard = ({ selectedCurriculum }) => {
                                   setEditingGroupStdId(null);
                                 }}
                               >
-                                cancel
+                                Cancel
                               </Button>
                             </Form>
                           </> :

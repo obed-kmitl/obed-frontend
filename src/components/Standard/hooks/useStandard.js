@@ -107,7 +107,7 @@ export const useStandard = (selectedCurriculum) => {
                             subStandardNo: subStd.order_number,
                             subStandardName: subStd.title,
                         }))
-                    }))
+                    })).sort(({standardNo:firstStandardNo},{standardNo:secondStandardNo})=> firstStandardNo - secondStandardNo)
                 }))
                 setStandard(receivedStandard)
                 console.log(receivedStandard)
@@ -205,11 +205,12 @@ export const useStandard = (selectedCurriculum) => {
                 return [
                     ...prev.slice(0, i),
                     {
-                        ...prev[i], details: [...prev[i].details, {
+                        ...prev[i], 
+                        details: [...prev[i].details, {
                             standardNo: value.standardNo,
                             standardName: value.standardName,
                             subStandard: []
-                        }]
+                        }].sort(({standardNo:firstStandardNo},{standardNo:secondStandardNo})=> firstStandardNo - secondStandardNo)
                     },
                     ...prev.slice(i + 1)]
             });
@@ -250,6 +251,10 @@ export const useStandard = (selectedCurriculum) => {
         let newStandard = [...standard]
         newStandard[editingTitleIndex].details[editingNameIndex].standardName = values.standardName
         newStandard[editingTitleIndex].details[editingNameIndex].standardNo = values.standardNo
+        newStandard = newStandard.map((std) => ({
+            ...std,
+            details: std.details.sort(({standardNo:firstStandardNo},{standardNo:secondStandardNo})=> firstStandardNo - secondStandardNo)
+        }))
         return await httpClient.put(`/standard/updateGroupSubStandard/${editingGroupStdId}`, {
             order_number: values.standardNo,
             title: values.standardName

@@ -243,7 +243,7 @@ export const Standard = ({ selectedCurriculum }) => {
                     </div>}
                   key={i}
                 >
-                  <StandardTable standardNo={ele.standardNo} standard={ele.subStandard} />
+                  <StandardTable standard={ele.subStandard} standardNo={ele.standardNo} groupSubStdId={ele.groupSubStdId} stdId={item.id} />
                 </Panel>
               )}</Collapse>
           </Panel>

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   Body,
   Button,
@@ -15,9 +14,9 @@ import {
 import styles from "./Standard.module.scss";
 import { useSubStandard } from './hooks/useSubStandard'
 
-export const StandardTable = ({ standard = [], standardNo }) => {
+export const StandardTable = ({ standard = [], standardNo, groupSubStdId, stdId }) => {
 
-  const [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection] = useSubStandard(standard)
+  const [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection] = useSubStandard(standard, groupSubStdId, stdId)
 
   const isEditing = (record) => record.subStandardNo === editingKey;
 
@@ -34,14 +33,11 @@ export const StandardTable = ({ standard = [], standardNo }) => {
     return (
       <td {...restProps}>
         {editing ? (
-          <div style={{ display: "flex", gap: "5px", alignItems: "center",width:"100%" }}>
-          {inputType==="number"&&<Body>{standardNo}.</Body>}
           <Form.Item
             //hasFeedback
             name={dataIndex}
             style={{
               margin: 0,
-              width:"100%"
             }}
             rules={[
               {
@@ -51,11 +47,12 @@ export const StandardTable = ({ standard = [], standardNo }) => {
               {
                 validator: (rule, value, callback) => {
                   const alreadyExistNo = data.map((e) => e.subStandardNo).filter((e) => e !== record.subStandardNo)
+                  console.log(data)
                   if (inputType === "number") {
                     if (alreadyExistNo.includes(value)) {
                       return Promise.reject("Already exist!")
                     }
-                    if ((isNaN(value) || value.includes("."))) {
+                    if ((isNaN(value) || value.toString().includes("."))) {
                       return Promise.reject("Enter number!")
                     }
 
@@ -66,16 +63,19 @@ export const StandardTable = ({ standard = [], standardNo }) => {
             ]}
           >
             {inputType === "number" ?
-                <InputNumber
+              <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
+                <Body>{standardNo}.</Body>
+                <Input
+                  min={1}
                   style={{ width: "80% " }}
+                  defaultValue={record.subStandardNo}
                 // formatter={(val) => val.replace(/[^0-9]/g, '')}
                 // parser={(val) => val.replace(/[^0-9]/g, '')}
                 />
-               :
+              </div> :
               <Input />
             }
           </Form.Item>
-          </div>
         ) : (
           children
         )}
@@ -111,7 +111,7 @@ export const StandardTable = ({ standard = [], standardNo }) => {
 
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
-              onClick={() => save(record.subStandardNo)}
+              onClick={() => save(record.subStandardNo,record.subStandardId)}
               style={{
                 marginRight: 14,
               }}

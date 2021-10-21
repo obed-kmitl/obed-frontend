@@ -103,7 +103,7 @@ export const useStandard = (selectedCurriculum) => {
                         standardName: groupSubStd.title,
                         subStandard: groupSubStd.sub_standards.map((subStd) => ({
                             groupSubStdId: subStd.group_sub_std_id,
-                            subStandardId: subStd.sub_standard_id,
+                            subStandardId: subStd.sub_std_id,
                             subStandardNo: subStd.order_number,
                             subStandardName: subStd.title,
                         }))

@@ -31,24 +31,32 @@ const useAuthen = () => {
         },
         (error) => {
           let resMessage = "";
-          switch (error.response.data.error.code) {
-            case "UNAUTHORIZED":
-              resMessage = "Wrong username or password.";
-              break;
-            case "INTERNAL_SERVER_ERROR":
-              resMessage = "Something went wrong, Please check and try again.";
-              break;
-            default:
-              resMessage =
-                (error.response &&
-                  error.response.data &&
-                  error.response.data.message) ||
-                error.message ||
-                error.toString();
-              break;
+          if (error.response && error.response.data) {
+            switch (error.response.data.error.code) {
+              case "UNAUTHORIZED":
+                resMessage = "Wrong username or password.";
+                break;
+              case "INTERNAL_SERVER_ERROR":
+                resMessage =
+                  "Something went wrong, Please check and try again.";
+                break;
+              default:
+                resMessage =
+                  (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                  error.message ||
+                  error.toString();
+                break;
+            }
+            setMessage(resMessage);
+            setLoading(false);
+          } else {
+            setMessage(
+              "Cannot connect to server, Please check connection and try again."
+            );
+            setLoading(false);
           }
-          setMessage(resMessage);
-          setLoading(false);
         }
       );
   }

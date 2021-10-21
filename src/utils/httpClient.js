@@ -41,7 +41,10 @@ httpClient.interceptors.response.use(
   async function (error) {
     const originalRequest = error.config;
     if (!error.response) {
+      // ## Comment this if{} to DEV without back-end ##
       console.log("Please check your connection.");
+      localStorage.clear();
+      return (window.location.href = "/login");
     }
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;

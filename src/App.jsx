@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import {
   Curriculum,
   Home,
@@ -9,6 +9,7 @@ import {
   Plan,
   Login,
   Student,
+  NotFound,
 } from "./pages";
 import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
@@ -45,7 +46,10 @@ function App() {
                   <Plan />
                 </PrivateRoute>
                 <PrivateRoute exact path="/">
-                  <Home />
+                  <Redirect to="/curriculum" />
+                </PrivateRoute>
+                <PrivateRoute path="/">
+                  <NotFound />
                 </PrivateRoute>
               </Switch>
             </Layout>
@@ -71,7 +75,10 @@ function App() {
                 </PublicRoute>
                 <PrivateRoute exact path="/">
                   <Home />
-                </PrivateRoute>   
+                </PrivateRoute>
+                <PrivateRoute path="/">
+                  <NotFound />
+                </PrivateRoute>
               </Switch>
             </Layout>
           </Switch>

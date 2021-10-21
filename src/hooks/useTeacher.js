@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import httpClient from "../utils/httpClient";
+import errorTranslate from "../utils/errorTranslate";
 
 export const useTeacher = () => {
   const [teachers, setTeachers] = useState();
@@ -26,14 +27,6 @@ export const useTeacher = () => {
     INSTRUCTOR: "อ.",
   };
 
-  function setErrorMessage(error) {
-    const resMessage =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-    setMessage(resMessage);
-  }
-
   async function fetchAllUsers() {
     const getThPrefix = {
       PROF_DR: "ศ.ดร.",
@@ -59,9 +52,11 @@ export const useTeacher = () => {
             email: user.email,
           }))
         );
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        setErrorMessage(error);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
@@ -75,10 +70,11 @@ export const useTeacher = () => {
         lastname: values.lastname,
       })
       .then((response) => {
-        return response;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        setErrorMessage(error);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
@@ -107,15 +103,24 @@ export const useTeacher = () => {
           return value;
         });
         setTeachers(newTeacher);
-        return response;
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        setErrorMessage(error);
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
       });
   }
 
   async function deleteTeacher(values) {
-    return await httpClient.delete(`/user/remove/${values.id}`);
+    return await httpClient
+      .delete(`/user/remove/${values.id}`)
+      .then((response) => {
+        return Promise.resolve(response.data.data);
+      })
+      .catch((error) => {
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
+      });
   }
 
   useEffect(() => {
@@ -125,6 +130,7 @@ export const useTeacher = () => {
 
   return [
     teachers,
+    fetchAllUsers,
     setTeachers,
     register,
     editTeacher,

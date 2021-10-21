@@ -5,8 +5,8 @@ import {
   Divider,
   Modal,
   Form,
+  Input,
   Select,
-  Upload,
   Tooltip,
   notification,
 } from "antd";
@@ -19,13 +19,12 @@ import {
   TabPane,
   CourseTable,
   Option,
-  Input,
   Standard,
   MappingStandard,
 } from "../../components";
 import styles from "./Curriculum.module.scss";
 import { Helmet } from "react-helmet";
-import { ExclamationCircleOutlined, UploadOutlined } from "@ant-design/icons";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useCurriculum } from "../../hooks/useCurriculum";
 
 export function Curriculum() {
@@ -35,127 +34,41 @@ export function Curriculum() {
   const [editDetail, setEditDetail] = useState(false);
   const [editCurVisible, setEditCurVisible] = useState(false);
   const [newCurVisible, setNewCurVisible] = useState(false);
-  const [newCourseVisible, setNewCourseVisible] = useState(false);
-  const [importVisible, setImportVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [editForm] = Form.useForm();
   const [newForm] = Form.useForm();
-  const [newCourseForm] = Form.useForm();
   const { confirm } = Modal;
 
-  const courses = [
-    {
-      key: "1",
-      course_id: "01076001",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-      course_name_en: "Introduction to Computer Engineering",
-      plo: [1.2, 1.3],
-    },
-    {
-      key: "2",
-      course_id: "01076002",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์",
-      course_name_en: "Programming Fundamental",
-      plo: [1.1, 1.2],
-    },
-    {
-      key: "3",
-      course_id: "01076003",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "วงจรไฟฟ้าและอิเล็กทรอนิกส์",
-      course_name_en: "Circuits and Electronics",
-      plo: [2.1, 2.2, 2.4],
-    },
-    {
-      key: "4",
-      course_id: "01076004",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "การเขียนโปรแกรมเชิงวัตถุ",
-      course_name_en: "Object Oriented Programming",
-      plo: [1.1, 1.3],
-    },
-    {
-      key: "5",
-      course_id: "01076005",
-      curriculum_id: "01072560",
-      precourse_id: "01076004",
-      course_name_th: "โครงสร้างข้อมูลและอัลกอริทึม",
-      course_name_en: "Data Structures and Algorithm",
-      plo: [2.1, 2.2],
-    },
-  ];
-
-  const mockPLO = [
-    {
-      id: 1.1,
-      desc: "PLO 1.1",
-    },
-    {
-      id: 1.2,
-      desc: "PLO 1.2",
-    },
-    {
-      id: 1.3,
-      desc: "PLO 1.3",
-    },
-    {
-      id: 2.1,
-      desc: "PLO 2.1",
-    },
-    {
-      id: 2.2,
-      desc: "PLO 2.1",
-    },
-    {
-      id: 2.3,
-      desc: "PLO 2.1",
-    },
-    {
-      id: 2.4,
-      desc: "PLO 2.1",
-    },
-  ];
-  const [filteredCourse, setFilteredCourse] = useState(courses);
-
-  function showArchiveConfirm() {
+  function showRemoveConfirm() {
     confirm({
-      title: "Archive " + selected.title + " ?",
+      title: "Remove " + selected.title + " ?",
       icon: <ExclamationCircleOutlined />,
       content: "Are you sure to remove this curriculum?",
       okText: "Remove",
       okType: "danger",
       cancelText: "Cancel",
       onOk() {
-        remove(selected.curriculum_id);
-        setSelected(null);
+        remove(selected.curriculum_id)
+          .then(() => {
+            openNotificationWithIcon(
+              "success",
+              "Curriculum removed",
+              selected.title + " have been removed."
+            );
+            setSelected(null);
+          })
+          .catch((message) => {
+            openNotificationWithIcon(
+              "error",
+              "Cannot remove curriculum",
+              message
+            );
+          });
       },
     });
   }
 
-  function search(keyword) {
-    if (keyword !== "") {
-      const results = courses.filter((course) => {
-        return (
-          course.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
-          course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
-          course.course_name_th.includes(keyword)
-        );
-      });
-      setFilteredCourse(results);
-      console.log(results);
-    } else {
-      setFilteredCourse(courses);
-    }
-  }
-
   function handleCreateSubmit(values) {
-    console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
     create(values)
       .then((data) => {
@@ -163,14 +76,19 @@ export function Curriculum() {
         setConfirmLoading(false);
         setNewCurVisible(false);
         newForm.resetFields();
+        openNotificationWithIcon(
+          "success",
+          "Curriculum created",
+          data.title + " have been created."
+        );
       })
-      .catch(() => {
-        console.log(message);
+      .catch((message) => {
+        setConfirmLoading(false);
+        openNotificationWithIcon("error", "Cannot create curriculum", message);
       });
   }
 
   function handleEditSubmit(values) {
-    console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
     update(selected.curriculum_id, values)
       .then((data) => {
@@ -178,31 +96,23 @@ export function Curriculum() {
         setConfirmLoading(false);
         setEditCurVisible(false);
         editForm.resetFields();
+        openNotificationWithIcon(
+          "success",
+          "Curriculum edited",
+          "Changes have been saved."
+        );
       })
-      .catch(() => {
-        console.log(message);
+      .catch((message) => {
+        setConfirmLoading(false);
+        openNotificationWithIcon("error", "Cannot edit curriculum", message);
       });
-  }
-
-  function handleCourseSubmit(values) {
-    console.log("Recieved values of form: ", values);
-    setConfirmLoading(true);
-    // TODO
-    setTimeout(() => {
-      setConfirmLoading(false);
-      setNewCourseVisible(false);
-      setImportVisible(false);
-    }, 2000);
   }
 
   function handleCancel() {
     setEditCurVisible(false);
     setNewCurVisible(false);
-    setNewCourseVisible(false);
-    setImportVisible(false);
     editForm.resetFields();
     newForm.resetFields();
-    newCourseForm.resetFields();
     setMessage("");
   }
 
@@ -227,12 +137,18 @@ export function Curriculum() {
     notification[type]({
       message: message,
       description: desc,
-      duration: 5,
+      duration: type === "error" ? 15 : 5,
     });
   }
 
   useEffect(() => {
-    getAll();
+    getAll().catch((message) => {
+      openNotificationWithIcon(
+        "error",
+        "Cannot fetch curriculum data",
+        message
+      );
+    });
     //eslint-disable-next-line
   }, []);
 
@@ -246,9 +162,9 @@ export function Curriculum() {
         <Header level={2}>Select Curriculum</Header>
         <Select
           placeholder="Curriculum"
-          onChange={(value) =>
-            setSelected(curriculum.find((ele) => ele.curriculum_id === value))
-          }
+          onChange={(value) => {
+            setSelected(curriculum.find((ele) => ele.curriculum_id === value));
+          }}
           style={{ width: "320px" }}
           defaultValue={null}
           value={selected?.curriculum_id}
@@ -287,6 +203,14 @@ export function Curriculum() {
         confirmLoading={confirmLoading}
         width="700px"
       >
+        {message !== "" && (
+          <Alert
+            style={{ marginBottom: "1rem" }}
+            message={message}
+            type="error"
+            showIcon
+          />
+        )}
         <Form
           form={newForm}
           name="curriculum_name"
@@ -333,128 +257,13 @@ export function Curriculum() {
                 />
               </Tooltip>
             </Header>
-            <Button danger onClick={() => showArchiveConfirm()}>
+            <Button danger onClick={() => showRemoveConfirm()}>
               Remove Curriculum
             </Button>
           </div>
           <Tabs defaultActiveKey="1">
             <TabPane tab="Course" key="1">
-              <div className={styles.tabHead}>
-                <Header level={2}>Course</Header>
-                <div>
-                  <Input
-                    search
-                    placeholder="Search"
-                    onSearch={search}
-                    allowClear
-                  />
-                  <Button onClick={() => setImportVisible(true)}>Import</Button>
-                  <Button onClick={() => setNewCourseVisible(true)}>New</Button>
-                </div>
-              </div>
-              <CourseTable course={filteredCourse} key={filteredCourse} />
-              <Modal
-                title="New Course"
-                visible={newCourseVisible}
-                okText="Create"
-                onOk={() => {
-                  newCourseForm
-                    .validateFields()
-                    .then((values) => {
-                      newCourseForm.resetFields();
-                      handleCourseSubmit(values);
-                    })
-                    .catch((info) => {
-                      console.log("Validate Failed", info);
-                    });
-                }}
-                onCancel={handleCancel}
-                okButtonProps={{ htmlType: "submit" }}
-                maskClosable={false}
-                confirmLoading={confirmLoading}
-                width="700px"
-                centered
-              >
-                <Form
-                  form={newCourseForm}
-                  name="course"
-                  layout="vertical"
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
-                  autoComplete="off"
-                  requiredMark={"required"}
-                >
-                  <Form.Item
-                    label="Course ID"
-                    name="course_id"
-                    rules={[
-                      { required: true, message: "Please input course id!" },
-                    ]}
-                  >
-                    <Input placeholder="Course ID" />
-                  </Form.Item>
-                  <Form.Item
-                    label="Course Name (EN)"
-                    name="course_name_en"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input course name (en)!",
-                      },
-                    ]}
-                  >
-                    <Input placeholder="Course Name in English" />
-                  </Form.Item>
-                  <Form.Item
-                    label="Course Name (TH)"
-                    name="course_name_th"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input course name (th)!",
-                      },
-                    ]}
-                  >
-                    <Input placeholder="Course Name in Thai" />
-                  </Form.Item>
-                  <Form.Item label="Prerequisite" name="precourse_id">
-                    <Input placeholder="Prerequisite Course ID" />
-                  </Form.Item>
-                  <Form.Item
-                    label="PLOs"
-                    name="plo"
-                    rules={[{ required: true, message: "Please input plo!" }]}
-                  >
-                    <Select mode="multiple" placeholder="PLO">
-                      {mockPLO.map((e) => (
-                        <Option value={e.id} key={e.id}>
-                          {e.id}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Form>
-              </Modal>
-              <Modal
-                title="Import Course"
-                visible={importVisible}
-                okText="OK"
-                onOk={() => {}}
-                onCancel={handleCancel}
-                maskClosable={false}
-                confirmLoading={confirmLoading}
-              >
-                <Header level={4}>Download Excel Template</Header>
-                <Button>Download</Button>
-                <Divider />
-                <Upload accept=".xlsx, .xls, .csv">
-                  <Header level={4}>Upload</Header>
-                  <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                </Upload>
-                <Body level={2} className={styles.uploadWarning}>
-                  Warning Message
-                </Body>
-              </Modal>
+              <CourseTable selectedCur={selected} />
             </TabPane>
             <TabPane tab="Standard" key="2">
               <Standard />

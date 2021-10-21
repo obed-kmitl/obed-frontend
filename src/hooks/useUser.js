@@ -5,16 +5,13 @@ import UserContext from "../contexts/UserContext";
 
 const useUser = () => {
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
   const { setUser } = useContext(UserContext);
 
   function getProfile() {
-    setLoading(true);
     return httpClient.get("/user/getProfile").then(
       (response) => {
         setUser(response.data.data);
-        setLoading(false);
-        return response.data.data;
+        return Promise.resolve(response.data.data);
       },
       (error) => {
         const resMessage =
@@ -24,12 +21,12 @@ const useUser = () => {
           error.message ||
           error.toString();
         setMessage(resMessage);
-        setLoading(false);
+        return Promise.reject(resMessage);
       }
     );
   }
 
-  return { getProfile, message, loading };
+  return { getProfile, message };
 };
 
 export default useUser;

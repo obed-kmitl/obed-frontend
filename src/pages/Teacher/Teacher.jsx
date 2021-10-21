@@ -23,6 +23,7 @@ export const Teacher = () => {
   const [form] = Form.useForm();
   const [
     teachers,
+    fetchAllUsers,
     setTeachers,
     register,
     editTeacher,
@@ -30,7 +31,7 @@ export const Teacher = () => {
     message,
     setMessage,
   ] = useTeacher();
-  const [filterList, setFilterList] = useState(teachers);
+  const [filterList, setFilterList] = useState([]);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -40,8 +41,23 @@ export const Teacher = () => {
   const [editingData, setEditingData] = useState();
   const [lastKeyword, setLastKeyword] = useState("");
 
+  const getThPrefix = {
+    PROF_DR: "ศ.ดร.",
+    PROF: "ศ.",
+    ASSOC_PROF_DR: "รศ.ดร.",
+    ASSOC_PROF: "รศ.",
+    ASST_PROF_DR: "ผศ.ดร.",
+    ASST_PROF: "ผศ.",
+    DR: "ดร.",
+    INSTRUCTOR: "อ.",
+  };
+
   const selectBefore = (
-    <Form.Item name="prefix" noStyle>
+    <Form.Item
+      name="prefix"
+      noStyle
+      rules={[{ required: true, message: "Please input prefix!" }]}
+    >
       <Select
         className="select-before"
         style={{ width: "100px" }}
@@ -86,17 +102,26 @@ export const Teacher = () => {
   function handleSubmit(values) {
     console.log("Recieved values of form: ", values);
     register(values)
-      .then(() => {
+      .then((data) => {
+        let newTeacher = {
+          id: data.user_id,
+          email: data.email,
+          username: data.username,
+          prefix: getThPrefix[data.prefix],
+          firstname: data.firstname,
+          lastname: data.lastname,
+        };
         openNotificationWithIcon(
           "success",
           "Teacher added",
           "Please check user " + values.email + " inbox to change password."
         );
         setVisible(false);
-        setTeachers([...teachers, values]);
+        setTeachers([...teachers, newTeacher]);
         form.resetFields();
       })
       .catch(() => {
+        setConfirmLoading(false);
         openNotificationWithIcon(
           "error",
           "Cannot register user",
@@ -120,6 +145,7 @@ export const Teacher = () => {
         form.resetFields();
       })
       .catch(() => {
+        setConfirmLoading(false);
         openNotificationWithIcon(
           "error",
           "Cannot edit user",
@@ -153,7 +179,7 @@ export const Teacher = () => {
     notification[type]({
       message: message,
       description: desc,
-      duration: 5,
+      duration: type === "error" ? 15 : 5,
     });
   }
 
@@ -184,7 +210,7 @@ export const Teacher = () => {
           "User " + record.username + " has been deleted."
         );
       })
-      .catch((error) => {
+      .catch(() => {
         openNotificationWithIcon(
           "error",
           "Cannot delete user",
@@ -192,6 +218,17 @@ export const Teacher = () => {
         );
       });
   }
+
+  useEffect(() => {
+    fetchAllUsers()
+      .then((data) => {
+        setFilterList(data);
+      })
+      .catch((message) => {
+        openNotificationWithIcon("error", "Cannot fetch teacher data", message);
+      });
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <div className={styles.teacher}>
@@ -351,7 +388,7 @@ export const Teacher = () => {
       >
         {message !== "" && (
           <Alert
-            className={styles.alert}
+            style={{ marginBottom: "1rem" }}
             message={message}
             type="error"
             showIcon

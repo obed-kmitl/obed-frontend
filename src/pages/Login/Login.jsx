@@ -46,6 +46,7 @@ export const Login = () => {
     return () => {
       notification.destroy();
     };
+    // eslint-disable-next-line
   }, []);
 
   return (

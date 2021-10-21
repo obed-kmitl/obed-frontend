@@ -95,8 +95,16 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
         }
     }
 
-    const deleteSection = (record) => {
-        setData(data.filter((standard) => standard.subStandardNo !== record.subStandardNo));
+    async function deleteSection (record) {
+        return await httpClient
+        .delete(`/standard/removeSubStandard/${record.subStandardId}`)
+        .then(()=>{
+            setData(data.filter((standard) => standard.subStandardNo !== record.subStandardNo));
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+        
     }
 
     return [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection]

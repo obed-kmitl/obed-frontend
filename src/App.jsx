@@ -45,7 +45,7 @@ function App() {
                   <Plan />
                 </PrivateRoute>
                 <PrivateRoute exact path="/">
-                  <Home />
+                  {/* <Home /> */}
                 </PrivateRoute>
               </Switch>
             </Layout>

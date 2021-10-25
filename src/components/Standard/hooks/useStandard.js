@@ -107,7 +107,8 @@ export const useStandard = (selectedCurriculum) => {
                             subStandardNo: subStd.order_number,
                             subStandardName: subStd.title,
                         }))
-                    })).sort(({standardNo:firstStandardNo},{standardNo:secondStandardNo})=> firstStandardNo - secondStandardNo)
+                    }))
+                    //.sort(({standardNo:firstStandardNo},{standardNo:secondStandardNo})=> firstStandardNo - secondStandardNo)
                 }))
                 setStandard(receivedStandard)
                 console.log(receivedStandard)

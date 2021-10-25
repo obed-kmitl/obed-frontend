@@ -107,6 +107,20 @@ export const Profile = () => {
         >
           <div className={styles.flexrow}>
             <Form.Item
+              label="Current Password"
+              name="oldPassword"
+              style={{ width: "100%" }}
+              rules={[{ required: true, message: "Please input Current Password!" }]}
+            >
+              <Input placeholder="Current Password" password />
+            </Form.Item>
+            <Form.Item
+              style={{ width: "100%" }}
+            >
+            </Form.Item>
+          </div>
+          <div className={styles.flexrow}>
+            <Form.Item
               label="New Password"
               name="newPassword"
               style={{ width: "100%" }}
@@ -132,20 +146,6 @@ export const Profile = () => {
               ]}
             >
               <Input placeholder="New Password" password />
-            </Form.Item>
-          </div>
-          <div className={styles.flexrow}>
-            <Form.Item
-              label="Current Password"
-              name="oldPassword"
-              style={{ width: "100%" }}
-              rules={[{ required: true, message: "Please input Current Password!" }]}
-            >
-              <Input placeholder="Current Password" password />
-            </Form.Item>
-            <Form.Item
-              style={{ width: "100%" }}
-            >
             </Form.Item>
           </div>
           <Form.Item>

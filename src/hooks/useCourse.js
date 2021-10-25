@@ -73,7 +73,6 @@ export const useCourse = () => {
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {
-        console.log("SSSSS");
         errorTranslate(error, setMessage);
         return Promise.reject(message);
       });

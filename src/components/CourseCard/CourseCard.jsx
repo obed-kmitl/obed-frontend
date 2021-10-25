@@ -1,6 +1,6 @@
 import styles from "./CourseCard.module.scss"
 import { Body, Header } from ".."
-import { Divider } from "antd"
+import { Divider, Tag } from "antd"
 // const bgImg = [
 //     "radial-gradient(circle at top right, rgb(36, 9, 119) 0%, rgb(36, 9, 119) 48%,rgb(72, 7, 149) 48%, rgb(72, 7, 149) 53%,rgb(109, 5, 178) 53%, rgb(109, 5, 178) 56%,rgb(145, 2, 208) 56%, rgb(145, 2, 208) 69%,rgb(181, 0, 237) 69%, rgb(181, 0, 237) 100%)",
 //     "radial-gradient(circle at 40% 91%, rgba(251, 251, 251,0.04) 0%, rgba(251, 251, 251,0.04) 50%,rgba(229, 229, 229,0.04) 50%, rgba(229, 229, 229,0.04) 100%),radial-gradient(circle at 66% 97%, rgba(36, 36, 36,0.04) 0%, rgba(36, 36, 36,0.04) 50%,rgba(46, 46, 46,0.04) 50%, rgba(46, 46, 46,0.04) 100%),radial-gradient(circle at 86% 7%, rgba(40, 40, 40,0.04) 0%, rgba(40, 40, 40,0.04) 50%,rgba(200, 200, 200,0.04) 50%, rgba(200, 200, 200,0.04) 100%),radial-gradient(circle at 15% 16%, rgba(99, 99, 99,0.04) 0%, rgba(99, 99, 99,0.04) 50%,rgba(45, 45, 45,0.04) 50%, rgba(45, 45, 45,0.04) 100%),radial-gradient(circle at 75% 99%, rgba(243, 243, 243,0.04) 0%, rgba(243, 243, 243,0.04) 50%,rgba(37, 37, 37,0.04) 50%, rgba(37, 37, 37,0.04) 100%),linear-gradient(90deg, rgb(34, 222, 237),rgb(135, 89, 215))",
@@ -14,14 +14,21 @@ import { Divider } from "antd"
 //     "radial-gradient(circle at 97% 32%, rgba(131, 131, 131,0.05) 0%, rgba(131, 131, 131,0.05) 50%,rgba(20, 20, 20,0.05) 50%, rgba(20, 20, 20,0.05) 100%),radial-gradient(circle at 61% 40%, rgba(35, 35, 35,0.05) 0%, rgba(35, 35, 35,0.05) 50%,rgba(239, 239, 239,0.05) 50%, rgba(239, 239, 239,0.05) 100%),radial-gradient(circle at 47% 73%, rgba(122, 122, 122,0.05) 0%, rgba(122, 122, 122,0.05) 50%,rgba(5, 5, 5,0.05) 50%, rgba(5, 5, 5,0.05) 100%),linear-gradient(90deg, rgb(0, 209, 117),rgb(205, 241, 44))"
 // ]
 
-function CourseCard(details,...props) {
-    const bgNo = parseInt(details.details.course_id.charAt(7))
+function CourseCard(details,ended, ...props) {
+    // const bgNo = parseInt(details.details.course_id.charAt(7))
+    //console.log(ended)
     return (
         <div
             className={styles.card}
             // style={{ backgroundImage: bgImg[bgNo] }}
-            {...props}    
-            >
+            {...props}
+        >
+            {ended === true ?
+                <div className={styles.tag}>
+                    <Tag>Ended</Tag>
+                </div> :
+                <div className={styles.tag}></div>
+            }
             <div className={styles.content}>
                 <div>
                     <Body level={2}>{details.details.semester}{" / "}{details.details.year}{" · "}{details.details.course_id}</Body>

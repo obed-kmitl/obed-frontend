@@ -7,6 +7,7 @@ const courseList = [
   {
     year: "2021",
     semester: "1",
+    ended:false,
     courses: [
       {
         key: "1",
@@ -58,6 +59,7 @@ const courseList = [
   {
     year: "2020",
     semester: "2",
+    ended:true,
     courses: [
       {
         key: "1",
@@ -91,6 +93,7 @@ const courseList = [
   {
     year: "2020",
     semester: "1",
+    ended:true,
     courses: [
       {
         key: "1",
@@ -188,7 +191,7 @@ export const Home = () => {
                 onClick={() => message.success("click" + course.course_id)}
                 className={styles.card}
               >
-                <CourseCard details={course} />
+                <CourseCard details={course} ended={false}/>
               </div>
 
             )}

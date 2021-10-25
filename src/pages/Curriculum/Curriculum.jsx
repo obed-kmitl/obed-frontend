@@ -13,7 +13,6 @@ import {
 import { EditFilled } from "@ant-design/icons";
 import {
   Header,
-  Body,
   Button,
   Tabs,
   TabPane,
@@ -31,7 +30,6 @@ export function Curriculum() {
   const { create, getAll, update, remove, curriculum, message, setMessage } =
     useCurriculum();
   const [selected, setSelected] = useState(null);
-  const [editDetail, setEditDetail] = useState(false);
   const [editCurVisible, setEditCurVisible] = useState(false);
   const [newCurVisible, setNewCurVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -121,15 +119,6 @@ export function Curriculum() {
   }
 
   function onFinishFailed(errorInfo) {
-    console.log("Failed:", errorInfo);
-  }
-
-  function onFinishDetail(values) {
-    console.log("Success:", values);
-    setEditDetail(false);
-  }
-
-  function onFinishDetailFailed(errorInfo) {
     console.log("Failed:", errorInfo);
   }
 
@@ -227,6 +216,42 @@ export function Curriculum() {
           >
             <Input placeholder="Curriculum Name" />
           </Form.Item>
+          <Form.Item
+            label="University"
+            name="university"
+            rules={[
+              {
+                required: true,
+                message: "Please input university!",
+              },
+            ]}
+          >
+            <Input placeholder="University or Institue Name" />
+          </Form.Item>
+          <Form.Item
+            label="Faculty"
+            name="faculty"
+            rules={[
+              {
+                required: true,
+                message: "Please input faculty!",
+              },
+            ]}
+          >
+            <Input placeholder="Faculty" />
+          </Form.Item>
+          <Form.Item
+            label="Department"
+            name="department"
+            rules={[
+              {
+                required: true,
+                message: "Please input department!",
+              },
+            ]}
+          >
+            <Input placeholder="Department" />
+          </Form.Item>
           <Divider />
           <Form.Item
             label="Clone Curriculum"
@@ -271,101 +296,6 @@ export function Curriculum() {
             <TabPane tab="Mapping" key="3">
               <MappingStandard />
             </TabPane>
-            <TabPane tab="Details" key="4">
-              <Form
-                name="detail"
-                initialValues={selected}
-                onFinish={onFinishDetail}
-                onFinishFailed={onFinishDetailFailed}
-              >
-                <div className={styles.tabHead}>
-                  <Header level={2}>Detail</Header>
-                  <div>
-                    {editDetail ? (
-                      <div className={styles.btn}>
-                        <Button type="primary" htmlType="submit" key="save">
-                          Save
-                        </Button>
-                        <Button onClick={() => setEditDetail(false)}>
-                          Cancel
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className={styles.btn}>
-                        <Button
-                          htmlType="button"
-                          onClick={() => setEditDetail(true)}
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className={styles.detailTab}>
-                  <Header level={4}>
-                    University:{" "}
-                    {editDetail ? (
-                      <Form.Item
-                        name="university"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input university!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="University or Institue Name" />
-                      </Form.Item>
-                    ) : (
-                      <Body level={1}>
-                        {selected.university || "No data, Please input."}
-                      </Body>
-                    )}
-                  </Header>
-                  <Header level={4}>
-                    Faculty:{" "}
-                    {editDetail ? (
-                      <Form.Item
-                        name="faculty"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input faculty!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Faculty" />
-                      </Form.Item>
-                    ) : (
-                      <Body level={1}>
-                        {selected.faculty || "No data, Please input."}
-                      </Body>
-                    )}
-                  </Header>
-                  <Header level={4}>
-                    Department:{" "}
-                    {editDetail ? (
-                      <Form.Item
-                        name="department"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input department!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Department" />
-                      </Form.Item>
-                    ) : (
-                      <Body level={1}>
-                        {selected.department || "No data, Please input."}
-                      </Body>
-                    )}
-                  </Header>
-                </div>
-              </Form>
-            </TabPane>
           </Tabs>
           <Modal
             title="Edit Curriculum"
@@ -403,6 +333,42 @@ export function Curriculum() {
                 rules={[{ required: true, message: "Please input name!" }]}
               >
                 <Input placeholder="Curriculum Name" />
+              </Form.Item>
+              <Form.Item
+                label="University"
+                name="university"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input university!",
+                  },
+                ]}
+              >
+                <Input placeholder="University or Institue Name" />
+              </Form.Item>
+              <Form.Item
+                label="Faculty"
+                name="faculty"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input faculty!",
+                  },
+                ]}
+              >
+                <Input placeholder="Faculty" />
+              </Form.Item>
+              <Form.Item
+                label="Department"
+                name="department"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input department!",
+                  },
+                ]}
+              >
+                <Input placeholder="Department" />
               </Form.Item>
             </Form>
           </Modal>

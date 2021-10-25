@@ -43,6 +43,7 @@ const useAuthen = () => {
 
   function onLogin(username, password, next = "") {
     setLoading(true);
+    setMessage("");
     return axios
       .post(config.apiUrl + "/auth/login", {
         username,
@@ -66,6 +67,7 @@ const useAuthen = () => {
 
   function onAdminLogin(username, password, next = "") {
     setLoading(true);
+    setMessage("");
     return axios
       .post(config.apiUrl + "/auth/adminLogin", {
         username,

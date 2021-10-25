@@ -1,4 +1,5 @@
-import { useState } from "react";
+//TODO : Reduce fetching?, Looped prerequisite?
+import { useState, useEffect } from "react";
 import { Option, Input } from "..";
 import {
   Table,
@@ -25,7 +26,6 @@ import {
 import { Header, Body, Button } from "..";
 import { useCourse } from "../../hooks/useCourse";
 import styles from "./CourseTable.module.scss";
-import { useEffect } from "react/cjs/react.development";
 
 export const CourseTable = ({ selectedCur }) => {
   const {
@@ -76,13 +76,20 @@ export const CourseTable = ({ selectedCur }) => {
     createCourse(selectedCur.curriculum_id, values)
       .then((data) => {
         setFetchCourse([...fetchCourse, data]);
-        setConfirmLoading(false);
-        setNewCourseVisible(false);
         newCourseForm.resetFields();
+        openNotificationWithIcon(
+          "success",
+          values.course_id + " created",
+          values.course_name_en
+        );
       })
       .catch((message) => {
         setConfirmLoading(false);
         openNotificationWithIcon("error", "Cannot create course", message);
+      })
+      .finally(() => {
+        setConfirmLoading(false);
+        setNewCourseVisible(false);
       });
   }
 
@@ -101,7 +108,7 @@ export const CourseTable = ({ selectedCur }) => {
     console.log("Failed:", errorInfo);
   }
 
-  useEffect(() => {
+  function getCourses() {
     getCourseByCurriculum(selectedCur.curriculum_id)
       .then((data) => {
         setFetchCourse(data);
@@ -109,6 +116,10 @@ export const CourseTable = ({ selectedCur }) => {
       .catch((message) => {
         openNotificationWithIcon("error", "Cannot fetch course data", message);
       });
+  }
+
+  useEffect(() => {
+    getCourses();
     // eslint-disable-next-line
   }, [selectedCur]);
 
@@ -234,41 +245,52 @@ export const CourseTable = ({ selectedCur }) => {
     setEditingKey("");
   };
 
-  const save = async (key) => {
+  const save = async () => {
     try {
       const row = await form.validateFields();
-      const newData = [...fetchCourse];
-      const index = newData.findIndex((item) => key === item.course_id);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setFetchCourse(newData);
-        setEditingKey("");
-      } else {
-        newData.push(row);
-        setFetchCourse(newData);
-        setEditingKey("");
-      }
-      updateCourse(editingKey, row).then(() => {
-        setFetchCourse(newData);
-        setFilteredCourse(null);
-        setIsSearch(false);
-      });
+      updateCourse(editingKey, row)
+        .then((data) => {
+          getCourses();
+          openNotificationWithIcon(
+            "success",
+            "Changes to " + data.course_id + " was saved",
+            data.course_name_en
+          );
+        })
+        .catch(() => {
+          openNotificationWithIcon("error", "Cannot edit course data", message);
+        })
+        .finally(() => {
+          setFilteredCourse(null);
+          setIsSearch(false);
+          setEditingKey("");
+        });
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
     }
   };
 
   const remove = (record) => {
-    let newData = [...fetchCourse];
-    newData = newData
-      .filter((ele) => ele.course_id !== record.course_id)
-      .filter((ele) => ele.pre_course_id !== record.course_id);
-    removeCourse(record.course_id).then(() => {
-      setFetchCourse(newData);
-      setFilteredCourse(null);
-      setIsSearch(false);
-    });
+    // let newData = [...fetchCourse];
+    // newData = newData
+    //   .filter((ele) => ele.course_id !== record.course_id)
+    //   .filter((ele) => ele.pre_course_id !== record.course_id);
+    removeCourse(record.course_id)
+      .then(() => {
+        getCourses();
+        openNotificationWithIcon(
+          "success",
+          record.course_id + " was removed",
+          record.course_name_en
+        );
+      })
+      .catch(() => {
+        openNotificationWithIcon("error", "Cannot remove course", message);
+      })
+      .finally(() => {
+        setFilteredCourse(null);
+        setIsSearch(false);
+      });
   };
 
   const columns = [
@@ -357,7 +379,7 @@ export const CourseTable = ({ selectedCur }) => {
         return editable ? (
           <Space size="middle">
             <Tooltip title="Save">
-              <Typography.Link href="#" onClick={() => save(record.course_id)}>
+              <Typography.Link href="#" onClick={() => save()}>
                 <SaveOutlined style={{ fontSize: "20px" }} />
               </Typography.Link>
             </Tooltip>
@@ -455,6 +477,7 @@ export const CourseTable = ({ selectedCur }) => {
             onChange: cancel,
           }}
           rowKey="course_id"
+          key={fetchCourse}
         />
       </Form>
       <Modal

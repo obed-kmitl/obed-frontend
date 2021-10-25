@@ -27,7 +27,7 @@ export const useCourse = () => {
         course_name_en: values.course_name_en,
         course_name_th: values.course_name_th,
         pre_course_id:
-          values.pre_course_id === "" ? null : values.pre_course_id,
+          values.pre_course_id === null ? "" : values.pre_course_id,
       })
       .then((response) => {
         setCourses([...courses, response.data.data]);
@@ -43,7 +43,8 @@ export const useCourse = () => {
     return await httpClient
       .put(`/course/update/${course_id}`, {
         course_id: values.course_id,
-        pre_course_id: values.pre_course_id,
+        pre_course_id:
+          values.pre_course_id === null ? "" : values.pre_course_id,
         course_name_en: values.course_name_en,
         course_name_th: values.course_name_th,
       })
@@ -58,9 +59,16 @@ export const useCourse = () => {
               course_name_th: response.data.data.course_name_th,
             };
           }
+          if (ele.pre_course_id === course_id) {
+            return {
+              course_id: ele.course_id,
+              pre_course_id: response.data.data.course_id,
+              course_name_en: ele.course_name_en,
+              course_name_th: ele.course_name_th,
+            };
+          }
           return ele;
         });
-        console.log(newCourses);
         setCourses(newCourses);
         return Promise.resolve(response.data.data);
       })

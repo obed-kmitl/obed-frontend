@@ -66,9 +66,9 @@ function App() {
                 <PrivateRoute path="/student">
                   <Student />
                 </PrivateRoute>
-                <PublicRoute path="/profile">
+                <PrivateRoute path="/profile">
                   <Profile />
-                </PublicRoute>
+                </PrivateRoute>
                 <PrivateRoute exact path="/">
                   <Home />
                 </PrivateRoute>   

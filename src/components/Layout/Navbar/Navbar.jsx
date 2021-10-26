@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { NavLink, Link } from "react-router-dom";
-import { UserOutlined, LogoutOutlined, DownOutlined } from "@ant-design/icons";
+import { UserOutlined, LogoutOutlined, DownOutlined,BookOutlined } from "@ant-design/icons";
 import { Menu, Dropdown } from "antd";
 
 import UserContext from "../../../contexts/UserContext";
@@ -12,6 +12,9 @@ const Navbar = () => {
   const { onLogout } = useAuthen();
   const { user } = useContext(UserContext);
   const isAdmin = window.location.host.split(".")[0] === "admin";
+  const isTeacherHome= !window.location.pathname.split("/")[1]==="";
+  console.log(window.location.pathname.split("/"))
+  
 
   const menu = (
     <Menu style={{ minWidth: "200px" }}>
@@ -19,10 +22,15 @@ const Navbar = () => {
         Logged in as <strong>{user?.username || "N/A"}</strong>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item icon={<UserOutlined />} key="2">
+      {!isAdmin &&
+        <Menu.Item icon={<BookOutlined />} key="2">
+          <Link to="/" exact>My Course</Link>
+        </Menu.Item>
+      }
+      <Menu.Item icon={<UserOutlined />} key="3">
         <Link to="/profile">Profile</Link>
       </Menu.Item>
-      <Menu.Item icon={<LogoutOutlined />} danger onClick={onLogout} key="3">
+      <Menu.Item icon={<LogoutOutlined />} danger onClick={onLogout} key="4">
         Logout
       </Menu.Item>
     </Menu>
@@ -73,12 +81,11 @@ const Navbar = () => {
           <Link to="/" className={styles.logo} title="Home">
             <img src={logo} alt="obed" />
           </Link>
-          <div className={styles.linkWrap}>
+          <div className={styles.linkWrap} style={{visibility:isTeacherHome&&"hidden"}}>
             <NavLink
-              to="/"
+              to="/overview"
               className={styles.link}
               activeClassName={styles.activeLink}
-              exact
             >
               Overview
             </NavLink>

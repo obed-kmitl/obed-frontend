@@ -9,6 +9,7 @@ import {
   Plan,
   Login,
   Student,
+  Overview
 } from "./pages";
 import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
@@ -63,15 +64,18 @@ function App() {
             </PublicRoute>
             <Layout>
               <Switch>
-                <PrivateRoute path="/student">
+                <PrivateRoute path="/:sectionId/overview">
+                  <Overview />
+                </PrivateRoute>
+                <PrivateRoute path="/:sectionId/student">
                   <Student />
                 </PrivateRoute>
-                <PrivateRoute path="/profile">
+                <PrivateRoute path="/:sectionId/profile">
                   <Profile />
                 </PrivateRoute>
                 <PrivateRoute exact path="/">
                   <Home />
-                </PrivateRoute>   
+                </PrivateRoute>
               </Switch>
             </Layout>
           </Switch>

@@ -7,3 +7,4 @@ export { TestTable } from './Test/TestTable';
 export { Plan } from './Plan/Plan';
 export { Login } from './Login/Login';
 export { Student } from './Student/Student';
+export { Overview } from './Overview/Overview'

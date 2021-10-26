@@ -1,16 +1,19 @@
 import styles from "./Home.module.scss";
 import { Helmet } from "react-helmet";
 import { Body, CourseCard, Header, Select, Option, Input } from "../../components";
-import { Divider, message } from "antd"
-import { useState } from "react";
+import { Divider } from "antd"
+import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
+import SectionContext from "../../contexts/SectionContext";
+
 const courseList = [
   {
     year: "2021",
     semester: "1",
-    ended:false,
+    ended: false,
     courses: [
       {
-        key: "1",
+        id: "1",
         course_id: "01076001",
         course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
         course_name_en: "Introduction to Computer Engineering",
@@ -19,7 +22,7 @@ const courseList = [
         semester: "1",
       },
       {
-        key: "2",
+        id: "2",
         course_id: "01076002",
         course_name_th: "พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์",
         course_name_en: "Programming Fundamental",
@@ -28,7 +31,7 @@ const courseList = [
         semester: "1",
       },
       {
-        key: "3",
+        id: "3",
         course_id: "01076003",
         course_name_th: "วงจรไฟฟ้าและอิเล็กทรอนิกส์",
         course_name_en: "Circuits and Electronics",
@@ -37,7 +40,7 @@ const courseList = [
         semester: "1",
       },
       {
-        key: "4",
+        id: "4",
         course_id: "01076004",
         course_name_th: "การเขียนโปรแกรมเชิงวัตถุ",
         course_name_en: "Object Oriented Programming",
@@ -46,7 +49,7 @@ const courseList = [
         semester: "1",
       },
       {
-        key: "5",
+        id: "5",
         course_id: "01076001",
         course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
         course_name_en: "Introduction to Computer Engineering",
@@ -59,10 +62,10 @@ const courseList = [
   {
     year: "2020",
     semester: "2",
-    ended:true,
+    ended: true,
     courses: [
       {
-        key: "1",
+        id: "6",
         course_id: "01076001",
         course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
         course_name_en: "Introduction to Computer Engineering",
@@ -71,7 +74,7 @@ const courseList = [
         semester: "2",
       },
       {
-        key: "2",
+        id: "7",
         course_id: "01076002",
         course_name_th: "พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์",
         course_name_en: "Programming Fundamental",
@@ -80,7 +83,7 @@ const courseList = [
         semester: "2",
       },
       {
-        key: "3",
+        id: "8",
         course_id: "01076003",
         course_name_th: "วงจรไฟฟ้าและอิเล็กทรอนิกส์",
         course_name_en: "Circuits and Electronics",
@@ -93,10 +96,10 @@ const courseList = [
   {
     year: "2020",
     semester: "1",
-    ended:true,
+    ended: true,
     courses: [
       {
-        key: "1",
+        id: "9",
         course_id: "01076004",
         course_name_th: "การเขียนโปรแกรมเชิงวัตถุ",
         course_name_en: "Object Oriented Programming",
@@ -105,7 +108,7 @@ const courseList = [
         semester: "1",
       },
       {
-        key: "2",
+        id: "10",
         course_id: "01076001",
         course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
         course_name_en: "Introduction to Computer Engineering",
@@ -120,6 +123,7 @@ const courseList = [
 export const Home = () => {
   const [filterSelected, setFilterSelected] = useState()
   const [filteredCourse, setFilteredCourse] = useState(courseList)
+  const { setSection } = useContext(SectionContext)
 
   function search(keyword) {
     if (keyword !== "") {
@@ -188,12 +192,13 @@ export const Home = () => {
           <div className={styles.cards}>
             {semesterCourse.courses.map((course) =>
               <div
-                onClick={() => message.success("click" + course.course_id)}
+                onClick={() => setSection(course.id)}
                 className={styles.card}
               >
-                <CourseCard details={course} ended={false}/>
+                <Link to={`${course.id}/overview`}>
+                  <CourseCard details={course} ended={false} />
+                </Link>
               </div>
-
             )}
           </div>
         </div>

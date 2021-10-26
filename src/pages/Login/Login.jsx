@@ -69,15 +69,15 @@ export const Login = () => {
             onFinish={(values) =>
               isAdmin
                 ? onAdminLogin(
-                    values.username,
-                    values.password,
-                    query.get("nextpage") || ""
-                  )
+                  values.username,
+                  values.password,
+                  query.get("nextpage") || ""
+                )
                 : onLogin(
-                    values.username,
-                    values.password,
-                    query.get("nextpage") || ""
-                  )
+                  values.username,
+                  values.password,
+                  query.get("nextpage") || ""
+                )
             }
             onFinishFailed={onFinishFailed}
             autoComplete="off"
@@ -127,10 +127,16 @@ export const Login = () => {
             </div>
           </Form>
         </div>
-        <img
+        {/* <img
           src={isAdmin ? img : img2}
           alt="login"
           className={styles.loginPic}
+        /> */}
+        <object
+          data={isAdmin ? img : img2}
+          alt="login"
+          className={styles.loginPic}
+          type="image/svg+xml"
         />
       </div>
     </div>

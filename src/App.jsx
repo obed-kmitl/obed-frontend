@@ -70,7 +70,7 @@ function App() {
                 <PrivateRoute path="/:sectionId/student">
                   <Student />
                 </PrivateRoute>
-                <PrivateRoute path="/:sectionId/profile">
+                <PrivateRoute path="/profile">
                   <Profile />
                 </PrivateRoute>
                 <PrivateRoute exact path="/">

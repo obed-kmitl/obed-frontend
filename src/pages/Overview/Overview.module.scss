@@ -1,0 +1,36 @@
+.overview {
+    .head {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    .details {
+        .table {
+            width: 100%;
+            margin: 1rem 0;
+            td {
+                padding: 0.5rem 0;
+            }
+            .nestTableTitle {
+                vertical-align: baseline;
+            }
+            .googleClassroomBtn {
+                color: #252629;
+                border-color: #c3c3c4;
+                align-items: center;
+                font-weight: 500;
+                height: 50px;
+                width: 100%;
+                .logo {
+                    width: 25px;
+                    margin: 0 0.5rem;
+                }
+            }
+        }
+    }
+}
+.flexrow {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}

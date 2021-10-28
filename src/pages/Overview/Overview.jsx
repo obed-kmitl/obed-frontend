@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import { Body, Button, Header } from "../../components";
 import { Divider, Typography, Modal, Popconfirm } from "antd";
 import {
-  EditOutlined,
+  //EditOutlined,
   LinkOutlined,
   CheckCircleFilled,
   DeleteOutlined,
@@ -72,12 +72,10 @@ const GoogleClassroomCard = ({ name, code, selected, hasAction, handleChangeGCla
               <Popconfirm
                 title="Are you sure to remove linked Google Classroom course?"
                 onConfirm={handleDeleteGClass}
-                //onCancel={cancel}
                 okText="Yes"
                 cancelText="No">
                 <Typography.Link
                   style={{ fontSize: "20px", color: "#FFFFFF" }}
-                  //onClick={() => handleDeleteGClass()}
                 >
                   <DeleteOutlined />
                 </Typography.Link>
@@ -120,12 +118,12 @@ export const Overview = () => {
       <Divider />
       <div className={styles.details}>
         <div className={styles.flexrow}>
-          <Header level={2}>Class Infomation</Header>
-          <Typography.Link
+          <Header level={2}>Class Information</Header>
+          {/* <Typography.Link
             style={{ fontSize: "20px" }}
           >
             <EditOutlined />
-          </Typography.Link>
+          </Typography.Link> */}
         </div>
         <table className={styles.table}>
           <tr>

@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import {
+  Body,
   Button,
   Input,
 } from "..";
-import { Form, Table, Popconfirm, Typography, InputNumber } from 'antd'
+import { Form, Table, Popconfirm, Typography } from 'antd'
 import {
   DeleteOutlined,
   EditOutlined,
@@ -12,13 +12,11 @@ import {
 } from '@ant-design/icons';
 
 import styles from "./Standard.module.scss";
+import { useSubStandard } from './hooks/useSubStandard'
 
+export const StandardTable = ({ standard = [], standardNo, groupSubStdId, stdId }) => {
 
-export const StandardTable = ({ standard = [], standardNo }) => {
-  const [form] = Form.useForm();
-  const [data, setData] = useState(standard);
-  const [editingKey, setEditingKey] = useState("");
-  const [isNewAdded, setIsNewAdded] = useState(false);
+  const [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection] = useSubStandard(standard, groupSubStdId, stdId)
 
   const isEditing = (record) => record.subStandardNo === editingKey;
 
@@ -36,7 +34,7 @@ export const StandardTable = ({ standard = [], standardNo }) => {
       <td {...restProps}>
         {editing ? (
           <Form.Item
-            hasFeedback
+            //hasFeedback
             name={dataIndex}
             style={{
               margin: 0,
@@ -49,10 +47,15 @@ export const StandardTable = ({ standard = [], standardNo }) => {
               {
                 validator: (rule, value, callback) => {
                   const alreadyExistNo = data.map((e) => e.subStandardNo).filter((e) => e !== record.subStandardNo)
+                  console.log(data)
                   if (inputType === "number") {
                     if (alreadyExistNo.includes(value)) {
                       return Promise.reject("Already exist!")
                     }
+                    if ((isNaN(value) || value.toString().includes("."))) {
+                      return Promise.reject("Enter number!")
+                    }
+
                   }
                   return Promise.resolve()
                 }
@@ -60,7 +63,16 @@ export const StandardTable = ({ standard = [], standardNo }) => {
             ]}
           >
             {inputType === "number" ?
-              <InputNumber min={1}/> :
+              <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
+                <Body>{standardNo}.</Body>
+                <Input
+                  min={1}
+                  style={{ width: "80% " }}
+                  defaultValue={record.subStandardNo}
+                // formatter={(val) => val.replace(/[^0-9]/g, '')}
+                // parser={(val) => val.replace(/[^0-9]/g, '')}
+                />
+              </div> :
               <Input />
             }
           </Form.Item>
@@ -99,7 +111,7 @@ export const StandardTable = ({ standard = [], standardNo }) => {
 
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
-              onClick={() => save(record.subStandardNo)}
+              onClick={() => save(record.subStandardNo,record.subStandardId)}
               style={{
                 marginRight: 14,
               }}
@@ -157,62 +169,6 @@ export const StandardTable = ({ standard = [], standardNo }) => {
       }),
     };
   });
-
-  const handleAddSubStd = () => {
-    //console.log(data)
-    setIsNewAdded(true)
-    const newData = { subStandardNo: '', subStandardName: '' };
-    setData([...data, newData]);
-    form.setFieldsValue({
-      subStandardNo: "",
-      subStandardName: "",
-    });
-    setEditingKey(newData.subStandardNo);
-  };
-
-  const edit = (record) => {
-    form.setFieldsValue({
-      ...record,
-    });
-    setEditingKey(record.subStandardNo);
-  };
-
-  const cancel = () => {
-    setEditingKey("");
-    if (isNewAdded) {
-      setData(data.slice(0, data.length - 1))
-      setIsNewAdded(false)
-    }
-  };
-
-  const save = async (subStandardNo) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...data];
-      const index = newData.findIndex((item) => subStandardNo === item.subStandardNo);
-
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setData(newData);
-        setEditingKey("");
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey("");
-      }
-      if (isNewAdded) {
-        setIsNewAdded(false);
-      }
-
-    } catch (errInfo) {
-      console.log("Validate Failed:", errInfo);
-    }
-  }
-
-  const deleteSection = (record) => {
-    setData(data.filter((standard) => standard.subStandardNo !== record.subStandardNo));
-  }
 
   return (
     <>

@@ -291,7 +291,7 @@ export function Curriculum() {
               <CourseTable selectedCur={selected} />
             </TabPane>
             <TabPane tab="Standard" key="2">
-              <Standard />
+              <Standard selectedCurriculum={selected.curriculum_id}/>
             </TabPane>
             <TabPane tab="Mapping" key="3">
               <MappingStandard />

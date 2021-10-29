@@ -2,11 +2,11 @@ import { message } from "antd";
 import { useState } from "react"
 
 
-export const useImportExcel = ( setStandard) => {
+export const useImportExcel = (setStandard) => {
     const [importModalVisible, setImportModalVisible] = useState(false);
     const [fileUpLoadStdId, setFileUpLoadStdId] = useState();
     const [importStandard, setImportStandard] = useState();
-  
+
     function handleImportBtnClick(index) {
         setImportModalVisible(true);
         setFileUpLoadStdId(index);
@@ -73,10 +73,10 @@ export const useImportExcel = ( setStandard) => {
                     ...prev.slice(fileUpLoadStdId + 1)]
             });
             setImportModalVisible(false);
-        }else{
-           message.error("Please Upload File!")
+        } else {
+            message.error("Please Upload File!")
         }
     }
 
-    return [importModalVisible, handleImportBtnClick, importModalCancel, getDetailsfromExcel, confirmImport ,importStandard]
+    return [importModalVisible, handleImportBtnClick, importModalCancel, getDetailsfromExcel, confirmImport, importStandard]
 }

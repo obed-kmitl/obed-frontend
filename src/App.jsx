@@ -10,6 +10,7 @@ import {
   Login,
   Student,
   NotFound,
+  Overview
 } from "./pages";
 import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
@@ -67,12 +68,15 @@ function App() {
             </PublicRoute>
             <Layout>
               <Switch>
-                <PrivateRoute path="/student">
+                <PrivateRoute path="/:sectionId/overview">
+                  <Overview />
+                </PrivateRoute>
+                <PrivateRoute path="/:sectionId/student">
                   <Student />
                 </PrivateRoute>
-                <PublicRoute path="/profile">
+                <PrivateRoute path="/profile">
                   <Profile />
-                </PublicRoute>
+                </PrivateRoute>
                 <PrivateRoute exact path="/">
                   <Home />
                 </PrivateRoute>

@@ -3,7 +3,7 @@ import {
   Button,
   Input,
 } from "..";
-import { Form, Table, Popconfirm, Typography, InputNumber } from 'antd'
+import { Form, Table, Popconfirm, Typography } from 'antd'
 import {
   DeleteOutlined,
   EditOutlined,

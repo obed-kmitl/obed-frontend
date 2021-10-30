@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {} from "..";
+import { } from "..";
 import { Form, Table, Popconfirm, Typography, TreeSelect, Tag } from "antd";
 import {
   EditOutlined,
@@ -16,15 +16,15 @@ export const MappingTable = ({
   standardNo,
   relativeStandard,
   isEdit,
+  mapping
 }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(standard);
   const [editingKey, setEditingKey] = useState("");
-  // eslint-disable-next-line no-unused-vars
   const [editing, setEditing] = useState(isEdit);
 
   const isEditing = (record) => record.subStandardNo === editingKey;
-
+  console.log(mapping)
   const EditableCell = ({
     editing,
     dataIndex,
@@ -68,8 +68,8 @@ export const MappingTable = ({
                 >
                   {option.subStandard.map((item) => (
                     <TreeNode
-                      key={option.standardNo + "." + item.subStandardNo}
-                      value={option.standardNo + "." + item.subStandardNo}
+                      key={item.subStandardId}
+                      value={item.subStandardId}
                       title={
                         option.standardNo +
                         "." +
@@ -151,7 +151,7 @@ export const MappingTable = ({
           </span>
         ) : (
           <Typography.Link
-            disabled={editingKey !== "" && !isEdit}
+            disabled={editingKey !== "" || !editing}
             onClick={() => edit(record)}
             style={{
               fontSize: "14px",
@@ -190,12 +190,6 @@ export const MappingTable = ({
   const cancel = () => {
     setEditingKey("");
   };
-  useEffect(() => {
-    setData(standard);
-  }, [standard]);
-  useEffect(() => {
-    setEditing(isEdit);
-  }, [isEdit]);
 
   const save = async (subStandardNo) => {
     try {
@@ -210,6 +204,7 @@ export const MappingTable = ({
         newData.splice(index, 1, { ...item, ...row });
         setData(newData);
         setEditingKey("");
+        console.log(data);
       } else {
         newData.push(row);
         setData(newData);
@@ -219,6 +214,13 @@ export const MappingTable = ({
       console.log("Validate Failed:", errInfo);
     }
   };
+
+  useEffect(() => {
+    setData(standard);
+  }, [standard]);
+  useEffect(() => {
+    setEditing(isEdit);
+  }, [isEdit]);
 
   return (
     <Form form={form} component={false}>

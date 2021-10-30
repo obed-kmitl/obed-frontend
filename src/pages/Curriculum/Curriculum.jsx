@@ -460,7 +460,7 @@ export function Curriculum() {
               <Standard selectedCurriculum={selected.curriculum_id}/>
             </TabPane>
             <TabPane tab="Mapping" key="3">
-              <MappingStandard />
+              <MappingStandard selectedCurriculum={selected.curriculum_id}/>
             </TabPane>
             <TabPane tab="Details" key="4">
               <Form

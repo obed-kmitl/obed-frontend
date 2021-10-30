@@ -3,38 +3,40 @@ import styles from "./MappingStandard.module.scss"
 import { Header, Body, Button, Select, Option, Collapse, Panel } from ".."
 import { Empty, Popconfirm, Typography } from "antd";
 import { SwapOutlined } from '@ant-design/icons';
-import { mockStandard } from "./mockStandard";
 import { MappingTable } from "./MappingTable";
+import { useMappingStandard } from "./hooks/useMappingStandard";
 
 
-export const MappingStandard = () => {
-    const [standardList] = useState(mockStandard)
-    const [mainStandard, setMainStandard] = useState(null)
-    const [relativeStandard, setRelativeStandard] = useState(null)
-    const [isEditing, setIsEditing] = useState(false)
+export const MappingStandard = ({ selectedCurriculum }) => {
 
-    function onMainSelectChange(value) {
-        const i = standardList.findIndex((e) => e.standardTitle === value)
-        console.log(standardList[i])
-        setMainStandard(standardList[i]);
-
-    }
-    function onRelativeSelectChange(value) {
-        const i = standardList.findIndex((e) => e.standardTitle === value)
-        console.log(standardList[i])
-        setRelativeStandard(standardList[i]);
-    }
-    function swapStandard() {
-        const temp = mainStandard;
-        setMainStandard(relativeStandard);
-        setRelativeStandard(temp)
-    }
+    const [
+        standardList,
+        mainStdId,
+        relativeStdId,
+        mainStandard,
+        relativeStandard,
+        mapping,
+        isEditing,
+        setIsEditing,
+        onMainSelectChange,
+        onRelativeSelectChange,
+        swapStandard,
+        handleSaveBtn
+    ] = useMappingStandard(selectedCurriculum)
+    
+    console.log(mapping)
+    console.log(mainStdId)
+    console.log(relativeStdId)
+    console.log(standardList.filter((e) => e.id === mainStdId))
 
     return (
         <div>
             <div className={styles.tabHead}>
                 <Header level={2}>Mapping Standard</Header>
-                {!isEditing ? <Button onClick={() => setIsEditing(true)}>Edit</Button> : <Button onClick={() => setIsEditing(false)}>Save</Button>}
+                {
+                !isEditing ? <Button onClick={() => setIsEditing(true)}>Edit</Button> 
+                :<Button type="primary" onClick={() => handleSaveBtn(false)}>Save</Button>
+                }
             </div>
             <div className={styles.content}>
                 <div className={styles.standardSelect}>
@@ -46,10 +48,11 @@ export const MappingStandard = () => {
                         <Select
                             placeholder="Please select Standard"
                             onChange={(value) => onMainSelectChange(value)}
-                            value={mainStandard ? mainStandard.standardTitle : null}
+                            value={mainStdId || null}
+                            disabled={!isEditing}
                         >
                             {standardList.map((e) => (
-                                <Option value={e.standardTitle} key={e.id} disabled={relativeStandard && relativeStandard.standardTitle === e.standardTitle}>
+                                <Option value={e.id} key={e.id} disabled={relativeStandard && relativeStandard.standardTitle === e.standardTitle}>
                                     {e.standardTitle}
                                 </Option>
                             ))}
@@ -71,20 +74,21 @@ export const MappingStandard = () => {
                         <Select
                             placeholder="Please select Standard"
                             onChange={(value) => onRelativeSelectChange(value)}
-                            value={relativeStandard ? relativeStandard.standardTitle : null}
+                            value={relativeStdId || null}
+                            disabled={!isEditing}
                         >
                             {standardList.map((e) => (
-                                <Option value={e.standardTitle} key={e.id} disabled={mainStandard && mainStandard.standardTitle === e.standardTitle}>
+                                <Option value={e.id} key={e.id} disabled={mainStandard && mainStandard.standardTitle === e.standardTitle}>
                                     {e.standardTitle}
                                 </Option>
                             ))}
                         </Select>
                     </div>
                 </div>
-                {mainStandard && relativeStandard ?
+                {mainStdId && relativeStdId ?
                     <>
                         <Collapse accordion>
-                            {mainStandard.details.map((standard, index) =>
+                            {standardList.filter((e) => e.id === mainStdId)[0]?.details.map((standard, index) =>
                                 <Panel
                                     header={<Header level={5}>{standard.standardNo}{" "}{standard.standardName}</Header>}
                                     key={index}
@@ -94,6 +98,7 @@ export const MappingStandard = () => {
                                         standardNo={standard.standardNo}
                                         relativeStandard={relativeStandard}
                                         isEdit={isEditing}
+                                        mapping={mapping}
                                     />
                                 </Panel>
                             )}

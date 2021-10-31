@@ -8,86 +8,129 @@ export const useMappingStandard = (selectedCurriculum) => {
     const [mainStdId, setMainStdId] = useState();
     const [relativeStdId, setRelativeStdId] = useState()
 
-
-    const [mainStandard, setMainStandard] = useState([])
-    const [relativeStandard, setRelativeStandard] = useState([])
     const [isEditing, setIsEditing] = useState(false)
     const [mapping, setMapping] = useState({})
 
-    async function fetchAllStandards() {
+    function filterMapStandard(currentStandard, currentMainSubStandardId, mapStandards, allStandards) {
+        if (currentStandard.standard_id === mapStandards.main_std_id) {
+            const relativeStandard = allStandards.filter((std) => std.standard_id === mapStandards.relative_std_id)[0]
+            let mappedSubStandard = []
+
+            const matchMainStandard = mapStandards.map_sub_standards.filter((mss) => mss.main_sub_std_id === currentMainSubStandardId)
+
+            if (matchMainStandard.length < 0) return []
+
+            relativeStandard.group_sub_standards.map((r_gss) =>
+                r_gss.sub_standards.map((r_ss) => {
+                    matchMainStandard.map((mms) => {
+                        if (mms.relative_sub_std_id === r_ss.sub_std_id) {
+                            mappedSubStandard = [...mappedSubStandard, `${r_gss.group_sub_std_id}.${r_ss.sub_std_id}`]
+                        }
+                    })
+                })
+            )
+
+
+            return mappedSubStandard
+        }
+
+        return []
+    }
+
+    async function fetchAllStandards(mapStandards) {
         return await httpClient
             .get(`/standard/getAllByCurriculum/${selectedCurriculum}`)
             .then((response) => {
-                const receivedStandard = response?.data.data.map((std) => ({
-                    id: std.standard_id,
-                    standardTitle: std.title,
-                    curriculumId: std.curriculum_id,
-                    details: std.group_sub_standards.map((groupSubStd) => ({
-                        groupSubStdId: groupSubStd.group_sub_std_id,
-                        standardId: groupSubStd.standard_id,
-                        standardNo: groupSubStd.order_number,
-                        standardName: groupSubStd.title,
-                        subStandard: groupSubStd.sub_standards.map((subStd) => ({
-                            groupSubStdId: subStd.group_sub_std_id,
-                            subStandardId: subStd.sub_std_id,
-                            subStandardNo: subStd.order_number,
-                            subStandardName: subStd.title,
-                            mapping: []
+                console.log(mapStandards)
+                const mappedStandard = response?.data.data.map((std, index, allStandards) => {
+                    return ({
+                        id: std.standard_id,
+                        standardTitle: std.title,
+                        curriculumId: std.curriculum_id,
+                        details: std.group_sub_standards.map((groupSubStd) => ({
+                            groupSubStdId: groupSubStd.group_sub_std_id,
+                            standardId: groupSubStd.standard_id,
+                            standardNo: groupSubStd.order_number,
+                            standardName: groupSubStd.title,
+                            subStandard: groupSubStd.sub_standards.map((subStd) => ({
+                                groupSubStdId: subStd.group_sub_std_id,
+                                subStandardId: subStd.sub_std_id,
+                                subStandardNo: subStd.order_number,
+                                subStandardName: subStd.title,
+                                mapping: filterMapStandard({ ...std }, subStd.sub_std_id, { ...mapStandards }, [...allStandards])
+                            }))
                         }))
-                    }))
-                }))
-                setStandardList(receivedStandard)
-                console.log(receivedStandard)
+                    })
+
+                })
+                setStandardList(mappedStandard)
+                console.log(mappedStandard)
             })
             .catch((error) => {
                 console.log(error);
             });
     }
     async function fetchMapping() {
-        return await httpClient
+        return httpClient
             .get(`/mapStandard/get/${selectedCurriculum}`)
             .then((response) => {
-                console.log(standardList)
-                console.log(response.data.data);
                 setMapping(response.data.data);
-                setMainStdId(response.data.data?.main_std_id||null);
-                setRelativeStdId(response.data.data?.relative_std_id||null);
+                setMainStdId(response.data.data?.main_std_id || null);
+                setRelativeStdId(response.data.data?.relative_std_id || null);
+                return response.data.data
             })
             .catch((error) => {
                 console.log(error);
             });
     }
 
+    async function fetchData() {
+        const mapStandards = await fetchMapping()
+        await fetchAllStandards(mapStandards);
+    }
 
 
     function onMainSelectChange(value) {
-        const selected = standardList.filter((e) => e.id === value)
-        console.log(selected)
+        // const selected = standardList.filter((e) => e.id === value)
+        // console.log(selected)
+        // setMainStandard(selected);
         setMainStdId(value)
-        setMainStandard(selected);
+        let newMapping = mapping
+        newMapping.main_std_id = value
+        setMapping(newMapping);
 
     }
     function onRelativeSelectChange(value) {
-        const selected = standardList.filter((e) => e.id === value)
-        console.log(selected)
+        // const selected = standardList.filter((e) => e.id === value)
+        // console.log(selected)
+        //setRelativeStandard(selected);
         setRelativeStdId(value)
-        setRelativeStandard(selected);
+        let newMapping = mapping
+        newMapping.relative_std_id = value
+        setMapping(newMapping);
     }
     function swapStandard() {
-        const temp = mainStandard;
-        setMainStandard(relativeStandard);
-        setRelativeStandard(temp)
+        const tempM = mainStdId;
+        const tempR = relativeStdId;
+        setMainStdId(relativeStdId);
+        setRelativeStdId(tempM)
+
+        let newMapping = mapping
+        newMapping.main_std_id = tempR
+        newMapping.relative_std_id = tempM
+        setMapping(newMapping);
+
     }
     function handleSaveBtn() {
-        console.log(mainStandard)
+        //console.log(mainStandard)
         setIsEditing(false)
     }
 
- 
+
     useEffect(() => {
-        fetchAllStandards();
-        fetchMapping();
-console.log("change")
+        // fetchAllStandards();
+        // fetchMapping();
+        fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedCurriculum]);
 
@@ -95,8 +138,8 @@ console.log("change")
         standardList,
         mainStdId,
         relativeStdId,
-        mainStandard,
-        relativeStandard,
+        // mainStandard,
+        // relativeStandard,
         mapping,
         isEditing,
         setIsEditing,

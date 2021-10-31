@@ -13,8 +13,8 @@ export const MappingStandard = ({ selectedCurriculum }) => {
         standardList,
         mainStdId,
         relativeStdId,
-        mainStandard,
-        relativeStandard,
+        // mainStandard,
+        // relativeStandard,
         mapping,
         isEditing,
         setIsEditing,
@@ -24,10 +24,10 @@ export const MappingStandard = ({ selectedCurriculum }) => {
         handleSaveBtn
     ] = useMappingStandard(selectedCurriculum)
     
-    console.log(mapping)
-    console.log(mainStdId)
-    console.log(relativeStdId)
-    console.log(standardList.filter((e) => e.id === mainStdId))
+    // console.log(mapping)
+    // console.log(mainStdId)
+    // console.log(relativeStdId)
+    // console.log(standardList.filter((e) => e.id === mainStdId))
 
     return (
         <div>
@@ -52,7 +52,7 @@ export const MappingStandard = ({ selectedCurriculum }) => {
                             disabled={!isEditing}
                         >
                             {standardList.map((e) => (
-                                <Option value={e.id} key={e.id} disabled={relativeStandard && relativeStandard.standardTitle === e.standardTitle}>
+                                <Option value={e.id} key={e.id} disabled={relativeStdId && relativeStdId===e.id}>
                                     {e.standardTitle}
                                 </Option>
                             ))}
@@ -78,7 +78,7 @@ export const MappingStandard = ({ selectedCurriculum }) => {
                             disabled={!isEditing}
                         >
                             {standardList.map((e) => (
-                                <Option value={e.id} key={e.id} disabled={mainStandard && mainStandard.standardTitle === e.standardTitle}>
+                                <Option value={e.id} key={e.id} disabled={mainStdId && mainStdId === e.id}>
                                     {e.standardTitle}
                                 </Option>
                             ))}
@@ -96,7 +96,7 @@ export const MappingStandard = ({ selectedCurriculum }) => {
                                     <MappingTable
                                         standard={standard.subStandard}
                                         standardNo={standard.standardNo}
-                                        relativeStandard={relativeStandard}
+                                        relativeStandard={standardList.filter((e) => e.id === relativeStdId)[0]}
                                         isEdit={isEditing}
                                         mapping={mapping}
                                     />

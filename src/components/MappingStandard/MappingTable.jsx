@@ -24,7 +24,7 @@ export const MappingTable = ({
   const [editing, setEditing] = useState(isEdit);
 
   const isEditing = (record) => record.subStandardNo === editingKey;
-  console.log(mapping)
+  console.log(relativeStandard)
   const EditableCell = ({
     editing,
     dataIndex,
@@ -61,15 +61,15 @@ export const MappingTable = ({
             >
               {relativeStandard.details.map((option) => (
                 <TreeNode
-                  key={option.standardNo}
-                  value={option.standardNo}
+                  key={option.groupSubStdId}
+                  value={option.groupSubStdId}
                   title={option.standardNo + " " + option.standardName}
                   selectable={false}
                 >
                   {option.subStandard.map((item) => (
                     <TreeNode
-                      key={item.subStandardId}
-                      value={item.subStandardId}
+                      key={option.groupSubStdId + "." + item.subStandardId}
+                      value={option.groupSubStdId + "." + item.subStandardId}
                       title={
                         option.standardNo +
                         "." +
@@ -111,18 +111,32 @@ export const MappingTable = ({
       width: "400px",
       editable: true,
       render: (mapping) => {
-        return mapping.map((element) => (
-          <Tag
-            style={{
-              height: "36px",
-              lineHeight: "2.5",
-              fontSize: "14px",
-              margin: ".25rem",
-            }}
-          >
-            {element}
-          </Tag>
-        ));
+
+        return mapping.map((element) => {
+          const stdNo =
+            relativeStandard.details
+              .filter((item) => item.groupSubStdId === parseInt(element.split(".")[0]))[0]
+              .standardNo
+          const subStdNo = 
+            relativeStandard.details
+              .filter((item) => item.groupSubStdId === parseInt(element.split(".")[0]))[0]
+              .subStandard.filter((item) => item.subStandardId === parseInt(element.split(".")[1]))[0]
+              .subStandardNo
+          const renderTagNo = stdNo+"."+subStdNo    
+          return (
+            <Tag
+              style={{
+                height: "36px",
+                lineHeight: "2.5",
+                fontSize: "14px",
+                margin: ".25rem",
+              }}
+            >
+              {renderTagNo}
+            </Tag>
+          )
+        }
+        );
       },
     },
     {

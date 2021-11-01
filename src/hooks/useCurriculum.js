@@ -10,7 +10,9 @@ export const useCurriculum = () => {
     return await httpClient
       .post("/curriculum/create", {
         title: values.title,
-        year: values.year,
+        university: values.university,
+        faculty: values.faculty,
+        department: values.department,
       })
       .then((response) => {
         getAll();
@@ -51,6 +53,9 @@ export const useCurriculum = () => {
     return await httpClient
       .put(`/curriculum/update/${id}`, {
         title: values.title,
+        university: values.university,
+        faculty: values.faculty,
+        department: values.department,
       })
       .then((response) => {
         getAll();

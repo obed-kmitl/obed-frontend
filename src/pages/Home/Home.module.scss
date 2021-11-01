@@ -1,23 +1,29 @@
-.home{
-  .head{
+@import "../../styles/color.scss";
+.home {
+  .head {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .filterbox{
+    .filterbox {
       display: flex;
       gap: 0.5rem;
       align-items: center;
     }
-    
+  }
+  a {
+    color: $color-grey-500;
+    :hover{
+      color: $color-grey-500;
+    }
   }
 
-  .cards{
+  .cards {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    gap:3rem;
-    .card{
+    gap: 3rem;
+    .card {
       cursor: pointer;
     }
   }

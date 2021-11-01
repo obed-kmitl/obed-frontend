@@ -16,15 +16,16 @@ export const MappingTable = ({
   standardNo,
   relativeStandard,
   isEdit,
-  mapping
+  mapping,
+  allStandard,
 }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(standard);
   const [editingKey, setEditingKey] = useState("");
   const [editing, setEditing] = useState(isEdit);
+  const [mappingList, setMappingList] = useState(mapping)
 
   const isEditing = (record) => record.subStandardNo === editingKey;
-  console.log(relativeStandard)
   const EditableCell = ({
     editing,
     dataIndex,
@@ -111,18 +112,23 @@ export const MappingTable = ({
       width: "400px",
       editable: true,
       render: (mapping) => {
-
         return mapping.map((element) => {
-          const stdNo =
-            relativeStandard.details
-              .filter((item) => item.groupSubStdId === parseInt(element.split(".")[0]))[0]
-              .standardNo
-          const subStdNo = 
-            relativeStandard.details
-              .filter((item) => item.groupSubStdId === parseInt(element.split(".")[0]))[0]
-              .subStandard.filter((item) => item.subStandardId === parseInt(element.split(".")[1]))[0]
-              .subStandardNo
-          const renderTagNo = stdNo+"."+subStdNo    
+          //console.log(relativeStandard.details.filter((item) => item.groupSubStdId === parseInt(element.split(".")[0])).length > 0)
+          let renderTagNo = ""
+          if (relativeStandard.details.filter((item) => item.groupSubStdId === parseInt(element.split(".")[0])).length > 0) {
+            const stdNo =
+              relativeStandard.details
+                .filter((item) => item.groupSubStdId === parseInt(element.split(".")[0]))[0]
+                .standardNo
+            const subStdNo =
+              relativeStandard.details
+                .filter((item) => item.groupSubStdId === parseInt(element.split(".")[0]))[0]
+                .subStandard.filter((item) => item.subStandardId === parseInt(element.split(".")[1]))[0]
+                .subStandardNo
+            renderTagNo = stdNo + "." + subStdNo
+          } else {
+            renderTagNo = element
+          }
           return (
             <Tag
               style={{
@@ -205,6 +211,29 @@ export const MappingTable = ({
     setEditingKey("");
   };
 
+  function mapMappingtoJson(data, index) {
+
+    const mainSubStandard = data[index].subStandardId
+    const relativeSubStandard = data[index].mapping
+
+    const mapping = relativeSubStandard.map((rss) => {
+      return {
+        main_sub_std_id: mainSubStandard,
+        relative_sub_std_id: parseInt(rss.split(".")[1])
+      }
+    })
+    //console.log(mapping)
+    let allMapping = mappingList
+    const removedPrevMapping = allMapping.map_sub_standards.filter((mapping) => mapping.main_sub_std_id !== mainSubStandard)
+    const addedNewMapping = [...removedPrevMapping, ...mapping]
+
+    allMapping.map_sub_standards = addedNewMapping
+
+    setMappingList(allMapping)
+
+    return allMapping
+  }
+
   const save = async (subStandardNo) => {
     try {
       const row = await form.validateFields();
@@ -218,11 +247,8 @@ export const MappingTable = ({
         newData.splice(index, 1, { ...item, ...row });
         setData(newData);
         setEditingKey("");
-        console.log(data);
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey("");
+        mapMappingtoJson(newData, index, allStandard);
+        //console.log(mapping)
       }
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
@@ -231,10 +257,20 @@ export const MappingTable = ({
 
   useEffect(() => {
     setData(standard);
+
   }, [standard]);
+
+  // useEffect(() => {
+  //   const mapping = mappingList
+  //   const clearedMapping = mapping.map_sub_standards = []
+  //   setMappingList(clearedMapping)
+  //   console.log('swap')
+  // }, [mappingList.main_std_id])
+
   useEffect(() => {
     setEditing(isEdit);
   }, [isEdit]);
+
 
   return (
     <Form form={form} component={false}>

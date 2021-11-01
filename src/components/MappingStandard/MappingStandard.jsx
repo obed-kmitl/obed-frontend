@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styles from "./MappingStandard.module.scss"
 import { Header, Body, Button, Select, Option, Collapse, Panel } from ".."
 import { Empty, Popconfirm, Typography } from "antd";
@@ -13,29 +12,25 @@ export const MappingStandard = ({ selectedCurriculum }) => {
         standardList,
         mainStdId,
         relativeStdId,
-        // mainStandard,
-        // relativeStandard,
         mapping,
+        setMapping,
         isEditing,
         setIsEditing,
         onMainSelectChange,
         onRelativeSelectChange,
         swapStandard,
-        handleSaveBtn
+        handleSaveBtn,
+        
     ] = useMappingStandard(selectedCurriculum)
-    
-    // console.log(mapping)
-    // console.log(mainStdId)
-    // console.log(relativeStdId)
-    // console.log(standardList.filter((e) => e.id === mainStdId))
+
 
     return (
         <div>
             <div className={styles.tabHead}>
                 <Header level={2}>Mapping Standard</Header>
                 {
-                !isEditing ? <Button onClick={() => setIsEditing(true)}>Edit</Button> 
-                :<Button type="primary" onClick={() => handleSaveBtn(false)}>Save</Button>
+                    !isEditing ? <Button onClick={() => setIsEditing(true)}>Edit</Button>
+                        : <Button type="primary" onClick={() => handleSaveBtn(false)}>Save</Button>
                 }
             </div>
             <div className={styles.content}>
@@ -52,7 +47,7 @@ export const MappingStandard = ({ selectedCurriculum }) => {
                             disabled={!isEditing}
                         >
                             {standardList.map((e) => (
-                                <Option value={e.id} key={e.id} disabled={relativeStdId && relativeStdId===e.id}>
+                                <Option value={e.id} key={e.id} disabled={relativeStdId && relativeStdId === e.id}>
                                     {e.standardTitle}
                                 </Option>
                             ))}
@@ -60,7 +55,6 @@ export const MappingStandard = ({ selectedCurriculum }) => {
                     </div>
                     <Popconfirm title="When swap Standard,All Mapping will reset" onConfirm={() => swapStandard()} >
                         <Typography.Link
-                            //onClick={() => swapStandard()}
                             disabled={!isEditing}
                         >
                             <SwapOutlined className={styles.swapIcon} />
@@ -99,6 +93,8 @@ export const MappingStandard = ({ selectedCurriculum }) => {
                                         relativeStandard={standardList.filter((e) => e.id === relativeStdId)[0]}
                                         isEdit={isEditing}
                                         mapping={mapping}
+                                        setMapping={setMapping}
+                                        allStandard={standardList}
                                     />
                                 </Panel>
                             )}

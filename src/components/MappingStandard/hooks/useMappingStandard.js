@@ -1,15 +1,15 @@
+import { message } from 'antd';
 import { useState, useEffect } from 'react'
 
 import httpClient from '../../../utils/httpClient';
 
 export const useMappingStandard = (selectedCurriculum) => {
     const [standardList, setStandardList] = useState([])
-
     const [mainStdId, setMainStdId] = useState();
     const [relativeStdId, setRelativeStdId] = useState()
-
     const [isEditing, setIsEditing] = useState(false)
     const [mapping, setMapping] = useState({})
+
 
     function filterMapStandard(currentStandard, currentMainSubStandardId, mapStandards, allStandards) {
         if (currentStandard.standard_id === mapStandards.main_std_id) {
@@ -30,7 +30,6 @@ export const useMappingStandard = (selectedCurriculum) => {
                 })
             )
 
-
             return mappedSubStandard
         }
 
@@ -41,7 +40,6 @@ export const useMappingStandard = (selectedCurriculum) => {
         return await httpClient
             .get(`/standard/getAllByCurriculum/${selectedCurriculum}`)
             .then((response) => {
-                console.log(mapStandards)
                 const mappedStandard = response?.data.data.map((std, index, allStandards) => {
                     return ({
                         id: std.standard_id,
@@ -64,7 +62,6 @@ export const useMappingStandard = (selectedCurriculum) => {
 
                 })
                 setStandardList(mappedStandard)
-                console.log(mappedStandard)
             })
             .catch((error) => {
                 console.log(error);
@@ -74,10 +71,24 @@ export const useMappingStandard = (selectedCurriculum) => {
         return httpClient
             .get(`/mapStandard/get/${selectedCurriculum}`)
             .then((response) => {
-                setMapping(response.data.data);
-                setMainStdId(response.data.data?.main_std_id || null);
-                setRelativeStdId(response.data.data?.relative_std_id || null);
-                return response.data.data
+                //console.log(response.data.data)
+                if (response.data.data !== undefined) {
+                    setMapping(response.data.data);
+                    setMainStdId(response.data.data?.main_std_id);
+                    setRelativeStdId(response.data.data?.relative_std_id);
+                    return response.data.data
+                }else{
+                    const noData =  
+                    {
+                        curriculum_id: selectedCurriculum,
+                        main_std_id: undefined,
+                        relative_std_id: undefined,
+                        map_sub_standards: []
+                    }
+                    setMapping(noData);
+                    setMainStdId(undefined);
+                    setRelativeStdId(undefined)
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -91,45 +102,51 @@ export const useMappingStandard = (selectedCurriculum) => {
 
 
     function onMainSelectChange(value) {
-        // const selected = standardList.filter((e) => e.id === value)
-        // console.log(selected)
-        // setMainStandard(selected);
         setMainStdId(value)
-        let newMapping = mapping
-        newMapping.main_std_id = value
-        setMapping(newMapping);
+        if (mapping !== undefined) {
+            let newMapping = mapping
+            newMapping.main_std_id = value
+            setMapping(newMapping);
+        }
+
 
     }
     function onRelativeSelectChange(value) {
-        // const selected = standardList.filter((e) => e.id === value)
-        // console.log(selected)
-        //setRelativeStandard(selected);
         setRelativeStdId(value)
-        let newMapping = mapping
-        newMapping.relative_std_id = value
-        setMapping(newMapping);
+        if (mapping !== undefined) {
+            let newMapping = mapping
+            newMapping.relative_std_id = value
+            setMapping(newMapping);
+        }
     }
     function swapStandard() {
         const tempM = mainStdId;
         const tempR = relativeStdId;
-        setMainStdId(relativeStdId);
-        setRelativeStdId(tempM)
 
         let newMapping = mapping
         newMapping.main_std_id = tempR
         newMapping.relative_std_id = tempM
         setMapping(newMapping);
 
+        setMainStdId(tempR);
+        setRelativeStdId(tempM)
+    
     }
-    function handleSaveBtn() {
-        //console.log(mainStandard)
-        setIsEditing(false)
+    async function handleSaveBtn() {
+        //console.log(mapping)
+        return await httpClient
+        .post(`/mapStandard/save`,mapping)
+        .then((response) => {
+            //console.log(response.data.data)
+            message.success("Save Mapping Successfully")
+            setIsEditing(false)
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     }
-
 
     useEffect(() => {
-        // fetchAllStandards();
-        // fetchMapping();
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedCurriculum]);
@@ -138,9 +155,8 @@ export const useMappingStandard = (selectedCurriculum) => {
         standardList,
         mainStdId,
         relativeStdId,
-        // mainStandard,
-        // relativeStandard,
         mapping,
+        setMapping,
         isEditing,
         setIsEditing,
         onMainSelectChange,

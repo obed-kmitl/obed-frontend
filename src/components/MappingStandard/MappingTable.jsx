@@ -66,6 +66,7 @@ export const MappingTable = ({
                   value={option.groupSubStdId}
                   title={option.standardNo + " " + option.standardName}
                   selectable={false}
+                  disabled={option.subStandard.length <=0}
                 >
                   {option.subStandard.map((item) => (
                     <TreeNode

@@ -73,9 +73,10 @@ export const useMappingStandard = (selectedCurriculum) => {
             .then((response) => {
                 //console.log(response.data.data)
                 if (response.data.data !== undefined) {
+                    console.log(response.data.data)
                     setMapping(response.data.data);
-                    setMainStdId(response.data.data?.main_std_id);
-                    setRelativeStdId(response.data.data?.relative_std_id);
+                    setMainStdId(response.data.data.main_std_id);
+                    setRelativeStdId(response.data.data.relative_std_id);
                     return response.data.data
                 }else{
                     const noData =  
@@ -126,14 +127,26 @@ export const useMappingStandard = (selectedCurriculum) => {
         let newMapping = mapping
         newMapping.main_std_id = tempR
         newMapping.relative_std_id = tempM
+        newMapping.map_sub_standards=[]
         setMapping(newMapping);
 
         setMainStdId(tempR);
-        setRelativeStdId(tempM)
+        setRelativeStdId(tempM);
+
+       
+        standardList.forEach(element => {
+            element.details.forEach(standard=>{
+                standard.subStandard.forEach(subStd=>{
+                    subStd.mapping=[]
+                })
+            })
+            
+        });
+
     
     }
     async function handleSaveBtn() {
-        //console.log(mapping)
+        console.log(mapping)
         return await httpClient
         .post(`/mapStandard/save`,mapping)
         .then((response) => {

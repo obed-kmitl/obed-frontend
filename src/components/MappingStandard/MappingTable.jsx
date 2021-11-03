@@ -24,6 +24,7 @@ export const MappingTable = ({
   const [editingKey, setEditingKey] = useState("");
   const [editing, setEditing] = useState(isEdit);
   const [mappingList, setMappingList] = useState(mapping)
+  console.log(mapping)
 
   const isEditing = (record) => record.subStandardNo === editingKey;
   const EditableCell = ({
@@ -223,14 +224,16 @@ export const MappingTable = ({
         relative_sub_std_id: parseInt(rss.split(".")[1])
       }
     })
-    //console.log(mapping)
+    console.log(mapping)
     let allMapping = mappingList
+    console.log(allMapping)
     const removedPrevMapping = allMapping.map_sub_standards.filter((mapping) => mapping.main_sub_std_id !== mainSubStandard)
     const addedNewMapping = [...removedPrevMapping, ...mapping]
 
     allMapping.map_sub_standards = addedNewMapping
 
     setMappingList(allMapping)
+    console.log(mappingList)
 
     return allMapping
   }

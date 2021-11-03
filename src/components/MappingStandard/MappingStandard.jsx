@@ -23,7 +23,7 @@ export const MappingStandard = ({ selectedCurriculum }) => {
         
     ] = useMappingStandard(selectedCurriculum)
 
-
+console.log(mapping)
     return (
         <div>
             <div className={styles.tabHead}>

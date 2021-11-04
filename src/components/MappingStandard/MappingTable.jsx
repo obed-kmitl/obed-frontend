@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {} from "..";
+import { } from "..";
 import { Form, Table, Popconfirm, Typography, TreeSelect, Tag } from "antd";
 import {
   EditOutlined,
@@ -16,15 +16,17 @@ export const MappingTable = ({
   standardNo,
   relativeStandard,
   isEdit,
+  mapping,
+  allStandard,
 }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(standard);
   const [editingKey, setEditingKey] = useState("");
-  // eslint-disable-next-line no-unused-vars
   const [editing, setEditing] = useState(isEdit);
+  const [mappingList, setMappingList] = useState(mapping)
+  console.log(mapping)
 
   const isEditing = (record) => record.subStandardNo === editingKey;
-
   const EditableCell = ({
     editing,
     dataIndex,
@@ -61,15 +63,16 @@ export const MappingTable = ({
             >
               {relativeStandard.details.map((option) => (
                 <TreeNode
-                  key={option.standardNo}
-                  value={option.standardNo}
+                  key={option.groupSubStdId}
+                  value={option.groupSubStdId}
                   title={option.standardNo + " " + option.standardName}
                   selectable={false}
+                  disabled={option.subStandard.length <=0}
                 >
                   {option.subStandard.map((item) => (
                     <TreeNode
-                      key={option.standardNo + "." + item.subStandardNo}
-                      value={option.standardNo + "." + item.subStandardNo}
+                      key={option.groupSubStdId + "." + item.subStandardId}
+                      value={option.groupSubStdId + "." + item.subStandardId}
                       title={
                         option.standardNo +
                         "." +
@@ -111,18 +114,37 @@ export const MappingTable = ({
       width: "400px",
       editable: true,
       render: (mapping) => {
-        return mapping.map((element) => (
-          <Tag
-            style={{
-              height: "36px",
-              lineHeight: "2.5",
-              fontSize: "14px",
-              margin: ".25rem",
-            }}
-          >
-            {element}
-          </Tag>
-        ));
+        return mapping.map((element) => {
+          //console.log(relativeStandard.details.filter((item) => item.groupSubStdId === parseInt(element.split(".")[0])).length > 0)
+          let renderTagNo = ""
+          if (relativeStandard.details.filter((item) => item.groupSubStdId === parseInt(element.split(".")[0])).length > 0) {
+            const stdNo =
+              relativeStandard.details
+                .filter((item) => item.groupSubStdId === parseInt(element.split(".")[0]))[0]
+                .standardNo
+            const subStdNo =
+              relativeStandard.details
+                .filter((item) => item.groupSubStdId === parseInt(element.split(".")[0]))[0]
+                .subStandard.filter((item) => item.subStandardId === parseInt(element.split(".")[1]))[0]
+                .subStandardNo
+            renderTagNo = stdNo + "." + subStdNo
+          } else {
+            renderTagNo = element
+          }
+          return (
+            <Tag
+              style={{
+                height: "36px",
+                lineHeight: "2.5",
+                fontSize: "14px",
+                margin: ".25rem",
+              }}
+            >
+              {renderTagNo}
+            </Tag>
+          )
+        }
+        );
       },
     },
     {
@@ -151,7 +173,7 @@ export const MappingTable = ({
           </span>
         ) : (
           <Typography.Link
-            disabled={editingKey !== "" && !isEdit}
+            disabled={editingKey !== "" || !editing}
             onClick={() => edit(record)}
             style={{
               fontSize: "14px",
@@ -190,12 +212,31 @@ export const MappingTable = ({
   const cancel = () => {
     setEditingKey("");
   };
-  useEffect(() => {
-    setData(standard);
-  }, [standard]);
-  useEffect(() => {
-    setEditing(isEdit);
-  }, [isEdit]);
+
+  function mapMappingtoJson(data, index) {
+
+    const mainSubStandard = data[index].subStandardId
+    const relativeSubStandard = data[index].mapping
+
+    const mapping = relativeSubStandard.map((rss) => {
+      return {
+        main_sub_std_id: mainSubStandard,
+        relative_sub_std_id: parseInt(rss.split(".")[1])
+      }
+    })
+    console.log(mapping)
+    let allMapping = mappingList
+    console.log(allMapping)
+    const removedPrevMapping = allMapping.map_sub_standards.filter((mapping) => mapping.main_sub_std_id !== mainSubStandard)
+    const addedNewMapping = [...removedPrevMapping, ...mapping]
+
+    allMapping.map_sub_standards = addedNewMapping
+
+    setMappingList(allMapping)
+    console.log(mappingList)
+
+    return allMapping
+  }
 
   const save = async (subStandardNo) => {
     try {
@@ -210,15 +251,30 @@ export const MappingTable = ({
         newData.splice(index, 1, { ...item, ...row });
         setData(newData);
         setEditingKey("");
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey("");
+        mapMappingtoJson(newData, index, allStandard);
+        //console.log(mapping)
       }
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
     }
   };
+
+  useEffect(() => {
+    setData(standard);
+
+  }, [standard]);
+
+  // useEffect(() => {
+  //   const mapping = mappingList
+  //   const clearedMapping = mapping.map_sub_standards = []
+  //   setMappingList(clearedMapping)
+  //   console.log('swap')
+  // }, [mappingList.main_std_id])
+
+  useEffect(() => {
+    setEditing(isEdit);
+  }, [isEdit]);
+
 
   return (
     <Form form={form} component={false}>

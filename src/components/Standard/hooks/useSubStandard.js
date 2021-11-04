@@ -48,7 +48,7 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
             if (isNewAdded) {
                 return await httpClient.post('/standard/createSubStandard', {
                     standard_id: stdId,
-                    group_sub_std_id: groupSubStdId,
+                    group_sub_std_id: parseInt(groupSubStdId),
                     order_number: parseInt(row.subStandardNo),
                     title: row.subStandardName
                 }).then((res) => {

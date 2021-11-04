@@ -107,7 +107,17 @@ export const useMappingStandard = (selectedCurriculum) => {
         if (mapping !== undefined) {
             let newMapping = mapping
             newMapping.main_std_id = value
+            newMapping.map_sub_standards=[]
             setMapping(newMapping);
+
+            standardList.forEach(element => {
+                element.details.forEach(standard=>{
+                    standard.subStandard.forEach(subStd=>{
+                        subStd.mapping=[]
+                    })
+                })
+                
+            });
         }
 
 
@@ -117,7 +127,17 @@ export const useMappingStandard = (selectedCurriculum) => {
         if (mapping !== undefined) {
             let newMapping = mapping
             newMapping.relative_std_id = value
+            newMapping.map_sub_standards=[]
             setMapping(newMapping);
+
+            standardList.forEach(element => {
+                element.details.forEach(standard=>{
+                    standard.subStandard.forEach(subStd=>{
+                        subStd.mapping=[]
+                    })
+                })
+                
+            });
         }
     }
     function swapStandard() {

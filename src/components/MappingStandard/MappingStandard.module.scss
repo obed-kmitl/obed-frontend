@@ -3,6 +3,11 @@
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 1rem;
+    .header {
+        display: flex;
+        align-items: center;
+    }
+
 }
 .content {
     width: 100%;

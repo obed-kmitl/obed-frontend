@@ -1,7 +1,10 @@
 import styles from "./MappingStandard.module.scss"
 import { Header, Body, Button, Select, Option, Collapse, Panel } from ".."
-import { Empty, Popconfirm, Typography } from "antd";
-import { SwapOutlined } from '@ant-design/icons';
+import { Empty, Popconfirm, Typography ,Tooltip} from "antd";
+import { 
+    SwapOutlined,
+    InfoCircleOutlined
+ } from '@ant-design/icons';
 import { MappingTable } from "./MappingTable";
 import { useMappingStandard } from "./hooks/useMappingStandard";
 
@@ -20,14 +23,17 @@ export const MappingStandard = ({ selectedCurriculum }) => {
         onRelativeSelectChange,
         swapStandard,
         handleSaveBtn,
-        
+
     ] = useMappingStandard(selectedCurriculum)
 
-console.log(mapping)
+    console.log(mapping)
     return (
         <div>
             <div className={styles.tabHead}>
-                <Header level={2}>Mapping Standard</Header>
+                <div className={styles.header}>
+                    <Header level={2}>Mapping Standard&nbsp;</Header>
+                    <Tooltip title="All mapping will reset when swap or change Standard"><InfoCircleOutlined/></Tooltip>
+                </div>
                 {
                     !isEditing ? <Button onClick={() => setIsEditing(true)}>Edit</Button>
                         : <Button type="primary" onClick={() => handleSaveBtn(false)}>Save</Button>

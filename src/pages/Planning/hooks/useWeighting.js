@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { message } from 'antd'
+import { message,Form } from 'antd'
+
 
 const weighting = [
     {
@@ -27,14 +28,13 @@ const weighting = [
         catagory: "Quiz",
         weight: 5
     },
-
-
 ]
 
 export const useWeighting = () => {
     const [weightingList, setWeightingList] = useState(weighting)
     const [isEditing, setIsEditing] = useState(false)
     const [editingList, setEditingList] = useState()
+    const [form] = Form.useForm()
 
     function handleEditBtn() {
         setIsEditing(true)
@@ -42,10 +42,11 @@ export const useWeighting = () => {
     }
 
     function handleAddWeighting() {
+
         setEditingList([
             ...editingList,
             {
-                id: 0,
+                id: Date.now(),
                 catagory: undefined,
                 weight: undefined
             }
@@ -56,27 +57,36 @@ export const useWeighting = () => {
         console.log(editingList.filter((e) => e.id !== id))
         setEditingList(editingList.filter((e) => e.id !== id))
     }
-    function save(value) {
-        // const newWeighting = value.map((item)=>
-        // ({
-        //     id:1,
-            
-        // })
-        // )
-      
-        console.log(Object.entries(value))
-        
-        
-
-        // if(value.forEach((element) =>  {sum +=element.weight; return sum;})>100){
-        //     message.error(sum)
-        // }else{
-        //     message.success(sum)
-        // }
-        // setIsEditing(false);
+    function save(values) {
+        console.log(values)
+        let newWeighting = []
+        for (const [key, value] of Object.entries(values)) {
+            console.log(`${key}: ${value.id} : ${value.catagory} : ${value.weight}`);
+            newWeighting = [...newWeighting, {
+                id: value.id,
+                catagory: value.catagory,
+                weight: value.weight
+            }]
+        }
+        let allWeight = 0
+        newWeighting.map((e) => e.weight).forEach((w) => {
+            allWeight = allWeight + w
+        })
+        console.log(allWeight)
+        if(allWeight === 100) {
+            setWeightingList(newWeighting)      
+            message.success("Score Weighting changed succesfully")  
+            setIsEditing(false);    
+        }else{
+            message.error("Total Weight must be 100%")  
+        }
+    }
+    function cancel(){
+        setIsEditing(false);
+        form.resetFields()
     }
 
-    return [weightingList, isEditing, editingList, handleEditBtn, handleAddWeighting, removeWeighting, save]
+    return [form, weightingList, isEditing, editingList, handleEditBtn, handleAddWeighting, removeWeighting, save, cancel]
 
 
 }

@@ -1,12 +1,13 @@
-//import { useParams } from "react-router-dom";
+
 import styles from "../Planning/Planning.module.scss"
 import { Helmet } from "react-helmet";
 import { Header, Button, Body, Input } from "../../components";
-import { Divider, Empty, InputNumber, Form, Popconfirm, Typography } from "antd";
+import { Divider, Empty, InputNumber, Form, Popconfirm, Typography, Tooltip } from "antd";
 import { useParams } from "react-router-dom";
 import { useWeighting } from "./hooks/useWeighting";
 import {
     DeleteOutlined,
+    InfoCircleOutlined
 } from "@ant-design/icons";
 
 const WeightingCard = ({ data }) => {
@@ -23,9 +24,8 @@ const WeightingCard = ({ data }) => {
 
 export const Planning = () => {
     let { sectionId } = useParams();
-    const [weightingList, isEditing, editingList, handleEditBtn, handleAddWeighting, removeWeighting, save] = useWeighting()
-    const [form] = Form.useForm()
-
+    const [form, weightingList, isEditing, editingList, handleEditBtn, handleAddWeighting, removeWeighting, save ,cancel] = useWeighting()
+  
     return (
         <div className={styles.planning}>
             <Helmet>
@@ -37,7 +37,10 @@ export const Planning = () => {
             <Divider />
             <div className={styles.details}>
                 <div className={styles.flexrowSpace}>
-                    <Header level={2}>Score Weighting</Header>
+                    <div className={styles.flexrow}>
+                    <Header level={2}>Score Weighting&nbsp;</Header>
+                    <Tooltip title =" Total score must be 100%"> <InfoCircleOutlined/></Tooltip>
+                    </div>
                     {isEditing ?
                         <Button onClick={() => handleAddWeighting()}>Add</Button>
                         :
@@ -60,7 +63,6 @@ export const Planning = () => {
                                 name="score weighting"
                                 layout="horizontal"
                                 onFinish={save}
-                                // onFinishFailed={onFinishFailed}
                                 autoComplete="off"
                                 requiredMark={false}
                                 initialValue={[]}
@@ -109,7 +111,7 @@ export const Planning = () => {
                                 )}
                                 <Form.Item>
                                     <div className={styles.btnGroup}>
-                                        <Button>Cancel</Button>
+                                        <Button onClick={()=>cancel()}>Cancel</Button>
                                         <Button type="primary" htmlType="submit">Save</Button>
                                     </div>
                                 </Form.Item>

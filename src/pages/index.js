@@ -10,3 +10,4 @@ export { Student } from "./Student/Student";
 export { NotFound } from "./NotFound/NotFound";
 export { Overview } from './Overview/Overview'
 export { Planning } from'./Planning/Planning'
+export { Activity } from'./Activity/Activity'

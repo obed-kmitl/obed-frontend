@@ -74,6 +74,7 @@ export const LearningOutcome = () => {
   const [page, setPage] = useState(1);
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
+  const [addVisible, setAddVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -84,6 +85,11 @@ export const LearningOutcome = () => {
       description: desc,
       duration: type === "error" ? 15 : 5,
     });
+  }
+
+  function handleSubmit(values) {
+    console.log("Recieved values of form: ", values);
+    setConfirmLoading(true);
   }
 
   function handleEdit(values) {
@@ -114,6 +120,7 @@ export const LearningOutcome = () => {
     editForm.resetFields();
     setSelectedData(null);
     setEditVisible(false);
+    setAddVisible(false);
     // setMessage("");
   }
 
@@ -137,7 +144,7 @@ export const LearningOutcome = () => {
       <div className={styles.head}>
         <Header level={1}>Course Learning Outcome</Header>
         <div>
-          <Button>Add</Button>
+          <Button onClick={() => setAddVisible(true)}>Add</Button>
         </div>
       </div>
       <Divider />
@@ -268,11 +275,69 @@ export const LearningOutcome = () => {
         />
       </Table>
       <Modal
+        title="Add Learning Outcome"
+        visible={addVisible}
+        okText="Add"
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              handleSubmit(values);
+            })
+            .catch((info) => {
+              console.log("Validate Failed", info);
+            });
+        }}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        okButtonProps={{ htmlType: "submit" }}
+        maskClosable={false}
+        centered
+      >
+        {/* {message !== "" && (
+          <Alert
+            style={{ marginBottom: "1rem" }}
+            message={message}
+            type="error"
+            showIcon
+          />
+        )} */}
+        <Form
+          form={form}
+          name="lo"
+          layout="vertical"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+          requiredMark={"required"}
+        >
+          <Form.Item
+            label="Learning Outcome"
+            name="title"
+            rules={[
+              { required: true, message: "Please input learning outcome!" },
+            ]}
+          >
+            <TextArea rows={4} placeholder="Description" />
+          </Form.Item>
+          {/* #TODO : Add required to Select PLOs */}
+          <Form.Item label="PLOs" name="plo">
+            <Select mode="multiple" placeholder="PLO">
+              {mockPLO.map((e) => (
+                <Option value={e.desc} key={e.id}>
+                  {e.desc}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
         title="Edit Learning Outcome"
         visible={editVisible}
         okText="Save"
         onOk={() => {
-          form
+          editForm
             .validateFields()
             .then((values) => {
               handleEdit(values);

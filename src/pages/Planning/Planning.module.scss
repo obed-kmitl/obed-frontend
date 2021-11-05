@@ -1,0 +1,46 @@
+@import "../../styles/color.scss";
+
+.planning {
+    .head {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+}
+
+.flexrowSpace{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.flexrow{
+    display: flex;
+    align-items: center;
+}
+.btnGroup{
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    Button{
+        width: 80px;
+    }
+
+}
+.cardList{
+    margin: 2rem 0;
+   
+}
+.card{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid $color-grey-100;
+    padding:0.5rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+    gap: 0.5rem;
+
+}

@@ -98,7 +98,7 @@ const Navbar = () => {
               Student
             </NavLink>
             <NavLink
-              to={`/${section}/plan`}
+              to={`/${section}/planning`}
               className={styles.link}
               activeClassName={styles.activeLink}
             >

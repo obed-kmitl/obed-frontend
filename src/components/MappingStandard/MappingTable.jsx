@@ -40,7 +40,6 @@ export const MappingTable = ({
       <td {...restProps}>
         {editing ? (
           <Form.Item
-            hasFeedback
             name={dataIndex}
             style={{
               margin: 0,
@@ -57,7 +56,6 @@ export const MappingTable = ({
               style={{ width: "380px" }}
               dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
               placeholder="Please select relative standard"
-              allowClear
               treeCheckable={true}
               showCheckedStrategy="SHOW_CHILD"
             >

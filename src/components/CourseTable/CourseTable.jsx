@@ -33,6 +33,7 @@ export const CourseTable = ({ selectedCur }) => {
     createCourse,
     updateCourse,
     removeCourse,
+    getPlo,
     setMessage,
     message,
   } = useCourse();
@@ -45,6 +46,7 @@ export const CourseTable = ({ selectedCur }) => {
   const [fetchCourse, setFetchCourse] = useState([]);
   const [filteredCourse, setFilteredCourse] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [ploList, setPloList] = useState([]);
 
   function openNotificationWithIcon(type, message, desc) {
     notification[type]({
@@ -79,17 +81,16 @@ export const CourseTable = ({ selectedCur }) => {
         newCourseForm.resetFields();
         openNotificationWithIcon(
           "success",
-          values.course_id + " created",
+          values.course_number + " created",
           values.course_name_en
         );
+        setNewCourseVisible(false);
       })
       .catch((message) => {
-        setConfirmLoading(false);
         openNotificationWithIcon("error", "Cannot create course", message);
       })
       .finally(() => {
         setConfirmLoading(false);
-        setNewCourseVisible(false);
       });
   }
 
@@ -116,6 +117,13 @@ export const CourseTable = ({ selectedCur }) => {
       .catch((message) => {
         openNotificationWithIcon("error", "Cannot fetch course data", message);
       });
+    getPlo(selectedCur.curriculum_id)
+      .then((data) => {
+        setPloList(data);
+      })
+      .catch((message) => {
+        openNotificationWithIcon("error", "Cannot fetch plo data", message);
+      });
   }
 
   useEffect(() => {
@@ -124,36 +132,6 @@ export const CourseTable = ({ selectedCur }) => {
   }, [selectedCur]);
 
   const isEditing = (record) => record.course_id === editingKey;
-  const mockPLO = [
-    {
-      id: 1.1,
-      desc: "PLO 1.1",
-    },
-    {
-      id: 1.2,
-      desc: "PLO 1.2",
-    },
-    {
-      id: 1.3,
-      desc: "PLO 1.3",
-    },
-    {
-      id: 2.1,
-      desc: "PLO 2.1",
-    },
-    {
-      id: 2.2,
-      desc: "PLO 2.1",
-    },
-    {
-      id: 2.3,
-      desc: "PLO 2.1",
-    },
-    {
-      id: 2.4,
-      desc: "PLO 2.1",
-    },
-  ];
   const EditableCell = ({
     editing,
     dataIndex,
@@ -166,12 +144,21 @@ export const CourseTable = ({ selectedCur }) => {
   }) => {
     let inputNode;
     switch (inputType) {
-      case "plo":
+      case "plos":
         inputNode = (
-          <Select mode="multiple" showSearch placeholder="Select PLO">
-            {mockPLO.map((ele, i) => (
-              <Option key={i} value={ele.id}>
-                {ele.id}
+          <Select
+            mode="multiple"
+            showSearch
+            placeholder="Select PLO"
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {ploList.map((ele) => (
+              <Option key={ele.sub_std_id} value={ele.sub_std_id}>
+                {ele.group_sub_order_number + "." + ele.sub_order_number}
               </Option>
             ))}
           </Select>
@@ -179,13 +166,21 @@ export const CourseTable = ({ selectedCur }) => {
         break;
       case "prereq":
         inputNode = (
-          <Select showSearch placeholder="Select Prerequisite Course">
+          <Select
+            showSearch
+            placeholder="Select Prerequisite Course"
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+          >
             <Option value={null}>None</Option>
             {fetchCourse.map((ele) => {
               if (ele.course_id !== editingKey)
                 return (
                   <Option key={ele.course_id} value={ele.course_id}>
-                    {ele.course_id}&nbsp;{ele.course_name_en}
+                    {ele.course_number + " " + ele.course_name_en}
                   </Option>
                 );
               return null;
@@ -235,8 +230,14 @@ export const CourseTable = ({ selectedCur }) => {
   };
 
   const edit = (record) => {
-    form.setFieldsValue({
+    const mapEditCourseData = {
       ...record,
+      relative_standards: record.relative_standards.map(
+        (relative_standard) => relative_standard.sub_std_id
+      ),
+    };
+    form.setFieldsValue({
+      ...mapEditCourseData,
     });
     setEditingKey(record.course_id);
   };
@@ -253,7 +254,7 @@ export const CourseTable = ({ selectedCur }) => {
           getCourses();
           openNotificationWithIcon(
             "success",
-            "Changes to " + data.course_id + " was saved",
+            "Changes to " + data.course_number + " was saved",
             data.course_name_en
           );
         })
@@ -271,16 +272,12 @@ export const CourseTable = ({ selectedCur }) => {
   };
 
   const remove = (record) => {
-    // let newData = [...fetchCourse];
-    // newData = newData
-    //   .filter((ele) => ele.course_id !== record.course_id)
-    //   .filter((ele) => ele.pre_course_id !== record.course_id);
     removeCourse(record.course_id)
       .then(() => {
         getCourses();
         openNotificationWithIcon(
           "success",
-          record.course_id + " was removed",
+          record.course_number + " was removed",
           record.course_name_en
         );
       })
@@ -296,11 +293,11 @@ export const CourseTable = ({ selectedCur }) => {
   const columns = [
     {
       title: "Course ID",
-      dataIndex: "course_id",
-      key: "course_id",
+      dataIndex: "course_number",
+      key: "course_number",
       width: "12%",
       editable: true,
-      sorter: (a, b) => a.course_id - b.course_id,
+      sorter: (a, b) => a.course_number - b.course_number,
       defaultSortOrder: "ascend",
     },
     {
@@ -339,34 +336,34 @@ export const CourseTable = ({ selectedCur }) => {
         showTitle: false,
       },
       editable: true,
-      render: (text) => (
-        <Tooltip
-          placement="topLeft"
-          className="prereq-data"
-          title={
-            text &&
-            text +
-              " " +
-              fetchCourse.find((ele) => text === ele.course_id)?.course_name_en
-          }
-        >
-          {text
-            ? text +
-              " " +
-              fetchCourse.find((ele) => text === ele.course_id)?.course_name_en
-            : "-"}
-        </Tooltip>
-      ),
+      render: (text) => {
+        const obj = fetchCourse.find((ele) => text === ele.course_id);
+        return (
+          <Tooltip
+            placement="topLeft"
+            className="prereq-data"
+            title={obj && obj.course_number + " " + obj.course_name_en}
+          >
+            {obj ? obj.course_number + " " + obj.course_name_en : "-"}
+          </Tooltip>
+        );
+      },
     },
     {
       title: "PLO",
-      dataIndex: "plo",
+      dataIndex: "relative_standards",
       width: "15%",
       editable: true,
       render: (plo) => (
         <>
           {plo?.map((ele) => {
-            return <Tag key={ele}>{ele}</Tag>;
+            return (
+              <Tooltip title={ele.sub_title} key={ele.sub_std_id}>
+                <Tag key={ele.sub_std_id}>
+                  {ele.group_sub_order_number + "." + ele.sub_order_number}
+                </Tag>
+              </Tooltip>
+            );
           })}
         </>
       ),
@@ -407,7 +404,7 @@ export const CourseTable = ({ selectedCur }) => {
             </Tooltip>
             <Tooltip title="Delete">
               <Popconfirm
-                title="Sure to delete? This may also delete course that prerequire this course."
+                title="Sure to delete?"
                 onConfirm={() => remove(record)}
               >
                 <Typography.Link
@@ -433,12 +430,12 @@ export const CourseTable = ({ selectedCur }) => {
       onCell: (record) => ({
         record,
         inputType:
-          col.dataIndex === "plo"
-            ? "plo"
+          col.dataIndex === "relative_standards"
+            ? "plos"
             : col.dataIndex === "pre_course_id"
             ? "prereq"
-            : col.dataIndex === "course_id"
-            ? "course_id"
+            : col.dataIndex === "course_number"
+            ? "course_number"
             : "text",
         dataIndex: col.dataIndex,
         title: col.title,
@@ -446,6 +443,7 @@ export const CourseTable = ({ selectedCur }) => {
       }),
     };
   });
+
   return (
     <>
       <div className={styles.tabHead}>
@@ -520,12 +518,14 @@ export const CourseTable = ({ selectedCur }) => {
         >
           <Form.Item
             label="Course ID"
-            name="course_id"
+            name="course_number"
             rules={[
               { required: true, message: "Please input course id!" },
               {
                 validator: (rule, value, callback) => {
-                  const alreadyExistNo = fetchCourse.map((e) => e.course_id);
+                  const alreadyExistNo = fetchCourse.map(
+                    (e) => e.course_number
+                  );
                   if (alreadyExistNo.includes(value)) {
                     return Promise.reject("Already exist!");
                   } else if (value.length !== 8) {
@@ -583,13 +583,35 @@ export const CourseTable = ({ selectedCur }) => {
               },
             ]}
           >
-            <Input placeholder="Prerequisite Course ID" />
+            <Select
+              showSearch
+              placeholder="Prerequisite Course ID"
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              {fetchCourse.map((e) => (
+                <Option value={e.course_id} key={e.course_id}>
+                  {e.course_number + " " + e.course_name_en}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
-          <Form.Item label="PLOs" name="plo">
-            <Select mode="multiple" placeholder="PLO">
-              {mockPLO.map((e) => (
-                <Option value={e.id} key={e.id}>
-                  {e.id}
+          <Form.Item label="PLOs" name="relative_standards" required>
+            <Select
+              mode="multiple"
+              placeholder="PLO"
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              {ploList.map((e) => (
+                <Option value={e.sub_std_id} key={e.sub_std_id}>
+                  {e.group_sub_order_number + "." + e.sub_order_number}
                 </Option>
               ))}
             </Select>

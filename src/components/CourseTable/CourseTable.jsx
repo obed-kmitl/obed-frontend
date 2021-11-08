@@ -397,7 +397,7 @@ export const CourseTable = ({ selectedCur }) => {
               <Typography.Link
                 disabled={editingKey !== ""}
                 onClick={() => edit(record)}
-                style={{ color: "#009FC7", fontSize: "20px" }}
+                style={{ fontSize: "20px" }}
               >
                 <EditOutlined />
               </Typography.Link>
@@ -409,7 +409,8 @@ export const CourseTable = ({ selectedCur }) => {
               >
                 <Typography.Link
                   disabled={editingKey !== ""}
-                  style={{ color: "#C73535", fontSize: "20px" }}
+                  style={{ fontSize: "20px" }}
+                  type="danger"
                 >
                   <DeleteOutlined />
                 </Typography.Link>
@@ -450,11 +451,17 @@ export const CourseTable = ({ selectedCur }) => {
         <Header level={2}>Course</Header>
         <div>
           <Input search placeholder="Search" onSearch={search} allowClear />
-          <Button onClick={() => setImportVisible(true)}>Import</Button>
+          <Button
+            onClick={() => setImportVisible(true)}
+            disabled={editingKey !== ""}
+          >
+            Import
+          </Button>
           <Button
             onClick={() => {
               setNewCourseVisible(true);
             }}
+            disabled={editingKey !== ""}
           >
             New
           </Button>

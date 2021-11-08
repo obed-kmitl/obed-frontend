@@ -31,7 +31,7 @@ const weighting = [
 ]
 
 export const useWeighting = () => {
-    const [weightingList, setWeightingList] = useState(weighting)
+    const [weightingList, setWeightingList] = useState([])
     const [isEditing, setIsEditing] = useState(false)
     const [editingList, setEditingList] = useState()
     const [form] = Form.useForm()
@@ -42,7 +42,7 @@ export const useWeighting = () => {
     }
 
     function handleAddWeighting() {
-
+        console.log(editingList)
         setEditingList([
             ...editingList,
             {

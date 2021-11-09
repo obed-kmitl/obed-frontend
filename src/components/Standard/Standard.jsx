@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Header, Button, Input, Collapse, Panel, Body } from "..";
 import { Form, Popconfirm, Typography, Modal, InputNumber, Upload, message, Divider, Empty } from 'antd'
 import {
@@ -57,6 +58,9 @@ export const Standard = ({ selectedCurriculum }) => {
       }
     }
   };
+  useEffect(() => {
+    console.log(standard)
+  }, [standard])
 
   return (
     <div>
@@ -67,8 +71,10 @@ export const Standard = ({ selectedCurriculum }) => {
         </div>
       </div>
       <Collapse accordion collapsible={isEditing && "disabled"}>
-        {standard.map((item, index) =>
-          <Panel
+        {standard.map((item, index) => {
+          //console.log(item)
+          return <Panel
+            key = {"standard "+index}
             header={
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 {editingTitleIndex === index && isEditing ?
@@ -138,15 +144,16 @@ export const Standard = ({ selectedCurriculum }) => {
                 }
               </div>
             }
-            key={index}
           >
             <div className={styles.topRightBtn} >
               <Button onClick={() => handleImportBtnClick(index)}>Import</Button>
               <Button onClick={() => handleAddStdBtn(index)}>Add</Button>
             </div>
             <Collapse accordion>
-              {item.details.map((ele, i) =>
-                <Panel
+              {item.details.map((ele, i) => {
+                //console.log(ele)
+                return <Panel
+                  key={"Groupsub "+i}
                   header={
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                       <div style={{ width: "100%", display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -241,13 +248,22 @@ export const Standard = ({ selectedCurriculum }) => {
                         </div>
                       }
                     </div>}
-                  key={i}
+                 
                 >
-                  <StandardTable standard={ele.subStandard} standardNo={ele.standardNo} groupSubStdId={ele.groupSubStdId} stdId={item.id} />
+                  <StandardTable
+                    standard={ele.subStandard}
+                    standardNo={ele.standardNo}
+                    groupSubStdId={ele.groupSubStdId}
+                    stdId={item.id}
+                    allStandard={standard}
+                    setAllStandard={setStandard}
+                    key={"table"+" "+ele.subStandardId}
+                  />
                 </Panel>
+              }
               )}</Collapse>
           </Panel>
-        )}
+        })}
       </Collapse>
       <Modal
         title="Create New Standard"

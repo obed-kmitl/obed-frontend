@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Form } from 'antd'
 import httpClient from "../../../utils/httpClient";
 
-export const useSubStandard = (standard, groupSubStdId, stdId) => {
+export const useSubStandard = (standard, groupSubStdId, stdId,allStandard,setAllStandard) => {
+    //console.log(allStandard)
     const [form] = Form.useForm();
     const [data, setData] = useState(standard);
     const [editingKey, setEditingKey] = useState("");
@@ -62,6 +63,14 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
                     const item = newData[index];
                     newData.splice(index, 1, { ...item, ...newSubStandard });
                     setData(newData);
+
+                    let newAllStandard = [...allStandard]
+                    const standardIndex = newAllStandard.findIndex((item)=>stdId===item.id)
+                    const groupSubStdIndex = newAllStandard[standardIndex].details.findIndex((item)=>groupSubStdId === item.groupSubStdId)  
+                    newAllStandard[standardIndex].details[groupSubStdIndex].subStandard = newData 
+                    //console.log(newAllStandard)  
+                    setAllStandard(newAllStandard)
+
                     setEditingKey("");
                     setIsNewAdded(false);
                 }).catch((err) => console.log(err))
@@ -74,22 +83,15 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
                     newData.splice(index, 1, { ...item, ...row });
                     setData(newData);
                     setEditingKey("");
+
+                    let newAllStandard = [...allStandard]
+                    const standardIndex = newAllStandard.findIndex((item)=>stdId===item.id)
+                    const groupSubStdIndex = newAllStandard[standardIndex].details.findIndex((item)=>groupSubStdId === item.groupSubStdId)  
+                    newAllStandard[standardIndex].details[groupSubStdIndex].subStandard = newData 
+                    //console.log(newAllStandard)  
+                    setAllStandard(newAllStandard)
                 })
             }
-            // if (index > -1) {
-            //     const item = newData[index];
-            //     newData.splice(index, 1, { ...item, ...row });
-            //     setData(newData);
-            //     setEditingKey("");
-            //     console.log("a")
-            // } 
-            // else {
-            //     newData.push(row);
-            //     setData(newData);
-            //     setEditingKey("");
-            //     console.log("b")
-            // }
-
         } catch (errInfo) {
             console.log("Validate Failed:", errInfo);
         }
@@ -100,6 +102,13 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
         .delete(`/standard/removeSubStandard/${record.subStandardId}`)
         .then(()=>{
             setData(data.filter((standard) => standard.subStandardNo !== record.subStandardNo));
+
+            let newAllStandard = [...allStandard]
+            const standardIndex = newAllStandard.findIndex((item)=>stdId===item.id)
+            const groupSubStdIndex = newAllStandard[standardIndex].details.findIndex((item)=>groupSubStdId === item.groupSubStdId)  
+            newAllStandard[standardIndex].details[groupSubStdIndex].subStandard = data 
+            //console.log(newAllStandard)  
+            setAllStandard(newAllStandard)
         })
         .catch((err)=>{
             console.log(err)

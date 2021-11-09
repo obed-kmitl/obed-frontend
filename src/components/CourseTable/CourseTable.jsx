@@ -109,6 +109,16 @@ export const CourseTable = ({ selectedCur }) => {
     console.log("Failed:", errorInfo);
   }
 
+  function fetchPlo() {
+    getPlo(selectedCur.curriculum_id)
+      .then((data) => {
+        setPloList(data);
+      })
+      .catch((message) => {
+        openNotificationWithIcon("error", "Cannot fetch plo data", message);
+      });
+  }
+
   function getCourses() {
     getCourseByCurriculum(selectedCur.curriculum_id)
       .then((data) => {
@@ -117,13 +127,7 @@ export const CourseTable = ({ selectedCur }) => {
       .catch((message) => {
         openNotificationWithIcon("error", "Cannot fetch course data", message);
       });
-    getPlo(selectedCur.curriculum_id)
-      .then((data) => {
-        setPloList(data);
-      })
-      .catch((message) => {
-        openNotificationWithIcon("error", "Cannot fetch plo data", message);
-      });
+    fetchPlo();
   }
 
   useEffect(() => {
@@ -396,7 +400,9 @@ export const CourseTable = ({ selectedCur }) => {
             <Tooltip title="Edit">
               <Typography.Link
                 disabled={editingKey !== ""}
-                onClick={() => edit(record)}
+                onClick={() => {
+                  edit(record);
+                }}
                 style={{ fontSize: "20px" }}
               >
                 <EditOutlined />

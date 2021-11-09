@@ -108,10 +108,8 @@ export const useStandard = (selectedCurriculum) => {
                             subStandardName: subStd.title,
                         }))
                     }))
-                    //.sort(({standardNo:firstStandardNo},{standardNo:secondStandardNo})=> firstStandardNo - secondStandardNo)
                 }))
                 setStandard(receivedStandard)
-                console.log(receivedStandard)
             })
             .catch((error) => {
                 console.log(error);
@@ -217,7 +215,6 @@ export const useStandard = (selectedCurriculum) => {
                     },
                     ...prev.slice(i + 1)]
             });
-            console.log(standard)
             setAddingStandardId(null)
             setAddStdVisible(false);
         }).catch((error) => {

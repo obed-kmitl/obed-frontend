@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Header, Button, Input, Collapse, Panel, Body } from "..";
 import { Form, Popconfirm, Typography, Modal, InputNumber, Upload, message, Divider, Empty } from 'antd'
 import {
@@ -58,9 +57,6 @@ export const Standard = ({ selectedCurriculum }) => {
       }
     }
   };
-  useEffect(() => {
-    console.log(standard)
-  }, [standard])
 
   return (
     <div>
@@ -72,7 +68,6 @@ export const Standard = ({ selectedCurriculum }) => {
       </div>
       <Collapse accordion collapsible={isEditing && "disabled"}>
         {standard.map((item, index) => {
-          //console.log(item)
           return <Panel
             key = {"standard "+index}
             header={
@@ -151,7 +146,7 @@ export const Standard = ({ selectedCurriculum }) => {
             </div>
             <Collapse accordion>
               {item.details.map((ele, i) => {
-                //console.log(ele)
+              
                 return <Panel
                   key={"Groupsub "+i}
                   header={
@@ -178,7 +173,6 @@ export const Standard = ({ selectedCurriculum }) => {
                                   {
                                     validator: (rule, value, callback) => {
                                       const alreadyExistNo = standard[index].details.map((e) => e.standardNo).filter((e) => e !== ele.standardNo)
-                                      console.log(alreadyExistNo)
                                       if (alreadyExistNo.includes(value)) {
                                         return Promise.reject("Already exist!")
                                       }
@@ -257,7 +251,7 @@ export const Standard = ({ selectedCurriculum }) => {
                     stdId={item.id}
                     allStandard={standard}
                     setAllStandard={setStandard}
-                    key={"table"+" "+ele.subStandardId}
+                    key={"table "+ele.subStandardId}
                   />
                 </Panel>
               }
@@ -338,7 +332,6 @@ export const Standard = ({ selectedCurriculum }) => {
               {
                 validator: (rule, value, callback) => {
                   const alreadyExistNo = standard[addingStandardId].details.map((e) => e.standardNo)
-                  console.log(alreadyExistNo)
                   if (alreadyExistNo.includes(value)) {
                     return Promise.reject("Already exist!")
                   }

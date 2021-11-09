@@ -10,15 +10,13 @@ import {
   SaveOutlined,
   CloseCircleTwoTone,
 } from '@ant-design/icons';
-
 import styles from "./Standard.module.scss";
 import { useSubStandard } from './hooks/useSubStandard'
 
 export const StandardTable = ({ standard = [], standardNo, groupSubStdId, stdId ,allStandard,setAllStandard,key}) => {
 
-  const [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection] = useSubStandard(standard, groupSubStdId, stdId,allStandard,setAllStandard)
+  const [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection] = useSubStandard(standard,groupSubStdId, stdId,allStandard,setAllStandard)
 
- // console.log(data)
   const isEditing = (record) => record.subStandardNo === editingKey;
   
   const EditableCell = ({

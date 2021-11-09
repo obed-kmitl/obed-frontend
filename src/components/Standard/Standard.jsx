@@ -67,8 +67,9 @@ export const Standard = ({ selectedCurriculum }) => {
         </div>
       </div>
       <Collapse accordion collapsible={isEditing && "disabled"}>
-        {standard.map((item, index) =>
-          <Panel
+        {standard.map((item, index) => {
+          return <Panel
+            key = {"standard "+index}
             header={
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 {editingTitleIndex === index && isEditing ?
@@ -138,15 +139,16 @@ export const Standard = ({ selectedCurriculum }) => {
                 }
               </div>
             }
-            key={index}
           >
             <div className={styles.topRightBtn} >
               <Button onClick={() => handleImportBtnClick(index)}>Import</Button>
               <Button onClick={() => handleAddStdBtn(index)}>Add</Button>
             </div>
             <Collapse accordion>
-              {item.details.map((ele, i) =>
-                <Panel
+              {item.details.map((ele, i) => {
+              
+                return <Panel
+                  key={"Groupsub "+i}
                   header={
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                       <div style={{ width: "100%", display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -171,7 +173,6 @@ export const Standard = ({ selectedCurriculum }) => {
                                   {
                                     validator: (rule, value, callback) => {
                                       const alreadyExistNo = standard[index].details.map((e) => e.standardNo).filter((e) => e !== ele.standardNo)
-                                      console.log(alreadyExistNo)
                                       if (alreadyExistNo.includes(value)) {
                                         return Promise.reject("Already exist!")
                                       }
@@ -241,13 +242,22 @@ export const Standard = ({ selectedCurriculum }) => {
                         </div>
                       }
                     </div>}
-                  key={i}
+                 
                 >
-                  <StandardTable standard={ele.subStandard} standardNo={ele.standardNo} groupSubStdId={ele.groupSubStdId} stdId={item.id} />
+                  <StandardTable
+                    standard={ele.subStandard}
+                    standardNo={ele.standardNo}
+                    groupSubStdId={ele.groupSubStdId}
+                    stdId={item.id}
+                    allStandard={standard}
+                    setAllStandard={setStandard}
+                    key={"table "+ele.subStandardId}
+                  />
                 </Panel>
+              }
               )}</Collapse>
           </Panel>
-        )}
+        })}
       </Collapse>
       <Modal
         title="Create New Standard"
@@ -322,7 +332,6 @@ export const Standard = ({ selectedCurriculum }) => {
               {
                 validator: (rule, value, callback) => {
                   const alreadyExistNo = standard[addingStandardId].details.map((e) => e.standardNo)
-                  console.log(alreadyExistNo)
                   if (alreadyExistNo.includes(value)) {
                     return Promise.reject("Already exist!")
                   }

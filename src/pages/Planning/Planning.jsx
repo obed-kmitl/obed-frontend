@@ -25,7 +25,7 @@ const WeightingCard = ({ data }) => {
 export const Planning = () => {
     let { sectionId } = useParams();
     const [form, weightingList, isEditing, editingList, handleEditBtn, handleAddWeighting, removeWeighting, save ,cancel] = useWeighting()
-  
+    console.log(weightingList)
     return (
         <div className={styles.planning}>
             <Helmet>
@@ -47,7 +47,7 @@ export const Planning = () => {
                         <Button onClick={() => handleEditBtn()}>Edit</Button>
                     }
                 </div>
-                {weightingList === undefined ?
+                {weightingList.length === 0 && editingList === undefined ?
                     <div>
                         <Empty
                             style={{ margin: "100px", color: "#c3c3c4", fontSize: "20px", fontWeight: "500" }}
@@ -79,7 +79,7 @@ export const Planning = () => {
                                             style={{ marginBottom: "0", width: "100%" }}
                                             initialValue={item.catagory}
                                             name={[item.id, "catagory"]}
-                                            rules={[{ required: true, message: "Please input name!" }]}
+                                            rules={[{ required: true, message: "" }]}
                                         >
                                             <Input placeholder="Catagory Name" />
                                         </Form.Item>
@@ -88,7 +88,7 @@ export const Planning = () => {
                                                 style={{ marginBottom: "0" }}
                                                 initialValue={item.weight}
                                                 name={[item.id, "weight"]}
-                                                rules={[{ required: true, message: "Please input percentage!" }]}
+                                                rules={[{ required: true, message: "" }]}
                                             >
                                                 <InputNumber style={{ width: "60px", height: "35px" }} placeholder="" />
                                             </Form.Item>

@@ -61,7 +61,7 @@ export const CourseTable = ({ selectedCur }) => {
       setIsSearch(true);
       let results = fetchCourse.filter((course) => {
         return (
-          course.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
+          course.course_number.toLowerCase().includes(keyword.toLowerCase()) ||
           course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
           course.course_name_th.includes(keyword)
         );

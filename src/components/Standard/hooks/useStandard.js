@@ -217,7 +217,7 @@ export const useStandard = (selectedCurriculum) => {
                     },
                     ...prev.slice(i + 1)]
             });
-            //console.log(standard)
+            console.log(standard)
             setAddingStandardId(null)
             setAddStdVisible(false);
         }).catch((error) => {

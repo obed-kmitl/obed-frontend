@@ -18,6 +18,7 @@ export const MappingTable = ({
   isEdit,
   mapping,
   allStandard,
+  setIsEditingTable
 }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(standard);
@@ -207,10 +208,12 @@ export const MappingTable = ({
       ...record,
     });
     setEditingKey(record.subStandardNo);
+    setIsEditingTable(true)
   };
 
   const cancel = () => {
     setEditingKey("");
+    setIsEditingTable(false)
   };
 
   function mapMappingtoJson(data, index) {
@@ -253,6 +256,7 @@ export const MappingTable = ({
         setEditingKey("");
         mapMappingtoJson(newData, index, allStandard);
         //console.log(mapping)
+        setIsEditingTable(false)
       }
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);

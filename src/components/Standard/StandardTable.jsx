@@ -18,7 +18,7 @@ export const StandardTable = ({ standard = [], standardNo, groupSubStdId, stdId 
 
   const [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection] = useSubStandard(standard, groupSubStdId, stdId,allStandard,setAllStandard)
 
-  console.log(data)
+ // console.log(data)
   const isEditing = (record) => record.subStandardNo === editingKey;
   
   const EditableCell = ({

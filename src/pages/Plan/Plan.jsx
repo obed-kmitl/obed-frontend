@@ -13,8 +13,18 @@ import {
 } from "../../components";
 import { Divider, Modal, Popconfirm, Transfer } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
+import { useSemester } from "./hooks/useSemester";
 
 export const Plan = () => {
+  const [
+    allSemester,
+    allCurriculum,
+    selectedCurriculum,
+    selectedSemester,
+    onChangeCurriculum,
+    onChangeSemester
+  ] = useSemester()
+
   const yearSemesters = [
     {
       year: "2021",
@@ -29,7 +39,6 @@ export const Plan = () => {
       semester: ["1", "2"],
     },
   ];
-
   const teacher = [
     {
       id: 1,
@@ -197,7 +206,6 @@ export const Plan = () => {
       section: [],
     },
   ];
-
   const curlist = [
     {
       name: "CE Curriculum 2560",
@@ -211,11 +219,12 @@ export const Plan = () => {
 
   const [courses, setCourses] = useState([]);
   const [selectedYear, setSelectedYear] = useState(
-    new Date().getFullYear().toString()
+
   );
-  const [selectedSemester, setSelectedSemester] = useState("1");
+  //const [selectedSemester, setSelectedSemester] = useState("1");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedCurriculum, setSelectedCurriculum] = useState(curlist[0].name);
+  // const [selectedCurriculum, setSelectedCurriculum] = useState(curlist[0].name);
+
   const [courseList, setCourseList] = useState(() => {
     const data = [];
     //key use in Tranfer component
@@ -330,6 +339,10 @@ export const Plan = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courses]);
 
+  useEffect(() => {
+    console.log(selectedSemester)
+  }, [selectedSemester])
+
   return (
     <div className={styles.plan}>
       <Helmet>
@@ -340,94 +353,106 @@ export const Plan = () => {
       <div className={styles.selectSemester}>
         <Header level={2}>Curriculum</Header>
         <Select
-          defaultValue={selectedCurriculum}
-          onChange={(value) => setSelectedCurriculum(value)}
-          width="440px"
+          defaultValue={"None"}
+          onChange={onChangeCurriculum}
+          width="250px"
+          placeholder="Please Select Curriculum"
         >
-          {curlist.map((e, i) => (
-            <Option value={e.name} key={i}>
-              {e.name}
+          <Option value={undefined} disabled>
+            None
+          </Option>
+          {allCurriculum?.map((e) => (
+            <Option value={e.curriculum_id} key={"cur_id: " + e.curriculum_id}>
+              {e.title}
             </Option>
           ))}
         </Select>
-        <Header level={2}>Year</Header>
-        <Select
-          defaultValue={selectedYear}
-          onChange={(value) => setSelectedYear(value)}
-          width={100}
-        >
-          {yearSemesters.map((e, i) => (
-            <Option value={e.year} key={i}>
-              {e.year}
-            </Option>
-          ))}
-        </Select>
+        {selectedCurriculum &&
+          <>
+            <Header level={2}>Semester</Header>
+            <Select
+              defaultValue={"None"}
+              onChange={onChangeSemester}
+              width={100}
+            >
+              {allSemester.map((e) => (
+                <Option value={e.semester_id} key={e.semester_number + "/" + e.year_number}>
+                  {e.semester_number}/{e.year_number}
+                </Option>
+              ))}
+            </Select>
+          </>
+        }
       </div>
-      <div className={styles.planHeader}>
-        <Header level={2}>
-          {selectedYear}/{selectedSemester}
-        </Header>
-        <div className={styles.rightContainer}>
-          <Input
-            placeholder="Search"
-            value={searchValue}
-            onChange={(e) => {
-              setSearchValue(e.target.value);
-              console.log(e.target.value);
-            }}
-            search
-            onSearch={search}
-          />
-          <Button onClick={() => handleAddCourse()}>Add</Button>
-          {/* <Button onClick={() => console.log(courses)}>Add</Button> */}
-        </div>
-      </div>
-      <div className={styles.plan}>
-        <div className={styles.collapseBox}>
-          <Collapse accordion>
-            {filterList.map((item, i) => (
-              <Panel
-                header={
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Header level={4}>
-                      {item.course_id} {item.course_name_en}
-                    </Header>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      {/* {!e.section?<WarningOutlined style={{color:"red" ,margin:"010px"}} />:null} */}
-                      <Popconfirm
-                        title="Are you sure to delete this course?"
-                        onConfirm={(e) => {
-                          handleDeleteCourse(item);
-                          e.stopPropagation();
-                        }}
-                        onCancel={(e) => e.stopPropagation()}
+      {selectedSemester !== undefined?
+        <>
+          <div className={styles.planHeader}>
+            <Header level={2}>
+             {selectedSemester.semester_number}/{selectedSemester.year_number}
+            </Header>
+            <div className={styles.rightContainer}>
+              <Input
+                placeholder="Search"
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                  console.log(e.target.value);
+                }}
+                search
+                onSearch={search}
+              />
+              <Button onClick={() => handleAddCourse()}>Add</Button>
+              {/* <Button onClick={() => console.log(courses)}>Add</Button> */}
+            </div>
+          </div>
+          <div className={styles.plan}>
+            <div className={styles.collapseBox}>
+              <Collapse accordion>
+                {filterList.map((item, i) => (
+                  <Panel
+                    header={
+                      <div
+                        style={{ display: "flex", justifyContent: "space-between" }}
                       >
-                        <div
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                        >
-                          <DeleteOutlined />
+                        <Header level={4}>
+                          {item.course_id} {item.course_name_en}
+                        </Header>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          {/* {!e.section?<WarningOutlined style={{color:"red" ,margin:"010px"}} />:null} */}
+                          <Popconfirm
+                            title="Are you sure to delete this course?"
+                            onConfirm={(e) => {
+                              handleDeleteCourse(item);
+                              e.stopPropagation();
+                            }}
+                            onCancel={(e) => e.stopPropagation()}
+                          >
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                            >
+                              <DeleteOutlined />
+                            </div>
+                          </Popconfirm>
                         </div>
-                      </Popconfirm>
-                    </div>
-                  </div>
-                }
-                key={i}
-              >
-                {/* <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
+                      </div>
+                    }
+                    key={i}
+                  >
+                    {/* <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
                                     <Button type="secondary" onClick={() => alert('Clicked')}>Add Section</Button>
                                     <Button danger onClick={() => alert('Clicked')}><DeleteOutlined /></Button>
                                 </div> */}
-                <SectionTable section={item.section} teacher={teacher} />
-              </Panel>
-            ))}
-          </Collapse>
-        </div>
-      </div>
-
+                    <SectionTable section={item.section} teacher={teacher} />
+                  </Panel>
+                ))}
+              </Collapse>
+            </div>
+          </div>
+        </>
+      :null
+      }
       <Modal
         visible={isModalVisible}
         title={
@@ -449,8 +474,6 @@ export const Plan = () => {
         maskClosable={false}
         centered
       >
-        <Header level={4}>Curriculum</Header>
-        <Divider />
         <Transfer
           dataSource={courseList}
           titles={["Courses", "Selected"]}

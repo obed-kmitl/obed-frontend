@@ -19,6 +19,8 @@ export const Plan = () => {
   const [
     allSemester,
     allCurriculum,
+    allCourse,
+    setAllCourse,
     selectedCurriculum,
     selectedSemester,
     onChangeCurriculum,
@@ -218,43 +220,40 @@ export const Plan = () => {
   ];
 
   const [courses, setCourses] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(
-
-  );
   //const [selectedSemester, setSelectedSemester] = useState("1");
   const [isModalVisible, setIsModalVisible] = useState(false);
   // const [selectedCurriculum, setSelectedCurriculum] = useState(curlist[0].name);
 
-  const [courseList, setCourseList] = useState(() => {
-    const data = [];
-    //key use in Tranfer component
-    course.forEach((element) => {
-      data.push({
-        key: element.course_id,
-        course_id: element.course_id,
-        curriculum_id: element.curriculum_id,
-        precourse_id: element.precourse_id,
-        course_name_th: element.course_name_th,
-        course_name_en: element.course_name_en,
-        section: element.section,
-      });
-    });
-    for (let i = 0; i < 20; i++) {
-      data.push({
-        key: `010760${i + 10}`,
-        course_id: `010760${i + 10}`,
-        curriculum_id: "01072560",
-        precourse_id: null,
-        course_name_th: `วิชาตัวอย่างลำดับที่ ${i}`,
-        course_name_en: `Mock Subject -  ${i}`,
-        section: [],
-      });
-    }
-    return data;
-  });
+  // const [courseList, setCourseList] = useState(() => {
+  //   const data = [];
+  //   //key use in Tranfer component
+  //   course.forEach((element) => {
+  //     data.push({
+  //       key: element.course_id,
+  //       course_id: element.course_id,
+  //       curriculum_id: element.curriculum_id,
+  //       precourse_id: element.precourse_id,
+  //       course_name_th: element.course_name_th,
+  //       course_name_en: element.course_name_en,
+  //       section: element.section,
+  //     });
+  //   });
+  //   for (let i = 0; i < 20; i++) {
+  //     data.push({
+  //       key: `010760${i + 10}`,
+  //       course_id: `010760${i + 10}`,
+  //       curriculum_id: "01072560",
+  //       precourse_id: null,
+  //       course_name_th: `วิชาตัวอย่างลำดับที่ ${i}`,
+  //       course_name_en: `Mock Subject -  ${i}`,
+  //       section: [],
+  //     });
+  //   }
+  //   return data;
+  // });
   const [targetKeys, setTargetKeys] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
-  const [filterList, setFilterList] = useState(courses);
+  const [filterList, setFilterList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
 
   const onChange = (nextTargetKeys, direction, moveKeys) => {
@@ -279,15 +278,15 @@ export const Plan = () => {
 
     targetKeys.forEach((element) => {
       const addItem = {
-        key: courseList.find((e) => e.key === element).key,
-        course_id: courseList.find((e) => e.key === element).course_id,
-        curriculum_id: courseList.find((e) => e.key === element).curriculum_id,
-        precourse_id: courseList.find((e) => e.key === element).precourse_id,
-        course_name_th: courseList.find((e) => e.key === element)
+        key: allCourse.find((e) => e.key === element).key,
+        course_id: allCourse.find((e) => e.key === element).course_id,
+        curriculum_id: allCourse.find((e) => e.key === element).curriculum_id,
+        precourse_id: allCourse.find((e) => e.key === element).precourse_id,
+        course_name_th: allCourse.find((e) => e.key === element)
           .course_name_th,
-        course_name_en: courseList.find((e) => e.key === element)
+        course_name_en: allCourse.find((e) => e.key === element)
           .course_name_en,
-        section: courseList.find((e) => e.key === element).section,
+        section: allCourse.find((e) => e.key === element).section,
       };
       setCourses((courses) => [...courses, addItem]);
       setCourses((courses) =>
@@ -296,8 +295,8 @@ export const Plan = () => {
         )
       );
       setFilterList((courses) => [...courses, addItem]);
-      setCourseList((courseList) =>
-        courseList.filter((e) => e.key !== element)
+      setAllCourse((allCourse) =>
+        allCourse.filter((e) => e.key !== element)
       );
     });
 
@@ -305,13 +304,13 @@ export const Plan = () => {
   };
 
   const handleDeleteCourse = (item) => {
-    setCourseList((courseList) => [...courseList, item]);
-    setCourseList((courseList) =>
-      courseList.sort((a, b) =>
-        a.course_id > b.course_id ? 1 : b.course_id > a.course_id ? -1 : 0
-      )
-    );
-    setCourses(courses.filter((course) => course.course_id !== item.course_id));
+    // setCourseList((courseList) => [...courseList, item]);
+    // setCourseList((courseList) =>
+    //   courseList.sort((a, b) =>
+    //     a.course_id > b.course_id ? 1 : b.course_id > a.course_id ? -1 : 0
+    //   )
+    // );
+    // setCourses(courses.filter((course) => course.course_id !== item.course_id));
   };
 
   const handleCancel = () => {
@@ -319,29 +318,29 @@ export const Plan = () => {
   };
 
   function search(keyword) {
-    if (keyword !== "") {
-      const results = courses.filter((course) => {
-        return (
-          course.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
-          course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
-          course.course_name_th.toLowerCase().includes(keyword.toLowerCase())
-        );
-      });
-      setFilterList(results);
-    } else {
-      setFilterList(courses);
-    }
+    // if (keyword !== "") {
+    //   const results = courses.filter((course) => {
+    //     return (
+    //       course.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
+    //       course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
+    //       course.course_name_th.toLowerCase().includes(keyword.toLowerCase())
+    //     );
+    //   });
+    //   setFilterList(results);
+    // } else {
+    //   setFilterList(courses);
+    // }
   }
 
   useEffect(() => {
     setSearchValue("");
     search("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [courses]);
+  }, [allCourse]);
 
   useEffect(() => {
-    console.log(selectedSemester)
-  }, [selectedSemester])
+    console.log(allCourse)
+  }, [allCourse])
 
   return (
     <div className={styles.plan}>
@@ -408,7 +407,7 @@ export const Plan = () => {
           <div className={styles.plan}>
             <div className={styles.collapseBox}>
               <Collapse accordion>
-                {filterList.map((item, i) => (
+                {filterList?.map((item, i) => (
                   <Panel
                     header={
                       <div
@@ -475,7 +474,7 @@ export const Plan = () => {
         centered
       >
         <Transfer
-          dataSource={courseList}
+          dataSource={allCourse}
           titles={["Courses", "Selected"]}
           targetKeys={targetKeys}
           selectedKeys={selectedKeys}

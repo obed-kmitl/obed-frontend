@@ -20,11 +20,21 @@ export const Plan = () => {
     allSemester,
     allCurriculum,
     allCourse,
-    setAllCourse,
+    //setAllCourse,
+    addedCourse,
+    setAddedCourse,
     selectedCurriculum,
     selectedSemester,
     onChangeCurriculum,
-    onChangeSemester
+    onChangeSemester,
+    handleAddCourses,
+    isModalVisible,
+    setIsModalVisible,
+    targetKeys,
+    selectedKeys,
+    onChange,
+    onSelectChange,
+    handleDeleteCourse
   ] = useSemester()
 
   const yearSemesters = [
@@ -131,83 +141,83 @@ export const Plan = () => {
       status: 1,
     },
   ];
-  const course = [
-    {
-      course_id: "01076001",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-      course_name_en: "Introduction to Computer Engineering",
-      section: [
-        {
-          section_id: "101",
-          teacher: [1, 2],
-        },
-        {
-          section_id: "102",
-          teacher: [3],
-        },
-        {
-          section_id: "103",
-          teacher: [4, 5, 6],
-        },
-      ],
-    },
-    {
-      course_id: "01076002",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์",
-      course_name_en: "Programming Fundamental",
-      section: [
-        {
-          section_id: "101",
-          teacher: [1],
-        },
-        {
-          section_id: "102",
-          teacher: [7],
-        },
-        {
-          section_id: "103",
-          teacher: [8],
-        },
-      ],
-    },
-    {
-      course_id: "01076003",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "วงจรไฟฟ้าและอิเล็กทรอนิกส์",
-      course_name_en: "Curcuits and Electronics",
-      section: [
-        {
-          section_id: "101",
-          teacher: [9, 10, 11],
-        },
-        {
-          section_id: "102",
-          teacher: [4, 5, 6],
-        },
-      ],
-    },
-    {
-      course_id: "01076004",
-      curriculum_id: "01072560",
-      precourse_id: null,
-      course_name_th: "การเขียนโปรแกรมเชิงวัตถุ",
-      course_name_en: "Object Oriented Programming",
-      section: [],
-    },
-    {
-      course_id: "01076005",
-      curriculum_id: "01072560",
-      precourse_id: "01076004",
-      course_name_th: "โครงสร้างข้อมูลและอัลกอริทึม",
-      course_name_en: "Data Structures and Algorithm",
-      section: [],
-    },
-  ];
+  // const course = [
+  //   {
+  //     course_id: "01076001",
+  //     curriculum_id: "01072560",
+  //     precourse_id: null,
+  //     course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
+  //     course_name_en: "Introduction to Computer Engineering",
+  //     section: [
+  //       {
+  //         section_id: "101",
+  //         teacher: [1, 2],
+  //       },
+  //       {
+  //         section_id: "102",
+  //         teacher: [3],
+  //       },
+  //       {
+  //         section_id: "103",
+  //         teacher: [4, 5, 6],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     course_id: "01076002",
+  //     curriculum_id: "01072560",
+  //     precourse_id: null,
+  //     course_name_th: "พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์",
+  //     course_name_en: "Programming Fundamental",
+  //     section: [
+  //       {
+  //         section_id: "101",
+  //         teacher: [1],
+  //       },
+  //       {
+  //         section_id: "102",
+  //         teacher: [7],
+  //       },
+  //       {
+  //         section_id: "103",
+  //         teacher: [8],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     course_id: "01076003",
+  //     curriculum_id: "01072560",
+  //     precourse_id: null,
+  //     course_name_th: "วงจรไฟฟ้าและอิเล็กทรอนิกส์",
+  //     course_name_en: "Curcuits and Electronics",
+  //     section: [
+  //       {
+  //         section_id: "101",
+  //         teacher: [9, 10, 11],
+  //       },
+  //       {
+  //         section_id: "102",
+  //         teacher: [4, 5, 6],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     course_id: "01076004",
+  //     curriculum_id: "01072560",
+  //     precourse_id: null,
+  //     course_name_th: "การเขียนโปรแกรมเชิงวัตถุ",
+  //     course_name_en: "Object Oriented Programming",
+  //     section: [],
+  //   },
+  //   {
+  //     course_id: "01076005",
+  //     curriculum_id: "01072560",
+  //     precourse_id: "01076004",
+  //     course_name_th: "โครงสร้างข้อมูลและอัลกอริทึม",
+  //     course_name_en: "Data Structures and Algorithm",
+  //     section: [],
+  //   },
+  // ];
   const curlist = [
     {
       name: "CE Curriculum 2560",
@@ -219,9 +229,9 @@ export const Plan = () => {
     },
   ];
 
-  const [courses, setCourses] = useState([]);
+  //const [courses, setCourses] = useState([]);
   //const [selectedSemester, setSelectedSemester] = useState("1");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+
   // const [selectedCurriculum, setSelectedCurriculum] = useState(curlist[0].name);
 
   // const [courseList, setCourseList] = useState(() => {
@@ -251,85 +261,85 @@ export const Plan = () => {
   //   }
   //   return data;
   // });
-  const [targetKeys, setTargetKeys] = useState([]);
-  const [selectedKeys, setSelectedKeys] = useState([]);
   const [filterList, setFilterList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  // const [targetKeys, setTargetKeys] = useState([]);
+  // const [selectedKeys, setSelectedKeys] = useState([]);
 
-  const onChange = (nextTargetKeys, direction, moveKeys) => {
-    console.log("targetKeys:", nextTargetKeys);
-    console.log("direction:", direction);
-    console.log("moveKeys:", moveKeys);
-    setTargetKeys(nextTargetKeys);
-  };
 
-  const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
-    console.log("sourceSelectedKeys:", sourceSelectedKeys);
-    console.log("targetSelectedKeys:", targetSelectedKeys);
-    setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
-  };
+  // const onChange = (nextTargetKeys, direction, moveKeys) => {
+  //   // console.log("targetKeys:", nextTargetKeys);
+  //   // console.log("direction:", direction);
+  //   // console.log("moveKeys:", moveKeys);
+  //   setTargetKeys(nextTargetKeys);
+  // };
+
+  // const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+  //   // console.log("sourceSelectedKeys:", sourceSelectedKeys);
+  //   // console.log("targetSelectedKeys:", targetSelectedKeys);
+  //   setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
+  // };
 
   const handleAddCourse = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-    setIsModalVisible(false);
+  // const handleOk = () => {
+  //   setIsModalVisible(false);
 
-    targetKeys.forEach((element) => {
-      const addItem = {
-        key: allCourse.find((e) => e.key === element).key,
-        course_id: allCourse.find((e) => e.key === element).course_id,
-        curriculum_id: allCourse.find((e) => e.key === element).curriculum_id,
-        precourse_id: allCourse.find((e) => e.key === element).precourse_id,
-        course_name_th: allCourse.find((e) => e.key === element)
-          .course_name_th,
-        course_name_en: allCourse.find((e) => e.key === element)
-          .course_name_en,
-        section: allCourse.find((e) => e.key === element).section,
-      };
-      setCourses((courses) => [...courses, addItem]);
-      setCourses((courses) =>
-        courses.sort((a, b) =>
-          a.course_id > b.course_id ? 1 : b.course_id > a.course_id ? -1 : 0
-        )
-      );
-      setFilterList((courses) => [...courses, addItem]);
-      setAllCourse((allCourse) =>
-        allCourse.filter((e) => e.key !== element)
-      );
-    });
+  //   targetKeys.forEach((element) => {
+  //     const addItem = {
+  //       key: allCourse.find((e) => e.key === element).key,
+  //       course_id: allCourse.find((e) => e.key === element).course_id,
+  //       curriculum_id: allCourse.find((e) => e.key === element).curriculum_id,
+  //       course_number: allCourse.find((e) => e.key === element).course_number,
+  //       course_name_th: allCourse.find((e) => e.key === element)
+  //         .course_name_th,
+  //       course_name_en: allCourse.find((e) => e.key === element)
+  //         .course_name_en,
+  //       section: allCourse.find((e) => e.key === element).section,
+  //     };
+  //     setAddedCourse((courses) => [...courses, addItem]);
+  //     setAddedCourse((courses) =>
+  //       courses.sort((a, b) =>
+  //         a.course_id > b.course_id ? 1 : b.course_id > a.course_id ? -1 : 0
+  //       )
+  //     );
+  //     setFilterList((courses) => [...courses, addItem]);
+  //     // setAllCourse((allCourse) =>
+  //     //   allCourse.filter((e) => e.key !== element)
+  //     // );
+  //   });
+  //   //setTargetKeys([]);
+  // };
 
-    setTargetKeys([]);
-  };
-
-  const handleDeleteCourse = (item) => {
-    // setCourseList((courseList) => [...courseList, item]);
-    // setCourseList((courseList) =>
-    //   courseList.sort((a, b) =>
-    //     a.course_id > b.course_id ? 1 : b.course_id > a.course_id ? -1 : 0
-    //   )
-    // );
-    // setCourses(courses.filter((course) => course.course_id !== item.course_id));
-  };
+  // const handleDeleteCourse = (item) => {
+  //   // setCourseList((courseList) => [...courseList, item]);
+  //   // setCourseList((courseList) =>
+  //   //   courseList.sort((a, b) =>
+  //   //     a.course_id > b.course_id ? 1 : b.course_id > a.course_id ? -1 : 0
+  //   //   )
+  //   // );
+  //   // setCourses(courses.filter((course) => course.course_id !== item.course_id));
+  // };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
   function search(keyword) {
-    // if (keyword !== "") {
-    //   const results = courses.filter((course) => {
-    //     return (
-    //       course.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
-    //       course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
-    //       course.course_name_th.toLowerCase().includes(keyword.toLowerCase())
-    //     );
-    //   });
-    //   setFilterList(results);
-    // } else {
-    //   setFilterList(courses);
-    // }
+    if (keyword !== "") {
+      const results = addedCourse.filter((course) => {
+        return (
+          course.course_number.toLowerCase().includes(keyword.toLowerCase()) ||
+          course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
+          course.course_name_th.toLowerCase().includes(keyword.toLowerCase())
+        );
+      });
+      setFilterList(results);
+    } else {
+      setFilterList(addedCourse);
+    }
   }
 
   useEffect(() => {
@@ -339,8 +349,13 @@ export const Plan = () => {
   }, [allCourse]);
 
   useEffect(() => {
-    console.log(allCourse)
-  }, [allCourse])
+    //console.log(addedCourse)
+    setFilterList(addedCourse)
+  }, [addedCourse])
+
+  // useEffect(() => {
+  //   console.log("filtered: ",filterList)
+  // }, [filterList])
 
   return (
     <div className={styles.plan}>
@@ -383,11 +398,11 @@ export const Plan = () => {
           </>
         }
       </div>
-      {selectedSemester !== undefined?
+      {selectedSemester !== undefined ?
         <>
           <div className={styles.planHeader}>
             <Header level={2}>
-             {selectedSemester.semester_number}/{selectedSemester.year_number}
+              {selectedSemester.semester_number}/{selectedSemester.year_number}
             </Header>
             <div className={styles.rightContainer}>
               <Input
@@ -414,7 +429,7 @@ export const Plan = () => {
                         style={{ display: "flex", justifyContent: "space-between" }}
                       >
                         <Header level={4}>
-                          {item.course_id} {item.course_name_en}
+                          {item.course_number} {item.course_name_en}
                         </Header>
                         <div style={{ display: "flex", alignItems: "center" }}>
                           {/* {!e.section?<WarningOutlined style={{color:"red" ,margin:"010px"}} />:null} */}
@@ -439,10 +454,6 @@ export const Plan = () => {
                     }
                     key={i}
                   >
-                    {/* <div style={{ width: "100%", padding: "10px 0", display: 'flex', justifyContent: "flex-end", gap: '1rem' }}>
-                                    <Button type="secondary" onClick={() => alert('Clicked')}>Add Section</Button>
-                                    <Button danger onClick={() => alert('Clicked')}><DeleteOutlined /></Button>
-                                </div> */}
                     <SectionTable section={item.section} teacher={teacher} />
                   </Panel>
                 ))}
@@ -450,7 +461,7 @@ export const Plan = () => {
             </div>
           </div>
         </>
-      :null
+        : null
       }
       <Modal
         visible={isModalVisible}
@@ -459,16 +470,16 @@ export const Plan = () => {
             Add Course
           </Header>
         }
-        onOk={handleOk}
+        onOk={() => handleAddCourses(targetKeys, selectedSemester.semester_id)}
         onCancel={handleCancel}
-        footer={[
-          <Button key="cancel" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleOk}>
-            Add
-          </Button>,
-        ]}
+        // footer={[
+        //   <Button key="cancel" onClick={handleCancel}>
+        //     Cancel
+        //   </Button>,
+        //   <Button key="submit" type="primary" >
+        //     Add
+        //   </Button>,
+        // ]}
         width={1024}
         maskClosable={false}
         centered
@@ -491,7 +502,7 @@ export const Plan = () => {
             itemsUnit: "courses",
             searchPlaceholder: "Search by Course ID or Name",
           }}
-          render={(item) => `${item.course_id} ${item.course_name_en}`}
+          render={(item) => `${item.course_number} ${item.course_name_en}`}
         />
       </Modal>
     </div>

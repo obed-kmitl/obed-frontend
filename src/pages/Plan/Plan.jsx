@@ -20,9 +20,7 @@ export const Plan = () => {
     allSemester,
     allCurriculum,
     allCourse,
-    //setAllCourse,
     addedCourse,
-    setAddedCourse,
     selectedCurriculum,
     selectedSemester,
     onChangeCurriculum,
@@ -34,294 +32,16 @@ export const Plan = () => {
     selectedKeys,
     onChange,
     onSelectChange,
-    handleDeleteCourse
+    handleDeleteCourse,
+    teacher
   ] = useSemester()
 
-  const yearSemesters = [
-    {
-      year: "2021",
-      semester: ["1", "2", "3"],
-    },
-    {
-      year: "2020",
-      semester: ["1", "2", "3"],
-    },
-    {
-      year: "2019",
-      semester: ["1", "2"],
-    },
-  ];
-  const teacher = [
-    {
-      id: 1,
-      firstname: "สมชาย",
-      lastname: "ใจดี",
-      username: "somchai1234",
-      email: "somchai.ja@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 2,
-      firstname: "สมหญิง",
-      lastname: "จริงใจ",
-      username: "somying1",
-      email: "somying.ji@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 3,
-      firstname: "สมปอง",
-      lastname: "สุขสบาย",
-      username: "sompong1988",
-      email: "sompong.su@kmitl.ac.th",
-      status: 0,
-    },
-    {
-      id: 4,
-      firstname: "สมปราชญ์",
-      lastname: "สดใส",
-      username: "somprach38",
-      email: "somprach.so@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 5,
-      firstname: "สมหมาย",
-      lastname: "สายไทย",
-      username: "sommai55",
-      email: "sommai.sa@kmitl.ac.th",
-      status: 0,
-    },
-    {
-      id: 6,
-      firstname: "สมหมาย",
-      lastname: "รักไทย",
-      username: "sommai1999",
-      email: "sommai.ra@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 7,
-      firstname: "สมศักดิ์",
-      lastname: "ใฝ่รู้",
-      username: "somsak74",
-      email: "somsak.fh@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 8,
-      firstname: "สมศรี",
-      lastname: "ศรีไทย",
-      username: "somsri6854",
-      email: "somsri.sr@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 9,
-      firstname: "สมพงศ์",
-      lastname: "ชัยชนะ",
-      username: "somphong",
-      email: "somphong.ch@kmitl.ac.th",
-      status: 1,
-    },
-    {
-      id: 10,
-      firstname: "สมสง่า",
-      lastname: "ราศี",
-      username: "somsanga34",
-      email: "somsanga.ra@kmitl.ac.th",
-      status: 0,
-    },
-    {
-      id: 11,
-      firstname: "สมเกิน",
-      lastname: "อีกหน้า",
-      username: "somkoen96",
-      email: "somkoen.ei@kmitl.ac.th",
-      status: 1,
-    },
-  ];
-  // const course = [
-  //   {
-  //     course_id: "01076001",
-  //     curriculum_id: "01072560",
-  //     precourse_id: null,
-  //     course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-  //     course_name_en: "Introduction to Computer Engineering",
-  //     section: [
-  //       {
-  //         section_id: "101",
-  //         teacher: [1, 2],
-  //       },
-  //       {
-  //         section_id: "102",
-  //         teacher: [3],
-  //       },
-  //       {
-  //         section_id: "103",
-  //         teacher: [4, 5, 6],
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     course_id: "01076002",
-  //     curriculum_id: "01072560",
-  //     precourse_id: null,
-  //     course_name_th: "พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์",
-  //     course_name_en: "Programming Fundamental",
-  //     section: [
-  //       {
-  //         section_id: "101",
-  //         teacher: [1],
-  //       },
-  //       {
-  //         section_id: "102",
-  //         teacher: [7],
-  //       },
-  //       {
-  //         section_id: "103",
-  //         teacher: [8],
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     course_id: "01076003",
-  //     curriculum_id: "01072560",
-  //     precourse_id: null,
-  //     course_name_th: "วงจรไฟฟ้าและอิเล็กทรอนิกส์",
-  //     course_name_en: "Curcuits and Electronics",
-  //     section: [
-  //       {
-  //         section_id: "101",
-  //         teacher: [9, 10, 11],
-  //       },
-  //       {
-  //         section_id: "102",
-  //         teacher: [4, 5, 6],
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     course_id: "01076004",
-  //     curriculum_id: "01072560",
-  //     precourse_id: null,
-  //     course_name_th: "การเขียนโปรแกรมเชิงวัตถุ",
-  //     course_name_en: "Object Oriented Programming",
-  //     section: [],
-  //   },
-  //   {
-  //     course_id: "01076005",
-  //     curriculum_id: "01072560",
-  //     precourse_id: "01076004",
-  //     course_name_th: "โครงสร้างข้อมูลและอัลกอริทึม",
-  //     course_name_en: "Data Structures and Algorithm",
-  //     section: [],
-  //   },
-  // ];
-  const curlist = [
-    {
-      name: "CE Curriculum 2560",
-      curriculum_id: "01072560",
-    },
-    {
-      name: "CE Curriculum 2557",
-      curriculum_id: "01072557",
-    },
-  ];
-
-  //const [courses, setCourses] = useState([]);
-  //const [selectedSemester, setSelectedSemester] = useState("1");
-
-  // const [selectedCurriculum, setSelectedCurriculum] = useState(curlist[0].name);
-
-  // const [courseList, setCourseList] = useState(() => {
-  //   const data = [];
-  //   //key use in Tranfer component
-  //   course.forEach((element) => {
-  //     data.push({
-  //       key: element.course_id,
-  //       course_id: element.course_id,
-  //       curriculum_id: element.curriculum_id,
-  //       precourse_id: element.precourse_id,
-  //       course_name_th: element.course_name_th,
-  //       course_name_en: element.course_name_en,
-  //       section: element.section,
-  //     });
-  //   });
-  //   for (let i = 0; i < 20; i++) {
-  //     data.push({
-  //       key: `010760${i + 10}`,
-  //       course_id: `010760${i + 10}`,
-  //       curriculum_id: "01072560",
-  //       precourse_id: null,
-  //       course_name_th: `วิชาตัวอย่างลำดับที่ ${i}`,
-  //       course_name_en: `Mock Subject -  ${i}`,
-  //       section: [],
-  //     });
-  //   }
-  //   return data;
-  // });
   const [filterList, setFilterList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  // const [targetKeys, setTargetKeys] = useState([]);
-  // const [selectedKeys, setSelectedKeys] = useState([]);
 
-
-  // const onChange = (nextTargetKeys, direction, moveKeys) => {
-  //   // console.log("targetKeys:", nextTargetKeys);
-  //   // console.log("direction:", direction);
-  //   // console.log("moveKeys:", moveKeys);
-  //   setTargetKeys(nextTargetKeys);
-  // };
-
-  // const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
-  //   // console.log("sourceSelectedKeys:", sourceSelectedKeys);
-  //   // console.log("targetSelectedKeys:", targetSelectedKeys);
-  //   setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
-  // };
-
-  const handleAddCourse = () => {
+  const handleAdd = () => {
     setIsModalVisible(true);
   };
-
-  // const handleOk = () => {
-  //   setIsModalVisible(false);
-
-  //   targetKeys.forEach((element) => {
-  //     const addItem = {
-  //       key: allCourse.find((e) => e.key === element).key,
-  //       course_id: allCourse.find((e) => e.key === element).course_id,
-  //       curriculum_id: allCourse.find((e) => e.key === element).curriculum_id,
-  //       course_number: allCourse.find((e) => e.key === element).course_number,
-  //       course_name_th: allCourse.find((e) => e.key === element)
-  //         .course_name_th,
-  //       course_name_en: allCourse.find((e) => e.key === element)
-  //         .course_name_en,
-  //       section: allCourse.find((e) => e.key === element).section,
-  //     };
-  //     setAddedCourse((courses) => [...courses, addItem]);
-  //     setAddedCourse((courses) =>
-  //       courses.sort((a, b) =>
-  //         a.course_id > b.course_id ? 1 : b.course_id > a.course_id ? -1 : 0
-  //       )
-  //     );
-  //     setFilterList((courses) => [...courses, addItem]);
-  //     // setAllCourse((allCourse) =>
-  //     //   allCourse.filter((e) => e.key !== element)
-  //     // );
-  //   });
-  //   //setTargetKeys([]);
-  // };
-
-  // const handleDeleteCourse = (item) => {
-  //   // setCourseList((courseList) => [...courseList, item]);
-  //   // setCourseList((courseList) =>
-  //   //   courseList.sort((a, b) =>
-  //   //     a.course_id > b.course_id ? 1 : b.course_id > a.course_id ? -1 : 0
-  //   //   )
-  //   // );
-  //   // setCourses(courses.filter((course) => course.course_id !== item.course_id));
-  // };
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -349,13 +69,9 @@ export const Plan = () => {
   }, [allCourse]);
 
   useEffect(() => {
-    //console.log(addedCourse)
     setFilterList(addedCourse)
   }, [addedCourse])
 
-  // useEffect(() => {
-  //   console.log("filtered: ",filterList)
-  // }, [filterList])
 
   return (
     <div className={styles.plan}>
@@ -410,13 +126,11 @@ export const Plan = () => {
                 value={searchValue}
                 onChange={(e) => {
                   setSearchValue(e.target.value);
-                  console.log(e.target.value);
                 }}
                 search
                 onSearch={search}
               />
-              <Button onClick={() => handleAddCourse()}>Add</Button>
-              {/* <Button onClick={() => console.log(courses)}>Add</Button> */}
+              <Button onClick={() => handleAdd()}>Add</Button>
             </div>
           </div>
           <div className={styles.plan}>
@@ -454,7 +168,7 @@ export const Plan = () => {
                     }
                     key={i}
                   >
-                    <SectionTable section={item.section} teacher={teacher} />
+                    <SectionTable section={item.sections} teacher={teacher} groupSectionId={item.group_sec_id} />
                   </Panel>
                 ))}
               </Collapse>
@@ -472,14 +186,7 @@ export const Plan = () => {
         }
         onOk={() => handleAddCourses(targetKeys, selectedSemester.semester_id)}
         onCancel={handleCancel}
-        // footer={[
-        //   <Button key="cancel" onClick={handleCancel}>
-        //     Cancel
-        //   </Button>,
-        //   <Button key="submit" type="primary" >
-        //     Add
-        //   </Button>,
-        // ]}
+        okText={"Add"}
         width={1024}
         maskClosable={false}
         centered

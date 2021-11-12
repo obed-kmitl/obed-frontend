@@ -40,7 +40,6 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
     };
 
     async function save(subStandardNo,subStdId) {
-
         try {
             const row = await form.validateFields()
             const newData = [...data];
@@ -89,7 +88,6 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
             //     setEditingKey("");
             //     console.log("b")
             // }
-
         } catch (errInfo) {
             console.log("Validate Failed:", errInfo);
         }

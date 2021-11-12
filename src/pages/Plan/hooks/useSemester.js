@@ -14,6 +14,8 @@ export const useSemester = () => {
     const [targetKeys, setTargetKeys] = useState([]);
     const [selectedKeys, setSelectedKeys] = useState([]);
 
+    const [teacher,setTeacher] = useState()
+
 
     const onChange = (nextTargetKeys, direction, moveKeys) => {
         // console.log("targetKeys:", nextTargetKeys);
@@ -60,6 +62,18 @@ export const useSemester = () => {
                 console.log(error);
             });
     }
+    
+    async function fetchAllTeacher() {
+        return await httpClient
+            .get(`/user/getAll`)
+            .then((response) => {
+                setTeacher(response.data.data)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
 
     //course ใช้เลือกใน Tranfer
     function onChangeCurriculum(value) {
@@ -97,30 +111,11 @@ export const useSemester = () => {
             }
         ])
         fetchAllCourse(value)
-        // return await httpClient
-        //     .get(`/course/getAllByCurriculum/${value}`)
-        //     .then((response) => {
-        //         console.log(response.data.data)
-        //         const receivedCourses = response?.data.data.map((course) => ({
-        //             key: course.course_id,
-        //             course_id: course.course_id,
-        //             curriculum_id: course.curriculum_id,
-        //             course_number: course.course_number,
-        //             course_name_en: course.course_name_en,
-        //             course_name_th: course.course_name_th,
-        //             disabled: false
-        //         }))
-        //         setAllCourse(receivedCourses);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
     }
 
     async function onChangeSemester(value) {
         return await httpClient.get(`/semester/get/${value}`)
             .then((response) => {
-                //console.log(response.data.data)
                 setSelectedSemester(response.data.data)
                 setAddedCourse(response.data.data.group_sections.sort(({ course_number: first }, { course_number: second }) => first - second))
             })
@@ -130,14 +125,11 @@ export const useSemester = () => {
     }
 
     async function handleAddCourse(targetKeys, semester_id) {
-        console.log(targetKeys, semester_id)
         return await httpClient
             .post(`semester/createGroupSections/${semester_id}`, {
                 course_id_list: targetKeys
             })
             .then((response) => {
-                console.log(addedCourse);
-                console.log(response.data.data)
                 setAddedCourse(addedCourse.concat(response.data.data.map(course => {
                     return (
                         {
@@ -170,38 +162,19 @@ export const useSemester = () => {
             .catch((error) => {
                 console.log(error);
             });
-        // setCourseList((courseList) => [...courseList, item]);
-        // setCourseList((courseList) =>
-        //   courseList.sort((a, b) =>
-        //     a.course_id > b.course_id ? 1 : b.course_id > a.course_id ? -1 : 0
-        //   )
-        // );
-        // setCourses(courses.filter((course) => course.course_id !== item.course_id));
     };
 
 
 
     useEffect(() => {
         fetchAllCurriculum();
+        fetchAllTeacher();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // useEffect(() => {
-    //     console.log(selectedSemester);
-    //     console.log(allCourse)
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [selectedSemester]);
-
-    // useEffect(() => {
-    //     console.log(addedCourse)
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [addedCourse]);
 
     useEffect(() => {
-
         const alreadyAddedCoursesId = addedCourse?.map((e) => e.course_id)
-        //console.log(allCourse,alreadyAddedCoursesId)
-        //let newAllCourses =[...allCourse]
         allCourse.forEach(element => {
             if (alreadyAddedCoursesId.includes(element.course_id)) {
                 element.disabled = true
@@ -209,16 +182,14 @@ export const useSemester = () => {
                 element.disabled = false
             }
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [addedCourse]);
-
 
     return [
         allSemester,
         allCurriculum,
         allCourse,
-        //setAllCourse,
         addedCourse,
-        setAddedCourse,
         selectedCurriculum,
         selectedSemester,
         onChangeCurriculum,
@@ -230,7 +201,8 @@ export const useSemester = () => {
         selectedKeys,
         onChange,
         onSelectChange,
-        handleDeleteCourse
+        handleDeleteCourse,
+        teacher
 
     ]
 }

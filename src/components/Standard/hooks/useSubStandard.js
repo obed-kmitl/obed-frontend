@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form } from 'antd'
 import httpClient from "../../../utils/httpClient";
 
-export const useSubStandard = (standard, groupSubStdId, stdId) => {
+
+export const useSubStandard = (standard,groupSubStdId, stdId, allStandard, setAllStandard) => {
     const [form] = Form.useForm();
-    const [data, setData] = useState(standard);
+    const [data, setData] = useState();
     const [editingKey, setEditingKey] = useState("");
     const [isNewAdded, setIsNewAdded] = useState(false);
     const handleAddSubStd = () => {
-        //console.log(data)
         setIsNewAdded(true)
         const newData = {
             groupSubStdId: groupSubStdId,
@@ -39,7 +39,7 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
         }
     };
 
-    async function save(subStandardNo,subStdId) {
+    async function save(subStandardNo, subStdId) {
 
         try {
             const row = await form.validateFields()
@@ -48,7 +48,7 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
             if (isNewAdded) {
                 return await httpClient.post('/standard/createSubStandard', {
                     standard_id: stdId,
-                    group_sub_std_id: groupSubStdId,
+                    group_sub_std_id: parseInt(groupSubStdId),
                     order_number: parseInt(row.subStandardNo),
                     title: row.subStandardName
                 }).then((res) => {
@@ -58,10 +58,16 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
                         subStandardNo: res.data.data.order_number,
                         subStandardName: res.data.data.title,
                     }
-                    //console.log(newSubStandard)
                     const item = newData[index];
                     newData.splice(index, 1, { ...item, ...newSubStandard });
                     setData(newData);
+
+                    let newAllStandard = [...allStandard]
+                    const standardIndex = newAllStandard.findIndex((item) => stdId === item.id)
+                    const groupSubStdIndex = newAllStandard[standardIndex].details.findIndex((item) => groupSubStdId === item.groupSubStdId)
+                    newAllStandard[standardIndex].details[groupSubStdIndex].subStandard = newData
+                    setAllStandard(newAllStandard)
+
                     setEditingKey("");
                     setIsNewAdded(false);
                 }).catch((err) => console.log(err))
@@ -74,39 +80,40 @@ export const useSubStandard = (standard, groupSubStdId, stdId) => {
                     newData.splice(index, 1, { ...item, ...row });
                     setData(newData);
                     setEditingKey("");
+
+                    let newAllStandard = [...allStandard]
+                    const standardIndex = newAllStandard.findIndex((item) => stdId === item.id)
+                    const groupSubStdIndex = newAllStandard[standardIndex].details.findIndex((item) => groupSubStdId === item.groupSubStdId)
+                    newAllStandard[standardIndex].details[groupSubStdIndex].subStandard = newData
+                    setAllStandard(newAllStandard)
                 })
             }
-            // if (index > -1) {
-            //     const item = newData[index];
-            //     newData.splice(index, 1, { ...item, ...row });
-            //     setData(newData);
-            //     setEditingKey("");
-            //     console.log("a")
-            // } 
-            // else {
-            //     newData.push(row);
-            //     setData(newData);
-            //     setEditingKey("");
-            //     console.log("b")
-            // }
-
         } catch (errInfo) {
             console.log("Validate Failed:", errInfo);
         }
     }
 
-    async function deleteSection (record) {
+    async function deleteSection(record) {
         return await httpClient
-        .delete(`/standard/removeSubStandard/${record.subStandardId}`)
-        .then(()=>{
-            setData(data.filter((standard) => standard.subStandardNo !== record.subStandardNo));
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
-        
-    }
+            .delete(`/standard/removeSubStandard/${record.subStandardId}`)
+            .then(() => {
+                setData(data.filter((standard) => standard.subStandardNo !== record.subStandardNo));
 
-    return [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection]
+                let newAllStandard = [...allStandard]
+                const standardIndex = newAllStandard.findIndex((item) => stdId === item.id)
+                const groupSubStdIndex = newAllStandard[standardIndex].details.findIndex((item) => groupSubStdId === item.groupSubStdId)
+                newAllStandard[standardIndex].details[groupSubStdIndex].subStandard = data
+                setAllStandard(newAllStandard)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }
+    useEffect(() => {
+        setData(standard)
+    }, [standard])
+
+    return [form, data, setData, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection]
 
 }

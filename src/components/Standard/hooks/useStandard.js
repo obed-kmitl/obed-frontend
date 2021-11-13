@@ -108,10 +108,8 @@ export const useStandard = (selectedCurriculum) => {
                             subStandardName: subStd.title,
                         }))
                     }))
-                    //.sort(({standardNo:firstStandardNo},{standardNo:secondStandardNo})=> firstStandardNo - secondStandardNo)
                 }))
                 setStandard(receivedStandard)
-                console.log(receivedStandard)
             })
             .catch((error) => {
                 console.log(error);
@@ -201,21 +199,22 @@ export const useStandard = (selectedCurriculum) => {
             standard_id: standard[addingStandardId].id,
             order_number: value.standardNo,
             title: value.standardName
-        }).then(() => {
+        }).then((res) => {
             setStandard(prev => {
                 return [
                     ...prev.slice(0, i),
                     {
-                        ...prev[i], 
+                        ...prev[i],
                         details: [...prev[i].details, {
-                            standardNo: value.standardNo,
-                            standardName: value.standardName,
+                            groupSubStdId: res.data.data.group_sub_std_id,
+                            standardId: res.data.data.standard_id,
+                            standardNo: res.data.data.order_number,
+                            standardName: res.data.data.title,
                             subStandard: []
-                        }].sort(({standardNo:firstStandardNo},{standardNo:secondStandardNo})=> firstStandardNo - secondStandardNo)
+                        }].sort(({ standardNo: firstStandardNo }, { standardNo: secondStandardNo }) => firstStandardNo - secondStandardNo)
                     },
                     ...prev.slice(i + 1)]
             });
-            //console.log(standard)
             setAddingStandardId(null)
             setAddStdVisible(false);
         }).catch((error) => {
@@ -254,7 +253,7 @@ export const useStandard = (selectedCurriculum) => {
         newStandard[editingTitleIndex].details[editingNameIndex].standardNo = values.standardNo
         newStandard = newStandard.map((std) => ({
             ...std,
-            details: std.details.sort(({standardNo:firstStandardNo},{standardNo:secondStandardNo})=> firstStandardNo - secondStandardNo)
+            details: std.details.sort(({ standardNo: firstStandardNo }, { standardNo: secondStandardNo }) => firstStandardNo - secondStandardNo)
         }))
         return await httpClient.put(`/standard/updateGroupSubStandard/${editingGroupStdId}`, {
             order_number: values.standardNo,

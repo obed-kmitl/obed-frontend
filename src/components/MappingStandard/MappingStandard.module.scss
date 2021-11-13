@@ -3,6 +3,11 @@
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 1rem;
+    .header {
+        display: flex;
+        align-items: center;
+    }
+
 }
 .content {
     width: 100%;
@@ -25,4 +30,9 @@
             font-size: 18px;
         }
     }
+}
+.flexrow{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }

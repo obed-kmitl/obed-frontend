@@ -191,6 +191,7 @@ export function Curriculum() {
         maskClosable={false}
         confirmLoading={confirmLoading}
         width="700px"
+        centered
       >
         {message !== "" && (
           <Alert
@@ -291,10 +292,10 @@ export function Curriculum() {
               <CourseTable selectedCur={selected} />
             </TabPane>
             <TabPane tab="Standard" key="2">
-              <Standard selectedCurriculum={selected.curriculum_id}/>
+              <Standard selectedCurriculum={selected.curriculum_id} />
             </TabPane>
             <TabPane tab="Mapping" key="3">
-              <MappingStandard />
+              <MappingStandard selectedCurriculum={selected.curriculum_id} />
             </TabPane>
           </Tabs>
           <Modal

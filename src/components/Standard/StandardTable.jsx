@@ -10,16 +10,15 @@ import {
   SaveOutlined,
   CloseCircleTwoTone,
 } from '@ant-design/icons';
-
 import styles from "./Standard.module.scss";
 import { useSubStandard } from './hooks/useSubStandard'
 
-export const StandardTable = ({ standard = [], standardNo, groupSubStdId, stdId }) => {
+export const StandardTable = ({ standard = [], standardNo, groupSubStdId, stdId ,allStandard,setAllStandard,key}) => {
 
-  const [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection] = useSubStandard(standard, groupSubStdId, stdId)
+  const [form, data, editingKey, isNewAdded, handleAddSubStd, save, cancel, edit, deleteSection] = useSubStandard(standard,groupSubStdId, stdId,allStandard,setAllStandard)
 
   const isEditing = (record) => record.subStandardNo === editingKey;
-
+  
   const EditableCell = ({
     editing,
     dataIndex,
@@ -47,7 +46,6 @@ export const StandardTable = ({ standard = [], standardNo, groupSubStdId, stdId 
               {
                 validator: (rule, value, callback) => {
                   const alreadyExistNo = data.map((e) => e.subStandardNo).filter((e) => e !== record.subStandardNo)
-                  console.log(data)
                   if (inputType === "number") {
                     if (alreadyExistNo.includes(value)) {
                       return Promise.reject("Already exist!")
@@ -171,7 +169,7 @@ export const StandardTable = ({ standard = [], standardNo, groupSubStdId, stdId 
   });
 
   return (
-    <>
+    <div key={key}>
       <div className={styles.topRightBtn}>
         <Button type="secondary" disabled={editingKey !== "" || isNewAdded === true} onClick={() => handleAddSubStd()}>Add</Button>
       </div>
@@ -187,11 +185,11 @@ export const StandardTable = ({ standard = [], standardNo, groupSubStdId, stdId 
           columns={mergedColumns}
           rowClassName="editable-row"
           pagination={false}
-          rowKey="subStandardNo"
+          rowKey="subStandardId"
           onRow={() => ({ className: styles.editableCell })}
         />
       </Form>
-    </>
+    </div>
   )
 
 }

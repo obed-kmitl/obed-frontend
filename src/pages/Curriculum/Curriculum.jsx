@@ -287,7 +287,7 @@ export function Curriculum() {
               Remove Curriculum
             </Button>
           </div>
-          <Tabs defaultActiveKey="1">
+          <Tabs defaultActiveKey="1" destroyInactiveTabPane>
             <TabPane tab="Course" key="1">
               <CourseTable selectedCur={selected} />
             </TabPane>

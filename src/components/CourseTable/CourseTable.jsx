@@ -61,7 +61,7 @@ export const CourseTable = ({ selectedCur }) => {
       setIsSearch(true);
       let results = fetchCourse.filter((course) => {
         return (
-          course.course_id.toLowerCase().includes(keyword.toLowerCase()) ||
+          course.course_number.toLowerCase().includes(keyword.toLowerCase()) ||
           course.course_name_en.toLowerCase().includes(keyword.toLowerCase()) ||
           course.course_name_th.includes(keyword)
         );
@@ -109,6 +109,16 @@ export const CourseTable = ({ selectedCur }) => {
     console.log("Failed:", errorInfo);
   }
 
+  function fetchPlo() {
+    getPlo(selectedCur.curriculum_id)
+      .then((data) => {
+        setPloList(data);
+      })
+      .catch((message) => {
+        openNotificationWithIcon("error", "Cannot fetch plo data", message);
+      });
+  }
+
   function getCourses() {
     getCourseByCurriculum(selectedCur.curriculum_id)
       .then((data) => {
@@ -117,13 +127,7 @@ export const CourseTable = ({ selectedCur }) => {
       .catch((message) => {
         openNotificationWithIcon("error", "Cannot fetch course data", message);
       });
-    getPlo(selectedCur.curriculum_id)
-      .then((data) => {
-        setPloList(data);
-      })
-      .catch((message) => {
-        openNotificationWithIcon("error", "Cannot fetch plo data", message);
-      });
+    fetchPlo();
   }
 
   useEffect(() => {
@@ -396,8 +400,10 @@ export const CourseTable = ({ selectedCur }) => {
             <Tooltip title="Edit">
               <Typography.Link
                 disabled={editingKey !== ""}
-                onClick={() => edit(record)}
-                style={{ color: "#009FC7", fontSize: "20px" }}
+                onClick={() => {
+                  edit(record);
+                }}
+                style={{ fontSize: "20px" }}
               >
                 <EditOutlined />
               </Typography.Link>
@@ -409,7 +415,8 @@ export const CourseTable = ({ selectedCur }) => {
               >
                 <Typography.Link
                   disabled={editingKey !== ""}
-                  style={{ color: "#C73535", fontSize: "20px" }}
+                  style={{ fontSize: "20px" }}
+                  type="danger"
                 >
                   <DeleteOutlined />
                 </Typography.Link>
@@ -450,11 +457,17 @@ export const CourseTable = ({ selectedCur }) => {
         <Header level={2}>Course</Header>
         <div>
           <Input search placeholder="Search" onSearch={search} allowClear />
-          <Button onClick={() => setImportVisible(true)}>Import</Button>
+          <Button
+            onClick={() => setImportVisible(true)}
+            disabled={editingKey !== ""}
+          >
+            Import
+          </Button>
           <Button
             onClick={() => {
               setNewCourseVisible(true);
             }}
+            disabled={editingKey !== ""}
           >
             New
           </Button>

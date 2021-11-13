@@ -1,5 +1,5 @@
 import {
-  Button, Tabs, TabPane, Header, Body, Select, Input, Collapse, Panel, TableCard, Table
+  Button, Tabs, TabPane, Header, Body, Select, Input, Collapse, Panel
 } from '../../components';
 
 import styles from './Sandbox.module.scss';
@@ -22,57 +22,6 @@ export const Sandbox = () => {
   Known for its loyalty and faithfulness,
   it can be found as a welcome guest in many households across the world.
 `;
-  const mock = {
-    course_id: "01076001",
-    course_name_en: "Introduction to Computer Engineering",
-    course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-    precourse_id: "01076002",
-    plos: ["1.1","1.3","2.1"]
-  }
-  const mock2 = [{
-    no: "ข้อ 1",
-    description: "จงแปลงเลข 127 ฐาน 10 เป็นเลขฐาน 2",
-    point: 2,
-    los: [1, 2],
-  },{
-    no: "ข้อ 2",
-    description: "จงแปลงเลข 1101101 ฐาน 2 (ไม่คิดเครื่องหมาย) เป็นเลขฐาน 10",
-    point: 2,
-    los: [1],
-  },]
-  const mockLO = [{
-    id: 1,
-    desc: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 10 ทั้งคิดและไม่คิดเครื่องหมาย"
-  },{
-    id: 2,
-    desc: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 8 ทั้งคิดและไม่คิดเครื่องหมาย"
-  },{
-    id: 3,
-    desc: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 16 ทั้งคิดและไม่คิดเครื่องหมาย"
-  }]
-  const mockCourseList = [{
-    id: "01076001",
-    course_name_en: "Introduction to Computer Engineering",
-  },{
-    id: "01076002",
-    course_name_en: "Programming Fundamental",
-  },{
-    id: "01076003",
-    course_name_en: "Circuits and Electronics",
-  }]
-  const mockPLO = [{
-    id: "1.1",
-    desc: "PLO 1.1"
-  },{
-    id: "1.2",
-    desc: "PLO 1.2"
-  },{
-    id: "1.3",
-    desc: "PLO 1.3"
-  },{
-    id: "2.1",
-    desc: "PLO 2.1"
-  }]
 
   const [editableStr, setEditableStr] = useState('This is an editable text.');
 
@@ -87,16 +36,6 @@ export const Sandbox = () => {
         <title>Sandbox - OBED</title>
       </Helmet>
       <h1><strong>OB</strong>ED SANDBOX</h1>
-      <p>TableCard Type 1</p>
-      <Table type={1} col1="Course ID" col2="Course Name" col3="Prerequisite" col4="PLO" col5="Action">
-      <TableCard type={1} data={mock} course={mockCourseList} plo={mockPLO} />
-      <TableCard type={1} course={mockCourseList} plo={mockPLO} edit />
-      </Table>
-      <p>TableCard Type 2</p>
-      <Table type={2} col1="No." col2="Title" col3="Detail" col4="Outcome" col5="Point" col6="Action">
-        {mock2.map((ele, i) => <TableCard type={2} data={ele} lo={mockLO} index={i+1} />)}
-      <TableCard type={2} data={mock2} lo={mockLO} edit />
-      </Table>
       <p>Button</p>
       <div className={styles.btnContainer}>
         <Button type="primary" onClick={() => alert('Clicked')}>Primary</Button>

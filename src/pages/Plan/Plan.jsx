@@ -338,6 +338,18 @@ export const Plan = () => {
       <Header level={1}>Semester Plan</Header>
       <Divider />
       <div className={styles.selectSemester}>
+        <Header level={2}>Curriculum</Header>
+        <Select
+          defaultValue={selectedCurriculum}
+          onChange={(value) => setSelectedCurriculum(value)}
+          width="440px"
+        >
+          {curlist.map((e, i) => (
+            <Option value={e.name} key={i}>
+              {e.name}
+            </Option>
+          ))}
+        </Select>
         <Header level={2}>Year</Header>
         <Select
           defaultValue={selectedYear}
@@ -349,24 +361,6 @@ export const Plan = () => {
               {e.year}
             </Option>
           ))}
-        </Select>
-        <Header level={2}>Semester</Header>
-        {
-          yearSemesters.filter(() => yearSemesters.year === selectedYear)
-            .semester
-        }
-        <Select
-          defaultValue={selectedSemester}
-          onChange={(value) => setSelectedSemester(value)}
-          width={100}
-        >
-          {yearSemesters
-            .filter((e) => e.year === selectedYear)[0]
-            .semester.map((e, i) => (
-              <Option value={e} key={i}>
-                {e}
-              </Option>
-            ))}
         </Select>
       </div>
       <div className={styles.planHeader}>
@@ -456,17 +450,6 @@ export const Plan = () => {
         centered
       >
         <Header level={4}>Curriculum</Header>
-        <Select
-          defaultValue={selectedCurriculum}
-          onChange={(value) => setSelectedCurriculum(value)}
-          width="440px"
-        >
-          {curlist.map((e, i) => (
-            <Option value={e.name} key={i}>
-              {e.name}
-            </Option>
-          ))}
-        </Select>
         <Divider />
         <Transfer
           dataSource={courseList}
@@ -483,7 +466,7 @@ export const Plan = () => {
           operations={["Add", "Remove"]}
           locale={{
             itemUnit: "course",
-            itemsUnit: "course",
+            itemsUnit: "courses",
             searchPlaceholder: "Search by Course ID or Name",
           }}
           render={(item) => `${item.course_id} ${item.course_name_en}`}

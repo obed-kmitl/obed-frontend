@@ -1,9 +1,14 @@
 import styles from "./MappingStandard.module.scss";
 import { Header, Body, Button, Select, Option, Collapse, Panel } from "..";
 import { Empty, Popconfirm, Typography, Tooltip } from "antd";
-import { SwapOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import {
+  SwapOutlined,
+  InfoCircleOutlined,
+  WarningOutlined,
+} from "@ant-design/icons";
 import { MappingTable } from "./MappingTable";
 import { useMappingStandard } from "./hooks/useMappingStandard";
+import { useState } from "react";
 
 export const MappingStandard = ({ selectedCurriculum }) => {
   const [
@@ -20,22 +25,34 @@ export const MappingStandard = ({ selectedCurriculum }) => {
     handleSaveBtn,
   ] = useMappingStandard(selectedCurriculum);
 
+  const [isEditingTable, setIsEditingTable] = useState(false);
+
   console.log(mapping);
   return (
     <div>
       <div className={styles.tabHead}>
         <div className={styles.header}>
-          <Header level={2}>Mapping Standard&nbsp;</Header>
+          <Header level={5}>Mapping Standard&nbsp;</Header>
           <Tooltip title="All mapping will reset when swap or change Standard">
-            <InfoCircleOutlined style={{ color: "#009cc4" }} />
+            <InfoCircleOutlined />
           </Tooltip>
         </div>
         {!isEditing ? (
           <Button onClick={() => setIsEditing(true)}>Edit</Button>
         ) : (
-          <Button type="primary" onClick={() => handleSaveBtn(false)}>
-            Save
-          </Button>
+          <div className={styles.flexrow}>
+            <WarningOutlined style={{ color: "#ffcc00" }} />
+            <Body level={4}>
+              Please click Save button after complete mapping!
+            </Body>
+            <Button
+              disabled={isEditingTable}
+              type="primary"
+              onClick={() => handleSaveBtn(false)}
+            >
+              Save
+            </Button>
+          </div>
         )}
       </div>
       <div className={styles.content}>
@@ -117,6 +134,7 @@ export const MappingStandard = ({ selectedCurriculum }) => {
                       mapping={mapping}
                       setMapping={setMapping}
                       allStandard={standardList}
+                      setIsEditingTable={setIsEditingTable}
                     />
                   </Panel>
                 ))}

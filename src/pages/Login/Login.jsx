@@ -138,6 +138,7 @@ export const Login = () => {
           alt="login"
           className={styles.loginPic}
           type="image/svg+xml"
+          aria-label="login"
         />
       </div>
     </div>

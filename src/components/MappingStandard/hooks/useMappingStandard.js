@@ -26,10 +26,11 @@ export const useMappingStandard = (selectedCurriculum) => {
                         if (mms.relative_sub_std_id === r_ss.sub_std_id) {
                             mappedSubStandard = [...mappedSubStandard, `${r_gss.group_sub_std_id}.${r_ss.sub_std_id}`]
                         }
+                        return null
                     })
+                    return null
                 })
             )
-
             return mappedSubStandard
         }
 

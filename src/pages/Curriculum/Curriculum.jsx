@@ -191,6 +191,7 @@ export function Curriculum() {
         maskClosable={false}
         confirmLoading={confirmLoading}
         width="700px"
+        centered
       >
         {message !== "" && (
           <Alert
@@ -286,15 +287,15 @@ export function Curriculum() {
               Remove Curriculum
             </Button>
           </div>
-          <Tabs defaultActiveKey="1">
+          <Tabs defaultActiveKey="1" destroyInactiveTabPane>
             <TabPane tab="Course" key="1">
               <CourseTable selectedCur={selected} />
             </TabPane>
             <TabPane tab="Standard" key="2">
-              <Standard selectedCurriculum={selected.curriculum_id}/>
+              <Standard selectedCurriculum={selected.curriculum_id} />
             </TabPane>
             <TabPane tab="Mapping" key="3">
-              <MappingStandard selectedCurriculum={selected.curriculum_id}/>
+              <MappingStandard selectedCurriculum={selected.curriculum_id} />
             </TabPane>
           </Tabs>
           <Modal

@@ -39,8 +39,7 @@ export const useSubStandard = (standard,groupSubStdId, stdId, allStandard, setAl
         }
     };
 
-    async function save(subStandardNo, subStdId) {
-
+    async function save(subStandardNo,subStdId) {
         try {
             const row = await form.validateFields()
             const newData = [...data];
@@ -88,6 +87,19 @@ export const useSubStandard = (standard,groupSubStdId, stdId, allStandard, setAl
                     setAllStandard(newAllStandard)
                 })
             }
+            // if (index > -1) {
+            //     const item = newData[index];
+            //     newData.splice(index, 1, { ...item, ...row });
+            //     setData(newData);
+            //     setEditingKey("");
+            //     console.log("a")
+            // } 
+            // else {
+            //     newData.push(row);
+            //     setData(newData);
+            //     setEditingKey("");
+            //     console.log("b")
+            // }
         } catch (errInfo) {
             console.log("Validate Failed:", errInfo);
         }

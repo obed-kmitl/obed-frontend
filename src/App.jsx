@@ -12,7 +12,8 @@ import {
   NotFound,
   Overview,
   Planning,
-  Activity
+  Activity,
+  LearningOutcome,
 } from "./pages";
 import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
@@ -75,6 +76,9 @@ function App() {
                 </PrivateRoute>
                 <PrivateRoute path="/:sectionId/student">
                   <Student />
+                </PrivateRoute>
+                <PrivateRoute path="/:sectionId/lo">
+                  <LearningOutcome />
                 </PrivateRoute>
                 <PrivateRoute path="/:sectionId/planning">
                   <Planning />

@@ -85,7 +85,7 @@ export const Plan = () => {
         <Select
           defaultValue={"None"}
           onChange={onChangeCurriculum}
-          width="250px"
+          width="200px"
           placeholder="Please Select Curriculum"
         >
           <Option value={undefined} disabled>
@@ -98,20 +98,26 @@ export const Plan = () => {
           ))}
         </Select>
         {selectedCurriculum &&
-          <>
-            <Header level={2}>Semester</Header>
-            <Select
-              defaultValue={"None"}
-              onChange={onChangeSemester}
-              width={100}
-            >
-              {allSemester.map((e) => (
-                <Option value={e.semester_id} key={e.semester_number + "/" + e.year_number}>
-                  {e.semester_number}/{e.year_number}
-                </Option>
-              ))}
-            </Select>
-          </>
+          <div className={styles.flexrowSpace}>
+            <div className={styles.flexrow}>
+              <Header level={2}>Semester</Header>
+              <Select
+                defaultValue={"None"}
+                onChange={onChangeSemester}
+                width={100}
+              >
+                {allSemester.map((e) => (
+                  <Option value={e.semester_id} key={e.semester_number + "/" + e.year_number}>
+                    {e.semester_number}/{e.year_number}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+            <div className={styles.flexrow}>
+              <Header level={5}>Create and Duplicate year plan from lastest year</Header>
+             <Button>Create</Button>
+            </div>
+          </div>
         }
       </div>
       {selectedSemester !== undefined ?

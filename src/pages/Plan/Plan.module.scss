@@ -15,6 +15,18 @@
     margin: 0;
   }
 }
+.flexrowSpace{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flexrow{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
 
 .planHeader {
   margin: 24px 0;

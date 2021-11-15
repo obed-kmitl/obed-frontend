@@ -1,5 +1,6 @@
 import styles from './ActivityList.module.scss'
 import { Collapse, Panel, Header, Select, Option } from '..'
+import { ActivityCard } from '..'
 
 const catagory = [
     {
@@ -27,6 +28,63 @@ const catagory = [
         catagory: "Quiz",
         weight: 5
     },
+]
+
+const activities = [
+    {
+        id: 1,
+        title: "Homework #1",
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
+        catagory_id: 1,
+        type: "Individual",
+        sub_activity: "Single",
+        total_score: 10,
+    },
+    {
+        id: 2,
+        title: "Homework #2",
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
+        catagory_id: 1,
+        type: "Individual",
+        sub_activity: "Multiple",
+        total_score: 10,
+    },
+    {
+        id: 3,
+        title: "Assignment #1",
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
+        catagory_id: 2,
+        type: "Group",
+        sub_activity: "Single",
+        total_score: 20,
+    },
+    {
+        id: 4,
+        title: "Quiz #1",
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
+        catagory_id: 5,
+        type: "Individual",
+        sub_activity: "Multiple",
+        total_score: 10,
+    },
+    {
+        id: 5,
+        title: "Final Exam",
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
+        catagory_id: 3,
+        type: "Individual",
+        sub_activity: "Multiple",
+        total_score: 40,
+    },
+    {
+        id: 6,
+        title: "Adttendance",
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
+        catagory_id: 4,
+        type: "Individual",
+        sub_activity: "Single",
+        total_score: 100,
+    }
 ]
 
 
@@ -61,7 +119,9 @@ export const ActivityList = () => {
                         }
                         key={cat.id}
                     >
-                        <p>test</p>
+                        {activities.filter((atv)=>atv.catagory_id===cat.id).map((activity,index) =>
+                            <ActivityCard activity={activity} key={activity.id} index={index+1} />
+                        )}
                     </Panel>
                 )}
             </Collapse>

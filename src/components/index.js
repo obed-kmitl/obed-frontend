@@ -13,3 +13,4 @@ export { PrivateRoute } from "./Routes/PrivateRoute";
 export { PublicRoute } from "./Routes/PublicRoute";
 export { CourseCard } from "./CourseCard/CourseCard"
 export { ActivityList } from "./ActivityList/ActivityList"
+export { ActivityCard } from "./ActivityCard/ActivityCard"

@@ -1,0 +1,54 @@
+@import "../../styles/color.scss";
+
+.card {
+    width: 100%;
+    height: 80px;
+    border: 1px solid $color-grey-200;
+    border-radius: 2px;
+    margin: 0.5rem 0;
+    display: flex;
+    .number {
+        width: 64px;
+        height: 80px;
+        border-right: 1px solid $color-grey-200;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .detail {
+        width: 100%;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1rem;
+        .content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            .titleBox {
+                display: flex;
+                .title {
+                    color: $color-turquoise-500;
+                    margin-right: 0.5rem;
+                }
+                .tag {
+                    height: 22px;
+                    //line-height: 2.5;
+                    font-size: 14px;
+                    margin: 0.25rem;
+                }
+            }
+            .description {
+                //width: 70%;
+                max-width: 600px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+        .score {
+            color: $color-olive-500;
+        }
+    }
+}

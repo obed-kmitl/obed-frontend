@@ -10,4 +10,7 @@
     :global(.ant-collapse-icon-position-right > .ant-collapse-item > .ant-collapse-header){
         padding-left: 0;
     }
+    :global(.ant-collapse-content-box){
+        padding: 0;
+    }
 }

@@ -49,6 +49,13 @@
         }
         .score {
             color: $color-olive-500;
+            display: flex;
+            align-items: center;
         }
     }
+    .logo {
+        width: 60px;
+        margin: 0.5rem;
+    }
+   
 }

@@ -195,6 +195,7 @@ export const useActivity = () => {
                 }
             })
         )
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterOption])
 
 
@@ -220,11 +221,13 @@ export const useActivity = () => {
                 }
             })
         )
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [archriveFilterOption])
 
     useEffect(() => {
         setFilteredActivity(activity);
         setFilteredArchriveActivity(archriveActivity);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activity])
 
     return { catagory, filteredActivity, filteredArchriveActivity, googleActivity, changeGroup, changeType, changeCatagory }

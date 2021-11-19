@@ -146,7 +146,6 @@ export const Standard = ({ selectedCurriculum }) => {
             </div>
             <Collapse accordion>
               {item.details.map((ele, i) => {
-              
                 return <Panel
                   key={"Groupsub "+i}
                   header={
@@ -251,7 +250,7 @@ export const Standard = ({ selectedCurriculum }) => {
                     stdId={item.id}
                     allStandard={standard}
                     setAllStandard={setStandard}
-                    key={"table "+ele.subStandardId}
+                    tableKey={"table "+ele.subStandardId}
                   />
                 </Panel>
               }

@@ -1,19 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Select, Option, Button } from "..";
 import { Table, Input, Popconfirm, Form, Typography, Tag } from "antd";
 import styles from './SectionTable.module.scss'
 import {
     EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleTwoTone
 } from '@ant-design/icons';
+import httpClient from "../../utils/httpClient";
 
-export const SectionTable = ({ section = [], teacher }) => {
+export const SectionTable = ({ section, teacher, groupSectionId }) => {
     const [form] = Form.useForm();
-    const [data, setData] = useState(section);
+    const [data, setData] = useState([]);
     const [editingKey, setEditingKey] = useState("");
     const [isNewAdded, setIsNewAdded] = useState(false);
 
-    const isEditing = (record) => record.section_id === editingKey;
-    const teacherList = teacher
+    const getThPrefix = {
+        PROF_DR: "ศ.ดร.",
+        PROF: "ศ.",
+        ASSOC_PROF_DR: "รศ.ดร.",
+        ASSOC_PROF: "รศ.",
+        ASST_PROF_DR: "ผศ.ดร.",
+        ASST_PROF: "ผศ.",
+        DR: "ดร.",
+        INSTRUCTOR: "อ.",
+    };
+
+    const isEditing = (record) => record.section_number === editingKey;
     const EditableCell = ({
         editing,
         dataIndex,
@@ -33,9 +44,9 @@ export const SectionTable = ({ section = [], teacher }) => {
                         showSearch
                         placeholder="Select Teacher"
                     >
-                        {teacherList.map((ele, i) => (
-                            <Option key={ele.id} value={ele.id}>
-                                {ele.firstname}{" "}{ele.lastname}
+                        {teacher.map((ele) => (
+                            <Option key={ele.user_id} value={ele.user_id}>
+                                {getThPrefix[ele.prefix]}{" "}{ele.firstname}{" "}{ele.lastname}
                             </Option>
                         ))}
                     </Select>
@@ -61,11 +72,12 @@ export const SectionTable = ({ section = [], teacher }) => {
                             },
                             {
                                 validator: (rule, value, callback) => {
-                                    const alreadyExistSection = data.map((e) => e.section_id).filter((e) => e !== record.section_id)
-                                    if (alreadyExistSection.includes(value)) {
+
+                                    const alreadyExistSection = data.map((e) => e.section_number.toString()).filter((e) => e !== record.section_number.toString())
+                                    if (alreadyExistSection.includes(value.toString())) {
                                         return Promise.reject("Already exist!")
                                     }
-                                    if ((isNaN(value) || value.includes(".")) && inputType !== "teacher") {
+                                    if ((isNaN(value.toString()) || value.toString().includes(".")) && inputType !== "teacher") {
                                         return Promise.reject("Enter number!")
                                     }
                                     return Promise.resolve()
@@ -86,7 +98,7 @@ export const SectionTable = ({ section = [], teacher }) => {
         form.setFieldsValue({
             ...record,
         });
-        setEditingKey(record.section_id);
+        setEditingKey(record.section_number);
     };
 
     const cancel = () => {
@@ -97,71 +109,96 @@ export const SectionTable = ({ section = [], teacher }) => {
         }
     };
 
-    const save = async (section_id) => {
+    const save = async (section_number) => {
         try {
             const row = await form.validateFields();
             const newData = [...data];
-            const index = newData.findIndex((item) => section_id === item.section_id);
-
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, { ...item, ...row });
-                setData(newData);
-                setEditingKey("");
-            } else {
-                newData.push(row);
-                setData(newData);
-                setEditingKey("");
-            }
+            const index = newData.findIndex((item) => section_number === item.section_number);
             if (isNewAdded) {
-                setIsNewAdded(false);
+                return await httpClient.post(`/semester/createSection/${groupSectionId}`, {
+                    section_number: parseInt(row.section_number),
+                    user_id_list: row.teacher_list
+                }).then((res) => {
+                    newData.splice(index, 1, {
+                        section_id: res.data.data[0].section_id,
+                        section_number: res.data.data[0].section_number,
+                        teacher_list: res.data.data[0].teacher_list?.map((e) => e.user_id)
+                    });
+                    setData(newData);
+                    setEditingKey("");
+                    setIsNewAdded(false);
+                }).catch((err) => console.log(err))
+            } else {
+                const item = newData[index];
+                return await httpClient.put(`/semester/updateSection/${item.section_id}`, {
+                    section_number: parseInt(row.section_number),
+                    user_id_list: row.teacher_list
+                }).then(() => {
+                    newData.splice(index, 1, { ...item, ...row });
+                    setData(newData);
+                    setEditingKey("");
+                })
             }
-
         } catch (errInfo) {
             console.log("Validate Failed:", errInfo);
         }
     }
 
     const handleAdd = () => {
-        //console.log(data)
         setIsNewAdded(true)
-        const newData = { section_id: '', teacher: [] };
+        const newData = {
+            section_id: null,
+            section_number: '',
+            teacher_list: []
+        };
         setData([...data, newData]);
         form.setFieldsValue({
-            section_id: "",
-            teacher: []
+            section_number: "",
+            teacher_list: []
         });
-        setEditingKey(newData.section_id);
-
-
+        setEditingKey(newData.section_number);
     };
 
-    const deleteSection = (record) => {
-        setData(data.filter((section) => section.section_id !== record.section_id));
+    async function deleteSection(record) {
+        return await httpClient
+            .delete(`/semester/removeSection/${record.section_id}`)
+            .then(() => {
+                setData(data.filter((section) => section.section_number !== record.section_number));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
     }
+
+    useEffect(() => {
+        let newData = [...section]
+        newData.forEach((section) => {
+            section.teacher_list = section.teacher_list.map(e => e.user_id)
+        })
+        setData(newData)
+    }, [section])
 
     const columns = [
         {
             title: "Section",
-            dataIndex: "section_id",
-            key: "section_id",
+            dataIndex: "section_number",
+            key: "section_number",
             width: 120,
             editable: true,
-            //   sorter: (a, b) => a.course_id - b.course_id,
         },
         {
             title: "Teacher",
-            dataIndex: "teacher",
+            dataIndex: "teacher_list",
             editable: true,
-            render: (teacher) => (
+            render: (selectedteacher) => (
                 <>
-                    {teacher?.map((ele) => {
-                        const teacherData = teacherList.filter((teacher) => teacher.id === ele);
-                        const teacherFirstName = teacherData[0].firstname
-                        const teacherLastName = teacherData[0].lastname
-                        const teacherName = `${teacherFirstName} ${teacherLastName}`
-                        // console.log(teacherData)
-                        // console.log(teacherName)
+                    {selectedteacher?.map((ele) => {
+                        const teacherData = teacher.filter((teacher) => teacher.user_id === ele)[0];
+                        const teacherPrefix = getThPrefix[teacherData.prefix]
+                        const teacherFirstName = teacherData.firstname
+                        const teacherLastName = teacherData.lastname
+                        const teacherName = `${teacherPrefix} ${teacherFirstName} ${teacherLastName}`
                         return <Tag style={{ height: '36px', lineHeight: '2.5', fontSize: '14px' }} key={ele}>{teacherName}</Tag>;
                     })}
                 </>
@@ -178,8 +215,7 @@ export const SectionTable = ({ section = [], teacher }) => {
 
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a
-                            onClick={()=>save(record.section_id)}
-                            
+                            onClick={() => save(record.section_number)}
                             style={{
                                 marginRight: 14,
                             }}
@@ -187,8 +223,8 @@ export const SectionTable = ({ section = [], teacher }) => {
                             <SaveOutlined />
                         </a>
 
-                      
-                        <Popconfirm title="Discard Changes?" onConfirm={()=>cancel()}>
+
+                        <Popconfirm title="Discard Changes?" onConfirm={() => cancel()}>
                             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                             <a >
                                 <CloseCircleTwoTone twoToneColor="#C73535" />
@@ -232,7 +268,7 @@ export const SectionTable = ({ section = [], teacher }) => {
             onCell: (record) => ({
                 record,
                 inputType:
-                    col.dataIndex === "teacher"
+                    col.dataIndex === "teacher_list"
                         ? "teacher"
                         : "text",
                 dataIndex: col.dataIndex,
@@ -258,7 +294,7 @@ export const SectionTable = ({ section = [], teacher }) => {
                     columns={mergedColumns}
                     rowClassName="editable-row"
                     pagination={false}
-                    rowKey="section_id"
+                    rowKey="section_number"
                     onRow={() => ({ className: styles.editableCell })}
                 />
             </Form>

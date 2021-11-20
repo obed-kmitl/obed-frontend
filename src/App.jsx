@@ -27,7 +27,7 @@ function App() {
   if (window.location.host.split(".")[0] === "admin") {
     return (
       <UserContext.Provider value={{ user, setUser }}>
-        <Router>
+        <Router basename="/obed">
           <Switch>
             <PublicRoute path="/login">
               <Login />

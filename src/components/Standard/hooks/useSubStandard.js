@@ -143,6 +143,7 @@ export const useSubStandard = (
   }
   useEffect(() => {
     setData(standard);
+    console.log(standard)
   }, [standard]);
 
   return {

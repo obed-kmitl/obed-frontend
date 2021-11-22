@@ -38,6 +38,7 @@ export const StandardTable = ({
 
   const isEditing = (record) => record.subStandardNo === editingKey;
 
+
   const EditableCell = ({
     editing,
     dataIndex,
@@ -65,17 +66,23 @@ export const StandardTable = ({
               {
                 validator: (rule, value, callback) => {
                   const alreadyExistNo = data
-                    .map((e) => e.subStandardNo)
-                    .filter((e) => e !== record.subStandardNo);
+                    .map((e) => e.subStandardNo.toString())
+                    .filter((e) => e !== record.subStandardNo.toString());
+                   
                   if (inputType === "number") {
                     if (alreadyExistNo.includes(value)) {
+                      console.log(record.subStandardNo)
                       return Promise.reject("Already exist!");
                     }
                     if (isNaN(value) || value.toString().includes(".")) {
                       return Promise.reject("Enter number!");
                     }
+                    if(value==="0"){
+                      return Promise.reject("Enter number more than 0!");
+                    }
                   }
                   return Promise.resolve();
+                  
                 },
               },
             ]}

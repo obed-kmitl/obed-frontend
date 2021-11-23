@@ -74,43 +74,57 @@ export const useSemester = () => {
             });
     }
 
+    async function fetchAllSemester(value) {
+        return await httpClient
+            .get(`/semester/getByCurriculum/${value}`)
+            .then((response) => {
+                setAllSemester(response.data.data)
+                console.log(response.data.data)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+
 
     //course ใช้เลือกใน Tranfer
     function onChangeCurriculum(value) {
         setSelectedCurriculum(value)
-        setAllSemester([
-            {
-                semester_id: 1,
-                year_number: 2021,
-                semester_number: 1,
-            },
-            {
-                semester_id: 2,
-                year_number: 2021,
-                semester_number: 2,
-            },
-            {
-                semester_id: 3,
-                year_number: 2021,
-                semester_number: 3,
-            },
-            {
-                semester_id: 4,
-                year_number: 2022,
-                semester_number: 1,
-            },
-            {
-                semester_id: 5,
-                year_number: 2022,
-                semester_number: 2,
-            },
-            {
-                semester_id: 6,
-                year_number: 2022,
-                semester_number: 3,
-            }
-        ])
+        // setAllSemester([
+        //     {
+        //         semester_id: 1,
+        //         year_number: 2021,
+        //         semester_number: 1,
+        //     },
+        //     {
+        //         semester_id: 2,
+        //         year_number: 2021,
+        //         semester_number: 2,
+        //     },
+        //     {
+        //         semester_id: 3,
+        //         year_number: 2021,
+        //         semester_number: 3,
+        //     },
+        //     {
+        //         semester_id: 4,
+        //         year_number: 2022,
+        //         semester_number: 1,
+        //     },
+        //     {
+        //         semester_id: 5,
+        //         year_number: 2022,
+        //         semester_number: 2,
+        //     },
+        //     {
+        //         semester_id: 6,
+        //         year_number: 2022,
+        //         semester_number: 3,
+        //     }
+        // ])
         fetchAllCourse(value)
+        fetchAllSemester(value)
     }
 
     async function onChangeSemester(value) {

@@ -106,7 +106,7 @@ export const Plan = () => {
                 onChange={onChangeSemester}
                 width={100}
               >
-                {allSemester.map((e) => (
+                {allSemester?.map((e) => (
                   <Option value={e.semester_id} key={e.semester_number + "/" + e.year_number}>
                     {e.semester_number}/{e.year_number}
                   </Option>

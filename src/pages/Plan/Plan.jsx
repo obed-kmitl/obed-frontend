@@ -10,13 +10,14 @@ import {
   Collapse,
   Panel,
   SectionTable,
+  Body
 } from "../../components";
-import { Divider, Modal, Popconfirm, Transfer } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { Divider, message, Modal, Popconfirm, Transfer } from "antd";
+import { DeleteOutlined ,WarningTwoTone } from "@ant-design/icons";
 import { useSemester } from "./hooks/useSemester";
 
 export const Plan = () => {
-  const [
+  const {
     allSemester,
     allCurriculum,
     allCourse,
@@ -25,7 +26,7 @@ export const Plan = () => {
     selectedSemester,
     onChangeCurriculum,
     onChangeSemester,
-    handleAddCourses,
+    handleAddCourse,
     isModalVisible,
     setIsModalVisible,
     targetKeys,
@@ -33,8 +34,11 @@ export const Plan = () => {
     onChange,
     onSelectChange,
     handleDeleteCourse,
-    teacher
-  ] = useSemester()
+    teacher,
+    duplicateYear,
+    duplicateModalVisible, 
+    setDuplicateModalVisible
+} = useSemester()
 
   const [filterList, setFilterList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -85,7 +89,7 @@ export const Plan = () => {
         <Select
           defaultValue={"None"}
           onChange={onChangeCurriculum}
-          width="200px"
+          width="250px"
           placeholder="Please Select Curriculum"
         >
           <Option value={undefined} disabled>
@@ -115,7 +119,7 @@ export const Plan = () => {
             </div>
             <div className={styles.flexrow}>
               <Header level={5}>Create and Duplicate year plan from lastest year</Header>
-             <Button>Create</Button>
+              <Button onClick={() => setDuplicateModalVisible(true)}>Create</Button>
             </div>
           </div>
         }
@@ -190,7 +194,7 @@ export const Plan = () => {
             Add Course
           </Header>
         }
-        onOk={() => handleAddCourses(targetKeys, selectedSemester.semester_id)}
+        onOk={() => handleAddCourse(targetKeys, selectedSemester.semester_id)}
         onCancel={handleCancel}
         okText={"Add"}
         width={1024}
@@ -218,6 +222,34 @@ export const Plan = () => {
           render={(item) => `${item.course_number} ${item.course_name_en}`}
         />
       </Modal>
+      <Modal
+        visible={duplicateModalVisible}
+        title={
+          <Header level={3}>
+            Duplicate Semester
+          </Header>
+        }
+        onOk={() => {
+          const allYear = allSemester.map((e)=>e.year_number)
+          if(Math.max(...allYear)< new Date().getFullYear()+545 ){
+             duplicateYear();
+          }else{
+            message.error("You can plan up to 2 year in advance")
+          }
+         
+        }}
+        onCancel={()=>setDuplicateModalVisible(false)}
+        okText={"Duplicate"}
+        width={600}
+        maskClosable={false}
+        centered
+      >
+        <Header level={4}>Are you sure to duplicate all semester from lastest year?</Header>
+        <Body level={2}><WarningTwoTone twoToneColor="#ffcc00" />&nbsp;you can duplicate once for each year and cannot delete semester plan</Body>
+        <Body level={2}><WarningTwoTone  twoToneColor="#ffcc00"/>&nbsp;you can plan up to 2 year in advance </Body>
+      </Modal>
     </div>
+
+
   );
 };

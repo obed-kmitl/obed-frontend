@@ -11,8 +11,9 @@ import {
   Student,
   NotFound,
   Overview,
-  LearningOutcome,
   Planning,
+  Activity,
+  LearningOutcome,
 } from "./pages";
 import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
@@ -26,7 +27,7 @@ function App() {
   if (window.location.host.split(".")[0] === "admin") {
     return (
       <UserContext.Provider value={{ user, setUser }}>
-        <Router>
+        <Router basename="/obed">
           <Switch>
             <PublicRoute path="/login">
               <Login />
@@ -81,6 +82,9 @@ function App() {
                 </PrivateRoute>
                 <PrivateRoute path="/:sectionId/planning">
                   <Planning />
+                </PrivateRoute>
+                <PrivateRoute path="/:sectionId/activity">
+                  <Activity />
                 </PrivateRoute>
                 <PrivateRoute path="/profile">
                   <Profile />

@@ -81,15 +81,13 @@ export const useSemester = () => {
         return await httpClient
             .get(`/semester/getByCurriculum/${value}`)
             .then((response) => {
-                setAllSemester(response.data.data)
+                setAllSemester(response.data.data.reverse())
                 console.log(response.data.data)
             })
             .catch((error) => {
                 console.log(error);
             });
     }
-
-
 
     //course ใช้เลือกใน Tranfer
     function onChangeCurriculum(value) {
@@ -156,6 +154,7 @@ export const useSemester = () => {
             })
             .then((response) => {
                 setDuplicateModalVisible(false)
+                fetchAllSemester(selectedCurriculum)
                 message.success("Duplicate Successfully")
             })
             .catch((error) => {

@@ -245,7 +245,7 @@ export const Plan = () => {
         centered
       >
         <Header level={4}>Are you sure to duplicate all semester from lastest year?</Header>
-        <Body level={2}><WarningTwoTone twoToneColor="#ffcc00" />&nbsp;you can duplicate once for each year and cannot delete semester plan</Body>
+        <Body level={2}><WarningTwoTone twoToneColor="#ffcc00" />&nbsp;You can only copy a semester plan once each year and you can't delete it.</Body>
         <Body level={2}><WarningTwoTone  twoToneColor="#ffcc00"/>&nbsp;you can plan up to 2 year in advance </Body>
       </Modal>
     </div>

@@ -2,132 +2,62 @@ import styles from "./Home.module.scss";
 import { Helmet } from "react-helmet";
 import { Body, CourseCard, Header, Select, Option, Input } from "../../components";
 import { Divider } from "antd"
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SectionContext from "../../contexts/SectionContext";
+import httpClient from "../../utils/httpClient";
 
-const courseList = [
-  {
-    year: "2021",
-    semester: "1",
-    ended: false,
-    courses: [
-      {
-        id: "1",
-        course_id: "01076001",
-        course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-        course_name_en: "Introduction to Computer Engineering",
-        section: "1",
-        year: "2021",
-        semester: "1",
-      },
-      {
-        id: "2",
-        course_id: "01076002",
-        course_name_th: "พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์",
-        course_name_en: "Programming Fundamental",
-        section: "1",
-        year: "2021",
-        semester: "1",
-      },
-      {
-        id: "3",
-        course_id: "01076003",
-        course_name_th: "วงจรไฟฟ้าและอิเล็กทรอนิกส์",
-        course_name_en: "Circuits and Electronics",
-        section: "1",
-        year: "2021",
-        semester: "1",
-      },
-      {
-        id: "4",
-        course_id: "01076004",
-        course_name_th: "การเขียนโปรแกรมเชิงวัตถุ",
-        course_name_en: "Object Oriented Programming",
-        section: "1",
-        year: "2021",
-        semester: "1",
-      },
-      {
-        id: "5",
-        course_id: "01076001",
-        course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-        course_name_en: "Introduction to Computer Engineering",
-        section: "2",
-        year: "2021",
-        semester: "1",
-      },
-    ]
-  },
-  {
-    year: "2020",
-    semester: "2",
-    ended: true,
-    courses: [
-      {
-        id: "6",
-        course_id: "01076001",
-        course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-        course_name_en: "Introduction to Computer Engineering",
-        section: "1",
-        year: "2020",
-        semester: "2",
-      },
-      {
-        id: "7",
-        course_id: "01076002",
-        course_name_th: "พื้นฐานการเขียนโปรแกรมคอมพิวเตอร์",
-        course_name_en: "Programming Fundamental",
-        section: "1",
-        year: "2020",
-        semester: "2",
-      },
-      {
-        id: "8",
-        course_id: "01076003",
-        course_name_th: "วงจรไฟฟ้าและอิเล็กทรอนิกส์",
-        course_name_en: "Circuits and Electronics",
-        section: "1",
-        year: "2020",
-        semester: "2",
-      },
-    ]
-  },
-  {
-    year: "2020",
-    semester: "1",
-    ended: true,
-    courses: [
-      {
-        id: "9",
-        course_id: "01076004",
-        course_name_th: "การเขียนโปรแกรมเชิงวัตถุ",
-        course_name_en: "Object Oriented Programming",
-        section: "1",
-        year: "2020",
-        semester: "1",
-      },
-      {
-        id: "10",
-        course_id: "01076001",
-        course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-        course_name_en: "Introduction to Computer Engineering",
-        section: "2",
-        year: "2020",
-        semester: "1",
-      },
-    ]
-  }
-
-];
 export const Home = () => {
   const [filterSelected, setFilterSelected] = useState()
-  const [filteredCourse, setFilteredCourse] = useState(courseList)
+  const [filteredCourse, setFilteredCourse] = useState([])
+  const [allCourse,setAllCourse]=useState([])
   const { setSection } = useContext(SectionContext)
+
+  async function fetchCourse() {
+    const seen = new Set();
+    return await httpClient
+      .get(`/semester/getSectionByTeacher`)
+      .then((response) => {
+        const allSemester = response.data.data[0].sections.map((e) =>
+        ({
+          semester_id: e.semester_id,
+          year: e.year_number,
+          semester: e.semester_number,
+          ended: false,
+          courses: []
+        })).filter(el => {
+          const duplicate = seen.has(el.semester_id);
+          seen.add(el.semester_id);
+          return !duplicate;
+        }).sort(({ semester_id: first }, { semester_id: second }) => first - second);
+
+        allSemester.forEach(semester => {
+          response.data.data[0].sections.forEach(course => {
+            if (course.semester_id === semester.semester_id) {
+              semester.courses.push({
+                id: course.section_id,
+                course_id: course.course_number,
+                course_name_th: course.course_name_th,
+                course_name_en: course.course_name_en,
+                section: course.section_number,
+                year: course.year_number,
+                semester: course.semester_number,
+              })
+            }
+          })
+        })
+        setFilteredCourse(allSemester)
+        setAllCourse(allSemester.reverse())
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   function search(keyword) {
     if (keyword !== "") {
-      const results = courseList.map((element) => {
+      const results = allCourse.map((element) => {
         return {
           ...element,
           courses: element.courses.filter((subElement) => {
@@ -141,9 +71,13 @@ export const Home = () => {
       })
       setFilteredCourse(results);
     } else {
-      setFilteredCourse(courseList);
+      setFilteredCourse(allCourse.reverse());
     }
   }
+
+  useEffect(() => {
+    fetchCourse()
+  }, [])
 
   return (
     <div className={styles.home}>
@@ -156,14 +90,14 @@ export const Home = () => {
           <Body level={2}>Semester</Body>
           <Select
             placeholder="Semester"
-            onChange={(value) => setFilterSelected(value ? [value.split("/")[0], value.split("/")[1]] : value)}
+            onChange={(value) => setFilterSelected(value ? [parseInt(value.split("/")[0]),parseInt(value.split("/")[1])] : value)}
             style={{ width: "100px" }}
             defaultValue={"All"}
           >
             <Option value={undefined}>
               All
             </Option>
-            {courseList.map((e) => (
+            {allCourse.map((e) => (
               <Option value={e.semester + "/" + e.year} key={e.semester + "/" + e.year}>
                 {e.semester + "/" + e.year}
               </Option>

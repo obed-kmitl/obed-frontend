@@ -14,7 +14,8 @@ const Navbar = () => {
   const { user } = useContext(UserContext);
   const { section } = useContext(SectionContext);
   const isAdmin = window.location.host.split(".")[0] === "admin";
-  const isTeacherHome = window.location.pathname.split("/")[1] === ("" || "profile");
+  const isTeacherHome = window.location.pathname.split("/")[1] === "profile" || window.location.pathname === "/";
+  
 
   const menu = (
     <Menu style={{ minWidth: "200px" }}>

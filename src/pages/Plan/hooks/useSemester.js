@@ -1,3 +1,4 @@
+import { message } from "antd"
 import { useState, useEffect } from "react"
 import httpClient from "../../../utils/httpClient"
 
@@ -14,7 +15,9 @@ export const useSemester = () => {
     const [targetKeys, setTargetKeys] = useState([]);
     const [selectedKeys, setSelectedKeys] = useState([]);
 
-    const [teacher,setTeacher] = useState()
+    const [teacher, setTeacher] = useState()
+
+    const [duplicateModalVisible, setDuplicateModalVisible] = useState(false)
 
 
     const onChange = (nextTargetKeys, direction, moveKeys) => {
@@ -62,7 +65,7 @@ export const useSemester = () => {
                 console.log(error);
             });
     }
-    
+
     async function fetchAllTeacher() {
         return await httpClient
             .get(`/user/getAll`)
@@ -74,43 +77,23 @@ export const useSemester = () => {
             });
     }
 
+    async function fetchAllSemester(value) {
+        return await httpClient
+            .get(`/semester/getByCurriculum/${value}`)
+            .then((response) => {
+                setAllSemester(response.data.data.reverse())
+                console.log(response.data.data)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
     //course ใช้เลือกใน Tranfer
     function onChangeCurriculum(value) {
         setSelectedCurriculum(value)
-        setAllSemester([
-            {
-                semester_id: 1,
-                year_number: 2021,
-                semester_number: 1,
-            },
-            {
-                semester_id: 2,
-                year_number: 2021,
-                semester_number: 2,
-            },
-            {
-                semester_id: 3,
-                year_number: 2021,
-                semester_number: 3,
-            },
-            {
-                semester_id: 4,
-                year_number: 2022,
-                semester_number: 1,
-            },
-            {
-                semester_id: 5,
-                year_number: 2022,
-                semester_number: 2,
-            },
-            {
-                semester_id: 6,
-                year_number: 2022,
-                semester_number: 3,
-            }
-        ])
         fetchAllCourse(value)
+        fetchAllSemester(value)
     }
 
     async function onChangeSemester(value) {
@@ -164,6 +147,21 @@ export const useSemester = () => {
             });
     };
 
+    async function duplicateYear() {
+        return await httpClient
+            .post(`/semester/duplicate`, {
+                curriculum_id: selectedCurriculum
+            })
+            .then((response) => {
+                setDuplicateModalVisible(false)
+                fetchAllSemester(selectedCurriculum)
+                message.success("Duplicate Successfully")
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
 
 
     useEffect(() => {
@@ -185,7 +183,7 @@ export const useSemester = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [addedCourse]);
 
-    return [
+    return {
         allSemester,
         allCurriculum,
         allCourse,
@@ -202,7 +200,9 @@ export const useSemester = () => {
         onChange,
         onSelectChange,
         handleDeleteCourse,
-        teacher
-
-    ]
+        teacher,
+        duplicateYear,
+        duplicateModalVisible, 
+        setDuplicateModalVisible
+    }
 }

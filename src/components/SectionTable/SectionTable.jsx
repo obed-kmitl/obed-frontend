@@ -176,7 +176,7 @@ export const SectionTable = ({ section, teacher, groupSectionId }) => {
         newData.forEach((section) => {
             section.teacher_list = section.teacher_list.map(e => e.user_id)
         })
-        setData(newData)
+        setData(newData.sort(({section_number: first }, {section_number: second }) => first - second))
     }, [section])
 
     const columns = [

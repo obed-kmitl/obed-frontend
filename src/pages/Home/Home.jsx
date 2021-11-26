@@ -2,9 +2,10 @@ import styles from "./Home.module.scss";
 import { Helmet } from "react-helmet";
 import { Body, CourseCard, Header, Select, Option, Input } from "../../components";
 import { Divider } from "antd"
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SectionContext from "../../contexts/SectionContext";
+import httpClient from "../../utils/httpClient";
 
 const courseList = [
   {
@@ -125,6 +126,53 @@ export const Home = () => {
   const [filteredCourse, setFilteredCourse] = useState(courseList)
   const { setSection } = useContext(SectionContext)
 
+  async function fetchCourse() {
+    const seen = new Set();
+    return await httpClient
+      .get(`/semester/getSectionByTeacher`)
+      .then((response) => {
+        console.log(response.data.data[0].sections)
+        const allSemester = response.data.data[0].sections.map((e) =>
+        ({
+          semester_id: e.semester_id,
+          year: e.year_number,
+          semester: e.semester_number,
+          ended: false,
+          courses: []
+        })).filter(el => {
+          const duplicate = seen.has(el.semester_id);
+          seen.add(el.semester_id);
+          return !duplicate;
+        }).sort(({ semester_id: first }, { semester_id: second }) => first - second);
+
+        allSemester.forEach(semester => {
+          response.data.data[0].sections.forEach(course => {
+            if (course.semester_id === semester.semester_id) {
+              semester.courses.push({
+                id: course.section_id,
+                course_id: course.course_number,
+                course_name_th: course.course_name_th,
+                course_name_en: course.course_name_en,
+                section: course.section_number,
+                year: course.year_number,
+                semester: course.semester_number,
+              })
+            }
+          })
+        })
+        setFilteredCourse(allSemester.reverse())
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  useEffect(() => {
+    console.log(filteredCourse)
+  }, [filteredCourse])
+
+
   function search(keyword) {
     if (keyword !== "") {
       const results = courseList.map((element) => {
@@ -144,6 +192,11 @@ export const Home = () => {
       setFilteredCourse(courseList);
     }
   }
+
+  useEffect(() => {
+    fetchCourse()
+    //console.log(user)
+  }, [])
 
   return (
     <div className={styles.home}>

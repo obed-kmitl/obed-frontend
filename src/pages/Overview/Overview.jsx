@@ -13,6 +13,7 @@ import {
 import googleClassroomLogo from "../../assets/img/logo_google_classroom.svg"
 import { useState } from "react";
 import { useGoogleClassroom } from "./hooks/useGoogleClassroom";
+import { useOverview } from "./hooks/useOverview";
 
 const mockCourse =
 {
@@ -90,8 +91,9 @@ const GoogleClassroomCard = ({ name, code, selected, hasAction, handleChangeGCla
 }
 
 export const Overview = () => {
-  //let { sectionId } = useParams();
+ 
   const [course, setCourse] = useState(mockCourse);
+  const {courseData} = useOverview()
   const [
     allGClass,
     selectedGClass,
@@ -106,6 +108,7 @@ export const Overview = () => {
     handleDeleteGClass
   ] = useGoogleClassroom()
 
+  
 
   return (
     <div className={styles.overview}>
@@ -130,19 +133,19 @@ export const Overview = () => {
             <td style={{ width: "20%", minWidth: "200px" }}>
               <Header level={5}>Course Id</Header>
             </td>
-            <td><Body level={2}>{course.course_id}</Body></td>
+            <td><Body level={2}>{courseData?.course_number}</Body></td>
           </tr>
           <tr>
             <td><Header level={5}>Section</Header></td>
-            <td><Body level={2}>{course.section}</Body></td>
+            <td><Body level={2}>{courseData?.section_number}</Body></td>
           </tr>
           <tr>
             <td><Header level={5}>Course Name (EN)</Header></td>
-            <td><Body level={2}>{course.course_name_en}</Body></td>
+            <td><Body level={2}>{courseData?.course_name_en}</Body></td>
           </tr>
           <tr>
             <td><Header level={5}>Course Name (TH)</Header></td>
-            <td><Body level={2}>{course.course_name_th}</Body></td>
+            <td><Body level={2}>{courseData?.course_name_th}</Body></td>
           </tr>
           <tr className={styles.nestTableTitle}>
             <td><Header level={5}>Instructor</Header></td>

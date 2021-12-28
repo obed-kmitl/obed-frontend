@@ -8,7 +8,7 @@ import { useActivityDetail } from './hooks/useActivityDetail';
 
 export const ActivityDetail = () => {
     let { activityId } = useParams();
-    const {activity} = useActivityDetail()
+    const {activity,catagory} = useActivityDetail()
     return (
         <div className={styles.activity}>
             <Helmet>
@@ -22,7 +22,7 @@ export const ActivityDetail = () => {
             </div>
             <Tabs defaultActiveKey="1">
                 <TabPane tab="Overview" key="1">
-                   <ActivityOverview activity={activity}/>
+                   <ActivityOverview activity={activity} catagory={catagory}/>
                 </TabPane>
                 <TabPane tab="Group" key="2" disabled>
                    

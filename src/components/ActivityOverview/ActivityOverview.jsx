@@ -1,6 +1,6 @@
 import styles from '../ActivityOverview/ActivityOverview.module.scss'
-import { Header, Body, Button } from '..'
-import {Divider } from 'antd'
+import { ActivityTable, Header, Body, Button } from '..'
+import { Divider } from 'antd'
 
 export const ActivityOverview = ({ activity, catagory }) => {
 
@@ -28,11 +28,7 @@ export const ActivityOverview = ({ activity, catagory }) => {
                 </div>
             </div >
             <div className={styles.objective}>
-                <div className={styles.header}>
-                    <Header level={2}>Objective</Header>
-                    <Button>Add</Button>
-                    </div>
-                
+                <ActivityTable />
             </div>
         </>
     )

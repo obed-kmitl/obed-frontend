@@ -1,0 +1,14 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+.tag {
+    height: 36px;
+    line-height: 2.5;
+    font-size: 14px;
+    width: 100%;
+    max-width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

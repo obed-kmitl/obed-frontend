@@ -14,3 +14,4 @@ export { PublicRoute } from "./Routes/PublicRoute";
 export { CourseCard } from "./CourseCard/CourseCard"
 export { ActivityList } from "./ActivityList/ActivityList"
 export { ActivityCard } from "./ActivityCard/ActivityCard"
+export { default as ClassroomTab } from './ClassroomTab/ClassroomTab'

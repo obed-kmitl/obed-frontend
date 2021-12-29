@@ -4,8 +4,6 @@ import { ActivityCard } from '..'
 import googleClassroomLogo from "../../assets/img/logo_google_classroom.svg"
 import { useActivity } from './hooks/useActivity'
 
-
-
 export const ActivityList = ({ archrive, google }) => {
 
     const {catagory,filteredActivity,filteredArchriveActivity,googleActivity,changeGroup,changeType,changeCatagory} = useActivity()

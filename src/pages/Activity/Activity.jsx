@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import {
     Header, Button, TabPane, Tabs,
-    ActivityList
+    ActivityList, ClassroomTab
 } from "../../components";
 
 export const Activity = () => {
@@ -27,7 +27,7 @@ export const Activity = () => {
                     <ActivityList archrive />
                 </TabPane>
                 <TabPane tab="Google Classsroom" key="3">
-                    <ActivityList google />
+                    <ClassroomTab />
                 </TabPane>
             </Tabs>
 

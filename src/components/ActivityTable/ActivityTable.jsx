@@ -3,52 +3,86 @@ import { Table, Input, InputNumber, Popconfirm, Form, Typography, Tag, Tooltip }
 import {
     EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleTwoTone
 } from '@ant-design/icons';
-import { Header, Button } from '..'
+import { Header, Button, Select, Option } from '..'
 import styles from '../ActivityTable/ActivityTable.module.scss'
 import { useActivityTable } from './hooks/useActivityTable';
+import TextArea from 'antd/lib/input/TextArea';
 
-const EditableCell = ({
-    editing,
-    dataIndex,
-    title,
-    inputType,
-    record,
-    index,
-    children,
-    ...restProps
-}) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
-    return (
-        <td {...restProps}>
-            {editing ? (
-                <Form.Item
-                    name={dataIndex}
-                    style={{
-                        margin: 0,
-                    }}
-                    rules={[
-                        {
-                            required: true,
-                            message: `Please Input ${title}!`,
-                        },
-                    ]}
-                >
-                    {inputNode}
-                </Form.Item>
-            ) : (
-                children
-            )}
-        </td>
-    );
-};
+
 
 export const ActivityTable = () => {
-    const { subActivity } = useActivityTable()
-
+    const { subActivity, cloList } = useActivityTable()
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
     const [data, setData] = useState(subActivity);
     const isEditing = (record) => record.id === editingKey;
+
+    const EditableCell = ({
+        editing,
+        dataIndex,
+        title,
+        inputType,
+        record,
+        index,
+        children,
+        ...restProps
+    }) => {
+
+        let inputNode;
+        switch (inputType) {
+            case "clo":
+                inputNode = (
+
+                    <Select
+                        mode="multiple"
+                        showSearch
+                        placeholder="Select CLOs"
+                        style={{ width: "350px" }}
+                    >
+                        {cloList.map((ele) => (
+                            <Option key={ele.id} value={ele.id}>
+                                {ele.number + " " + ele.title}
+                            </Option>
+                        ))}
+                    </Select>
+                );
+                break;
+            case "point":
+                inputNode = <InputNumber style={{ width: 50 }} />;
+                break;
+            case "detail":
+                inputNode =
+                    <TextArea
+                        autoSize={{ minRows: 4, maxRows: 4 }}
+                    />;
+                break;
+            default:
+                inputNode = <Input />;
+                break;
+        }
+        return (
+            <td {...restProps}>
+                {editing ? (
+                    <Form.Item
+                        name={dataIndex}
+                        style={{
+                            margin: 0,
+                        }}
+                        rules={[
+                            {
+                                required: true,
+                                message: `Please Input ${title}!`,
+                            },
+                        ]}
+                    >
+                        {inputNode}
+                    </Form.Item>
+                ) : (
+                    children
+                )}
+            </td>
+        );
+    };
 
     const edit = (record) => {
         console.log(record)
@@ -99,21 +133,27 @@ export const ActivityTable = () => {
         {
             title: 'Detail',
             dataIndex: 'detail',
-            width: '35%',
+            width: '40%',
             editable: true,
+            render: (detail) => (
+                <>
+                    <div className={styles.detail}>{detail}</div>
+                </>
+            ),
         },
         {
             title: 'Course Learning Outcome',
             dataIndex: 'clo',
-            width: '35%',
+            width: '30%',
             editable: true,
             render: (clo) => (
                 <>
                     {clo?.map((ele) => {
+                        const cloData = cloList.filter((e) => e.id === ele)[0]
                         return (
-                            <Tooltip title={ele.title} >
-                                <Tag className={styles.tag} key={ele.id}>
-                                    {ele.title}
+                            <Tooltip title={cloData.title} >
+                                <Tag className={styles.tag} key={cloData.id}>
+                                    {cloData.number + " " + cloData.title}
                                 </Tag>
                             </Tooltip>
                         );
@@ -124,13 +164,12 @@ export const ActivityTable = () => {
         {
             title: 'Point',
             dataIndex: 'point',
-            width: '5%',
+            width: '8%',
             editable: true,
         },
         {
-            title: 'operation',
-            dataIndex: 'operation',
-            width: '10%',
+            title: 'Action',
+            width: '5%',
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -167,7 +206,7 @@ export const ActivityTable = () => {
                         >
                             <EditOutlined />
                         </Typography.Link>
-                        <Popconfirm title="Delete this section?" onConfirm={() => {}}>
+                        <Popconfirm title="Delete this section?" onConfirm={() => { }}>
                             <Typography.Link
                                 //disabled={editingKey !== "" || isNewAdded === true}
                                 type="danger"
@@ -190,7 +229,7 @@ export const ActivityTable = () => {
             ...col,
             onCell: (record) => ({
                 record,
-                inputType: col.dataIndex === 'age' ? 'number' : 'text',
+                inputType: col.dataIndex,
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),

@@ -5,10 +5,12 @@ import {
     Header, Button, TabPane, Tabs, ActivityOverview
 } from "../../components";
 import { useActivityDetail } from './hooks/useActivityDetail';
+import { useActivityOverview } from '../../components/ActivityOverview/hooks/useActivityOverview';
 
 export const ActivityDetail = () => {
     let { activityId } = useParams();
-    const {activity,catagory} = useActivityDetail()
+    const { activity, catagory } = useActivityDetail()
+    const { isEditing, editOverview ,saveOverview } = useActivityOverview()
     return (
         <div className={styles.activity}>
             <Helmet>
@@ -16,22 +18,20 @@ export const ActivityDetail = () => {
             </Helmet>
             <div className={styles.head}>
                 <Header level={1}>Activity</Header>
-                <div>
-                    <Button>Edit</Button>
-                </div>
+              
             </div>
             <Tabs defaultActiveKey="1">
                 <TabPane tab="Overview" key="1">
-                   <ActivityOverview activity={activity} catagory={catagory}/>
+                    <ActivityOverview activity={activity} catagory={catagory} />
                 </TabPane>
                 <TabPane tab="Group" key="2" disabled>
-                   
+
                 </TabPane>
                 <TabPane tab="Grading" key="3">
-                   
+
                 </TabPane>
                 <TabPane tab="Rubric" key="4">
-                   
+
                 </TabPane>
             </Tabs>
 

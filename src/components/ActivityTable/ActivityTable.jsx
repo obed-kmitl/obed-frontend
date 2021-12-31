@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Tag, Tooltip } from 'antd';
 import {
     EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleTwoTone
@@ -11,10 +11,8 @@ import TextArea from 'antd/lib/input/TextArea';
 
 
 export const ActivityTable = () => {
-    const { subActivity, cloList } = useActivityTable()
-    const [form] = Form.useForm();
-    const [editingKey, setEditingKey] = useState('');
-    const [data, setData] = useState(subActivity);
+    const { data, form, editingKey, cloList, edit, cancel, save, deleteSubActivity, isNewAdded, add } = useActivityTable()
+
     const isEditing = (record) => record.id === editingKey;
 
     const EditableCell = ({
@@ -48,7 +46,7 @@ export const ActivityTable = () => {
                 );
                 break;
             case "point":
-                inputNode = <InputNumber style={{ width: 50 }} />;
+                inputNode = <InputNumber style={{ width: 50 }} min={0} />;
                 break;
             case "detail":
                 inputNode =
@@ -84,56 +82,23 @@ export const ActivityTable = () => {
         );
     };
 
-    const edit = (record) => {
-        console.log(record)
-        form.setFieldsValue({
-            ...record,
-        });
-        setEditingKey(record.id);
-    };
-
-    const cancel = () => {
-        setEditingKey('');
-    };
-
-    const save = async (id) => {
-        try {
-            const row = await form.validateFields();
-            const newData = [...data];
-            const index = newData.findIndex((item) => id === item.id);
-
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, { ...item, ...row });
-                setData(newData);
-                setEditingKey('');
-            } else {
-                newData.push(row);
-                setData(newData);
-                setEditingKey('');
-            }
-        } catch (errInfo) {
-            console.log('Validate Failed:', errInfo);
-        }
-    };
-
     const columns = [
         {
             title: 'No.',
-            width: '5%',
+            width: '80px',
             key: 'index',
             render: (text, record, index) => index + 1,
         },
         {
             title: 'Title',
             dataIndex: 'title',
-            width: '10%',
+            width: '100px',
             editable: true,
         },
         {
             title: 'Detail',
             dataIndex: 'detail',
-            width: '40%',
+            width: '50%',
             editable: true,
             render: (detail) => (
                 <>
@@ -144,7 +109,7 @@ export const ActivityTable = () => {
         {
             title: 'Course Learning Outcome',
             dataIndex: 'clo',
-            width: '30%',
+            width: '50%',
             editable: true,
             render: (clo) => (
                 <>
@@ -164,12 +129,12 @@ export const ActivityTable = () => {
         {
             title: 'Point',
             dataIndex: 'point',
-            width: '8%',
+            width: '80px',
             editable: true,
         },
         {
             title: 'Action',
-            width: '5%',
+            width: '90px',
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -197,7 +162,7 @@ export const ActivityTable = () => {
                 ) : (
                     <>
                         <Typography.Link
-                            //disabled={editingKey !== "" || isNewAdded === true}
+                            disabled={editingKey !== "" || isNewAdded === true}
                             onClick={() => edit(record)}
                             style={{
                                 marginRight: 12,
@@ -206,9 +171,9 @@ export const ActivityTable = () => {
                         >
                             <EditOutlined />
                         </Typography.Link>
-                        <Popconfirm title="Delete this section?" onConfirm={() => { }}>
+                        <Popconfirm title="Delete this section?" onConfirm={() => deleteSubActivity(record)}>
                             <Typography.Link
-                                //disabled={editingKey !== "" || isNewAdded === true}
+                                disabled={editingKey !== "" || isNewAdded === true}
                                 type="danger"
                             >
                                 <DeleteOutlined />
@@ -237,10 +202,10 @@ export const ActivityTable = () => {
         };
     });
     return (
-        <>
+        <div className={styles.activityTable}>
             <div className={styles.header}>
                 <Header level={2}>Objective</Header>
-                <Button>Add</Button>
+                <Button onClick={() => add()} disabled={editingKey !== "" || isNewAdded === true}>Add</Button>
             </div>
             <Form form={form} component={false}>
                 <Table
@@ -253,12 +218,11 @@ export const ActivityTable = () => {
                     dataSource={data}
                     columns={mergedColumns}
                     rowClassName="editable-row"
-                    pagination={{
-                        onChange: cancel,
-                    }}
+                    pagination={false}
                     rowKey="id"
+                    scroll={{ y: "70vh" }}
                 />
             </Form>
-        </>
+        </div>
     );
 };

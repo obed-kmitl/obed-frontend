@@ -98,7 +98,7 @@ export const ActivityTable = () => {
         {
             title: 'Detail',
             dataIndex: 'detail',
-            width: '50%',
+            //width: '50%',
             editable: true,
             render: (detail) => (
                 <>
@@ -109,7 +109,7 @@ export const ActivityTable = () => {
         {
             title: 'Course Learning Outcome',
             dataIndex: 'clo',
-            width: '50%',
+            width: '400px',
             editable: true,
             render: (clo) => (
                 <>
@@ -208,7 +208,7 @@ export const ActivityTable = () => {
                 <Button onClick={() => add()} disabled={editingKey !== "" || isNewAdded === true}>Add</Button>
             </div>
             <Form form={form} component={false}>
-                <Table
+                <Table id="activitytable"
                     components={{
                         body: {
                             cell: EditableCell,
@@ -221,6 +221,11 @@ export const ActivityTable = () => {
                     pagination={false}
                     rowKey="id"
                     scroll={{ y: "70vh" }}
+                    // footer={() =>
+                    //     <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+                    //         <Button onClick={() => add()} disabled={editingKey !== "" || isNewAdded === true}>Add</Button>
+                    //     </div>
+                    // }
                 />
             </Form>
         </div>

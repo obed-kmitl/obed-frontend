@@ -141,9 +141,15 @@ export const useActivityTable = () => {
             detail: "",
             clo: [],
             point: null
-        });
+        })
         setEditingKey(newData.id);
+      setTimeout(() => {
+          var table = document.getElementById("activitytable").getElementsByClassName("ant-table-container")[0].getElementsByClassName("ant-table-body")[0]
+          table.scrollTop = table.scrollHeight
+        
+        }, 50);
     }
+
 
     return { data, form, editingKey, cloList, edit, cancel, save, deleteSubActivity, isNewAdded, add }
 }

@@ -12,3 +12,4 @@ export { Overview } from "./Overview/Overview";
 export { Planning } from "./Planning/Planning";
 export { Activity } from "./Activity/Activity";
 export { LearningOutcome } from "./LearningOutcome/LearningOutcome";
+export { ActivityDetail } from "./ActivityDetail/ActivityDetail";

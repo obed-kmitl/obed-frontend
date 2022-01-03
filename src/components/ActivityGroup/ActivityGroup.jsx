@@ -1,7 +1,7 @@
 import styles from '../ActivityGroup/ActivityGroup.module.scss'
 import { Button, Collapse, Panel, Header } from '..'
 import {
-    CloseOutlined
+    CloseOutlined,DeleteOutlined
 } from '@ant-design/icons';
 const groups = [
     {
@@ -30,7 +30,7 @@ export const ActivityGroup = () => {
         <div className={styles.group}>
             <div className={styles.header}>
                 <Header level={2}>All Groups </Header>
-                <div style={{gap:"0.5rem" ,display:"flex"}}>
+                <div style={{ gap: "0.5rem", display: "flex" }}>
                     <Button>Import</Button>
                     <Button>Add</Button>
                 </div>
@@ -38,7 +38,14 @@ export const ActivityGroup = () => {
             </div>
             <Collapse >
                 {groups.map((g, index) =>
-                    <Panel header={<Header level={3}>{g.group_name}</Header>} key={index}>
+                    <Panel
+                        header={
+                            <div style={{ display: "flex", justifyContent: "space-between",alignItems:"center" }}>
+                                <Header level={3}>{g.group_name}</Header>
+                                <DeleteOutlined style={{color:"#C73535"}}  onClick={(e) => { e.stopPropagation() }}/>
+                            </div>
+                        }
+                        key={index}>
                         <div className={styles.container}>
                             {g.member.map((student) =>
                                 <div className={styles.student}>

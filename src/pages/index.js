@@ -13,3 +13,4 @@ export { Planning } from "./Planning/Planning";
 export { Activity } from "./Activity/Activity";
 export { LearningOutcome } from "./LearningOutcome/LearningOutcome";
 export { TeacherReport } from "./TeacherReport/TeacherReport";
+export { ActivityDetail } from "./ActivityDetail/ActivityDetail";

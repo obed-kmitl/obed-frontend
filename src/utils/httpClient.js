@@ -2,35 +2,10 @@ import axios from "axios";
 import config from "../config";
 
 const httpClient = axios.create({
+  // Important! credentials should be allow when communicate with api.
+  // See more https://stackoverflow.com/questions/43002444/make-axios-send-cookies-in-its-requests-automatically
+  withCredentials: true,
   baseURL: config.apiUrl,
-});
-
-function RefreshAccessToken() {
-  const rtk = localStorage.getItem("rtk");
-
-  return axios
-    .post(config.apiUrl + "/auth/getAccessToken/" + 1, {
-      // Hardcoded as userId is 1
-      refreshToken: rtk,
-    })
-    .then((response) => {
-      localStorage.setItem("atk", response.data.data.accessToken);
-      return response.data.data.accessToken;
-    });
-}
-
-httpClient.interceptors.request.use((request) => {
-  const token = localStorage.getItem("atk");
-  if (token != null) {
-    request.headers = {
-      "x-access-token": "Bearer " + token,
-    };
-  } else {
-    // ## Comment this else{} to DEV without back-end ##
-    localStorage.clear();
-    return (window.location.href = "/login");
-  }
-  return request;
 });
 
 // Response interceptor for API calls
@@ -39,26 +14,13 @@ httpClient.interceptors.response.use(
     return response;
   },
   async function (error) {
-    const originalRequest = error.config;
     if (!error.response) {
       // ## Comment this if{} to DEV without back-end ##
       console.log("Please check your connection.");
-      localStorage.clear();
       return (window.location.href = "/login");
     }
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const accessToken = await RefreshAccessToken();
-        axios.defaults.headers.common["x-access-token"] =
-          "Bearer " + accessToken;
-        return httpClient(originalRequest);
-      } catch {
-        // ## Comment this catch{} to DEV without back-end ##
-        localStorage.clear();
-        return (window.location.href =
-          "/login?sessionExpired=true&nextpage=" + window.location.pathname);
-      }
+    if (error.response.status === 401) {
+      return (window.location.href = "/login");
     }
 
     return Promise.reject(error);

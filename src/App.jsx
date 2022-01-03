@@ -15,6 +15,7 @@ import {
   Activity,
   LearningOutcome,
   TeacherReport,
+  ActivityDetail,
 } from "./pages";
 import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
@@ -84,11 +85,14 @@ function App() {
                 <PrivateRoute path="/:sectionId/planning">
                   <Planning />
                 </PrivateRoute>
-                <PrivateRoute path="/:sectionId/activity">
+                <PrivateRoute exact path="/:sectionId/activity">
                   <Activity />
                 </PrivateRoute>
                 <PrivateRoute path="/:sectionId/report">
                   <TeacherReport />
+                </PrivateRoute>
+                <PrivateRoute path="/:sectionId/activity/:activityId">
+                  <ActivityDetail />
                 </PrivateRoute>
                 <PrivateRoute path="/profile">
                   <Profile />

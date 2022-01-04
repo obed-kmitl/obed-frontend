@@ -45,11 +45,13 @@ const useAuthen = () => {
     setLoading(true);
     setMessage("");
     return axios
-      .post(config.apiUrl + "/auth/login", {
-        username,
-        password,
-      },
-      {withCredentials: true}
+      .post(
+        config.apiUrl + "/auth/login",
+        {
+          username,
+          password,
+        },
+        { withCredentials: true }
       )
       .then(
         (response) => {
@@ -69,11 +71,13 @@ const useAuthen = () => {
     setLoading(true);
     setMessage("");
     return axios
-      .post(config.apiUrl + "/auth/adminLogin", {
-        username,
-        password,
-      },
-      {withCredentials: true}
+      .post(
+        config.apiUrl + "/auth/adminLogin",
+        {
+          username,
+          password,
+        },
+        { withCredentials: true }
       )
       .then(
         (response) => {
@@ -91,8 +95,13 @@ const useAuthen = () => {
 
   function onLogout() {
     return httpClient.post(`/auth/logout/${user.user_id}`).then((res) => {
-      setUser({});
-      history.push("/login");
+      if (user.role === "ADMIN") {
+        setUser({});
+        history.push("/admin");
+      } else {
+        setUser({});
+        history.push("/login");
+      }
     });
   }
 

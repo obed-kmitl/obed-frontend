@@ -5,7 +5,6 @@ import { Radar } from "react-chartjs-2";
 import {
   Divider,
   Select,
-  Tooltip,
 } from "antd";
 import { Header, Option } from "../../components";
 import {

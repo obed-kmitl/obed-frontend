@@ -1,16 +1,24 @@
 import { useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import httpClient from "../utils/httpClient";
 import UserContext from "../contexts/UserContext";
 
 const useUser = () => {
+  const history = useHistory();
   const [message, setMessage] = useState("");
   const { setUser } = useContext(UserContext);
 
-  function getProfile() {
+  function getProfile(roles) {
     return httpClient.get("/user/getProfile").then(
       (response) => {
+        const { role } = response.data.data;
         setUser(response.data.data);
+        if (!roles.includes(role)) {
+          if (role === "ADMIN") {
+            history.push("/");
+          } else history.push("/");
+        }
         return Promise.resolve(response.data.data);
       },
       (error) => {

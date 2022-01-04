@@ -17,10 +17,10 @@ httpClient.interceptors.response.use(
     if (!error.response) {
       // ## Comment this if{} to DEV without back-end ##
       console.log("Please check your connection.");
-      return (window.location.href = "/login");
+      return (window.location.href = "/obed/login");
     }
     if (error.response.status === 401) {
-      return (window.location.href = "/login");
+      return (window.location.href = "/obed/login");
     }
 
     return Promise.reject(error);

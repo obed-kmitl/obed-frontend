@@ -18,7 +18,7 @@ const Navbar = () => {
   const { onLogout } = useAuthen();
   const { user } = useContext(UserContext);
   const { section } = useContext(SectionContext);
-  const isAdmin = window.location.host.split(".")[0] === "admin";
+  const isAdmin = user.role === "ADMIN";
   const isTeacherHome =
     window.location.pathname.split("/")[1] === "profile" ||
     window.location.pathname === "/";

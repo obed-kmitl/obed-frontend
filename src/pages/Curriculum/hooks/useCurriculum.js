@@ -1,6 +1,6 @@
 import { useState } from "react";
-import errorTranslate from "../utils/errorTranslate";
-import httpClient from "../utils/httpClient";
+import errorTranslate from "../../../utils/errorTranslate";
+import httpClient from "../../../utils/httpClient";
 
 export const useCurriculum = () => {
   const [message, setMessage] = useState("");

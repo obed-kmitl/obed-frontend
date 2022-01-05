@@ -90,11 +90,11 @@ export const ActivityList = ({ archrive, google }) => {
                             }
                             key={cat.id}
                         >
-                            {filteredActivity?.filter((atv) => atv.catagory_id === cat.id).map((activity, index) =>
-
-                                <Link to={`${window.location.pathname}/${activity.id}`} className={styles.link}>
+                            {filteredActivity?.filter((atv) => atv.catagory_id === cat.id).map((activity, index) =>{
+                                console.log(window.location.pathname)
+                                return(<Link to={`${window.location.pathname.split("/")[3]}/${activity.id}`} className={styles.link}>
                                     <ActivityCard activity={activity} key={activity.id} index={index + 1} />
-                                </Link>
+                                </Link>)}
                             )}
                         </Panel>
                     )}

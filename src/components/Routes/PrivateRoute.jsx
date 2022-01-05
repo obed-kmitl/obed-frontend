@@ -5,29 +5,27 @@ import { Route, useParams } from "react-router-dom";
 import useUser from "../../hooks/useUser";
 import SectionContext from "../../contexts/SectionContext";
 
-const PrivateRoute = ({ children, path, ...props }) => {
+const PrivateRoute = ({ children, path, roles, ...props }) => {
   const { getProfile } = useUser();
-  
+
   useEffect(() => {
-    getProfile();
+    getProfile(roles);
   }, []);
 
   return (
     <Route path={path} {...props}>
-      <SectionContextManager>
-        {children}
-      </SectionContextManager>
+      <SectionContextManager>{children}</SectionContextManager>
     </Route>
   );
 };
 
 const SectionContextManager = ({ children }) => {
-  const { setSection } = useContext(SectionContext)
-  let {sectionId} = useParams();
+  const { setSection } = useContext(SectionContext);
+  let { sectionId } = useParams();
   useEffect(() => {
-    setSection(sectionId)
+    setSection(sectionId);
   }, []);
 
-  return children
-}
+  return children;
+};
 export { PrivateRoute };

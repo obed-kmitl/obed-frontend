@@ -14,7 +14,8 @@ import {
   Planning,
   Activity,
   LearningOutcome,
-  ActivityDetail
+  TeacherReport,
+  ActivityDetail,
 } from "./pages";
 import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
@@ -25,86 +26,77 @@ import UserContext from "./contexts/UserContext";
 function App() {
   const [user, setUser] = useState({});
 
-  if (window.location.host.split(".")[0] === "admin") {
-    return (
-      <UserContext.Provider value={{ user, setUser }}>
-        <Router basename="/obed">
-          <Switch>
-            <PublicRoute path="/login">
-              <Login />
-            </PublicRoute>
-            <Layout>
-              <Switch>
-                <PrivateRoute path="/teacher">
-                  <Teacher />
-                </PrivateRoute>
-                <PrivateRoute path="/curriculum">
-                  <Curriculum />
-                </PrivateRoute>
-                <PrivateRoute path="/sandbox">
-                  <Sandbox />
-                </PrivateRoute>
-                <PrivateRoute path="/profile">
-                  <Profile />
-                </PrivateRoute>
-                <PrivateRoute path="/plan">
-                  <Plan />
-                </PrivateRoute>
-                <PrivateRoute exact path="/">
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      <Router basename="/obed">
+        <Switch>
+          <PublicRoute path="/login">
+            <Login />
+          </PublicRoute>
+          <PublicRoute path="/admin">
+            <Login isAdmin={true} />
+          </PublicRoute>
+          <Layout>
+            <Switch>
+              <PrivateRoute roles={["ADMIN"]} path="/teacher">
+                <Teacher />
+              </PrivateRoute>
+              <PrivateRoute roles={["ADMIN"]} path="/curriculum">
+                <Curriculum />
+              </PrivateRoute>
+              <PrivateRoute roles={["ADMIN"]} path="/sandbox">
+                <Sandbox />
+              </PrivateRoute>
+              <PrivateRoute roles={["ADMIN", "TEACHER"]} path="/profile">
+                <Profile />
+              </PrivateRoute>
+              <PrivateRoute roles={["ADMIN"]} path="/plan">
+                <Plan />
+              </PrivateRoute>
+              <PrivateRoute roles={["TEACHER"]} path="/:sectionId/overview">
+                <Overview />
+              </PrivateRoute>
+              <PrivateRoute roles={["TEACHER"]} path="/:sectionId/student">
+                <Student />
+              </PrivateRoute>
+              <PrivateRoute roles={["TEACHER"]} path="/:sectionId/lo">
+                <LearningOutcome />
+              </PrivateRoute>
+              <PrivateRoute roles={["TEACHER"]} path="/:sectionId/planning">
+                <Planning />
+              </PrivateRoute>
+              <PrivateRoute
+                roles={["TEACHER"]}
+                exact
+                path="/:sectionId/activity"
+              >
+                <Activity />
+              </PrivateRoute>
+              <PrivateRoute roles={["TEACHER"]} path="/:sectionId/report">
+                <TeacherReport />
+              </PrivateRoute>
+              <PrivateRoute
+                roles={["TEACHER"]}
+                path="/:sectionId/activity/:activityId"
+              >
+                <ActivityDetail />
+              </PrivateRoute>
+              <PrivateRoute roles={["ADMIN", "TEACHER"]} exact path="/">
+                {user.role === "ADMIN" ? (
                   <Redirect to="/curriculum" />
-                </PrivateRoute>
-                <PrivateRoute path="/">
-                  <NotFound />
-                </PrivateRoute>
-              </Switch>
-            </Layout>
-          </Switch>
-        </Router>
-      </UserContext.Provider>
-    );
-  } else
-    return (
-      <UserContext.Provider value={{ user, setUser }}>
-        <Router>
-          <Switch>
-            <PublicRoute path="/login">
-              <Login />
-            </PublicRoute>
-            <Layout>
-              <Switch>
-                <PrivateRoute path="/:sectionId/overview">
-                  <Overview />
-                </PrivateRoute>
-                <PrivateRoute path="/:sectionId/student">
-                  <Student />
-                </PrivateRoute>
-                <PrivateRoute path="/:sectionId/lo">
-                  <LearningOutcome />
-                </PrivateRoute>
-                <PrivateRoute path="/:sectionId/planning">
-                  <Planning />
-                </PrivateRoute>
-                <PrivateRoute exact path="/:sectionId/activity">
-                  <Activity />
-                </PrivateRoute>
-                <PrivateRoute path="/:sectionId/activity/:activityId">
-                  <ActivityDetail />
-                </PrivateRoute>
-                <PrivateRoute path="/profile">
-                  <Profile />
-                </PrivateRoute>
-                <PrivateRoute exact path="/">
+                ) : (
                   <Home />
-                </PrivateRoute>
-                <PrivateRoute path="/">
-                  <NotFound />
-                </PrivateRoute>
-              </Switch>
-            </Layout>
-          </Switch>
-        </Router>
-      </UserContext.Provider>
-    );
+                )}
+              </PrivateRoute>
+              <PrivateRoute roles={["ADMIN", "TEACHER"]} path="/">
+                <NotFound />
+              </PrivateRoute>
+            </Switch>
+          </Layout>
+        </Switch>
+      </Router>
+    </UserContext.Provider>
+  );
 }
 
 export default App;

@@ -11,7 +11,7 @@ import { useLocation } from "react-router";
 import useAuthen from "../../hooks/useAuthen";
 import { useEffect } from "react";
 
-export const Login = () => {
+export const Login = ({ isAdmin = false }) => {
   const [form] = Form.useForm();
   const { onLogin, onAdminLogin, message, loading } = useAuthen();
 
@@ -24,8 +24,6 @@ export const Login = () => {
   function onFinishFailed(errorInfo) {
     console.log("Failed:", errorInfo);
   }
-
-  const isAdmin = window.location.host.split(".")[0] === "admin";
 
   function openNotificationWithIcon(type, message, desc) {
     notification[type]({
@@ -70,15 +68,15 @@ export const Login = () => {
             onFinish={(values) =>
               isAdmin
                 ? onAdminLogin(
-                  values.username,
-                  values.password,
-                  query.get("nextpage") || ""
-                )
+                    values.username,
+                    values.password,
+                    query.get("nextpage") || ""
+                  )
                 : onLogin(
-                  values.username,
-                  values.password,
-                  query.get("nextpage") || ""
-                )
+                    values.username,
+                    values.password,
+                    query.get("nextpage") || ""
+                  )
             }
             onFinishFailed={onFinishFailed}
             autoComplete="off"

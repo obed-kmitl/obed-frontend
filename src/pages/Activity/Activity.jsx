@@ -12,7 +12,7 @@ export const Activity = () => {
     return (
         <div className={styles.activity}>
             <Helmet>
-                <title>{sectionId} Activity - OBED</title>
+                <title>Activity - OBED</title>
             </Helmet>
             <div className={styles.head}>
                 <Header level={1}>Activity</Header>

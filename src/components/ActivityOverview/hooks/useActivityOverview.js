@@ -1,31 +1,34 @@
-import { useEffect, useState } from "react"
-import { Form} from 'antd'
-export const useActivityOverview = (activity) => {
-    const [activityData, setActivityData] = useState()
-    const [isEditing,setIsEditing] = useState(false)
-    const [editDescValue,setEditDescValue] = useState()
-    const [editCatagory,setEditCatagory] = useState()
-    const [editGroupType,setEditGroupType] = useState()
+import { useState } from "react"
+import { Form } from 'antd'
+export const useActivityOverview = (activity, setActivity) => {
+    const [isEditing, setIsEditing] = useState(false)
+    const [editDescValue, setEditDescValue] = useState()
+    const [editCatagory, setEditCatagory] = useState()
+    const [editGroupType, setEditGroupType] = useState()
+    const [editTitle, setEditTitle] = useState()
+    const [editScore, setEditScore] = useState()
     const form = Form.useForm()
 
-    useEffect(() => {
-        setActivityData(activity)
-    }, [])
-
     function editOverview() {
-        setEditDescValue(activityData.description)
-        setEditCatagory(activityData.catagory_id)
-        setEditGroupType(activityData.type)
+        setEditDescValue(activity.description)
+        setEditCatagory(activity.catagory_id)
+        setEditGroupType(activity.type)
+        setEditTitle(activity.title)
+        setEditScore(activity.total_score)
         setIsEditing(true)
     }
 
     function saveOverview() {
         setIsEditing(false)
-        const newData = activityData
-        newData.description = editDescValue
-        newData.catagory_id=editCatagory
-        newData.type=editGroupType
-        setActivityData(newData)
+        setActivity({
+            id: activity.id,
+            title: editTitle,
+            description: editDescValue,
+            catagory_id: editCatagory,
+            type: editGroupType,
+            total_score: editScore,
+        })
+
     }
     function handleEditDescription(value) {
         setEditDescValue(value)
@@ -36,8 +39,12 @@ export const useActivityOverview = (activity) => {
     function changeType(value) {
         setEditGroupType(value)
     }
+    function handleEditTitle(value) {
+        setEditTitle(value)
+    }
+    function handleEditScore(value) {
+        setEditScore(value)
+    }
 
-
-
-    return { activityData, isEditing, editOverview ,saveOverview,form,handleEditDescription,changeCatagory,changeType}
+    return { isEditing, editOverview, saveOverview, form, handleEditDescription, changeCatagory, changeType,handleEditTitle,handleEditScore }
 }

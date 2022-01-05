@@ -20,8 +20,8 @@ const Navbar = () => {
   const { section } = useContext(SectionContext);
   const isAdmin = user.role === "ADMIN";
   const isTeacherHome =
-    window.location.pathname.split("/")[1] === "profile" ||
-    window.location.pathname === "/";
+    window.location.pathname.split("/")[2] === "profile" ||
+    window.location.pathname === "/obed/";
 
   const menu = (
     <Menu style={{ minWidth: "200px" }}>

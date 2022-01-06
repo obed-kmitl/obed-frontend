@@ -10,7 +10,7 @@ import httpClient from "../../utils/httpClient";
 export const Home = () => {
   const [filterSelected, setFilterSelected] = useState()
   const [filteredCourse, setFilteredCourse] = useState([])
-  const [allCourse,setAllCourse]=useState([])
+  const [allCourse, setAllCourse] = useState([])
   const { setSection } = useContext(SectionContext)
 
   async function fetchCourse() {
@@ -18,37 +18,38 @@ export const Home = () => {
     return await httpClient
       .get(`/semester/getSectionByTeacher`)
       .then((response) => {
-        const allSemester = response.data.data[0].sections.map((e) =>
-        ({
-          semester_id: e.semester_id,
-          year: e.year_number,
-          semester: e.semester_number,
-          ended: false,
-          courses: []
-        })).filter(el => {
-          const duplicate = seen.has(el.semester_id);
-          seen.add(el.semester_id);
-          return !duplicate;
-        }).sort(({ semester_id: first }, { semester_id: second }) => first - second);
+        if (response.data.data.length>0) {
+          const allSemester = response.data.data[0].sections.map((e) =>
+          ({
+            semester_id: e.semester_id,
+            year: e.year_number,
+            semester: e.semester_number,
+            ended: false,
+            courses: []
+          })).filter(el => {
+            const duplicate = seen.has(el.semester_id);
+            seen.add(el.semester_id);
+            return !duplicate;
+          }).sort(({ semester_id: first }, { semester_id: second }) => first - second);
 
-        allSemester.forEach(semester => {
-          response.data.data[0].sections.forEach(course => {
-            if (course.semester_id === semester.semester_id) {
-              semester.courses.push({
-                id: course.section_id,
-                course_id: course.course_number,
-                course_name_th: course.course_name_th,
-                course_name_en: course.course_name_en,
-                section: course.section_number,
-                year: course.year_number,
-                semester: course.semester_number,
-              })
-            }
+          allSemester.forEach(semester => {
+            response.data.data[0].sections.forEach(course => {
+              if (course.semester_id === semester.semester_id) {
+                semester.courses.push({
+                  id: course.section_id,
+                  course_id: course.course_number,
+                  course_name_th: course.course_name_th,
+                  course_name_en: course.course_name_en,
+                  section: course.section_number,
+                  year: course.year_number,
+                  semester: course.semester_number,
+                })
+              }
+            })
           })
-        })
-        setFilteredCourse(allSemester)
-        setAllCourse(allSemester.reverse())
-
+          setFilteredCourse(allSemester)
+          setAllCourse(allSemester.reverse())
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -90,7 +91,7 @@ export const Home = () => {
           <Body level={2}>Semester</Body>
           <Select
             placeholder="Semester"
-            onChange={(value) => setFilterSelected(value ? [parseInt(value.split("/")[0]),parseInt(value.split("/")[1])] : value)}
+            onChange={(value) => setFilterSelected(value ? [parseInt(value.split("/")[0]), parseInt(value.split("/")[1])] : value)}
             style={{ width: "100px" }}
             defaultValue={"All"}
           >
@@ -117,20 +118,20 @@ export const Home = () => {
         } else {
           return item
         }
-      }).map((semesterCourse) =>
+      }).map((semesterCourse,index) =>
         <div>
           <div style={{ display: "flex", alignItems: "center", margin: "1rem 0" }}>
             <Header level={2}>{semesterCourse.semester}{"/"}{semesterCourse.year}</Header>
             <Divider style={{ minWidth: "0", marginLeft: "8px" }} />
           </div>
           <div className={styles.cards}>
-            {semesterCourse.courses.map((course) =>
+            {semesterCourse.courses.map((course,i) =>
               <div
                 onClick={() => setSection(course.id)}
                 className={styles.card}
               >
                 <Link to={`${course.id}/overview`}>
-                  <CourseCard details={course} ended={false} />
+                  <CourseCard details={course} ended={false} key={index+i} />
                 </Link>
               </div>
             )}

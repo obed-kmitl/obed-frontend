@@ -1,31 +1,31 @@
 import styles from '../ActivityGroup/ActivityGroup.module.scss'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Collapse, Panel, Header, Select, Option } from '..'
 import {
-    CloseOutlined, DeleteOutlined
+    CloseOutlined, DeleteOutlined, EditOutlined
 } from '@ant-design/icons';
-import { Popover } from 'antd';
+import { Input, Popover, Modal, Form ,Popconfirm} from 'antd';
 
 const groups = [
     {
         id: 1,
         group_name: 'Group 1',
-        member: [61010352, 61010541, 61011387, 61019999]
+        member: [61010001, 61010002, 61010003, 61010004]
     },
     {
         id: 2,
         group_name: 'Group 2',
-        member: [61010001, 61010002, 61010003, 61010004]
+        member: [61010005, 61010006, 61010007,]
     },
     {
         id: 3,
         group_name: 'Group 3',
-        member: [61010005, 61010006, 61010007, 61010008, 61010352, 61010541, 61011387, 61019999, 61010352, 61010541, 61011387, 61019999]
+        member: [61010008, 61010009, 61010010]
     },
     {
         id: 4,
         group_name: 'Group 4',
-        member: [61010010, 61010011, 61019995, 61019996]
+        member: [61010011, 61019999, 61019998]
     }
 ]
 
@@ -112,6 +112,9 @@ const students = [
 export const ActivityGroup = () => {
     const [group, setGroup] = useState(groups)
     const [addingGroup, setAddingGroup] = useState(null)
+    const [addGroupModal, setAddGroupModal] = useState(false)
+    const [editingGroup, setEditingGroup] = useState(null)
+    const [form] = Form.useForm()
 
     function handleAddStudent(value) {
         let added = [...group]
@@ -120,17 +123,41 @@ export const ActivityGroup = () => {
         setAddingGroup(null)
     }
 
-    function handleRemoveStudent() {
-        console.log("remove")
+    function handleRemoveStudent(student, g_id) {
+        let removed = [...group]
+        removed.filter((e) => e.id === g_id)[0].member = removed.filter((e) => e.id === g_id)[0].member.filter((e) => e !== student);
+        setGroup(removed)
     }
 
-    function handleAddGroup() {
-        console.log("addG")
+    function handleAddGroup(value) {
+        setGroup([...group, {
+            id: Date.now(),//mock wait id from backend
+            group_name: value.group_name,
+            member: []
+        }])
+        form.resetFields()
+        setAddGroupModal(false)
     }
 
-    function handleDeleteGroup() {
-        console.log("delete")
+    function handleDeleteGroup(id) {
+        setGroup(group.filter((g) => g.id !== id))
     }
+
+    function handleEditGroup(value) {
+        console.log(value)
+        let edited = [...group]
+        edited.filter((g) => g.id === editingGroup)[0].group_name = value.group_name
+        setGroup(edited)
+        setEditingGroup(null)
+        form.resetFields()
+    }
+    useEffect(() => {
+        form.setFieldsValue({ group_name: group.filter((g) => g.id === editingGroup)[0]?.group_name })
+    }, [editingGroup])
+
+    useEffect(() => {
+        console.log(group);
+    }, [group])
 
     return (
         <div className={styles.group}>
@@ -138,7 +165,7 @@ export const ActivityGroup = () => {
                 <Header level={2}>All Groups </Header>
                 <div style={{ gap: "0.5rem", display: "flex" }}>
                     <Button>Import</Button>
-                    <Button onClick={() => handleAddGroup()}>Add</Button>
+                    <Button onClick={() => setAddGroupModal(true)}>Add</Button>
                 </div>
 
             </div>
@@ -148,7 +175,12 @@ export const ActivityGroup = () => {
                         header={
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                 <Header level={3}>{g.group_name}</Header>
-                                <DeleteOutlined style={{ color: "#C73535" }} onClick={(e) => { e.stopPropagation(); handleDeleteGroup() }} />
+                                <div style={{ display: "flex", gap: "0.5rem" }}>
+                                    <EditOutlined style={{ color: "#009fc7" }} onClick={(e) => { e.stopPropagation(); setEditingGroup(g.id) }} />
+                                    <Popconfirm title="Delete this group?" onConfirm={() =>  handleDeleteGroup(g.id)}>
+                                        <DeleteOutlined style={{ color: "#C73535" }} onClick={(e) => { e.stopPropagation(); }} />
+                                    </Popconfirm>
+                                </div>
                             </div>
                         }
                         key={index}>
@@ -164,22 +196,24 @@ export const ActivityGroup = () => {
                                 >
                                     <div className={styles.student}>
                                         {student}
-                                        <div onClick={() => handleRemoveStudent()}><CloseOutlined /></div>
+                                        <div onClick={() => handleRemoveStudent(student, g.id)}><CloseOutlined /></div>
                                     </div>
                                 </Popover>
                             )}
                             {addingGroup === g.id ?
-                                <Select
-                                    width={120}
-                                    onChange={(value) => handleAddStudent(value)}
-                                    showSearch={true}
-                                >
-                                    {students.map((std) =>
-                                        <Option value={std.id} disabled={g.member.includes(std.id)}>{std.id}</Option>
-                                    )}
-                                </Select>
+                                <div className={styles.select}>
+                                    <Select
+                                        width={120}
+                                        onChange={(value) => handleAddStudent(value)}
+                                        showSearch={true}
+                                    >
+                                        {students.map((std) =>
+                                            <Option value={std.id} disabled={g.member.includes(std.id)}>{std.id}</Option>
+                                        )}
+                                    </Select>
+                                    <CloseOutlined style={{ color: "#C73535" }} onClick={() => setAddingGroup(null)} />
+                                </div>
                                 :
-
                                 <div className={styles.addbtn} onClick={() => setAddingGroup(g.id)}>
                                     Add Student
                                 </div>
@@ -188,7 +222,78 @@ export const ActivityGroup = () => {
                     </Panel>)
                 }
             </Collapse>
-
+            <Modal
+                title={"Add Group"}
+                visible={addGroupModal}
+                okText="Add"
+                onOk={() => {
+                    form
+                        .validateFields()
+                        .then((values) => {
+                            handleAddGroup(values);
+                        })
+                        .catch((info) => {
+                            console.log("Validate Failed", info);
+                        });
+                }}
+                onCancel={() => { setAddGroupModal(false); form.resetFields() }}
+                okButtonProps={{ htmlType: "submit" }}
+                maskClosable={false}
+                centered
+            >
+                <Form
+                    form={form}
+                    name="group"
+                    autoComplete="off"
+                    requiredMark={"required"}
+                >
+                    <Form.Item
+                        label="Group Name"
+                        name="group_name"
+                        rules={[
+                            { required: true, message: "Please input Name" },
+                        ]}
+                    >
+                        <Input placeholder="Group Name" />
+                    </Form.Item>
+                </Form>
+            </Modal>
+            <Modal
+                title={"Edit Group"}
+                visible={editingGroup !== null}
+                okText="Save"
+                onOk={() => {
+                    form
+                        .validateFields()
+                        .then((values) => {
+                            handleEditGroup(values);
+                        })
+                        .catch((info) => {
+                            console.log("Validate Failed", info);
+                        });
+                }}
+                onCancel={() => { setEditingGroup(null); form.resetFields() }}
+                okButtonProps={{ htmlType: "submit" }}
+                maskClosable={false}
+                centered
+            >
+                <Form
+                    form={form}
+                    name="group"
+                    autoComplete="off"
+                    requiredMark={"required"}
+                >
+                    <Form.Item
+                        label="Group Name"
+                        name="group_name"
+                        rules={[
+                            { required: true, message: "Please input Name" },
+                        ]}
+                    >
+                        <Input name='group_name' placeholder="Group Name" />
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
     )
 }

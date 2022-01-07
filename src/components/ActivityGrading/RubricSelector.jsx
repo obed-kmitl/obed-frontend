@@ -74,6 +74,7 @@ export const RubricSelector = ({student}) => {
                 }}
                 pagination={false}
                 dataSource={mockSubActivity} 
+                rowKey={"id"}
             />
     )
 }

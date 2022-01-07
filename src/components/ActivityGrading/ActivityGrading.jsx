@@ -2,7 +2,6 @@ import { GradingTable } from "./GradingTable"
 
 const students = [
     {
-        key: 61010001,
         id: 61010001,
         prefix: "นางสาว",
         firstname: "กมลชนก",
@@ -12,7 +11,6 @@ const students = [
         score_status:"Finished"
     },
     {
-        key: 61010002,
         id: 61010002,
         prefix: "นาย",
         firstname: "ธนวัฒน์",
@@ -22,7 +20,6 @@ const students = [
         score_status:"Finished"
     },
     {
-        key: 61010003,
         id: 61010003,
         prefix: "นาย",
         firstname: "สมปอง",
@@ -32,7 +29,6 @@ const students = [
         score_status:"Finished"
     },
     {
-        key: 61010004,
         id: 61010004,
         prefix: "นาย",
         firstname: "สมปราชญ์",
@@ -42,7 +38,6 @@ const students = [
         score_status:"Not Finished"
     },
     {
-        key: 61010005,
         id: 61010005,
         prefix: "นาย",
         firstname: "สมหมาย",
@@ -52,7 +47,6 @@ const students = [
         score_status:"Not Finished"
     },
     {
-        key: 61010006,
         id: 61010006,
         prefix: "นาย",
         firstname: "สมหมาย",
@@ -62,7 +56,6 @@ const students = [
         score_status:"Finished"
     },
     {
-        key: 61010007,
         id: 61010007,
         prefix: "นาย",
         firstname: "สมศักดิ์",
@@ -72,7 +65,6 @@ const students = [
         score_status:"Finished"
     },
     {
-        key: 61010008,
         id: 61010008,
         prefix: "นาย",
         firstname: "สมชาย",
@@ -82,7 +74,6 @@ const students = [
         score_status:"Not Submitted"
     },
     {
-        key: 61010009,
         id: 61010009,
         prefix: "นาย",
         firstname: "สมพงศ์",
@@ -92,7 +83,6 @@ const students = [
         score_status:"Not Submitted"
     },
     {
-        key: 610100010,
         id: 61010010,
         prefix: "นางสาว",
         firstname: "สมสง่า",
@@ -102,7 +92,6 @@ const students = [
         score_status:"Not Submitted"
     },
     {
-        key: 610100011,
         id: 61010011,
         prefix: "นางสาว",
         firstname: "สมหญิง",

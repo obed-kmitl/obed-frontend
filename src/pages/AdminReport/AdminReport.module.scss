@@ -1,0 +1,31 @@
+@import "../../styles/color.scss";
+
+.adminReport {
+  .linkContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .linkWrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid $color-turquoise-500;
+    border-radius: 5px;
+    transition: all ease-in-out 150ms;
+
+    &:hover {
+      background-color: #f0fcff;
+    }
+
+    p {
+      display: inline;
+      font-size: 16px;
+      color: $color-grey-600;
+      font-weight: 500;
+    }
+  }
+}

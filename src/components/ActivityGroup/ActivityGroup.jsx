@@ -4,7 +4,7 @@ import { Button, Collapse, Panel, Header, Select, Option } from '..'
 import {
     CloseOutlined, DeleteOutlined, EditOutlined
 } from '@ant-design/icons';
-import { Input, Popover, Modal, Form ,Popconfirm} from 'antd';
+import { Input, Popover, Modal, Form, Popconfirm } from 'antd';
 
 const groups = [
     {
@@ -155,10 +155,6 @@ export const ActivityGroup = () => {
         form.setFieldsValue({ group_name: group.filter((g) => g.id === editingGroup)[0]?.group_name })
     }, [editingGroup])
 
-    useEffect(() => {
-        console.log(group);
-    }, [group])
-
     return (
         <div className={styles.group}>
             <div className={styles.header}>
@@ -177,7 +173,7 @@ export const ActivityGroup = () => {
                                 <Header level={3}>{g.group_name}</Header>
                                 <div style={{ display: "flex", gap: "0.5rem" }}>
                                     <EditOutlined style={{ color: "#009fc7" }} onClick={(e) => { e.stopPropagation(); setEditingGroup(g.id) }} />
-                                    <Popconfirm title="Delete this group?" onConfirm={() =>  handleDeleteGroup(g.id)}>
+                                    <Popconfirm title="Delete this group?" onConfirm={() => handleDeleteGroup(g.id)}>
                                         <DeleteOutlined style={{ color: "#C73535" }} onClick={(e) => { e.stopPropagation(); }} />
                                     </Popconfirm>
                                 </div>

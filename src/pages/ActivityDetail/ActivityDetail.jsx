@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import {
     Header, TabPane, Tabs,
-    ActivityOverview, ActivityGroup
+    ActivityOverview, ActivityGroup, ActivityGrading
 } from "../../components";
 import { useEffect } from 'react';
 import { useActivityDetail } from './hooks/useActivityDetail';
@@ -30,10 +30,10 @@ export const ActivityDetail = () => {
                     <ActivityOverview activity={activity} catagory={catagory} setActivity={setActivity} />
                 </TabPane>
                 <TabPane tab="Group" key="2" disabled={activity.type === 'Individual'}>
-                    <ActivityGroup activity={activity}/>
+                    <ActivityGroup activity={activity} />
                 </TabPane>
                 <TabPane tab="Grading" key="3">
-
+                    <ActivityGrading activity={activity}/>
                 </TabPane>
                 <TabPane tab="Rubric" key="4">
 

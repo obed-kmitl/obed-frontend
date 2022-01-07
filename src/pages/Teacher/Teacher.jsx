@@ -16,7 +16,7 @@ import {
 } from "antd";
 import { DeleteOutlined, MailOutlined, EditOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
-import { useTeacher } from "../../hooks/useTeacher";
+import { useTeacher } from "./hooks/useTeacher";
 
 export const Teacher = () => {
   const { Column } = Table;

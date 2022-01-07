@@ -24,7 +24,7 @@ import {
 import styles from "./Curriculum.module.scss";
 import { Helmet } from "react-helmet";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { useCurriculum } from "../../hooks/useCurriculum";
+import { useCurriculum } from "./hooks/useCurriculum";
 
 export function Curriculum() {
   const { create, getAll, update, remove, curriculum, message, setMessage } =

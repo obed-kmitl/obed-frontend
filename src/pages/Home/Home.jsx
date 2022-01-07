@@ -118,7 +118,7 @@ export const Home = () => {
           return item
         }
       }).map((semesterCourse) =>
-        <div>
+        <div key={semesterCourse.year + "/" + semesterCourse.semester}>
           <div style={{ display: "flex", alignItems: "center", margin: "1rem 0" }}>
             <Header level={2}>{semesterCourse.semester}{"/"}{semesterCourse.year}</Header>
             <Divider style={{ minWidth: "0", marginLeft: "8px" }} />
@@ -128,6 +128,7 @@ export const Home = () => {
               <div
                 onClick={() => setSection(course.id)}
                 className={styles.card}
+                key={course.id}
               >
                 <Link to={`${course.id}/overview`}>
                   <CourseCard details={course} ended={false} />

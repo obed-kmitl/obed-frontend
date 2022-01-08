@@ -7,7 +7,7 @@ const Activity = {
         description: "แปลงเลขต่อไปนี้จากเลขฐาน 2 ไปยัง เลขฐาน 10 แบบไม่คิดเครื่องหมาย Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam accusantium a non. Doloribus libero minus optio fugit perferendis natus voluptate, quaerat ut nemo laboriosam delectus ea nisi, saepe fuga enim! Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam accusantium a non. Doloribus libero minus optio fugit perferendis natus voluptate, quaerat ut nemo laboriosam delectus ea nisi, saepe fuga enim!"  ,
         catagory_id: 1,
         type: "Group",
-        total_score: 100,
+        total_score: 50,
     
 }
 

@@ -1,0 +1,54 @@
+@import "../../styles/color.scss";
+
+.rubricWrap {
+  display: flex;
+  border: 1px solid $color-grey-100;
+  border-radius: 2px;
+  padding: 1rem 2rem;
+  overflow: auto;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  background-color: #ffffff;
+  justify-content: space-between;
+  .rubric {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid $color-grey-100;
+    border-radius: 4px;
+    min-width: 170px;
+    width: 170px;
+    min-height: 170px;
+    height: 170px;
+    position: relative;
+    gap: 0.5rem;
+    transition: all ease-in-out 100ms;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 0 0 10px 0 $color-grey-200;
+      
+    }
+
+    .level {
+      width: 100%;
+      border-bottom: 1px solid $color-grey-100;
+      text-align: center;
+    }
+
+    .desc {
+      padding: 0 1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 4; /* number of lines to show */
+      line-clamp: 4;
+      -webkit-box-orient: vertical;
+    }
+
+    .point {
+      position: absolute;
+      bottom: 0.2rem;
+      left: 0.5rem;
+      font-size: 18px;
+    }
+  }
+}

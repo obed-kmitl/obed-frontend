@@ -5,7 +5,7 @@ import {
 } from '@ant-design/icons';
 import { RubricSelector } from './RubricSelector';
 
-export const GradingTable = ({ students, activity }) => {
+export const GradingTable = ({ students,setStudents,activity }) => {
     const columns = [
         { title: 'Student Id', dataIndex: 'id', key: 'id', width: "120px" },
         { title: 'Prefix', dataIndex: 'prefix', width: "100px" },
@@ -14,11 +14,19 @@ export const GradingTable = ({ students, activity }) => {
         {
             title: 'Score',
             dataIndex: 'score',
-            render: (score) => (
+            render: (score) =>{ 
+                let calculatedScore = 0
+                let totalMaxScore = 0
+                score.forEach(element => {
+                    calculatedScore =  calculatedScore + element.obtained_score ||0
+                    totalMaxScore =  totalMaxScore + element.max_score ||0
+                });
+                calculatedScore = (calculatedScore/totalMaxScore)*activity.total_score
+                return(
                 <div >
-                    {score} / {activity.total_score}
+                   {calculatedScore} / {activity.total_score}
                 </div>
-            )
+            )}
         },
         {
             title: 'Status',
@@ -56,7 +64,7 @@ export const GradingTable = ({ students, activity }) => {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: "flex-end", gap: "0.5rem", paddingBottom: "1rem" }}>
-                <Tooltip title="กรอกครบแล้ว/ยังกรอกไม่ครบ/ยังไม่ได้กรอก" overlayStyle={{maxWidth: '500px'}}>
+                <Tooltip title="กรอกครบแล้ว/ยังกรอกไม่ครบ/ยังไม่ได้กรอก" overlayStyle={{ maxWidth: '500px' }}>
                     <div style={{ color: "white", display: "flex", textAlign: "center", fontSize: "18px" }}>
                         <div style={{ backgroundColor: "#68A028", width: "32px", height: "32px", paddingTop: "0.2rem" }}>
                             {students.filter((s) => s.score_status === "Finished").length}
@@ -75,7 +83,7 @@ export const GradingTable = ({ students, activity }) => {
             <Table
                 columns={columns}
                 expandable={{
-                    expandedRowRender: record => <RubricSelector student={record} />,
+                    expandedRowRender: (record,index) => <RubricSelector student={record} index={index} students={students} setStudents={setStudents} />,
                     expandRowByClick: true,
                     expandIcon: () => null,
                     expandIconColumnIndex: -1

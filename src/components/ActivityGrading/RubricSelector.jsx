@@ -1,7 +1,13 @@
-import { Pagination, Table } from 'antd';
+import { Pagination, Table, Popconfirm } from 'antd';
 import {
-  DownOutlined
+    DownOutlined,
+    PlusCircleOutlined,
+    DeleteOutlined,
+    EditOutlined,
 } from '@ant-design/icons';
+import { Header, Body } from '..';
+import styles from './RubricSelector.module.scss'
+import { useState, useEffect } from 'react';
 
 const mockSubActivity = [
     {
@@ -34,8 +40,74 @@ const mockSubActivity = [
     }
 ]
 
+const rubrics = [
+    {
+        point: 0,
+        desc: "ไม่ส่งงานในเวลาที่กำหนด",
+    },
+    {
+        point: 0.5,
+        desc: "ไม่ผ่านตามมาตรฐาน",
+    },
+    {
+        point: 1,
+        desc: "ผ่านตามมาตรฐานที่กำหนด",
+    },
+    {
+        point: 1.5,
+        desc: "ผ่านตามมาตรฐานที่กำหนดและถูกต้องสมบูรณ์",
+    },
+    {
+        point: 2,
+        desc: "ผ่านตามมาตรฐานที่กำหนดและถูกต้องสมบูรณ์ และมีความคิดสร้างสรรค์ Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+    },
+];
 
-export const RubricSelector = ({student}) => {
+
+export const RubricSelector = ({ student,index, students, setStudents }) => {
+    const [subActivity, setSubActivity] = useState()
+
+
+    const Rubric = (record) => {
+        const [defRubric, setDefRubric] = useState();
+
+
+        useEffect(() => {
+            let arr = rubrics.sort((a, b) => a.point - b.point);
+            setDefRubric(arr);
+        }, []);
+
+        return (
+            <div className={styles.rubricWrap}>
+                {defRubric?.map((ele, i) => (
+                    <div className={styles.rubric} key={"def" + i} onClick={() => handleSelectRubric(ele.point,record)}>
+                        <Header level={4} className={styles.level}>
+                            Level {i + 1}
+                        </Header>
+                        <Body level={3} className={styles.desc}>
+                            {ele.desc}
+                        </Body>
+                        <strong className={styles.point}>{ele.point} Points</strong>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
+
+    const handleSelectRubric = (point,record) => {
+        let updatedScoreStudent = [...students]
+        const scoreIndex =updatedScoreStudent[index].score.findIndex(
+            (item) => item.sub_activity_id === record.record.id
+          );
+        updatedScoreStudent[index].score[scoreIndex].obtained_score = point
+        setStudents(updatedScoreStudent)
+    }
+
+    useEffect(() => {
+        setSubActivity(mockSubActivity)
+    }, [])
+
     const columns = [
         {
             title: 'No.',
@@ -48,33 +120,37 @@ export const RubricSelector = ({student}) => {
         {
             title: 'Point',
             dataIndex: 'point',
-            render: (point) => (
-                <div>
-                    / {point} 
-                </div>
-            )
+            render: (point, record) => {
+
+                return (
+                    <div>
+                        {student.score.filter((e) => e.sub_activity_id === record.id)[0].obtained_score} / {point}
+                    </div>
+                )
+            }
         },
         {
-            width:"50px",
+            width: "50px",
             render: () => (
-                <DownOutlined/>
+                <DownOutlined />
             )
         },
     ];
 
     return (
 
-            <Table
-                columns={columns}
-                expandable={{
-                    expandedRowRender: record => <div></div>,
-                    expandRowByClick: true,
-                    expandIcon: () => null,
-                    expandIconColumnIndex: -1,
-                }}
-                pagination={false}
-                dataSource={mockSubActivity} 
-                rowKey={"id"}
-            />
+        <Table
+            columns={columns}
+            expandable={{
+                expandedRowRender: (record) => <Rubric record={record} />,
+                expandRowByClick: true,
+                expandIcon: () => null,
+                expandIconColumnIndex: -1,
+            }}
+            width={"400px"}
+            pagination={false}
+            dataSource={mockSubActivity}
+            rowKey={"id"}
+        />
     )
 }

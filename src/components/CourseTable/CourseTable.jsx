@@ -24,7 +24,7 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import { Header, Body, Button } from "..";
-import { useCourse } from "../../hooks/useCourse";
+import { useCourse } from "./hooks/useCourse";
 import styles from "./CourseTable.module.scss";
 
 export const CourseTable = ({ selectedCur }) => {

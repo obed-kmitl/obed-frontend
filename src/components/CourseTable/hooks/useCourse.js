@@ -1,6 +1,6 @@
 import { useState } from "react";
-import httpClient from "../utils/httpClient";
-import errorTranslate from "../utils/errorTranslate";
+import httpClient from "../../../utils/httpClient";
+import errorTranslate from "../../../utils/errorTranslate";
 
 export const useCourse = () => {
   const [courses, setCourses] = useState([]);

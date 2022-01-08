@@ -31,7 +31,7 @@ const Navbar = () => {
       <Menu.Divider />
       {!isAdmin && (
         <Menu.Item icon={<BookOutlined />} key="2">
-          <Link to="/" exact>
+          <Link to="/">
             My Course
           </Link>
         </Menu.Item>

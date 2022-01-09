@@ -67,10 +67,8 @@ const rubrics = [
 export const RubricSelector = ({ student,index, students, setStudents }) => {
     const [subActivity, setSubActivity] = useState()
 
-
     const Rubric = (record) => {
         const [defRubric, setDefRubric] = useState();
-
 
         useEffect(() => {
             let arr = rubrics.sort((a, b) => a.point - b.point);
@@ -149,7 +147,7 @@ export const RubricSelector = ({ student,index, students, setStudents }) => {
             }}
             width={"400px"}
             pagination={false}
-            dataSource={mockSubActivity}
+            dataSource={subActivity}
             rowKey={"id"}
         />
     )

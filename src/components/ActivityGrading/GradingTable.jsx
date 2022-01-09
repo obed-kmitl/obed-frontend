@@ -77,8 +77,7 @@ export const GradingTable = ({ students,setStudents,activity }) => {
                         </div>
                     </div>
                 </Tooltip>
-                <Button>Import</Button>
-                <Button>Save</Button>
+                <Button >Import</Button>
             </div>
             <Table
                 columns={columns}
@@ -86,8 +85,7 @@ export const GradingTable = ({ students,setStudents,activity }) => {
                     expandedRowRender: (record,index) => <RubricSelector student={record} index={index} students={students} setStudents={setStudents} />,
                     expandRowByClick: true,
                     expandIcon: () => null,
-                    expandIconColumnIndex: -1
-
+                    expandIconColumnIndex: -1,
                 }}
                 dataSource={students}
                 rowKey={"id"}

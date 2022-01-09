@@ -1,14 +1,12 @@
 import { useState } from "react"
 
 const Activity = {
-    
         id: 1,
         title: "Activity-1: Number base conversion - base 2 to base 10",
         description: "แปลงเลขต่อไปนี้จากเลขฐาน 2 ไปยัง เลขฐาน 10 แบบไม่คิดเครื่องหมาย Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam accusantium a non. Doloribus libero minus optio fugit perferendis natus voluptate, quaerat ut nemo laboriosam delectus ea nisi, saepe fuga enim! Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam accusantium a non. Doloribus libero minus optio fugit perferendis natus voluptate, quaerat ut nemo laboriosam delectus ea nisi, saepe fuga enim!"  ,
         catagory_id: 1,
         type: "Group",
-        total_score: 50,
-    
+        total_score: 100,
 }
 
 const catagories = [

@@ -14,3 +14,5 @@ export { Activity } from "./Activity/Activity";
 export { LearningOutcome } from "./LearningOutcome/LearningOutcome";
 export { TeacherReport } from "./TeacherReport/TeacherReport";
 export { ActivityDetail } from "./ActivityDetail/ActivityDetail";
+export { AdminReport } from "./AdminReport/AdminReport";
+export { AdminGraph } from "./AdminGraph/AdminGraph";

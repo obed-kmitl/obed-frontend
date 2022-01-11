@@ -2,9 +2,12 @@ import styles from "./NotFound.module.scss";
 import { WarningTwoTone } from "@ant-design/icons";
 import { Button } from "../../components";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import UserContext from "../../contexts/UserContext";
 
 export const NotFound = () => {
-  const isAdmin = window.location.host.split(".")[0] === "admin";
+  const { user } = useContext(UserContext);
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <div className={styles.notFound}>

@@ -21,3 +21,4 @@ export { CourseCard } from "./CourseCard/CourseCard";
 export { TeacherReportForm } from "./TeacherReportForm/TeacherReportForm";
 export { ActivityGrading } from "./ActivityGrading/ActivityGrading"
 export { ActivityRubric } from "./ActivityRubric/ActivityRubric";
+export { ActivityGradingGroup } from "./ActivityGradingGroup/ActivityGradingGroup"

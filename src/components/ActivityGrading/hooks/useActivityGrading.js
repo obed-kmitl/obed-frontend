@@ -425,24 +425,61 @@ const rubrics = [
 export const useActivityGrading = () => {
     const [students, setStudents] = useState([])
     const [subActivity, setSubActivity] = useState()
-
+    const [editingScore, setEditingScore] = useState([])
+    const [scoreValue,setScoreValue] = useState()
 
     const handleSelectRubric = (point, studentId, sub_activity_id) => {
         let updatedScoreStudent = [...students]
-        const studentIndex =updatedScoreStudent.findIndex(
+        const studentIndex = updatedScoreStudent.findIndex(
             (item) => item.id === studentId
-          );
-        const scoreIndex =updatedScoreStudent[studentIndex].score.findIndex(
+        );
+        const scoreIndex = updatedScoreStudent[studentIndex].score.findIndex(
             (item) => item.sub_activity_id === sub_activity_id
-          );
+        );
         updatedScoreStudent[studentIndex].score[scoreIndex].obtained_score = point
-        setStudents(updatedScoreStudent)
+        const updateStatusScore = updateStatus(updatedScoreStudent)
+        setStudents(updateStatusScore)
 
     }
 
+    const updateStatus = (data) =>{
+        let retriveStudent = data
+        const addedStatusStudent = []
+        retriveStudent.forEach(student => {
+            const allScore = student.score.map((e) => (e.obtained_score))
+            const status = () => {
+                if (!allScore.includes(null)) {
+                    return "Finished"
+                }
+                else if (allScore.includes(null) && allScore.some((i) => i !== null)) {
+                    return "Not Finished"
+                }
+                else {
+                    return "Not Submitted"
+                }
+            }
+            addedStatusStudent.push({
+                id: student.id,
+                prefix: student.prefix,
+                firstname: student.firstname,
+                lastname: student.lastname,
+                email: student.email,
+                score: student.score,
+                score_status: status(),
+            })
+        });
+        return addedStatusStudent
+    }
 
+    const onScoreChange = (value) =>{
+       setScoreValue(value)
+    }
 
-
+    const saveScore = () => {
+        handleSelectRubric(scoreValue, editingScore[0], editingScore[1])
+        setScoreValue(null)
+        setEditingScore([])
+    }
 
     useEffect(() => {
         let retriveStudent = students_score
@@ -482,5 +519,5 @@ export const useActivityGrading = () => {
     // }, [students])
 
 
-    return { students, setStudents, subActivity, rubrics, handleSelectRubric }
+    return { students, subActivity, rubrics, handleSelectRubric, editingScore, setEditingScore, onScoreChange, saveScore }
 }

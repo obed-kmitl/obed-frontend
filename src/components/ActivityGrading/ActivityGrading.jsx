@@ -1,14 +1,15 @@
 //import { GradingTable } from "./GradingTable"
 import { useState, useEffect } from "react";
 import { useActivityGrading } from "./hooks/useActivityGrading";
-import { Tooltip, Tabs } from "antd";
+import { Tooltip, Tabs, Input, InputNumber } from "antd";
 import { Button, Collapse, Panel, Header, Body } from "..";
 import styles from './ActivityGrading.module.scss'
+import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 
 export const ActivityGrading = ({ activity }) => {
-    const { students, setStudents, subActivity, rubrics, handleSelectRubric } = useActivityGrading()
-
-    const Rubric = ({studentId, sub_activity_id}) => {
+    const { students, subActivity, rubrics, handleSelectRubric,editingScore, setEditingScore ,onScoreChange,saveScore } = useActivityGrading()
+    
+    const Rubric = ({ studentId, sub_activity_id }) => {
         const [defRubric, setDefRubric] = useState();
 
         useEffect(() => {
@@ -19,7 +20,7 @@ export const ActivityGrading = ({ activity }) => {
         return (
             <div className={styles.rubricWrap}>
                 {defRubric?.map((ele, i) => (
-                    <div className={styles.rubric} key={"def" + i} onClick={() => handleSelectRubric(ele.point,studentId, sub_activity_id)}>
+                    <div className={styles.rubric} key={"def" + i} onClick={() => handleSelectRubric(ele.point, studentId, sub_activity_id)}>
                         <Header level={4} className={styles.level}>
                             Level {i + 1}
                         </Header>
@@ -102,9 +103,40 @@ export const ActivityGrading = ({ activity }) => {
                                             <Tabs.TabPane tab={subAct.title} key={i}>
                                                 <div className={styles.subActivityHeader}>
                                                     <Header level={4}>{subAct.title + " " + subAct.detail}</Header>
-                                                    <Body level={2}>{student.score.filter((e) => e.sub_activity_id === subAct.id)[0].obtained_score} / {subAct.point}</Body>
+                                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                                        {editingScore[0] === student.id && editingScore[1] === subAct.id ?
+                                                            <>
+                                                                <InputNumber
+                                                                    style={{ width: "60px" }}
+                                                                    min={0}
+                                                                    max={subAct.point}
+                                                                    onChange={onScoreChange}
+                                                                    defaultValue={student.score.filter((e) => e.sub_activity_id === subAct.id)[0].obtained_score}
+                                                                />
+                                                                <Body level={2}> &nbsp;{" / " + subAct.point}&nbsp;</Body>
+                                                                <SaveOutlined
+                                                                    style={{ color: "#009fc7", cursor: "pointer" }}
+                                                                    onClick={() => saveScore()}
+                                                                />
+                                                            </>
+
+                                                            :
+                                                            <>
+                                                                <Body level={2}>
+                                                                    {student.score.filter((e) => e.sub_activity_id === subAct.id)[0].obtained_score}
+                                                                </Body>
+                                                                <Body level={2}> &nbsp;{" / " + subAct.point}&nbsp;</Body>
+                                                                <EditOutlined
+                                                                    style={{ color: "#009fc7", cursor: "pointer" }}
+                                                                    onClick={() => setEditingScore([student.id, subAct.id])}
+                                                                />
+                                                            </>
+                                                        }
+
+
+                                                    </div>
                                                 </div>
-                                                <Rubric studentId={student.id} sub_activity_id={subAct.id}/>
+                                                <Rubric studentId={student.id} sub_activity_id={subAct.id} />
                                             </Tabs.TabPane>
                                         ))}
 

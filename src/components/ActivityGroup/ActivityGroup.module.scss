@@ -13,7 +13,8 @@
         .student{
             border: 1px solid $color-grey-200;
             font-size: 16px;
-            padding: 0.25rem 0.5rem;
+            padding: 0 0.5rem;
+            height: 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -25,11 +26,18 @@
         .addbtn{
             cursor: pointer;
             width: 120px;
+            height: 32px;
             border: 1px dashed $color-grey-200;
-            font-size: 18px;
+            font-size: 16px;
             text-align: center;
             padding: 0.25rem 0.5rem;
             color: $color-grey-200;
+        }
+        .select{
+            display: flex;
+            align-items: center;
+            gap:0.25rem;
+            
         }
     
     }

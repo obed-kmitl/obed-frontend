@@ -3,13 +3,13 @@ import { useParams } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import {
     Header, TabPane, Tabs,
-    ActivityOverview, ActivityGroup, ActivityRubric
+    ActivityOverview, ActivityGroup, ActivityGrading , ActivityRubric, ActivityGradingGroup
 } from "../../components";
 import { useEffect } from 'react';
 import { useActivityDetail } from './hooks/useActivityDetail';
 
 export const ActivityDetail = () => {
-    let { activityId } = useParams();
+    //let { activityId } = useParams();
     const { activity, setActivity, catagory } = useActivityDetail()
 
     useEffect(() => {
@@ -30,10 +30,11 @@ export const ActivityDetail = () => {
                     <ActivityOverview activity={activity} catagory={catagory} setActivity={setActivity} />
                 </TabPane>
                 <TabPane tab="Group" key="2" disabled={activity.type === 'Individual'}>
-                    <ActivityGroup activity={activity}/>
+                    <ActivityGroup activity={activity} />
                 </TabPane>
                 <TabPane tab="Grading" key="3">
-
+                    {activity.type === "Individual" && <ActivityGrading activity={activity}/>}
+                    {activity.type === "Group" && <ActivityGradingGroup activity={activity}/>}
                 </TabPane>
                 <TabPane tab="Rubric" key="4">
                     <ActivityRubric />

@@ -74,6 +74,13 @@ const Navbar = () => {
             >
               Semester Plan
             </NavLink>
+            <NavLink
+              to="/summary"
+              className={styles.link}
+              activeClassName={styles.activeLink}
+            >
+              Report
+            </NavLink>
           </div>
         </div>
         <Dropdown overlay={menu} placement="bottomRight">

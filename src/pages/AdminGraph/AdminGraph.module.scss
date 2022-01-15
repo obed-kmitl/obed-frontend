@@ -1,0 +1,27 @@
+@import "../../styles/color.scss";
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.backBtn {
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 5px;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #f0fcff;
+  }
+}
+
+.filterWrap {
+  display: flex;
+  gap: 1rem;
+}
+
+.graphWrap {
+  margin-top: 1rem;
+  height: 600px;
+}

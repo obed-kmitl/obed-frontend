@@ -16,6 +16,8 @@ import {
   LearningOutcome,
   TeacherReport,
   ActivityDetail,
+  AdminReport,
+  AdminGraph,
 } from "./pages";
 import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
@@ -52,6 +54,18 @@ function App() {
               </PrivateRoute>
               <PrivateRoute roles={["ADMIN"]} path="/plan">
                 <Plan />
+              </PrivateRoute>
+              <PrivateRoute roles={["ADMIN"]} path="/summary/subject">
+                <AdminGraph page="subject" />
+              </PrivateRoute>
+              <PrivateRoute roles={["ADMIN"]} path="/summary/cohort">
+                <AdminGraph page="cohort" />
+              </PrivateRoute>
+              <PrivateRoute roles={["ADMIN"]} path="/summary/student">
+                <AdminGraph page="student" />
+              </PrivateRoute>
+              <PrivateRoute roles={["ADMIN"]} exact path="/summary">
+                <AdminReport />
               </PrivateRoute>
               <PrivateRoute roles={["TEACHER"]} path="/:sectionId/overview">
                 <Overview />

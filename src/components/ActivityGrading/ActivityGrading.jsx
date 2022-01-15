@@ -132,8 +132,6 @@ export const ActivityGrading = ({ activity }) => {
                                                                 />
                                                             </>
                                                         }
-
-
                                                     </div>
                                                 </div>
                                                 <Rubric studentId={student.id} sub_activity_id={subAct.id} />

@@ -267,7 +267,8 @@ export const useActivityGradingGroup = () => {
     const [students, setStudents] = useState([])
     const [group,setGroup]=useState([])
     const [subActivity, setSubActivity] = useState()
-
+    const [editingScore, setEditingScore] = useState([])
+    const [scoreValue,setScoreValue] = useState()
 
     const handleSelectRubric = (point, groupId, sub_activity_id) => {
         let updatedScoreGroup = [...group]
@@ -278,17 +279,15 @@ export const useActivityGradingGroup = () => {
             (item) => item.sub_activity_id === sub_activity_id
           );
         updatedScoreGroup[groupIndex].score[scoreIndex].obtained_score = point
-        setStudents(updatedScoreGroup)
+        const updateStatusScore = updateStatus(updatedScoreGroup)
+        setGroup(updateStatusScore)
 
     }
-    useEffect(() => {
-        setStudents(student)
-    }, [])
-    useEffect(() => {
-        setSubActivity(mockSubActivity)
-    }, [])
-    useEffect(() => {
-        let retriveGroup = groups
+    
+    
+    const updateStatus = (data) =>{
+        console.log(data)
+        let retriveGroup = data
         const addedStatusGroup = []
         retriveGroup.forEach(g => {
             const allScore = g.score.map((e) => (e.obtained_score))
@@ -311,13 +310,28 @@ export const useActivityGradingGroup = () => {
                 score_status: status(),
             })
         })
+        return addedStatusGroup
+    }
+
+    const onScoreChange = (value) =>{
+       setScoreValue(value)
+    }
+
+    const saveScore = () => {
+        handleSelectRubric(scoreValue, editingScore[0], editingScore[1])
+        setScoreValue(null)
+        setEditingScore([])
+    }
+    useEffect(() => {
+        setStudents(student)
+    }, [])
+    useEffect(() => {
+        setSubActivity(mockSubActivity)
+    }, [])
+    useEffect(() => {
+        const addedStatusGroup = updateStatus(groups)
         setGroup(addedStatusGroup)
     }, [])
 
-    useEffect(() => {
-        console.log(group);
-    }, [group])
-
-
-    return { students, group, subActivity, rubrics, handleSelectRubric }
+    return { students, group, subActivity, rubrics, handleSelectRubric,editingScore, setEditingScore, onScoreChange, saveScore }
 }

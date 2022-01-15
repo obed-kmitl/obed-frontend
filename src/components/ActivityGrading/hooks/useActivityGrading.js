@@ -482,31 +482,7 @@ export const useActivityGrading = () => {
     }
 
     useEffect(() => {
-        let retriveStudent = students_score
-        const addedStatusStudent = []
-        retriveStudent.forEach(student => {
-            const allScore = student.score.map((e) => (e.obtained_score))
-            const status = () => {
-                if (!allScore.includes(null)) {
-                    return "Finished"
-                }
-                else if (allScore.includes(null) && allScore.some((i) => i !== null)) {
-                    return "Not Finished"
-                }
-                else {
-                    return "Not Submitted"
-                }
-            }
-            addedStatusStudent.push({
-                id: student.id,
-                prefix: student.prefix,
-                firstname: student.firstname,
-                lastname: student.lastname,
-                email: student.email,
-                score: student.score,
-                score_status: status(),
-            })
-        });
+        const addedStatusStudent = updateStatus(students_score)
         setStudents(addedStatusStudent)
 
     }, [])

@@ -25,7 +25,6 @@ const WeightingCard = ({ data }) => {
 export const Planning = () => {
     let { sectionId } = useParams();
     const [form, weightingList, isEditing, editingList, handleEditBtn, handleAddWeighting, removeWeighting, save ,cancel] = useWeighting()
-    console.log(weightingList)
     return (
         <div className={styles.planning}>
             <Helmet>

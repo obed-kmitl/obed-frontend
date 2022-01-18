@@ -24,7 +24,7 @@ import {
 import styles from "./Curriculum.module.scss";
 import { Helmet } from "react-helmet";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { useCurriculum } from "../../hooks/useCurriculum";
+import { useCurriculum } from "./hooks/useCurriculum";
 
 export function Curriculum() {
   const { create, getAll, update, remove, curriculum, message, setMessage } =
@@ -209,6 +209,7 @@ export function Curriculum() {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           requiredMark={"required"}
+          initialValues={{ clone: "" }}
         >
           <Form.Item
             label="Name"
@@ -259,8 +260,8 @@ export function Curriculum() {
             name="clone"
             rules={[{ required: false, message: "Please input year!" }]}
           >
-            <Select defaultValue="0">
-              <Option value="0">None</Option>
+            <Select>
+              <Option value="">None</Option>
               {curriculum.map((e) => (
                 <Option value={e.curriculum_id} key={e.curriculum_id}>
                   {e.title}

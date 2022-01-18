@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Form } from 'antd';
 
 const catagories = [
     {
@@ -141,13 +142,44 @@ export const useActivity = () => {
     const [catagory, setCatagory] = useState(catagories)
     const [activity, setActivity] = useState(activities)
     const [archriveActivity, setArchriveActivity] = useState(archrive_activities)
-    const [googleActivity, setGoogleActivity] = useState(google_activities)
+    // const [googleActivity, setGoogleActivity] = useState(google_activities)
 
     const [filteredActivity, setFilteredActivity] = useState()
     const [filteredArchriveActivity, setFilteredArchriveActivity] = useState()
 
-    const [archriveFilterOption, setarchriveFilterOption] = useState(["All", "All", "All"]) // catagory,group,type
-    const [filterOption, setFilterOption] = useState(["All", "All"]) // group,type
+    const [archriveFilterOption, setarchriveFilterOption] = useState(["All", "All"]) // catagory,group
+    const [filterOption, setFilterOption] = useState(["All"]) // group
+
+    //add Activity/////////////////// 
+    const [addModalVisible, setAddModalVisible] = useState(false)
+    const [form] = Form.useForm()
+
+
+    function handleAddActivity() {
+        setAddModalVisible(true)
+    }
+
+    function handleSubmit(value) {
+        setAddModalVisible(false)
+        console.log(value)
+        setActivity([...activity,
+        {
+            id: Date.now(),
+            title: value.title,
+            description: value.description,
+            catagory_id: value.catagory_id,
+            type: value.group,
+            //sub_activity: "Single",
+            total_score: value.point,
+        }
+        ])
+        form.resetFields()
+    }
+    function handleCancel() {
+        setAddModalVisible(false)
+        form.resetFields()
+    }
+    /////////////////////////////////////
 
     function changeGroup(value, archrive = false) {
         if (archrive) {
@@ -161,21 +193,21 @@ export const useActivity = () => {
         }
     }
 
-    function changeType(value, archrive = false) {
-        if (archrive) {
-            let newFilter = [...archriveFilterOption]
-            newFilter[1] = value
-            setarchriveFilterOption(newFilter)
-        } else {
-            let newFilter = [...filterOption]
-            newFilter[1] = value
-            setFilterOption(newFilter)
-        }
-    }
+    // function changeType(value, archrive = false) {
+    //     if (archrive) {
+    //         let newFilter = [...archriveFilterOption]
+    //         newFilter[1] = value
+    //         setarchriveFilterOption(newFilter)
+    //     } else {
+    //         let newFilter = [...filterOption]
+    //         newFilter[1] = value
+    //         setFilterOption(newFilter)
+    //     }
+    // }
 
     function changeCatagory(value) {
         let newFilter = [...archriveFilterOption]
-        newFilter[2] = value
+        newFilter[1] = value
         setarchriveFilterOption(newFilter)
     }
 
@@ -187,13 +219,14 @@ export const useActivity = () => {
                 } else {
                     return act.type === filterOption[0]
                 }
-            }).filter((act) => {
-                if (filterOption[1] === "All") {
-                    return act
-                } else {
-                    return act.sub_activity === filterOption[1]
-                }
             })
+            // .filter((act) => {
+            //     if (filterOption[1] === "All") {
+            //         return act
+            //     } else {
+            //         return act.sub_activity === filterOption[1]
+            //     }
+            // })
         )
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterOption])
@@ -207,19 +240,21 @@ export const useActivity = () => {
                 } else {
                     return act.type === archriveFilterOption[0]
                 }
-            }).filter((act) => {
-                if (archriveFilterOption[1] === "All") {
-                    return act
-                } else {
-                    return act.sub_activity === archriveFilterOption[1]
-                }
-            }).filter((act) => {
-                if (archriveFilterOption[2] === "All") {
-                    return act
-                } else {
-                    return act.catagory_id === archriveFilterOption[2]
-                }
             })
+                // .filter((act) => {
+                //     if (archriveFilterOption[1] === "All") {
+                //         return act
+                //     } else {
+                //         return act.sub_activity === archriveFilterOption[1]
+                //     }
+                // })
+                .filter((act) => {
+                    if (archriveFilterOption[2] === "All") {
+                        return act
+                    } else {
+                        return act.catagory_id === archriveFilterOption[2]
+                    }
+                })
         )
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [archriveFilterOption])
@@ -230,5 +265,8 @@ export const useActivity = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activity])
 
-    return { catagory, filteredActivity, filteredArchriveActivity, googleActivity, changeGroup, changeType, changeCatagory }
+    return {
+        catagory, filteredActivity, filteredArchriveActivity, changeGroup, changeCatagory,
+        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel
+    }
 }

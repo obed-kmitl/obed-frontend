@@ -10,7 +10,7 @@ const useAuthen = () => {
   const history = useHistory();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   function errorHandler(error) {
     let resMessage = "";
@@ -45,15 +45,17 @@ const useAuthen = () => {
     setLoading(true);
     setMessage("");
     return axios
-      .post(config.apiUrl + "/auth/login", {
-        username,
-        password,
-      })
+      .post(
+        config.apiUrl + "/auth/login",
+        {
+          username,
+          password,
+        },
+        { withCredentials: true }
+      )
       .then(
         (response) => {
-          if (response.data.data.accessToken) {
-            localStorage.setItem("atk", response.data.data.accessToken);
-            localStorage.setItem("rtk", response.data.data.refreshToken);
+          if (response.data.data) {
             setUser(response.data.data.userProfile);
           }
           history.push(next === "" ? "/" : next);
@@ -69,15 +71,17 @@ const useAuthen = () => {
     setLoading(true);
     setMessage("");
     return axios
-      .post(config.apiUrl + "/auth/adminLogin", {
-        username,
-        password,
-      })
+      .post(
+        config.apiUrl + "/auth/adminLogin",
+        {
+          username,
+          password,
+        },
+        { withCredentials: true }
+      )
       .then(
         (response) => {
-          if (response.data.data.accessToken) {
-            localStorage.setItem("atk", response.data.data.accessToken);
-            localStorage.setItem("rtk", response.data.data.refreshToken);
+          if (response.data.data) {
             setUser(response.data.data.userProfile);
           }
           history.push(next === "" ? "/" : next);
@@ -90,10 +94,14 @@ const useAuthen = () => {
   }
 
   function onLogout() {
-    return httpClient.post("/auth/logout").then(() => {
-      localStorage.clear();
-      setUser({});
-      history.push("/login");
+    return httpClient.post(`/auth/logout/${user.user_id}`).then((res) => {
+      if (user.role === "ADMIN") {
+        setUser({});
+        history.push("/admin");
+      } else {
+        setUser({});
+        history.push("/login");
+      }
     });
   }
 

@@ -345,7 +345,7 @@ export const Standard = ({ selectedCurriculum }) => {
             label="Standard Name"
             name="standardName"
             rules={[
-              { required: true, message: "Please input Standard No.!" },
+              { required: true, message: "Please input Standard Name!" },
             ]}
           >
             <Input placeholder=" standard name" />

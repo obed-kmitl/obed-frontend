@@ -11,6 +11,14 @@ export { Standard } from "./Standard/Standard";
 export { MappingStandard } from "./MappingStandard/MappingStandard";
 export { PrivateRoute } from "./Routes/PrivateRoute";
 export { PublicRoute } from "./Routes/PublicRoute";
-export { CourseCard } from "./CourseCard/CourseCard"
-export { ActivityList } from "./ActivityList/ActivityList"
-export { ActivityCard } from "./ActivityCard/ActivityCard"
+export { ActivityList } from "./ActivityList/ActivityList";
+export { ActivityCard } from "./ActivityCard/ActivityCard";
+export { ActivityOverview } from "./ActivityOverview/ActivityOverview";
+export { ActivityTable } from "./ActivityTable/ActivityTable";
+export { ActivityGroup } from "./ActivityGroup/ActivityGroup";
+export { default as ClassroomTab } from "./ClassroomTab/ClassroomTab";
+export { CourseCard } from "./CourseCard/CourseCard";
+export { TeacherReportForm } from "./TeacherReportForm/TeacherReportForm";
+export { ActivityGrading } from "./ActivityGrading/ActivityGrading"
+export { ActivityRubric } from "./ActivityRubric/ActivityRubric";
+export { ActivityGradingGroup } from "./ActivityGradingGroup/ActivityGradingGroup"

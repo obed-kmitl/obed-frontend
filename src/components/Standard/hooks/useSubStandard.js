@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Form } from "antd";
 import httpClient from "../../../utils/httpClient";
+import openNotificationWithIcon from "../../../utils/notification";
 
 export const useSubStandard = (
   standard,
@@ -85,7 +86,14 @@ export const useSubStandard = (
             setEditingKey("");
             setIsNewAdded(false);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            openNotificationWithIcon(
+              "error",
+              "Cannot create sub standard",
+              err.toString()
+            );
+            console.log(err);
+          });
       } else {
         return await httpClient
           .put(`/standard/updateSubStandard/${subStdId}`, {
@@ -109,6 +117,14 @@ export const useSubStandard = (
               groupSubStdIndex
             ].subStandard = newData;
             setAllStandard(newAllStandard);
+          })
+          .catch((err) => {
+            openNotificationWithIcon(
+              "error",
+              "Cannot edit sub standard",
+              err.toString()
+            );
+            console.log(err);
           });
       }
     } catch (errInfo) {
@@ -138,12 +154,13 @@ export const useSubStandard = (
         setAllStandard(newAllStandard);
       })
       .catch((err) => {
+        openNotificationWithIcon("error", "Cannot delete sub standard", err.toString());
         console.log(err);
       });
   }
   useEffect(() => {
     setData(standard);
-    console.log(standard)
+    console.log(standard);
   }, [standard]);
 
   return {

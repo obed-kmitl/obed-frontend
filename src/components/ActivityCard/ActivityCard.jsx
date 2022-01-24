@@ -41,11 +41,10 @@ export const ActivityCard = ({ google, activity, index }) => {
                         {!google &&
                             <>
                                 <Tag className={styles.tag} color="orange">{activity.type}</Tag>
-                                {/* <Tag className={styles.tag} color="green" >{activity.sub_activity}</Tag> */}
                             </>
                         }
                     </div>
-                    <Body level={2} className={styles.description}>{activity.description}</Body>
+                    <Body level={2} className={styles.description}>{activity.detail}</Body>
                 </div>
                 <div className={styles.score}>
                     {google ?

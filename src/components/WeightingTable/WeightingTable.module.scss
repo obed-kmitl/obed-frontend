@@ -1,0 +1,23 @@
+
+.flexrowSpace{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.flexrow{
+    display: flex;
+    align-items: center;
+}
+.btnGroup{
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem 0;
+    Button{
+        width: 80px;
+    }
+
+}

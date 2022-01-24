@@ -96,6 +96,11 @@ export const useSemester = () => {
       .get(`/semester/get/${value}`)
       .then((response) => {
         setSelectedSemester(response.data.data);
+        response.data.data.group_sections.forEach((g_sec) => {
+            g_sec.sections.forEach((section) => {
+                   section.teacher_list = section.teacher_list.map(e => e.user_id)
+                })
+        })
         setAddedCourse(
           response.data.data.group_sections.sort(
             ({ course_number: first }, { course_number: second }) =>

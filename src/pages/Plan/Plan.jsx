@@ -82,6 +82,7 @@ export const Plan = () => {
     setFilterList(addedCourse);
   }, [addedCourse]);
 
+
   return (
     <div className={styles.plan}>
       <Helmet>

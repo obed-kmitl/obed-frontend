@@ -84,15 +84,15 @@ export const ActivityList = ({ archrive, google }) => {
                         <Panel
                             header={
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                    <Header level={3}>{cat.catagory}</Header>
+                                    <Header level={3}>{cat.title}</Header>
                                     <Header style={{ color: "#F7941D" }} level={4}>{cat.weight}%</Header>
                                 </div>
                             }
                             key={cat.id}
                         >
-                            {filteredActivity?.filter((atv) => atv.catagory_id === cat.id).map((activity, index) =>
-                                <Link to={`${window.location.pathname.split("/")[3]}/${activity.id}`} className={styles.link}>
-                                    <ActivityCard activity={activity} key={activity.id} index={index + 1} />
+                            {filteredActivity?.filter((atv) => atv.category_id === cat.category_id).map((activity, index) =>
+                                <Link to={`${window.location.pathname.split("/")[3]}/${activity.activity_id}`} className={styles.link}>
+                                    <ActivityCard activity={activity} key={activity.activity_id} index={index + 1} />
                                 </Link>
                             )}
                         </Panel>
@@ -141,43 +141,34 @@ export const ActivityList = ({ archrive, google }) => {
                             { required: true, message: "Please input Description!" },
                         ]}
                     >
-                        <TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 3 }}/>
+                        <TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 3 }} />
                     </Form.Item>
-                    <div style={{ display: 'flex', justifyContent: "space-between", }}>
-                        <Form.Item
-                            label="Group Type"
-                            name="group"
-                            rules={[
-                                { required: true, message: "Please Select Group Type" },
-                            ]}
-                        >
-                            <Select width={200} defaultValue="None">
-                                <Option value="Individual">Individual</Option>
-                                <Option value="Group">Group</Option>
-                            </Select>
-                        </Form.Item>
-                        <Form.Item
-                            label="Catagory"
-                            name="catagory_id"
-                            rules={[
-                                { required: true, message: "Please Select Catagory" },
-                            ]}
-                        >
-                            <Select width={200} defaultValue="None">
-                                {catagory.map((cat) =>
-                                    <Option value={cat.id}>{cat.catagory}</Option>
-                                )}
-                            </Select>
-                        </Form.Item>
-                    </div>
                     <Form.Item
-                        label="Point"
-                        name="point"
+                        label="Group Type"
+                        name="group"
+                        extra="Once an activity has been created, Group type cannot be changed."
+
                         rules={[
-                            { required: true, message: "Please input total point!" },
+                            { required: true, message: "Please Select Group Type" },
                         ]}
                     >
-                        <InputNumber min={0} />
+                        <Select defaultValue="None">
+                            <Option value="Individual">Individual</Option>
+                            <Option value="Group">Group</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        label="Catagory"
+                        name="catagory_id"
+                        rules={[
+                            { required: true, message: "Please Select Catagory" },
+                        ]}
+                    >
+                        <Select defaultValue="None">
+                            {catagory.map((cat) =>
+                                <Option value={cat.category_id}>{cat.title}</Option>
+                            )}
+                        </Select>
                     </Form.Item>
                 </Form>
             </Modal>

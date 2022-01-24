@@ -1,5 +1,5 @@
 import styles from "./ActivityCard.module.scss"
-import { Body, Header ,Button} from ".."
+import { Body, Header, Button } from ".."
 import { Tag, Typography, Dropdown, Menu } from "antd"
 import {
     MoreOutlined
@@ -17,7 +17,9 @@ const menu = (
     </Menu>
 );
 
-
+function Capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 
 export const ActivityCard = ({ google, activity, index }) => {
 
@@ -40,7 +42,8 @@ export const ActivityCard = ({ google, activity, index }) => {
                         <Header level={3} className={styles.title}>{activity.title}</Header>
                         {!google &&
                             <>
-                                <Tag className={styles.tag} color="orange">{activity.type}</Tag>
+                                <Tag className={styles.tag} color="orange">{Capitalize(activity.type)}</Tag>
+
                             </>
                         }
                     </div>

@@ -22,7 +22,7 @@ const EditableCell = ({
     children,
     ...restProps
 }) => {
-    const inputNode = inputType === 'number' ? <InputNumber min={0}/> : <Input />;
+    const inputNode = inputType === 'number' ? <InputNumber min={0} /> : <Input />;
     return (
         <td {...restProps}>
             {editing ? (
@@ -152,6 +152,31 @@ export const WeightingTable = () => {
                 rowClassName="editable-row"
                 pagination={false}
                 rowKey="category_id"
+                summary={pageData => {
+                    let total = 0;
+                    pageData.forEach(({ weight }) => {
+                        total += weight;
+
+                    });
+
+                    return (
+                        <>
+                            <Table.Summary.Row>
+                                <Table.Summary.Cell >
+                                    <Typography.Text >Total</Typography.Text>
+                                </Table.Summary.Cell>
+                                <Table.Summary.Cell colSpan={2}>
+                                    {total === 100 ?
+                                        <Typography.Text type='success'>{total}</Typography.Text>
+                                        :
+                                        <Typography.Text type='danger'>{total}</Typography.Text>
+                                    }
+
+                                </Table.Summary.Cell>
+                            </Table.Summary.Row>
+                        </>
+                    );
+                }}
             />
             {(isAllEditing) &&
                 <div className={styles.btnGroup}>

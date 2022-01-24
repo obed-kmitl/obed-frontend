@@ -12,7 +12,7 @@ export const useWeighting = (sectionId) => {
     const [errMsg, setErrMsg] = useState()
     const [form] = Form.useForm()
 
-    const [count,setCount]= useState(0)
+    const [count, setCount] = useState(0)
     function handleEditBtn() {
         setIsAllEditing(true)
         setTempWeighting([...weightingList])
@@ -20,30 +20,38 @@ export const useWeighting = (sectionId) => {
 
     function handleAddWeighting() {
         setWeightingList([...weightingList, {
-            category_id: "NEW_"+count ,
+            category_id: "NEW_" + count,
             section_id: sectionId,
             title: undefined,
             weight: undefined
         }])
-        setEditingKey("NEW_"+count);
+        setEditingKey("NEW_" + count);
         form.resetFields();
-        setCount(count+1)
+        setCount(count + 1)
     }
     function removeWeighting(record) {
         setWeightingList(weightingList.filter(e => e !== record))
 
     }
 
-    function saveAll() {
+    async function saveAll() {
         let allWeight = 0
         weightingList.map((e) => e.weight).forEach((w) => {
             allWeight = allWeight + w
         })
         if (allWeight === 100) {
-            console.log(weightingList)
-            //setWeightingList(newWeighting)
-            message.success("Score Weighting changed succesfully")
-            setIsAllEditing(false);
+            return await httpClient.post(`/category/save`, {
+                section_id: parseInt(sectionId),
+                categories: weightingList
+            }).then((res) => {
+                console.log(res.data)
+               setWeightingList(res.data.data)
+               message.success("Score Weighting changed succesfully")
+               setIsAllEditing(false);
+
+            }).catch((err) => console.log(err))
+
+          
         } else {
             message.error("Total Weight must be 100%")
         }
@@ -119,7 +127,7 @@ export const useWeighting = (sectionId) => {
         cancel,
         save,
         isEditing,
-        editingKey, 
+        editingKey,
     }
 
 

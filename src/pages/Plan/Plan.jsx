@@ -10,10 +10,10 @@ import {
   Collapse,
   Panel,
   SectionTable,
-  Body
+  Body,
 } from "../../components";
-import { Divider, message, Modal, Popconfirm, Transfer } from "antd";
-import { DeleteOutlined ,WarningTwoTone } from "@ant-design/icons";
+import { Divider, message, Modal, Popconfirm, Transfer, Checkbox } from "antd";
+import { DeleteOutlined, WarningTwoTone } from "@ant-design/icons";
 import { useSemester } from "./hooks/useSemester";
 
 export const Plan = () => {
@@ -36,12 +36,14 @@ export const Plan = () => {
     handleDeleteCourse,
     teacher,
     duplicateYear,
-    duplicateModalVisible, 
-    setDuplicateModalVisible
-} = useSemester()
+    createSemester,
+    duplicateModalVisible,
+    setDuplicateModalVisible,
+  } = useSemester();
 
   const [filterList, setFilterList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  const [duplicate, setDuplicate] = useState(false);
 
   const handleAdd = () => {
     setIsModalVisible(true);
@@ -66,6 +68,10 @@ export const Plan = () => {
     }
   }
 
+  function onChangeDuplicate() {
+    setDuplicate(!duplicate);
+  }
+
   useEffect(() => {
     setSearchValue("");
     search("");
@@ -73,9 +79,8 @@ export const Plan = () => {
   }, [allCourse]);
 
   useEffect(() => {
-    setFilterList(addedCourse)
-  }, [addedCourse])
-
+    setFilterList(addedCourse);
+  }, [addedCourse]);
 
   return (
     <div className={styles.plan}>
@@ -101,7 +106,7 @@ export const Plan = () => {
             </Option>
           ))}
         </Select>
-        {selectedCurriculum &&
+        {selectedCurriculum && (
           <div className={styles.flexrowSpace}>
             <div className={styles.flexrow}>
               <Header level={2}>Semester</Header>
@@ -111,20 +116,24 @@ export const Plan = () => {
                 width={100}
               >
                 {allSemester?.map((e) => (
-                  <Option value={e.semester_id} key={e.semester_number + "/" + e.year_number}>
+                  <Option
+                    value={e.semester_id}
+                    key={e.semester_number + "/" + e.year_number}
+                  >
                     {e.semester_number}/{e.year_number}
                   </Option>
                 ))}
               </Select>
             </div>
             <div className={styles.flexrow}>
-              <Header level={5}>Create and Duplicate year plan from lastest year</Header>
-              <Button onClick={() => setDuplicateModalVisible(true)}>Create</Button>
+              <Button onClick={() => setDuplicateModalVisible(true)}>
+                New Semester
+              </Button>
             </div>
           </div>
-        }
+        )}
       </div>
-      {selectedSemester !== undefined ?
+      {selectedSemester !== undefined ? (
         <>
           <div className={styles.planHeader}>
             <Header level={2}>
@@ -150,7 +159,10 @@ export const Plan = () => {
                   <Panel
                     header={
                       <div
-                        style={{ display: "flex", justifyContent: "space-between" }}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
                       >
                         <Header level={4}>
                           {item.course_number} {item.course_name_en}
@@ -178,15 +190,18 @@ export const Plan = () => {
                     }
                     key={i}
                   >
-                    <SectionTable section={item.sections} teacher={teacher} groupSectionId={item.group_sec_id} />
+                    <SectionTable
+                      section={item.sections}
+                      teacher={teacher}
+                      groupSectionId={item.group_sec_id}
+                    />
                   </Panel>
                 ))}
               </Collapse>
             </div>
           </div>
         </>
-        : null
-      }
+      ) : null}
       <Modal
         visible={isModalVisible}
         title={
@@ -224,32 +239,45 @@ export const Plan = () => {
       </Modal>
       <Modal
         visible={duplicateModalVisible}
-        title={
-          <Header level={3}>
-            Duplicate Semester
-          </Header>
-        }
+        title={<Header level={3}>New Semester</Header>}
         onOk={() => {
-          const allYear = allSemester.map((e)=>e.year_number)
-          if(Math.max(...allYear)< new Date().getFullYear()+545 ){
-             duplicateYear();
-          }else{
-            message.error("You can plan up to 2 year in advance")
+          const allYear = allSemester.map((e) => e.year_number);
+          if (duplicate) {
+            if (Math.max(...allYear) < new Date().getFullYear() + 545) {
+              duplicateYear();
+            } else {
+              message.error("You can duplicate up to 2 year in advance");
+            }
+          } else {
+            if (Math.max(...allYear) < new Date().getFullYear() + 545) {
+              createSemester();
+            } else {
+              message.error("You can create up to 2 year in advance");
+            }
           }
-         
         }}
-        onCancel={()=>setDuplicateModalVisible(false)}
-        okText={"Duplicate"}
+        onCancel={() => setDuplicateModalVisible(false)}
+        okText={duplicate ? "Duplicate" : "Create"}
         width={600}
         maskClosable={false}
         centered
       >
-        <Header level={4}>Are you sure to duplicate all semester from lastest year?</Header>
-        <Body level={2}><WarningTwoTone twoToneColor="#ffcc00" />&nbsp;You can only copy a semester plan once each year and you can't delete it.</Body>
-        <Body level={2}><WarningTwoTone  twoToneColor="#ffcc00"/>&nbsp;you can plan up to 2 year in advance </Body>
+        <Checkbox onChange={onChangeDuplicate}>
+          <Header level={4}>Duplicate all semester from last year</Header>
+        </Checkbox>
+        <Body level={2}>
+          <WarningTwoTone twoToneColor="#ffcc00" />
+          &nbsp;You can duplicate a semester plan once each year.
+        </Body>
+        <Body level={2}>
+          <WarningTwoTone twoToneColor="#ffcc00" />
+          &nbsp;You can plan up to 2 year in advance.
+        </Body>
+        <Body level={2}>
+          <WarningTwoTone twoToneColor="#ffcc00" />
+          &nbsp;Cannot be delete if created.
+        </Body>
       </Modal>
     </div>
-
-
   );
 };

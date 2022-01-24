@@ -172,11 +172,12 @@ export const SectionTable = ({ section, teacher, groupSectionId }) => {
     }
 
     useEffect(() => {
-        let newData = [...section]
-        newData.forEach((section) => {
-            section.teacher_list = section.teacher_list.map(e => e.user_id)
-        })
-        setData(newData.sort(({section_number: first }, {section_number: second }) => first - second))
+        // let newData = [...section]
+        // newData.forEach((section) => {
+        //    section.teacher_list = section.teacher_list.map(e => e.user_id)
+        // })
+        //console.log(section)
+        setData(section.sort(({section_number: first }, {section_number: second }) => first - second))
     }, [section])
 
     const columns = [
@@ -195,9 +196,9 @@ export const SectionTable = ({ section, teacher, groupSectionId }) => {
                 <>
                     {selectedteacher?.map((ele) => {
                         const teacherData = teacher.filter((teacher) => teacher.user_id === ele)[0];
-                        const teacherPrefix = getThPrefix[teacherData.prefix]
-                        const teacherFirstName = teacherData.firstname
-                        const teacherLastName = teacherData.lastname
+                        const teacherPrefix = getThPrefix[teacherData?.prefix]
+                        const teacherFirstName = teacherData?.firstname
+                        const teacherLastName = teacherData?.lastname
                         const teacherName = `${teacherPrefix} ${teacherFirstName} ${teacherLastName}`
                         return <Tag style={{ height: '36px', lineHeight: '2.5', fontSize: '14px' }} key={ele}>{teacherName}</Tag>;
                     })}

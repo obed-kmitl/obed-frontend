@@ -77,6 +77,7 @@ export const Plan = () => {
   }, [addedCourse])
 
 
+
   return (
     <div className={styles.plan}>
       <Helmet>

@@ -49,7 +49,6 @@ export const useSemester = () => {
         return await httpClient
             .get(`/course/getAllByCurriculum/${value}`)
             .then((response) => {
-                console.log(response.data.data)
                 const receivedCourses = response?.data.data.map((course) => ({
                     key: course.course_id,
                     course_id: course.course_id,
@@ -82,7 +81,6 @@ export const useSemester = () => {
             .get(`/semester/getByCurriculum/${value}`)
             .then((response) => {
                 setAllSemester(response.data.data.reverse())
-                console.log(response.data.data)
             })
             .catch((error) => {
                 console.log(error);
@@ -100,6 +98,11 @@ export const useSemester = () => {
         return await httpClient.get(`/semester/get/${value}`)
             .then((response) => {
                 setSelectedSemester(response.data.data)
+                response.data.data.group_sections.forEach((g_sec) => {
+                    g_sec.sections.forEach((section) => {
+                           section.teacher_list = section.teacher_list.map(e => e.user_id)
+                        })
+                })
                 setAddedCourse(response.data.data.group_sections.sort(({ course_number: first }, { course_number: second }) => first - second))
             })
             .catch((error) => {
@@ -202,7 +205,7 @@ export const useSemester = () => {
         handleDeleteCourse,
         teacher,
         duplicateYear,
-        duplicateModalVisible, 
+        duplicateModalVisible,
         setDuplicateModalVisible
     }
 }

@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 
 import styles from "./MappingStandard.module.scss";
+import httpClient from "../../utils/httpClient"
 
 const { TreeNode } = TreeSelect;
 
@@ -25,7 +26,6 @@ export const MappingTable = ({
   const [editingKey, setEditingKey] = useState("");
   const [editing, setEditing] = useState(isEdit);
   const [mappingList, setMappingList] = useState(mapping)
-  console.log(mapping)
 
   const isEditing = (record) => record.subStandardNo === editingKey;
   const EditableCell = ({
@@ -66,7 +66,7 @@ export const MappingTable = ({
                   value={option.groupSubStdId}
                   title={option.standardNo + " " + option.standardName}
                   selectable={false}
-                  disabled={option.subStandard.length <=0}
+                  disabled={option.subStandard.length <= 0}
                 >
                   {option.subStandard.map((item) => (
                     <TreeNode
@@ -214,7 +214,7 @@ export const MappingTable = ({
     setIsEditingTable(false)
   };
 
-  function mapMappingtoJson(data, index) {
+  async function mapMappingtoJson(data, index) {
 
     const mainSubStandard = data[index].subStandardId
     const relativeSubStandard = data[index].mapping
@@ -236,7 +236,11 @@ export const MappingTable = ({
     setMappingList(allMapping)
     console.log(mappingList)
 
-    return allMapping
+    return await httpClient
+      .post(`/mapStandard/save`, mappingList)
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   const save = async (subStandardNo) => {
@@ -263,7 +267,6 @@ export const MappingTable = ({
 
   useEffect(() => {
     setData(standard);
-
   }, [standard]);
 
   // useEffect(() => {

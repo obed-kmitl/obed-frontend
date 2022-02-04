@@ -85,7 +85,7 @@ export const ActivityList = ({ archrive, google }) => {
                             header={
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <Header level={3}>{cat.title}</Header>
-                                    <Header style={{ color: "#F7941D" }} level={4}>{cat.weight}%</Header>
+                                    {cat.title !== "Unassigned" &&<Header style={{ color: "#F7941D" }} level={4}>{cat.weight}%</Header>}
                                 </div>
                             }
                             key={cat.id}

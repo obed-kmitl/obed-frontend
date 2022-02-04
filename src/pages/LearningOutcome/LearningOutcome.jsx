@@ -124,7 +124,8 @@ export const LearningOutcome = () => {
         {
           section_id: parseInt(sectionId),
           detail: values.detail,
-          order_number: values.order_number
+          order_number: values.order_number,
+          relative_standards: values.relative_sub_standards || []
         }
       )
       .then((res) => {
@@ -369,7 +370,7 @@ export const LearningOutcome = () => {
           >
             <TextArea rows={4} placeholder="Description" />
           </Form.Item>
-          <Form.Item label="PLOs" name="plo">
+          <Form.Item label="PLOs" name="relative_sub_standards">
             <Select mode="multiple" placeholder="PLO">
               {plo?.map((e) => (
                 <Option value={e.sub_std_id} key={e.sub_std_id}>

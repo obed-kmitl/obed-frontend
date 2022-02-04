@@ -46,14 +46,14 @@ export const useWeighting = (sectionId) => {
             }).then((res) => {
                 console.log(res.data)
                setWeightingList(res.data.data)
-               message.success("Score Weighting changed succesfully")
+               message.success("Score Weighting changed succesfully",1)
                setIsAllEditing(false);
 
             }).catch((err) => console.log(err))
 
           
         } else {
-            message.error("Total Weight must be 100%")
+            message.error("Total Weight must be 100%",1)
         }
     }
     function cancelAll() {

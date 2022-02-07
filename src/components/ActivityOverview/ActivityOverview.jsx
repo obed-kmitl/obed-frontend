@@ -1,21 +1,29 @@
 import styles from '../ActivityOverview/ActivityOverview.module.scss'
 import { ActivityTable, Header, Body, Select, Option } from '..'
-import { Divider, Typography, Input, InputNumber } from 'antd'
+import { Divider, Typography, Input} from 'antd'
 import { useActivityOverview } from '../ActivityOverview/hooks/useActivityOverview'
 import {
     EditOutlined, SaveOutlined,
 } from '@ant-design/icons';
-export const ActivityOverview = ({ activity, catagory, setActivity }) => {
-    const { isEditing, editOverview, saveOverview, handleEditDescription, changeCatagory, changeType,handleEditTitle,handleEditScore } = useActivityOverview(activity, setActivity)
+import { useParams } from 'react-router-dom';
+
+export const ActivityOverview = ({ activity, category, setActivity }) => {
+    let { activityId} = useParams();
+    const { isEditing, editOverview, saveOverview, handleEditDescription, changecategory, changeType, handleEditTitle } = useActivityOverview(activity, setActivity, activityId)
+
+    function Capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+
     return (
         <>
             <div className={styles.overview}>
                 {isEditing &&
                     <div className={styles.top}>
                         <Header level={2}>Title</Header>
-                        <Input onChange={({ target: { value } }) => handleEditTitle(value)} defaultValue={activity?.title} />
-                        <Header level={2}>Total Score</Header>
-                        <InputNumber min={0} width={50} onChange={(value) => handleEditScore(value)} defaultValue={activity?.total_score} />
+                        <Input onChange={({ target: { value } }) => handleEditTitle(value)} defaultValue={activity?.title} maxLength={50} />
+                        {/* <Header level={2}>Total Score</Header>
+                        <InputNumber min={0} width={50} onChange={(value) => handleEditScore(value)} defaultValue={activity?.total_score} /> */}
                     </div>
 
                 }
@@ -25,28 +33,35 @@ export const ActivityOverview = ({ activity, catagory, setActivity }) => {
                         <Divider style={{ border: "none", margin: "0.25rem", height: "0px" }} />
                         <div>
                             {isEditing ?
-                                <Input.TextArea style={{ resize: "none" }} rows={4} onChange={({ target: { value } }) => handleEditDescription(value)} defaultValue={activity?.description} />
+                                <Input.TextArea
+                                    style={{ resize: "none" }}
+                                    rows={3} onChange={({ target: { value } }) => handleEditDescription(value)}
+                                    defaultValue={activity?.detail}
+                                    showCount
+                                    maxLength={400}
+    
+                                />
                                 :
-                                <Body level={2}>{activity?.description}</Body>
+                                <Body level={2}>{activity?.detail}</Body>
                             }
 
                         </div>
                     </div>
                     <Divider type="vertical" style={{ height: "100%" }} />
                     <div className={styles.right}>
-                        <div className={styles.catagory}>
-                            <Header level={2}>Catagory</Header>
+                        <div className={styles.category}>
+                            <Header level={2}>category</Header>
                             {isEditing ?
                                 <Select
-                                    defaultValue={activity?.catagory_id}
-                                    onChange={(value) => changeCatagory(value)}
+                                    defaultValue={activity?.category_id}
+                                    onChange={(value) => changecategory(value)}
                                 >
-                                    {catagory.map((cat) =>
-                                        <Option value={cat.id}>{cat.catagory}</Option>
+                                    {category.map((cat) =>
+                                        <Option value={cat.category_id}>{cat.title}</Option>
                                     )}
                                 </Select>
                                 :
-                                <Body level={1}>{catagory.filter(e => e.id === activity?.catagory_id)[0]?.catagory}</Body>
+                                <Body level={1}>{category.filter(e => e.category_id === activity?.category_id)[0]?.title}</Body>
                             }
 
                         </div>
@@ -58,11 +73,11 @@ export const ActivityOverview = ({ activity, catagory, setActivity }) => {
                                     defaultValue={activity?.type}
                                     onChange={(value) => changeType(value)}
                                 >
-                                    <Option value="Individual">Individual</Option>
-                                    <Option value="Group">Group</Option>
+                                    <Option value="INDIVIDUAL">Individual</Option>
+                                    <Option value="GROUP">Group</Option>
                                 </Select>
                                 :
-                                <Body level={2}>{activity?.type}</Body>
+                                <Body level={2}>{Capitalize(activity?.type)}</Body>
                             }
 
                         </div>

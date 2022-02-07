@@ -11,7 +11,7 @@ import TextArea from 'antd/lib/input/TextArea'
 export const ActivityList = ({ archrive, google }) => {
 
     const {
-        catagory, filteredActivity, filteredArchriveActivity, changeGroup, changeCatagory,
+        category, filteredActivity, filteredArchriveActivity, changeGroup, changecategory,
         handleAddActivity, addModalVisible, handleSubmit, form, handleCancel
     } = useActivity()
 
@@ -35,19 +35,13 @@ export const ActivityList = ({ archrive, google }) => {
                         <Option value="Individual">Individual</Option>
                         <Option value="Group">Group</Option>
                     </Select>
-                    {/* <Body level={1}>Type:</Body>
-                    <Select width={150} defaultValue="All" onChange={(value) => changeType(value, archrive)}>
-                        <Option value="All">All</Option>
-                        <Option value="Single">Single</Option>
-                        <Option value="Multiple">Multiple</Option>
-                    </Select> */}
                     {archrive ?
                         <>
-                            <Body level={1}>Catagory:</Body>
-                            <Select width={150} defaultValue="All" onChange={(value) => changeCatagory(value)}>
+                            <Body level={1}>category:</Body>
+                            <Select width={150} defaultValue="All" onChange={(value) => changecategory(value)}>
                                 <Option value="All">All</Option>
-                                {catagory.map((cat) =>
-                                    <Option value={cat.id}>{cat.catagory}</Option>
+                                {category.map((cat) =>
+                                    <Option value={cat.id}>{cat.category}</Option>
                                 )}
                             </Select>
                         </>
@@ -78,9 +72,9 @@ export const ActivityList = ({ archrive, google }) => {
                 //     :
                 <Collapse
                     ghost
-                    defaultActiveKey={catagory.map((cat) => cat.id)}
+                    defaultActiveKey={category.map((cat) => cat.id)}
                 >
-                    {catagory.map((cat) =>
+                    {category.map((cat) =>
                         <Panel
                             header={
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -132,7 +126,7 @@ export const ActivityList = ({ archrive, google }) => {
                             { required: true, message: "Please input Activity Name!" },
                         ]}
                     >
-                        <Input placeholder="Activity Name" />
+                        <Input placeholder="Activity Name" maxLength={50} />
                     </Form.Item>
                     <Form.Item
                         label="Description"
@@ -141,7 +135,7 @@ export const ActivityList = ({ archrive, google }) => {
                             { required: true, message: "Please input Description!" },
                         ]}
                     >
-                        <TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 3 }} />
+                        <TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 3 }} showCount maxLength={400} />
                     </Form.Item>
                     <Form.Item
                         label="Group Type"
@@ -158,15 +152,15 @@ export const ActivityList = ({ archrive, google }) => {
                         </Select>
                     </Form.Item>
                     <Form.Item
-                        label="Catagory"
-                        name="catagory_id"
+                        label="category"
+                        name="category_id"
                         rules={[
-                            { required: true, message: "Please Select Catagory" },
+                            { required: true, message: "Please Select category" },
                         ]}
                     >
                         <Select defaultValue="None">
-                            {catagory.map((cat) =>
-                                <Option value={cat.category_id}>{cat.title}</Option>
+                            {category.map((cat) =>
+                                <Option value={cat.category_id || 0}>{cat.title}</Option> //Unassigned Activity => id 0
                             )}
                         </Select>
                     </Form.Item>

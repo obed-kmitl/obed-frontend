@@ -1,40 +1,56 @@
 import { useState } from "react"
 import { Form } from 'antd'
-export const useActivityOverview = (activity, setActivity) => {
+import httpClient from "../../../utils/httpClient"
+
+export const useActivityOverview = (activity, setActivity, activityId) => {
     const [isEditing, setIsEditing] = useState(false)
     const [editDescValue, setEditDescValue] = useState()
-    const [editCatagory, setEditCatagory] = useState()
+    const [editcategory, setEditcategory] = useState()
     const [editGroupType, setEditGroupType] = useState()
     const [editTitle, setEditTitle] = useState()
-    const [editScore, setEditScore] = useState()
+    //const [editScore, setEditScore] = useState()
     const form = Form.useForm()
 
     function editOverview() {
-        setEditDescValue(activity.description)
-        setEditCatagory(activity.catagory_id)
+        setEditDescValue(activity.detail)
+        setEditcategory(activity.category_id)
         setEditGroupType(activity.type)
         setEditTitle(activity.title)
-        setEditScore(activity.total_score)
+        // setEditScore(activity.total_score)
         setIsEditing(true)
     }
 
-    function saveOverview() {
-        setIsEditing(false)
-        setActivity({
-            id: activity.id,
-            title: editTitle,
-            description: editDescValue,
-            catagory_id: editCatagory,
-            type: editGroupType,
-            total_score: editScore,
-        })
-
+    async function saveOverview() {
+        return await httpClient
+            .put(`/activity/update/${activityId}`,
+                {
+                    title: editTitle,
+                    detail: editDescValue,
+                    category_id: editcategory,
+                    type: editGroupType,
+                }
+            )
+            .then((response) => {
+                setIsEditing(false)
+                setActivity(response.data.data)
+                // setActivity({
+                //     id: activity.id,
+                //     title: editTitle,
+                //     detail: editDescValue,
+                //     category_id: editcategory,
+                //     type: editGroupType,
+                //     // total_score: editScore,
+                // })
+            })
+            .catch((error) => {
+                console.log(error)
+            });
     }
     function handleEditDescription(value) {
         setEditDescValue(value)
     }
-    function changeCatagory(value) {
-        setEditCatagory(value)
+    function changecategory(value) {
+        setEditcategory(value)
     }
     function changeType(value) {
         setEditGroupType(value)
@@ -42,9 +58,6 @@ export const useActivityOverview = (activity, setActivity) => {
     function handleEditTitle(value) {
         setEditTitle(value)
     }
-    function handleEditScore(value) {
-        setEditScore(value)
-    }
 
-    return { isEditing, editOverview, saveOverview, form, handleEditDescription, changeCatagory, changeType,handleEditTitle,handleEditScore }
+    return { isEditing, editOverview, saveOverview, form, handleEditDescription, changecategory, changeType, handleEditTitle }
 }

@@ -4,30 +4,30 @@ import errorTranslate from "../../../utils/errorTranslate";
 import httpClient from '../../../utils/httpClient';
 import { useParams } from "react-router-dom";
 
-const catagories = [
+const categories = [
     {
         id: 1,
-        catagory: "Homework",
+        category: "Homework",
         weight: 20
     },
     {
         id: 2,
-        catagory: "Assignment",
+        category: "Assignment",
         weight: 20
     },
     {
         id: 3,
-        catagory: "Examination",
+        category: "Examination",
         weight: 50
     },
     {
         id: 4,
-        catagory: "Attendance",
+        category: "Attendance",
         weight: 5
     },
     {
         id: 5,
-        catagory: "Quiz",
+        category: "Quiz",
         weight: 5
     },
 ]
@@ -37,7 +37,7 @@ const activities = [
         id: 1,
         title: "Homework #1",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
-        catagory_id: 1,
+        category_id: 1,
         type: "Individual",
         sub_activity: "Single",
         total_score: 10,
@@ -46,7 +46,7 @@ const activities = [
         id: 2,
         title: "Homework #2",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
-        catagory_id: 1,
+        category_id: 1,
         type: "Group",
         sub_activity: "Multiple",
         total_score: 10,
@@ -55,7 +55,7 @@ const activities = [
         id: 3,
         title: "Assignment #1",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
-        catagory_id: 2,
+        category_id: 2,
         type: "Group",
         sub_activity: "Single",
         total_score: 20,
@@ -64,7 +64,7 @@ const activities = [
         id: 4,
         title: "Quiz #1",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
-        catagory_id: 5,
+        category_id: 5,
         type: "Individual",
         sub_activity: "Multiple",
         total_score: 10,
@@ -73,7 +73,7 @@ const activities = [
         id: 5,
         title: "Final Exam",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
-        catagory_id: 3,
+        category_id: 3,
         type: "Individual",
         sub_activity: "Multiple",
         total_score: 40,
@@ -82,7 +82,7 @@ const activities = [
         id: 6,
         title: "Adttendance",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
-        catagory_id: 4,
+        category_id: 4,
         type: "Individual",
         sub_activity: "Single",
         total_score: 100,
@@ -94,7 +94,7 @@ const archrive_activities = [
         id: 1,
         title: "Homework #4",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
-        catagory_id: 1,
+        category_id: 1,
         type: "Individual",
         sub_activity: "Single",
         total_score: 10,
@@ -103,7 +103,7 @@ const archrive_activities = [
         id: 2,
         title: "Homework #5",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
-        catagory_id: 1,
+        category_id: 1,
         type: "Individual",
         sub_activity: "Multiple",
         total_score: 10,
@@ -112,7 +112,7 @@ const archrive_activities = [
         id: 3,
         title: "Assignment #7",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non minima iusto nihil laborum maxime enim consequatur, cumque ex mollitia ratione!",
-        catagory_id: 2,
+        category_id: 2,
         type: "Group",
         sub_activity: "Single",
         total_score: 20,
@@ -142,7 +142,7 @@ const google_activities = [
 ]
 
 export const useActivity = () => {
-    const [catagory, setCatagory] = useState([])
+    const [category, setcategory] = useState([])
     const [activity, setActivity] = useState([])
     const [archriveActivity, setArchriveActivity] = useState(archrive_activities)
     // const [googleActivity, setGoogleActivity] = useState(google_activities)
@@ -150,7 +150,7 @@ export const useActivity = () => {
     const [filteredActivity, setFilteredActivity] = useState()
     const [filteredArchriveActivity, setFilteredArchriveActivity] = useState()
 
-    const [archriveFilterOption, setarchriveFilterOption] = useState(["All", "All"]) // catagory,group
+    const [archriveFilterOption, setarchriveFilterOption] = useState(["All", "All"]) // category,group
     const [filterOption, setFilterOption] = useState(["All"]) // group
 
     //add Activity/////////////////// 
@@ -169,7 +169,7 @@ export const useActivity = () => {
             .post(`/activity/create`,
                 {
                     section_id: parseInt(sectionId),
-                    category_id: value.catagory_id,
+                    category_id: value.category_id,
                     title: value.title,
                     detail: value.description,
                     type: value.group.toUpperCase()
@@ -203,7 +203,7 @@ export const useActivity = () => {
         }
     }
 
-    function changeCatagory(value) {
+    function changecategory(value) {
         let newFilter = [...archriveFilterOption]
         newFilter[1] = value
         setarchriveFilterOption(newFilter)
@@ -236,7 +236,7 @@ export const useActivity = () => {
                     if (archriveFilterOption[2] === "All") {
                         return act
                     } else {
-                        return act.catagory_id === archriveFilterOption[2]
+                        return act.category_id === archriveFilterOption[2]
                     }
                 })
         )
@@ -247,7 +247,7 @@ export const useActivity = () => {
         return await httpClient
             .get(`/activity/getAllBySection/${sectionId}`)
             .then((response) => {
-                setCatagory(response.data.data)
+                setcategory(response.data.data)
                 const retrivedData = response.data.data
                 const activity = []
                 retrivedData.forEach(element => {
@@ -276,7 +276,7 @@ export const useActivity = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     return {
-        catagory, filteredActivity, filteredArchriveActivity, changeGroup, changeCatagory,
+        category, filteredActivity, filteredArchriveActivity, changeGroup, changecategory,
         handleAddActivity, addModalVisible, handleSubmit, form, handleCancel
     }
 }

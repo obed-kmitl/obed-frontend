@@ -124,7 +124,7 @@ export const LearningOutcome = () => {
         {
           section_id: parseInt(sectionId),
           detail: values.detail,
-          order_number: values.order_number,
+          order_number: values.order_number.toString(),
           relative_standards: values.relative_sub_standards || []
         }
       )
@@ -144,7 +144,7 @@ export const LearningOutcome = () => {
       .put(`/clo/update/${values.clo_id}`,
         {
           detail: values.detail,
-          order_number: values.order_number,
+          order_number: values.order_number.toString(),
           relative_standards: values.relative_sub_standards
         }
       )
@@ -222,10 +222,16 @@ export const LearningOutcome = () => {
           width="60px"
           render={(value, item, index) => (page - 1) * 10 + index + 1}
         />
+         <Column
+          title="Title"
+          dataIndex="order_number"
+          key="order_number"
+          width="60px"
+        />
         <Column
           title="Learning Outcomes"
           dataIndex="detail"
-          key="title"
+          key="detail"
           width="100%"
         />
         <Column
@@ -353,7 +359,8 @@ export const LearningOutcome = () => {
           requiredMark={"required"}
         >
           <Form.Item
-            label="No."
+            label="Title"
+            extra="Enter number (ex:1, 2, 3) or decimal (ex:1.1, 1.2)"
             name="order_number"
             rules={[
               { required: true, message: "Please input No." },

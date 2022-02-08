@@ -21,6 +21,7 @@ export const useActivityOverview = (activity, setActivity, activityId) => {
     }
 
     async function saveOverview() {
+        console.log(activity)
         return await httpClient
             .put(`/activity/update/${activityId}`,
                 {
@@ -32,15 +33,9 @@ export const useActivityOverview = (activity, setActivity, activityId) => {
             )
             .then((response) => {
                 setIsEditing(false)
-                setActivity(response.data.data)
-                // setActivity({
-                //     id: activity.id,
-                //     title: editTitle,
-                //     detail: editDescValue,
-                //     category_id: editcategory,
-                //     type: editGroupType,
-                //     // total_score: editScore,
-                // })
+                console.log({...response.data.data,subActivities: activity.subActivities})
+                setActivity({...response.data.data,subActivities: activity.subActivities})
+                
             })
             .catch((error) => {
                 console.log(error)

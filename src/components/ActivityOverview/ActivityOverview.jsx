@@ -8,13 +8,13 @@ import {
 import { useParams } from 'react-router-dom';
 
 export const ActivityOverview = ({ activity, category, setActivity }) => {
-    let { activityId} = useParams();
+    let { activityId } = useParams();
     const { isEditing, editOverview, saveOverview, handleEditDescription, changecategory, changeType, handleEditTitle } = useActivityOverview(activity, setActivity, activityId)
 
     function Capitalize(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        return str?.charAt(0).toUpperCase() + str?.slice(1).toLowerCase();
     }
-
+   
     return (
         <>
             <div className={styles.overview}>
@@ -103,7 +103,7 @@ export const ActivityOverview = ({ activity, category, setActivity }) => {
                 </div >
             </div>
             <div className={styles.objective}>
-                <ActivityTable />
+                <ActivityTable subActivity={activity.subActivities}/>
             </div>
         </>
     )

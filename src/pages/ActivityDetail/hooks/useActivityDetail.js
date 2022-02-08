@@ -1,9 +1,10 @@
-import { useState,useEffect } from "react"
+import { useState, useEffect } from "react"
 import httpClient from "../../../utils/httpClient"
 
-export const useActivityDetail = (activityId,sectionId) => {
-    const [activity,setActivity] = useState()
-    const [category,setCategory] = useState()
+export const useActivityDetail = (activityId, sectionId) => {
+    const [activity, setActivity] = useState()
+    const [category, setCategory] = useState()
+    const [totalScore, setTotalScore] = useState()
 
     async function fetchActivity() {
         return await httpClient
@@ -16,7 +17,7 @@ export const useActivityDetail = (activityId,sectionId) => {
                 console.log(error)
             });
     }
-    
+
     async function fetchCategory() {
         return await httpClient
             .get(`/category/getAllBySection/${sectionId}`)
@@ -30,11 +31,18 @@ export const useActivityDetail = (activityId,sectionId) => {
     }
 
     useEffect(() => {
-      fetchCategory();
-      fetchActivity();
+        fetchCategory();
+        fetchActivity();
     }, []);
-    
-    
 
-    return {activity,setActivity,category}
+    useEffect(() => {
+        let total = 0;
+        activity?.subActivities?.forEach(element => {
+            total += element.max_score
+        });
+        console.log(total)
+
+    }, [activity])
+
+    return { activity, setActivity, category }
 }

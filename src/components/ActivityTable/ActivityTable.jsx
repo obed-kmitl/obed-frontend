@@ -9,11 +9,9 @@ import { useActivityTable } from './hooks/useActivityTable';
 import TextArea from 'antd/lib/input/TextArea';
 
 
-
-export const ActivityTable = () => {
-    const { data, form, editingKey, cloList, edit, cancel, save, deleteSubActivity, isNewAdded, add } = useActivityTable()
-
-    const isEditing = (record) => record.id === editingKey;
+export const ActivityTable = ({ subActivity }) => {
+    const { data, form, editingKey, cloList, edit, cancel, save, deleteSubActivity, isNewAdded, add } = useActivityTable(subActivity)
+    const isEditing = (record) => record.sub_activity_id === editingKey;
 
     const EditableCell = ({
         editing,
@@ -28,9 +26,8 @@ export const ActivityTable = () => {
 
         let inputNode;
         switch (inputType) {
-            case "clo":
+            case "clos":
                 inputNode = (
-
                     <Select
                         mode="multiple"
                         showSearch
@@ -38,8 +35,8 @@ export const ActivityTable = () => {
                         style={{ width: "350px" }}
                     >
                         {cloList.map((ele) => (
-                            <Option key={ele.id} value={ele.id}>
-                                {ele.number + " " + ele.title}
+                            <Option key={ele.clo_id} value={ele.clo_id}>
+                                {ele.order_number + " " + ele.detail}
                             </Option>
                         ))}
                     </Select>
@@ -51,7 +48,7 @@ export const ActivityTable = () => {
             case "detail":
                 inputNode =
                     <TextArea
-                        autoSize={{ minRows: 4, maxRows: 4 }}
+                        autoSize={{ minRows: 3, maxRows: 3 }}
                     />;
                 break;
             default:
@@ -89,12 +86,12 @@ export const ActivityTable = () => {
             key: 'index',
             render: (text, record, index) => index + 1,
         },
-        {
-            title: 'Title',
-            dataIndex: 'title',
-            width: '100px',
-            editable: true,
-        },
+        // {
+        //     title: 'Title',
+        //     dataIndex: 'title',
+        //     width: '100px',
+        //     editable: true,
+        // },
         {
             title: 'Detail',
             dataIndex: 'detail',
@@ -102,33 +99,35 @@ export const ActivityTable = () => {
             editable: true,
             render: (detail) => (
                 <>
-                    <div className={styles.detail}>{detail}</div>
+                    <div className={styles.overflowBox}>{detail}</div>
                 </>
             ),
         },
         {
             title: 'Course Learning Outcome',
-            dataIndex: 'clo',
+            dataIndex: 'clos',
             width: '400px',
             editable: true,
-            render: (clo) => (
-                <>
-                    {clo?.map((ele) => {
-                        const cloData = cloList.filter((e) => e.id === ele)[0]
+            render: (clos) => (
+                <div className={styles.overflowBox}>
+                    {clos?.map((clo) => {
+                        const cloData = cloList.filter((e) => e.clo_id === clo)[0]
+                        //console.log(cloData)
                         return (
-                            <Tooltip title={cloData.title} >
-                                <Tag className={styles.tag} key={cloData.id}>
-                                    {cloData.number + " " + cloData.title}
+                            <Tooltip title={clo.detail} >
+                                <Tag className={styles.tag} key={cloData.clo_id}>
+                                    {/* {cloData.number + " " + cloData.title} */}
+                                    {cloData.order_number + " " + cloData.detail}
                                 </Tag>
                             </Tooltip>
                         );
                     })}
-                </>
+                </div>
             ),
         },
         {
             title: 'Point',
-            dataIndex: 'point',
+            dataIndex: 'max_score',
             width: '80px',
             editable: true,
         },
@@ -142,7 +141,7 @@ export const ActivityTable = () => {
 
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a
-                            onClick={() => save(record.id)}
+                            onClick={() => save(record.sub_activity_id)}
                             style={{
                                 marginRight: 14,
                             }}
@@ -219,13 +218,13 @@ export const ActivityTable = () => {
                     columns={mergedColumns}
                     rowClassName="editable-row"
                     pagination={false}
-                    rowKey="id"
-                    scroll={{ y: "70vh" }}
-                    // footer={() =>
-                    //     <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
-                    //         <Button onClick={() => add()} disabled={editingKey !== "" || isNewAdded === true}>Add</Button>
-                    //     </div>
-                    // }
+                    rowKey="sub_activity_id"
+                    scroll={{ y: "550px" }}
+                // footer={() =>
+                //     <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+                //         <Button onClick={() => add()} disabled={editingKey !== "" || isNewAdded === true}>Add</Button>
+                //     </div>
+                // }
                 />
             </Form>
         </div>

@@ -144,13 +144,9 @@ const google_activities = [
 export const useActivity = () => {
     const [category, setcategory] = useState([])
     const [activity, setActivity] = useState([])
-    const [archriveActivity, setArchriveActivity] = useState(archrive_activities)
     // const [googleActivity, setGoogleActivity] = useState(google_activities)
 
     const [filteredActivity, setFilteredActivity] = useState()
-    const [filteredArchriveActivity, setFilteredArchriveActivity] = useState()
-
-    const [archriveFilterOption, setarchriveFilterOption] = useState(["All", "All"]) // category,group
     const [filterOption, setFilterOption] = useState(["All"]) // group
 
     //add Activity/////////////////// 
@@ -189,24 +185,20 @@ export const useActivity = () => {
         setAddModalVisible(false)
         form.resetFields()
     }
+
+    async function deleteActivity(id) {
+        return await httpClient
+            .delete(`/activity/remove/${id}`)
+            .then((res)=>{
+                console.log(res)
+            }).catch(err=>console.log(err))
+    }
     /////////////////////////////////////
 
-    function changeGroup(value, archrive = false) {
-        if (archrive) {
-            let newFilter = [...archriveFilterOption]
-            newFilter[0] = value
-            setarchriveFilterOption(newFilter)
-        } else {
+    function changeGroup(value) {
             let newFilter = [...filterOption]
             newFilter[0] = value
             setFilterOption(newFilter)
-        }
-    }
-
-    function changecategory(value) {
-        let newFilter = [...archriveFilterOption]
-        newFilter[1] = value
-        setarchriveFilterOption(newFilter)
     }
 
     useEffect(() => {
@@ -221,27 +213,6 @@ export const useActivity = () => {
         )
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterOption])
-
-
-    useEffect(() => {
-        setFilteredArchriveActivity(
-            archriveActivity.filter((act) => {
-                if (archriveFilterOption[0] === "All") {
-                    return act
-                } else {
-                    return act.type === archriveFilterOption[0]
-                }
-            })
-                .filter((act) => {
-                    if (archriveFilterOption[2] === "All") {
-                        return act
-                    } else {
-                        return act.category_id === archriveFilterOption[2]
-                    }
-                })
-        )
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [archriveFilterOption])
 
     async function fetchActivity() {
         return await httpClient
@@ -267,7 +238,6 @@ export const useActivity = () => {
 
     useEffect(() => {
         setFilteredActivity(activity);
-        setFilteredArchriveActivity(archriveActivity);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activity])
 
@@ -276,7 +246,7 @@ export const useActivity = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     return {
-        category, filteredActivity, filteredArchriveActivity, changeGroup, changecategory,
-        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel
+        category, filteredActivity, changeGroup,
+        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity
     }
 }

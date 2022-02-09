@@ -53,7 +53,8 @@ export const Plan = () => {
     setIsModalVisible(false);
   };
 
-  function search(keyword) {
+  function search(kw) {
+    let keyword = kw.trim();
     if (keyword !== "") {
       const results = addedCourse.filter((course) => {
         return (
@@ -81,7 +82,6 @@ export const Plan = () => {
   useEffect(() => {
     setFilterList(addedCourse);
   }, [addedCourse]);
-
 
   return (
     <div className={styles.plan}>

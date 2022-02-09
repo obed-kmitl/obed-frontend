@@ -402,13 +402,13 @@ export const Student = () => {
                       <Tooltip title="Edit">
                         <EditOutlined
                           style={{ color: "#009FC7" }}
-                          onClick={() => editFromList(ele.id)}
+                          onClick={() => editFromList(ele.student_number)}
                         />
                       </Tooltip>
                       <Tooltip title="Remove">
                         <MinusCircleOutlined
                           style={{ color: "#C73535" }}
-                          onClick={() => removeFromList(ele.id)}
+                          onClick={() => removeFromList(ele.student_number)}
                         />
                       </Tooltip>
                     </Space>

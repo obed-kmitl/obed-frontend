@@ -66,9 +66,9 @@ export const useActivityTable = (subActivity) => {
     const [cloList, setCloList] = useState(mockCLO)
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
-    const [data, setData] = useState(mockSubActivity);
+    const [data, setData] = useState([]);
     const [isNewAdded, setIsNewAdded] = useState(false);
-    let { sectionId } = useParams();
+    let { sectionId, activityId } = useParams();
 
     const edit = (record) => {
         console.log(record)
@@ -91,38 +91,96 @@ export const useActivityTable = (subActivity) => {
             const row = await form.validateFields();
             const newData = [...data];
             const index = newData.findIndex((item) => id === item.sub_activity_id);
-            if (isNewAdded) {
-                if (index > -1) {
-                    const item = newData[index];
-                    newData.splice(index, 1, { ...item, ...row });
-                    setData(newData);
-                    setEditingKey('');
-                } else {
-                    newData.push(row);
-                    setData(newData);
-                    setEditingKey('');
-                }
-                setIsNewAdded(false);
-            } else {
-                if (index > -1) {
-                    const item = newData[index];
-                    newData.splice(index, 1, { ...item, ...row });
-                    setData(newData);
-                    setEditingKey('');
-                } else {
-                    newData.push(row);
-                    setData(newData);
-                    setEditingKey('');
-                }
+            if (isNewAdded) { //add
+                return await httpClient
+                    .post(`/activity/createSubActivity`,
+                        {
+                            activity_id: parseInt(activityId),
+                            detail: row.detail,
+                            max_score: parseInt(row.max_score),
+                            clos: row.clos
+                        }
+                    )
+                    .then((response) => {
+                        console.log(newData)
+                        let allclos = []
+                        response.data.data.clos.forEach(e => allclos.push(e.clo_id))
+                        const newSubActivity = {
+                            activity_id: response.data.data.activityId,
+                            clos: allclos,
+                            detail: response.data.data.detail,
+                            max_score: response.data.data.max_score,
+                            sub_activity_id: response.data.data.sub_activity_id,
+                        }
+                        if (index > -1) {
+                            newData.splice(index, 1, newSubActivity );
+                            setData(newData);
+                            setEditingKey('');
+                        } else {
+                            newData.push(newSubActivity);
+                            setData(newData);
+                            setEditingKey('');
+                        }
+                        setIsNewAdded(false);
+                        return Promise.resolve(response.data.data);
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+            } else { //edit
+                return await httpClient
+                .put(`activity/updateSubActivity/${id}`,
+                    {
+                        detail: row.detail,
+                        max_score: parseInt(row.max_score),
+                        clos: row.clos
+                    }
+                )
+                .then((response) => {
+                    console.log(newData)
+                    let allclos = []
+                    response.data.data.clos.forEach(e => allclos.push(e.clo_id))
+                    const newSubActivity = {
+                        activity_id: response.data.data.activityId,
+                        clos: allclos,
+                        detail: response.data.data.detail,
+                        max_score: response.data.data.max_score,
+                        sub_activity_id: response.data.data.sub_activity_id,
+                    }
+                    if (index > -1) {
+                        newData.splice(index, 1, newSubActivity );
+                        setData(newData);
+                        setEditingKey('');
+                    } else {
+                        newData.push(newSubActivity);
+                        setData(newData);
+                        setEditingKey('');
+                    }
+                    setIsNewAdded(false);
+                    return Promise.resolve(response.data.data);
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
             }
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
     };
 
-    const deleteSubActivity = (record) => {
-        setData(data.filter(item => item.id !== record.id))
+    const deleteSubActivity = async (id) => {
+        return await httpClient
+        .delete(`/activity/removeSubActivity/${id}`)
+        .then((response) => {
+            setData(data.filter(item => item.sub_activity_id !== id))
+            return Promise.resolve(response.data.data);
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+      
     }
+
     const add = () => {
         setIsNewAdded(true)
         const newData = {
@@ -173,9 +231,6 @@ export const useActivityTable = (subActivity) => {
         setData(simplifySubActivty)
 
     }, [subActivity]);
-
-
-
 
     return { data, form, editingKey, cloList, edit, cancel, save, deleteSubActivity, isNewAdded, add }
 }

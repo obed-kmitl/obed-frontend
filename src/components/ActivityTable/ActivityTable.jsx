@@ -7,11 +7,20 @@ import { Header, Button, Select, Option } from '..'
 import styles from '../ActivityTable/ActivityTable.module.scss'
 import { useActivityTable } from './hooks/useActivityTable';
 import TextArea from 'antd/lib/input/TextArea';
+import { useEffect } from 'react';
 
-
-export const ActivityTable = ({ subActivity }) => {
+export const ActivityTable = ({ subActivity, setTotalScore}) => {
     const { data, form, editingKey, cloList, edit, cancel, save, deleteSubActivity, isNewAdded, add } = useActivityTable(subActivity)
     const isEditing = (record) => record.sub_activity_id === editingKey;
+
+    useEffect(() => {
+        let total = 0;
+        data?.forEach(element => {
+            total += element.max_score
+        });
+        setTotalScore(total)
+       
+    }, [data])
 
     const EditableCell = ({
         editing,
@@ -42,7 +51,7 @@ export const ActivityTable = ({ subActivity }) => {
                     </Select>
                 );
                 break;
-            case "point":
+            case "max_score":
                 inputNode = <InputNumber style={{ width: 50 }} min={0} />;
                 break;
             case "detail":
@@ -115,9 +124,9 @@ export const ActivityTable = ({ subActivity }) => {
                         //console.log(cloData)
                         return (
                             <Tooltip title={clo.detail} >
-                                <Tag className={styles.tag} key={cloData.clo_id}>
+                                <Tag className={styles.tag} key={cloData?.clo_id}>
                                     {/* {cloData.number + " " + cloData.title} */}
-                                    {cloData.order_number + " " + cloData.detail}
+                                    {cloData?.order_number + " " + cloData?.detail}
                                 </Tag>
                             </Tooltip>
                         );
@@ -170,7 +179,7 @@ export const ActivityTable = ({ subActivity }) => {
                         >
                             <EditOutlined />
                         </Typography.Link>
-                        <Popconfirm title="Delete this section?" onConfirm={() => deleteSubActivity(record)}>
+                        <Popconfirm title="Delete this section?" onConfirm={() => deleteSubActivity(record.sub_activity_id)}>
                             <Typography.Link
                                 disabled={editingKey !== "" || isNewAdded === true}
                                 type="danger"

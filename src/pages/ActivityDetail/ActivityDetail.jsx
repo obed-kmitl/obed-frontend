@@ -11,7 +11,7 @@ import { LeftOutlined } from "@ant-design/icons";
 
 export const ActivityDetail = () => {
     let { activityId, sectionId } = useParams();
-    const { activity, setActivity, category } = useActivityDetail(activityId, sectionId)
+    const { activity, setActivity, category, totalScore,setTotalScore} = useActivityDetail(activityId, sectionId)
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -31,11 +31,11 @@ export const ActivityDetail = () => {
                         <Header level={1}>
                             {activity.title}
                         </Header>
-                        <Header level={2} style={{ color: '#68A028' }}>{activity.total_score}pts</Header>
+                        <Header level={2} style={{ color: '#68A028' }}>{totalScore} pts</Header>
                     </div>
                     <Tabs defaultActiveKey="1">
                         <TabPane tab="Overview" key="1">
-                            <ActivityOverview activity={activity} category={category} setActivity={setActivity} />
+                            <ActivityOverview activity={activity} category={category} setActivity={setActivity} setTotalScore={setTotalScore}/>
                         </TabPane>
                         <TabPane tab="Group" key="2" disabled={activity.type === 'INDIVIDUAL'}>
                             <ActivityGroup activity={activity} />

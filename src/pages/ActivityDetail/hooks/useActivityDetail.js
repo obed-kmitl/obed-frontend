@@ -40,9 +40,10 @@ export const useActivityDetail = (activityId, sectionId) => {
         activity?.subActivities?.forEach(element => {
             total += element.max_score
         });
+        setTotalScore(total)
         console.log(total)
 
     }, [activity])
 
-    return { activity, setActivity, category }
+    return { activity, setActivity, category ,totalScore,setTotalScore}
 }

@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 
-export const ActivityOverview = ({ activity, category, setActivity }) => {
+export const ActivityOverview = ({ activity, category, setActivity,setTotalScore}) => {
     let { activityId } = useParams();
     const { isEditing, editOverview, saveOverview, handleEditDescription, changecategory, changeType, handleEditTitle } = useActivityOverview(activity, setActivity, activityId)
 
@@ -103,7 +103,7 @@ export const ActivityOverview = ({ activity, category, setActivity }) => {
                 </div >
             </div>
             <div className={styles.objective}>
-                <ActivityTable subActivity={activity.subActivities}/>
+                <ActivityTable subActivity={activity.subActivities} setTotalScore={setTotalScore}/>
             </div>
         </>
     )

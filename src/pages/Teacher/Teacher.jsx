@@ -80,7 +80,8 @@ export const Teacher = () => {
     setVisible(true);
   }
 
-  function search(keyword) {
+  function search(kw) {
+    let keyword = kw.trim();
     setLastKeyword(keyword);
     if (keyword !== "") {
       const results = teachers.filter((teacher) => {

@@ -40,7 +40,7 @@ export const Standard = ({ selectedCurriculum }) => {
 
   const uploadProps = {
     name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    action: 'http://localhost:3000/',
     headers: {
       authorization: 'authorization-text',
     },
@@ -49,6 +49,7 @@ export const Standard = ({ selectedCurriculum }) => {
     accept: ".xlsx,.xls",
     async onChange(info) {
       if (info.file.status === 'done') {
+        console.log(info.file.originFileObj)
         const datafromExcel = await excelReader(info.file.originFileObj)
         getDetailsfromExcel(datafromExcel)
         message.success(`${info.file.name} file uploaded successfully`);

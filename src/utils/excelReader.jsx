@@ -4,7 +4,7 @@ export default async function excelReader(file) {
     const promise = new Promise((resolve, reject) => {
         const fileReader = new FileReader();
         fileReader.readAsArrayBuffer(file);
-  
+
         fileReader.onload = (e) => {
           const bufferArray = e.target.result;
   
@@ -23,7 +23,7 @@ export default async function excelReader(file) {
           reject(error);
         };
       });
-
+      
       const data = await promise
       return data 
 

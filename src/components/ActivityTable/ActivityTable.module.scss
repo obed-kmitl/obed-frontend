@@ -5,9 +5,8 @@
         justify-content: space-between;
         margin: 1rem 0;
     }
-    .detail {
-        max-width: 375px;
-        height: 100px;
+    .overflowBox {
+        height: 102px;
         overflow-y: auto;
     }
     .tag {
@@ -27,7 +26,7 @@
     
     /* Track */
     ::-webkit-scrollbar-track {
-        background: transparent;
+        background: $color-grey-100;
     }
     
     /* Handle */

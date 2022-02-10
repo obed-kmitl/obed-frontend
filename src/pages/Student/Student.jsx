@@ -51,7 +51,11 @@ export const Student = () => {
   const [importVisible, setImportVisible] = useState(false);
   const [addList, setAddList] = useState([]);
   const [uploadList, setUploadList] = useState([]);
-  const { getStudentListFromExcel } = useImportStudent(section);
+  const [studentListValid, setStudentListValid] = useState(true);
+  const { getStudentListFromExcel } = useImportStudent(
+    section,
+    setStudentListValid
+  );
   const selectBefore = (
     <Form.Item
       name="prefix"
@@ -140,7 +144,7 @@ export const Student = () => {
     editForm.resetFields();
     setSelectedData(null);
     setAddList([]);
-    setUploadList({});
+    setUploadList([]);
   }
 
   function onFinish(values) {
@@ -230,13 +234,16 @@ export const Student = () => {
     headers: {
       authorization: "authorization-text",
     },
-    showUploadList: { showRemoveIcon: false },
     maxCount: 1,
-    accept: ".xlsx,.xls",
+    accept: ".xlsx, .xls",
     async onChange(info) {
+      setStudentListValid(true);
       if (info.file.status === "done") {
         const datafromExcel = await excelReader(info.file.originFileObj);
-        setUploadList(getStudentListFromExcel(datafromExcel));
+        let list = getStudentListFromExcel(datafromExcel);
+        setUploadList(list);
+        if (list.length === 0) setStudentListValid(false);
+        else setStudentListValid(true);
         message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
@@ -570,12 +577,12 @@ export const Student = () => {
         maskClosable={false}
         confirmLoading={confirmLoading}
       >
-        <Header level={4}>Upload</Header>
-        <Body level={2} className={styles.uploadWarning}>
-          Use KMITL REG excel template only
-        </Body>
-        <Upload accept=".xlsx, .xls, .csv" {...uploadProps}>
+        <Header level={4}>Upload (Use KMITL REG Excel template only)</Header>
+        <Upload {...uploadProps}>
           <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          <Body level={2} className={styles.uploadWarning}>
+            {!studentListValid && "Student list not found"}
+          </Body>
         </Upload>
       </Modal>
     </div>

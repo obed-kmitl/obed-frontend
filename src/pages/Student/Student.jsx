@@ -570,12 +570,12 @@ export const Student = () => {
         maskClosable={false}
         confirmLoading={confirmLoading}
       >
+        <Header level={4}>Upload</Header>
+        <Body level={2} className={styles.uploadWarning}>
+          Use KMITL REG excel template only
+        </Body>
         <Upload accept=".xlsx, .xls, .csv" {...uploadProps}>
-          <Header level={4}>Upload</Header>
           <Button icon={<UploadOutlined />}>Click to Upload</Button>
-          <Body level={2} className={styles.uploadWarning}>
-            Use KMITL REG excel template only
-          </Body>
         </Upload>
       </Modal>
     </div>

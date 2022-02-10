@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import styles from "./Student.module.scss";
 import { Helmet } from "react-helmet";
-import { Header, Button, Input, Option } from "../../components";
+import { Header, Button, Input, Option, Body } from "../../components";
 import {
   Divider,
   Table,
@@ -50,7 +50,7 @@ export const Student = () => {
   const [searching, setSearching] = useState(false);
   const [importVisible, setImportVisible] = useState(false);
   const [addList, setAddList] = useState([]);
-  const [uploadList, setUploadList] = useState({});
+  const [uploadList, setUploadList] = useState([]);
   const { getStudentListFromExcel } = useImportStudent(section);
   const selectBefore = (
     <Form.Item
@@ -201,15 +201,15 @@ export const Student = () => {
   }
 
   function submitUploadList(list) {
-    setConfirmLoading(true);
     if (list.length > 0) {
+      setConfirmLoading(true);
       createStudents(list)
         .then(() => {
           openNotificationWithIcon(
             "success",
             list.length + " Student(s) added"
           );
-          setUploadList({});
+          setUploadList([]);
           setImportVisible(false);
         })
         .catch((message) => {
@@ -219,6 +219,8 @@ export const Student = () => {
           _fetchStudent();
           setConfirmLoading(false);
         });
+    } else {
+      setImportVisible(false);
     }
   }
 
@@ -233,7 +235,6 @@ export const Student = () => {
     accept: ".xlsx,.xls",
     async onChange(info) {
       if (info.file.status === "done") {
-        console.log(info.file.originFileObj);
         const datafromExcel = await excelReader(info.file.originFileObj);
         setUploadList(getStudentListFromExcel(datafromExcel));
         message.success(`${info.file.name} file uploaded successfully`);
@@ -565,12 +566,16 @@ export const Student = () => {
           submitUploadList(uploadList);
         }}
         onCancel={handleCancel}
+        okButtonProps={{ disabled: uploadList.length === 0 }}
         maskClosable={false}
         confirmLoading={confirmLoading}
       >
         <Upload accept=".xlsx, .xls, .csv" {...uploadProps}>
-          <Header level={4}>Upload (ใช้ Template ของสำนักทะเบียน)</Header>
+          <Header level={4}>Upload</Header>
           <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          <Body level={2} className={styles.uploadWarning}>
+            Use KMITL REG excel template only
+          </Body>
         </Upload>
       </Modal>
     </div>

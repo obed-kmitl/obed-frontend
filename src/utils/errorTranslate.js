@@ -1,7 +1,7 @@
 export default function errorTranslate(error, setMessage) {
   let resMessage = "";
   if (error.response && error.response.data) {
-    switch (error.response.data.error.code) {
+    switch (error.response.data.error?.code) {
       case "INTERNAL_SERVER_ERROR":
         resMessage = "Internal server error, Please contact system admin.";
         break;

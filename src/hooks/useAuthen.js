@@ -94,15 +94,20 @@ const useAuthen = () => {
   }
 
   function onLogout() {
-    return httpClient.post(`/auth/logout/${user.user_id}`).then((res) => {
-      if (user.role === "ADMIN") {
-        setUser({});
-        history.push("/admin");
-      } else {
-        setUser({});
+    return httpClient
+      .post(`/auth/logout/${user.user_id}`)
+      .then((res) => {
+        if (user.role === "ADMIN") {
+          setUser({});
+          history.push("/admin");
+        } else {
+          setUser({});
+          history.push("/login");
+        }
+      })
+      .catch(() => {
         history.push("/login");
-      }
-    });
+      });
   }
 
   return { onLogin, onAdminLogin, onLogout, message, loading };

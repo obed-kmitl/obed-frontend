@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import styles from "./Student.module.scss";
 import { Helmet } from "react-helmet";
-import { Header, Button, Input, Option, Body } from "../../components";
+import { Header, Button, Input, Option } from "../../components";
 import {
   Divider,
   Table,
@@ -13,6 +13,7 @@ import {
   notification,
   Space,
   Upload,
+  message,
 } from "antd";
 import {
   DeleteOutlined,
@@ -23,6 +24,8 @@ import {
 } from "@ant-design/icons";
 import { useState, useEffect, useContext } from "react";
 import { useStudent } from "./hooks/useStudent";
+import { useImportStudent } from "./hooks/useImportStudent";
+import excelReader from "../../utils/excelReader";
 import SectionContext from "../../contexts/SectionContext";
 
 export const Student = () => {
@@ -47,6 +50,8 @@ export const Student = () => {
   const [searching, setSearching] = useState(false);
   const [importVisible, setImportVisible] = useState(false);
   const [addList, setAddList] = useState([]);
+  const [uploadList, setUploadList] = useState({});
+  const { getStudentListFromExcel } = useImportStudent(section);
   const selectBefore = (
     <Form.Item
       name="prefix"
@@ -135,6 +140,7 @@ export const Student = () => {
     editForm.resetFields();
     setSelectedData(null);
     setAddList([]);
+    setUploadList({});
   }
 
   function onFinish(values) {
@@ -193,6 +199,49 @@ export const Student = () => {
       });
     }
   }
+
+  function submitUploadList(list) {
+    setConfirmLoading(true);
+    if (list.length > 0) {
+      createStudents(list)
+        .then(() => {
+          openNotificationWithIcon(
+            "success",
+            list.length + " Student(s) added"
+          );
+          setUploadList({});
+          setImportVisible(false);
+        })
+        .catch((message) => {
+          openNotificationWithIcon("error", "Cannot add student", message);
+        })
+        .finally(() => {
+          _fetchStudent();
+          setConfirmLoading(false);
+        });
+    }
+  }
+
+  const uploadProps = {
+    name: "file",
+    action: "http://localhost:3000/",
+    headers: {
+      authorization: "authorization-text",
+    },
+    showUploadList: { showRemoveIcon: false },
+    maxCount: 1,
+    accept: ".xlsx,.xls",
+    async onChange(info) {
+      if (info.file.status === "done") {
+        console.log(info.file.originFileObj);
+        const datafromExcel = await excelReader(info.file.originFileObj);
+        setUploadList(getStudentListFromExcel(datafromExcel));
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
 
   useEffect(() => {
     _fetchStudent();
@@ -512,18 +561,17 @@ export const Student = () => {
         title="Import Student"
         visible={importVisible}
         okText="OK"
-        onOk={() => {}}
+        onOk={() => {
+          submitUploadList(uploadList);
+        }}
         onCancel={handleCancel}
         maskClosable={false}
         confirmLoading={confirmLoading}
       >
-        <Upload accept=".xlsx, .xls, .csv">
+        <Upload accept=".xlsx, .xls, .csv" {...uploadProps}>
           <Header level={4}>Upload (ใช้ Template ของสำนักทะเบียน)</Header>
           <Button icon={<UploadOutlined />}>Click to Upload</Button>
         </Upload>
-        <Body level={2} className={styles.uploadWarning}>
-          {"ERR_MSG"}
-        </Body>
       </Modal>
     </div>
   );

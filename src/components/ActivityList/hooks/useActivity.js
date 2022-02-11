@@ -218,6 +218,7 @@ export const useActivity = () => {
         return await httpClient
             .get(`/activity/getAllBySection/${sectionId}`)
             .then((response) => {
+                console.log(response.data.data)
                 setcategory(response.data.data)
                 const retrivedData = response.data.data
                 const activity = []

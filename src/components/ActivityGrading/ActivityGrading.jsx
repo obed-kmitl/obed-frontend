@@ -96,7 +96,7 @@ export const ActivityGrading = ({ activity }) => {
                             }
                             key={index}
                         >
-                            <div style={{ height: "250px", overflow: "auto" }}>
+                            <div style={{ height: "220px", overflow: "auto" }}>
                                 <div>
                                     <Tabs defaultActiveKey="0" tabPosition={"left"} >
                                         {subActivity?.map((subAct, i) => (
@@ -134,7 +134,7 @@ export const ActivityGrading = ({ activity }) => {
                                                         }
                                                     </div>
                                                 </div>
-                                                <Rubric studentId={student.id} sub_activity_id={subAct.id} />
+                                                {/* <Rubric studentId={student.id} sub_activity_id={subAct.id} /> */}
                                             </Tabs.TabPane>
                                         ))}
 

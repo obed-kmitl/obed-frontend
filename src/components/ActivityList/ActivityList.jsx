@@ -12,7 +12,7 @@ export const ActivityList = ({ google }) => {
 
     const {
         category, filteredActivity, changeGroup,
-        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity
+        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity,
     } = useActivity()
 
     return (

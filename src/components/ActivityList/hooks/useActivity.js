@@ -246,6 +246,7 @@ export const useActivity = () => {
         fetchActivity()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
     return {
         category, filteredActivity, changeGroup,
         handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity

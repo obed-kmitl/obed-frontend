@@ -135,7 +135,7 @@ export const ActivityList = ({ google }) => {
                         </Select>
                     </Form.Item>
                     <Form.Item
-                        label="category"
+                        label="Category"
                         name="category_id"
                         rules={[
                             { required: true, message: "Please Select category" },

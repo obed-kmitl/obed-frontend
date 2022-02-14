@@ -1,5 +1,7 @@
 import { number } from "prop-types";
 import { useState, useEffect } from "react";
+import httpClient from "../../../utils/httpClient";
+import { useParams } from "react-router-dom";
 
 const students_score = [
     {
@@ -423,30 +425,34 @@ const rubrics = [
 
 
 export const useActivityGrading = () => {
-    const [students, setStudents] = useState([])
+    //const [students, setStudents] = useState([])
+    const [stdWithScore, setStdWithScore] = useState([])
     const [subActivity, setSubActivity] = useState()
     const [editingScore, setEditingScore] = useState([])
-    const [scoreValue,setScoreValue] = useState()
+    const [scoreValue, setScoreValue] = useState()
+
+    let { activityId, sectionId } = useParams();
 
     const handleSelectRubric = (point, studentId, sub_activity_id) => {
-        let updatedScoreStudent = [...students]
-        const studentIndex = updatedScoreStudent.findIndex(
-            (item) => item.id === studentId
-        );
-        const scoreIndex = updatedScoreStudent[studentIndex].score.findIndex(
-            (item) => item.sub_activity_id === sub_activity_id
-        );
-        updatedScoreStudent[studentIndex].score[scoreIndex].obtained_score = point
-        const updateStatusScore = updateStatus(updatedScoreStudent)
-        setStudents(updateStatusScore)
+        // let updatedScoreStudent = [...students]
+        // const studentIndex = updatedScoreStudent.findIndex(
+        //     (item) => item.id === studentId
+        // );
+        // const scoreIndex = updatedScoreStudent[studentIndex].score.findIndex(
+        //     (item) => item.sub_activity_id === sub_activity_id
+        // );
+        // updatedScoreStudent[studentIndex].score[scoreIndex].obtained_score = point
+        // const updateStatusScore = updateStatus(updatedScoreStudent)
+        // setStudents(updateStatusScore)
 
     }
 
-    const updateStatus = (data) =>{
+    const updateStatus = (data) => {
         let retriveStudent = data
         const addedStatusStudent = []
         retriveStudent.forEach(student => {
-            const allScore = student.score.map((e) => (e.obtained_score))
+            console.log(student)
+            const allScore = student.scores?.map((e) => (e.obtained_score))||[]
             const status = () => {
                 if (!allScore.includes(null)) {
                     return "Finished"
@@ -459,41 +465,73 @@ export const useActivityGrading = () => {
                 }
             }
             addedStatusStudent.push({
-                id: student.id,
-                prefix: student.prefix,
-                firstname: student.firstname,
-                lastname: student.lastname,
-                email: student.email,
-                score: student.score,
+                ...student,
                 score_status: status(),
             })
         });
         return addedStatusStudent
     }
 
-    const onScoreChange = (value) =>{
-       setScoreValue(value)
+    const onScoreChange = (value) => {
+        setScoreValue(value)
     }
 
-    const saveScore = () => {
-        handleSelectRubric(scoreValue, editingScore[0], editingScore[1])
-        setScoreValue(null)
+    const saveScore = (studentId, sub_activity_id) => {
+        // handleSelectRubric(scoreValue, editingScore[0], editingScore[1])
+        // setScoreValue(null)
+        // setEditingScore([])
+        let updatedScoreStudent = [...stdWithScore]
+        const studentIndex = updatedScoreStudent.findIndex(
+            (item) => item.student_id === studentId
+        );
+        const scoreIndex = updatedScoreStudent[studentIndex]?.scores.findIndex(
+            (item) => item.sub_activity_id === sub_activity_id
+        );
+        //console.log(updatedScoreStudent[studentIndex]?.scores)
+        updatedScoreStudent[studentIndex].scores[scoreIndex].obtained_score = scoreValue
+        const updateStatusScore = updateStatus(updatedScoreStudent)
+        setStdWithScore(updateStatusScore)
         setEditingScore([])
+        
     }
 
+    const fetchStudentScore = async () => {
+        return await httpClient
+            .get(`/assessment/getAllIndividualByActivity/${sectionId}/${activityId}`)
+            .then((response) => {
+                console.log(updateStatus(response.data.data))
+                setStdWithScore(updateStatus(response.data.data))
+                return Promise.resolve(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error)
+                return Promise.reject(error);
+            });
+    }
+
+    async function fetchSubActivity() {
+        return await httpClient
+            .get(`/activity/get/${activityId}`)
+            .then((response) => {
+                setSubActivity(response.data.data.subActivities)
+                return Promise.resolve(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+    }
+
+    //fetch initial data
     useEffect(() => {
-        const addedStatusStudent = updateStatus(students_score)
-        setStudents(addedStatusStudent)
+        fetchStudentScore()
+        fetchSubActivity()
 
     }, [])
+
     useEffect(() => {
-        setSubActivity(mockSubActivity)
-    }, [])
-
-    // useEffect(() => {
-    //     console.log(students);
-    // }, [students])
+        console.log(stdWithScore);
+    }, [stdWithScore])
 
 
-    return { students, subActivity, rubrics, handleSelectRubric, editingScore, setEditingScore, onScoreChange, saveScore }
+    return { /*students*/stdWithScore, subActivity, rubrics, handleSelectRubric, editingScore, setEditingScore, onScoreChange, saveScore, setScoreValue }
 }

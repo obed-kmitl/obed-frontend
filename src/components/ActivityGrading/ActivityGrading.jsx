@@ -1,7 +1,7 @@
 //import { GradingTable } from "./GradingTable"
 import { useState, useEffect } from "react";
 import { useActivityGrading } from "./hooks/useActivityGrading";
-import { Tooltip, Tabs, Input, InputNumber } from "antd";
+import { Tooltip, Tabs, InputNumber } from "antd";
 import { Button, Collapse, Panel, Header, Body } from "..";
 import styles from './ActivityGrading.module.scss'
 import { EditOutlined, SaveOutlined } from "@ant-design/icons";

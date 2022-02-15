@@ -2,10 +2,7 @@ import styles from "./TeacherReport.module.scss";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Radar } from "react-chartjs-2";
-import {
-  Divider,
-  Select,
-} from "antd";
+import { Divider, Select } from "antd";
 import { Header, Option } from "../../components";
 import {
   Chart as ChartJS,
@@ -68,8 +65,8 @@ export function TeacherReport() {
         borderColor: "rgba(0, 159, 199, 1)",
         borderWidth: 1,
       },
-      {
-        label: "61010001",
+      selectedId && {
+        label: selectedId,
         data: [82, 68, 79, 81, 60],
         backgroundColor: "rgba(247, 148, 29, 0.2)",
         borderColor: "rgba(247, 148, 29, 1)",

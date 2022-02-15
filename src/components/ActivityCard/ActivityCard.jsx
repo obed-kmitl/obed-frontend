@@ -5,7 +5,6 @@ import {
     DeleteOutlined
 } from "@ant-design/icons";
 import googleClassroomLogo from "../../assets/img/logo_google_classroom.svg"
-import { useEffect } from "react";
 
 function Capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();

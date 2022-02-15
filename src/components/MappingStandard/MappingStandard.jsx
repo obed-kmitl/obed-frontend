@@ -1,11 +1,7 @@
 import styles from "./MappingStandard.module.scss";
 import { Header, Body, Button, Select, Option, Collapse, Panel } from "..";
 import { Empty, Popconfirm, Typography, Tooltip } from "antd";
-import {
-  SwapOutlined,
-  InfoCircleOutlined,
-  WarningOutlined,
-} from "@ant-design/icons";
+import { SwapOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { MappingTable } from "./MappingTable";
 import { useMappingStandard } from "./hooks/useMappingStandard";
 import { useState } from "react";

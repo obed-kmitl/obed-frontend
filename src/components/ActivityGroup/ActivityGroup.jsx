@@ -153,6 +153,7 @@ export const ActivityGroup = () => {
     }
     useEffect(() => {
         form.setFieldsValue({ group_name: group.filter((g) => g.id === editingGroup)[0]?.group_name })
+        // eslint-disable-next-line
     }, [editingGroup])
 
     return (

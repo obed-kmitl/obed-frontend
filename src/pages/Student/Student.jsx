@@ -230,7 +230,7 @@ export const Student = () => {
 
   const uploadProps = {
     name: "file",
-    action: "http://localhost:3000/",
+    action: window.location.origin,
     headers: {
       authorization: "authorization-text",
     },
@@ -253,6 +253,7 @@ export const Student = () => {
 
   useEffect(() => {
     _fetchStudent();
+    // eslint-disable-next-line
   }, [section]);
 
   return (

@@ -1,4 +1,3 @@
-import { number } from "prop-types";
 import { useState, useEffect } from "react";
 
 const students_score = [

@@ -33,6 +33,7 @@ export const useActivityDetail = (activityId, sectionId) => {
     useEffect(() => {
         fetchCategory();
         fetchActivity();
+        // eslint-disable-next-line
     }, []);
 
     useEffect(() => {

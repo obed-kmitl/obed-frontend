@@ -7,8 +7,8 @@ import {
 } from "../../components";
 
 export const Activity = () => {
-    let { sectionId } = useParams();
-  
+    // let { sectionId } = useParams();
+
     return (
         <div className={styles.activity}>
             <Helmet>

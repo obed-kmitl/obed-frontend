@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Table, InputNumber, Popconfirm, Form, Typography, Tooltip } from 'antd';
 import { useParams } from "react-router-dom";
 import { useWeighting } from './hooks/useWeighting';

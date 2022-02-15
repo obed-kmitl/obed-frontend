@@ -3,7 +3,7 @@ export const useImportStudent = (sectionId, setValid) => {
     let students = [];
     let temp = data.filter((ele) => !isNaN(ele?.__EMPTY));
 
-    temp.map((ele) => {
+    temp.forEach((ele) => {
       if (typeof ele.__EMPTY_2 === "string") {
         const name = ele.__EMPTY_2.trim().split("  ");
         students.push({

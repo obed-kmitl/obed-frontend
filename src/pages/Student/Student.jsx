@@ -190,7 +190,7 @@ export const Student = () => {
     setAddList(result);
   }
 
-  async function editFromList(student_number) {
+  function editFromList(student_number) {
     let edit = addList.find((item) => item.student_number === student_number);
     form.setFieldsValue(edit);
     removeFromList(student_number);

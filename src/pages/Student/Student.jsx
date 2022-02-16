@@ -48,6 +48,7 @@ export const Student = () => {
   const [editForm] = Form.useForm();
   const [selectedData, setSelectedData] = useState(null);
   const [searching, setSearching] = useState(false);
+  const [isEditList, setIsEditList] = useState(false);
   const [importVisible, setImportVisible] = useState(false);
   const [addList, setAddList] = useState([]);
   const [uploadList, setUploadList] = useState([]);
@@ -189,7 +190,7 @@ export const Student = () => {
     setAddList(result);
   }
 
-  function editFromList(student_number) {
+  async function editFromList(student_number) {
     let edit = addList.find((item) => item.student_number === student_number);
     form.setFieldsValue(edit);
     removeFromList(student_number);
@@ -435,7 +436,13 @@ export const Student = () => {
             >
               <Input placeholder="Email" />
             </Form.Item> */}
-            <Button htmlType="submit" style={{ width: "100%" }}>
+            <Button
+              htmlType="submit"
+              style={{ width: "100%" }}
+              onClick={() => {
+                setIsEditList(false);
+              }}
+            >
               Add to List <RightOutlined />
             </Button>
           </Form>
@@ -459,8 +466,14 @@ export const Student = () => {
                     <Space className={styles.btn}>
                       <Tooltip title="Edit">
                         <EditOutlined
-                          style={{ color: "#009FC7" }}
-                          onClick={() => editFromList(ele.student_number)}
+                          style={{
+                            color: "#009FC7",
+                            display: isEditList ? "none" : "block",
+                          }}
+                          onClick={() => {
+                            setIsEditList(true);
+                            editFromList(ele.student_number);
+                          }}
                         />
                       </Tooltip>
                       <Tooltip title="Remove">

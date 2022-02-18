@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import styles from "./Teacher.module.scss";
 import { Helmet } from "react-helmet";
-import { Header, Button, Input, Option } from "../../components";
+import { Header, Button, Option } from "../../components";
 import {
   Alert,
   Divider,
@@ -13,14 +13,17 @@ import {
   Popconfirm,
   notification,
   Space,
+  Tag,
+  Input,
 } from "antd";
-import { DeleteOutlined, MailOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, LockOutlined, EditOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { useTeacher } from "./hooks/useTeacher";
 
 export const Teacher = () => {
   const { Column } = Table;
   const [form] = Form.useForm();
+  const [passwordForm] = Form.useForm();
   const [
     teachers,
     fetchAllUsers,
@@ -34,6 +37,7 @@ export const Teacher = () => {
   const [filterList, setFilterList] = useState([]);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -111,10 +115,11 @@ export const Teacher = () => {
           prefix: getThPrefix[data.prefix],
           firstname: data.firstname,
           lastname: data.lastname,
+          role: "TEACHER",
         };
         openNotificationWithIcon(
           "success",
-          "Teacher added",
+          "User added",
           "Please check user " + values.email + " inbox to change password."
         );
         setVisible(false);
@@ -138,7 +143,7 @@ export const Teacher = () => {
       .then(() => {
         openNotificationWithIcon(
           "success",
-          "Teacher edited",
+          "User edited",
           "User " + values.username + " has been saved."
         );
         setVisible(false);
@@ -162,7 +167,9 @@ export const Teacher = () => {
 
   function handleCancel() {
     form.resetFields();
+    passwordForm.resetFields();
     setVisible(false);
+    setPasswordVisible(false);
     setSelectedData(null);
     setEdit(false);
     setMessage("");
@@ -184,19 +191,24 @@ export const Teacher = () => {
     });
   }
 
-  function resendPassword(record) {
+  function changePassword(value) {
+    let newValue = {
+      ...value,
+      id: selectedData?.id,
+      username: selectedData?.username,
+    };
     let success = true;
-    if (success)
+    if (success) {
       openNotificationWithIcon(
         "success",
-        "Request sent to " + record.email,
-        "Please check user email inbox to change password."
+        newValue.username + " password changed"
       );
-    else
+      setPasswordVisible(false);
+    } else
       openNotificationWithIcon(
         "error",
-        "Request Error",
-        "There's error sending request, Please try again."
+        "Cannot change password",
+        "Unexpected error, Please try again."
       );
   }
 
@@ -234,10 +246,10 @@ export const Teacher = () => {
   return (
     <div className={styles.teacher}>
       <Helmet>
-        <title>Teacher - OBED</title>
+        <title>User - OBED</title>
       </Helmet>
       <div className={styles.head}>
-        <Header level={1}>Teacher</Header>
+        <Header level={1}>User</Header>
         <div>
           <Input search placeholder="Search" onSearch={search} allowClear />
           <Button onClick={showModal}>Add</Button>
@@ -314,6 +326,29 @@ export const Teacher = () => {
         <Column title="Username" dataIndex="username" key="username" />
         <Column title="Email" dataIndex="email" key="email" />
         <Column
+          title="Role"
+          dataIndex="role"
+          key="role"
+          render={(role) => (
+            <>
+              <Tag color={role === "ADMIN" ? "blue" : "orange"} key={role}>
+                {role}
+              </Tag>
+            </>
+          )}
+          filters={[
+            {
+              text: "Admin",
+              value: "ADMIN",
+            },
+            {
+              text: "Teacher",
+              value: "TEACHER",
+            },
+          ]}
+          onFilter={(value, record) => record.role === value}
+        />
+        <Column
           title="Action"
           key="action"
           width="30px"
@@ -336,16 +371,19 @@ export const Teacher = () => {
                   <EditOutlined />
                 </a>
               </Tooltip>
-              <Tooltip title="Request Password Change">
+              <Tooltip title="Change Password">
                 <a
                   href="#"
                   style={{
                     fontSize: "20px",
                     color: "#009FC7",
                   }}
-                  onClick={() => resendPassword(record)}
+                  onClick={() => {
+                    setSelectedData(record);
+                    setPasswordVisible(true);
+                  }}
                 >
-                  <MailOutlined />
+                  <LockOutlined />
                 </a>
               </Tooltip>
               <Tooltip title="Delete">
@@ -369,7 +407,7 @@ export const Teacher = () => {
         />
       </Table>
       <Modal
-        title={edit ? "Edit Teacher" : "Add Teacher"}
+        title={edit ? "Edit User" : "Add User"}
         visible={visible}
         okText={edit ? "Save" : "Add"}
         onOk={() => {
@@ -386,6 +424,7 @@ export const Teacher = () => {
         onCancel={handleCancel}
         okButtonProps={{ htmlType: "submit" }}
         maskClosable={false}
+        centered
       >
         {message !== "" && (
           <Alert
@@ -423,6 +462,35 @@ export const Teacher = () => {
             <Input placeholder="Lastname" />
           </Form.Item>
           <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: "Please input email!" },
+              { type: "email" },
+              {
+                validator: (rule, value, callback) => {
+                  if (edit) {
+                    const alreadyExistEmail = teachers
+                      ?.map((e) => e.email)
+                      .filter((e) => e !== editingData.email);
+                    if (alreadyExistEmail?.includes(value)) {
+                      return Promise.reject("Already exist!");
+                    }
+                    return Promise.resolve();
+                  } else {
+                    const alreadyExistEmail = teachers?.map((e) => e.email);
+                    if (alreadyExistEmail?.includes(value)) {
+                      return Promise.reject("Already exist!");
+                    }
+                    return Promise.resolve();
+                  }
+                },
+              },
+            ]}
+          >
+            <Input placeholder="Email" />
+          </Form.Item>
+          <Form.Item
             label="Username"
             name="username"
             rules={[
@@ -452,34 +520,144 @@ export const Teacher = () => {
           >
             <Input placeholder="Username" />
           </Form.Item>
+          {!edit && (
+            <>
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[
+                  {
+                    required: true,
+                    min: 6,
+                    message:
+                      "Please input your password! (Minimum 6 characters)",
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input.Password placeholder="Password" />
+              </Form.Item>
+              <Form.Item
+                name="confirm"
+                label="Confirm Password"
+                dependencies={["password"]}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "Please confirm your password!",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error(
+                          "The two passwords that you entered do not match!"
+                        )
+                      );
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password placeholder="Confirm Password" />
+              </Form.Item>
+            </>
+          )}
+        </Form>
+      </Modal>
+      <Modal
+        title="Change Password"
+        visible={passwordVisible}
+        okText="Save"
+        onOk={() => {
+          passwordForm
+            .validateFields()
+            .then((values) => {
+              changePassword(values);
+            })
+            .catch((info) => {
+              console.log("Validate Failed", info);
+            });
+        }}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        okButtonProps={{ htmlType: "submit" }}
+        maskClosable={false}
+        centered
+      >
+        {message !== "" && (
+          <Alert
+            style={{ marginBottom: "1rem" }}
+            message={message}
+            type="error"
+            showIcon
+          />
+        )}
+        <Form
+          form={passwordForm}
+          name="password"
+          layout="vertical"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+          requiredMark={"required"}
+        >
           <Form.Item
-            label="Email"
-            name="email"
+            name="oldPassword"
+            label="Old Password"
             rules={[
-              { required: true, message: "Please input email!" },
-              { type: "email" },
               {
-                validator: (rule, value, callback) => {
-                  if (edit) {
-                    const alreadyExistEmail = teachers
-                      ?.map((e) => e.email)
-                      .filter((e) => e !== editingData.email);
-                    if (alreadyExistEmail?.includes(value)) {
-                      return Promise.reject("Already exist!");
-                    }
-                    return Promise.resolve();
-                  } else {
-                    const alreadyExistEmail = teachers?.map((e) => e.email);
-                    if (alreadyExistEmail?.includes(value)) {
-                      return Promise.reject("Already exist!");
-                    }
-                    return Promise.resolve();
-                  }
-                },
+                required: true,
+                min: 6,
+                message: "Please input your old password!",
               },
             ]}
+            hasFeedback
           >
-            <Input placeholder="Email" />
+            <Input.Password placeholder="Old Password" />
+          </Form.Item>
+          <Form.Item
+            name="newPassword"
+            label="New Password"
+            rules={[
+              {
+                required: true,
+                min: 6,
+                message:
+                  "Please input your new password! (Minimum 6 characters)",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input.Password placeholder="New Password" />
+          </Form.Item>
+          <Form.Item
+            name="confirm"
+            label="Confirm Password"
+            dependencies={["newPassword"]}
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Please confirm your password!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("newPassword") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error(
+                      "The two passwords that you entered do not match!"
+                    )
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Confirm Password" />
           </Form.Item>
         </Form>
       </Modal>

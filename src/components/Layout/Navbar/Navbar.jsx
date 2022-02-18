@@ -31,9 +31,7 @@ const Navbar = () => {
       <Menu.Divider />
       {!isAdmin && (
         <Menu.Item icon={<BookOutlined />} key="2">
-          <Link to="/">
-            My Course
-          </Link>
+          <Link to="/">My Course</Link>
         </Menu.Item>
       )}
       <Menu.Item icon={<UserOutlined />} key="3">
@@ -65,7 +63,7 @@ const Navbar = () => {
               className={styles.link}
               activeClassName={styles.activeLink}
             >
-              Teacher
+              User
             </NavLink>
             <NavLink
               to="/plan"

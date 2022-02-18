@@ -44,9 +44,9 @@ export const ActivityDetail = () => {
                             {activity.type === "INDIVIDUAL" && <ActivityGrading activity={activity} />}
                             {activity.type === "GROUP" && <ActivityGradingGroup activity={activity} />}
                         </TabPane>
-                        <TabPane tab="Rubric" key="4">
+                        {/* <TabPane tab="Rubric" key="4">
                             <ActivityRubric />
-                        </TabPane>
+                        </TabPane> */}
                     </Tabs>
                 </>
             }

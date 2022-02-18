@@ -1,38 +1,47 @@
-//import { GradingTable } from "./GradingTable"
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 import { useActivityGrading } from "./hooks/useActivityGrading";
 import { Tooltip, Tabs, Input, InputNumber } from "antd";
 import { Button, Collapse, Panel, Header, Body } from "..";
 import styles from './ActivityGrading.module.scss'
-import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 
 export const ActivityGrading = ({ activity }) => {
-    const { stdWithScore, subActivity, rubrics, handleSelectRubric, editingScore, setEditingScore, onScoreChange, saveScore, setScoreValue } = useActivityGrading()
+    const { stdWithScore,
+        subActivity,
+        //rubrics,
+        // handleSelectRubric,
+        editingScore,
+        setEditingScore,
+        onScoreChange,
+        saveScore,
+        setScoreValue
+    } = useActivityGrading()
 
-    const Rubric = ({ studentId, sub_activity_id }) => {
-        const [defRubric, setDefRubric] = useState();
 
-        useEffect(() => {
-            let arr = rubrics.sort((a, b) => a.point - b.point);
-            setDefRubric(arr);
-        }, []);
+    // const Rubric = ({ studentId, sub_activity_id }) => {
+    //     const [defRubric, setDefRubric] = useState();
 
-        return (
-            <div className={styles.rubricWrap}>
-                {defRubric?.map((ele, i) => (
-                    <div className={styles.rubric} key={"def" + i} onClick={() => handleSelectRubric(ele.point, studentId, sub_activity_id)}>
-                        <Header level={4} className={styles.level}>
-                            Level {i + 1}
-                        </Header>
-                        <Body level={3} className={styles.desc}>
-                            {ele.desc}
-                        </Body>
-                        <Header level={5} className={styles.point}>{ele.point} Points</Header>
-                    </div>
-                ))}
-            </div>
-        )
-    }
+    //     useEffect(() => {
+    //         let arr = rubrics.sort((a, b) => a.point - b.point);
+    //         setDefRubric(arr);
+    //     }, []);
+
+    //     return (
+    //         <div className={styles.rubricWrap}>
+    //             {defRubric?.map((ele, i) => (
+    //                 <div className={styles.rubric} key={"def" + i} onClick={() => handleSelectRubric(ele.point, studentId, sub_activity_id)}>
+    //                     <Header level={4} className={styles.level}>
+    //                         Level {i + 1}
+    //                     </Header>
+    //                     <Body level={3} className={styles.desc}>
+    //                         {ele.desc}
+    //                     </Body>
+    //                     <Header level={5} className={styles.point}>{ele.point} Points</Header>
+    //                 </div>
+    //             ))}
+    //         </div>
+    //     )
+    // }
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: "flex-end", gap: "0.5rem", paddingBottom: "1rem" }}>
@@ -112,7 +121,7 @@ export const ActivityGrading = ({ activity }) => {
                                                                         max={subAct.max_score}
                                                                         step={0.5}
                                                                         onChange={onScoreChange}
-                                                                        defaultValue={student.scores.filter((e) => e.sub_activity_id === subAct.id)[0]?.obtained_score}
+                                                                        defaultValue={student.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score}
                                                                     />
 
                                                                     <Body level={1}> &nbsp;{" / " + subAct.max_score}&nbsp;</Body>
@@ -163,8 +172,3 @@ export const ActivityGrading = ({ activity }) => {
         </>
     )
 }
-
-
-
-
-// <GradingTable stdWithScore={stdWithScore} setstdWithScore={setstdWithScore} activity={activity}/>

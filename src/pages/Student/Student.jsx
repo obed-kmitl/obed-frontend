@@ -231,23 +231,18 @@ export const Student = () => {
 
   const uploadProps = {
     name: "file",
-    action: window.location.origin,
-    headers: {
-      authorization: "authorization-text",
-    },
+    beforeUpload: () => false,
     maxCount: 1,
     accept: ".xlsx, .xls",
-    async onChange(info) {
+    async onChange({ file }) {
       setStudentListValid(true);
-      if (info.file.status === "done") {
-        const datafromExcel = await excelReader(info.file.originFileObj);
+      if (file.status !== "removed") {
+        const datafromExcel = await excelReader(file);
         let list = getStudentListFromExcel(datafromExcel);
         setUploadList(list);
         if (list.length === 0) setStudentListValid(false);
         else setStudentListValid(true);
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
+        message.success(`${file.name} file uploaded successfully`);
       }
     },
   };

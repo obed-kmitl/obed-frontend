@@ -81,6 +81,7 @@ export const useActivity = () => {
         return await httpClient
             .get(`/activity/getAllBySection/${sectionId}`)
             .then((response) => {
+                console.log(response.data.data)
                 setcategory(response.data.data)
                 const retrivedData = response.data.data
                 const activity = []
@@ -108,6 +109,7 @@ export const useActivity = () => {
         fetchActivity()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
     return {
         category, filteredActivity, changeGroup,
         handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity

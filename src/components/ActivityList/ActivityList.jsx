@@ -12,7 +12,7 @@ export const ActivityList = ({ google }) => {
 
     const {
         category, filteredActivity, changeGroup,
-        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity
+        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity,
     } = useActivity()
 
     return (
@@ -42,7 +42,7 @@ export const ActivityList = ({ google }) => {
                    
                 </div>
             }
-            {
+            {category.length>0&&
                 // google ?
                 //     <div style={{ padding: "1rem 0 0" }}>
                 //         {
@@ -54,7 +54,7 @@ export const ActivityList = ({ google }) => {
                 //     :
                 <Collapse
                     ghost
-                    defaultActiveKey={category.map((cat) => cat.id)}
+                    defaultActiveKey={category.map((cat) => cat.category_id)}
                 >
                     {category.map((cat) =>
                         <Panel
@@ -64,7 +64,8 @@ export const ActivityList = ({ google }) => {
                                     {cat.title !== "Unassigned" &&<Header style={{ color: "#F7941D" }} level={4}>{cat.weight}%</Header>}
                                 </div>
                             }
-                            key={cat.id}
+                            key={cat.category_id}
+                            
                         >
                             {filteredActivity?.filter((atv) => atv.category_id === cat.category_id).map((activity, index) =>
                                 <Link to={`${window.location.pathname.split("/")[3]}/${activity.activity_id}`} className={styles.link}>
@@ -134,7 +135,7 @@ export const ActivityList = ({ google }) => {
                         </Select>
                     </Form.Item>
                     <Form.Item
-                        label="category"
+                        label="Category"
                         name="category_id"
                         rules={[
                             { required: true, message: "Please Select category" },

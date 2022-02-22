@@ -178,7 +178,6 @@ export const useActivityTable = (subActivity) => {
         return await httpClient
             .get(`/clo/getAllBySection/${sectionId}`)
             .then((res) => {
-                console.log(res.data.data)
                 setCloList(res.data.data)
             })
             .catch((error) => {

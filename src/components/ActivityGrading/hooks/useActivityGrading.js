@@ -1,4 +1,3 @@
-import { number } from "prop-types";
 import { useState, useEffect } from "react";
 import httpClient from "../../../utils/httpClient";
 import { useParams } from "react-router-dom";

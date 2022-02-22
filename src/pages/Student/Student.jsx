@@ -13,6 +13,7 @@ import {
   notification,
   Space,
   Upload,
+  message,
 } from "antd";
 import {
   DeleteOutlined,
@@ -23,6 +24,8 @@ import {
 } from "@ant-design/icons";
 import { useState, useEffect, useContext } from "react";
 import { useStudent } from "./hooks/useStudent";
+import { useImportStudent } from "./hooks/useImportStudent";
+import excelReader from "../../utils/excelReader";
 import SectionContext from "../../contexts/SectionContext";
 
 export const Student = () => {
@@ -45,8 +48,15 @@ export const Student = () => {
   const [editForm] = Form.useForm();
   const [selectedData, setSelectedData] = useState(null);
   const [searching, setSearching] = useState(false);
+  const [isEditList, setIsEditList] = useState(false);
   const [importVisible, setImportVisible] = useState(false);
   const [addList, setAddList] = useState([]);
+  const [uploadList, setUploadList] = useState([]);
+  const [studentListValid, setStudentListValid] = useState(true);
+  const { getStudentListFromExcel } = useImportStudent(
+    section,
+    setStudentListValid
+  );
   const selectBefore = (
     <Form.Item
       name="prefix"
@@ -135,6 +145,7 @@ export const Student = () => {
     editForm.resetFields();
     setSelectedData(null);
     setAddList([]);
+    setUploadList([]);
   }
 
   function onFinish(values) {
@@ -194,8 +205,56 @@ export const Student = () => {
     }
   }
 
+  function submitUploadList(list) {
+    if (list.length > 0) {
+      setConfirmLoading(true);
+      createStudents(list)
+        .then(() => {
+          openNotificationWithIcon(
+            "success",
+            list.length + " Student(s) added"
+          );
+          setUploadList([]);
+          setImportVisible(false);
+        })
+        .catch((message) => {
+          openNotificationWithIcon("error", "Cannot add student", message);
+        })
+        .finally(() => {
+          _fetchStudent();
+          setConfirmLoading(false);
+        });
+    } else {
+      setImportVisible(false);
+    }
+  }
+
+  const uploadProps = {
+    name: "file",
+    action: window.location.origin,
+    headers: {
+      authorization: "authorization-text",
+    },
+    maxCount: 1,
+    accept: ".xlsx, .xls",
+    async onChange(info) {
+      setStudentListValid(true);
+      if (info.file.status === "done") {
+        const datafromExcel = await excelReader(info.file.originFileObj);
+        let list = getStudentListFromExcel(datafromExcel);
+        setUploadList(list);
+        if (list.length === 0) setStudentListValid(false);
+        else setStudentListValid(true);
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+
   useEffect(() => {
     _fetchStudent();
+    // eslint-disable-next-line
   }, [section]);
 
   return (
@@ -377,7 +436,13 @@ export const Student = () => {
             >
               <Input placeholder="Email" />
             </Form.Item> */}
-            <Button htmlType="submit" style={{ width: "100%" }}>
+            <Button
+              htmlType="submit"
+              style={{ width: "100%" }}
+              onClick={() => {
+                setIsEditList(false);
+              }}
+            >
               Add to List <RightOutlined />
             </Button>
           </Form>
@@ -401,8 +466,14 @@ export const Student = () => {
                     <Space className={styles.btn}>
                       <Tooltip title="Edit">
                         <EditOutlined
-                          style={{ color: "#009FC7" }}
-                          onClick={() => editFromList(ele.student_number)}
+                          style={{
+                            color: "#009FC7",
+                            display: isEditList ? "none" : "block",
+                          }}
+                          onClick={() => {
+                            setIsEditList(true);
+                            editFromList(ele.student_number);
+                          }}
                         />
                       </Tooltip>
                       <Tooltip title="Remove">
@@ -512,18 +583,21 @@ export const Student = () => {
         title="Import Student"
         visible={importVisible}
         okText="OK"
-        onOk={() => {}}
+        onOk={() => {
+          submitUploadList(uploadList);
+        }}
         onCancel={handleCancel}
+        okButtonProps={{ disabled: uploadList.length === 0 }}
         maskClosable={false}
         confirmLoading={confirmLoading}
       >
-        <Upload accept=".xlsx, .xls, .csv">
-          <Header level={4}>Upload (ใช้ Template ของสำนักทะเบียน)</Header>
+        <Header level={4}>Upload (Use KMITL REG Excel template only)</Header>
+        <Upload {...uploadProps}>
           <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          <Body level={2} className={styles.uploadWarning}>
+            {!studentListValid && "Student list not found"}
+          </Body>
         </Upload>
-        <Body level={2} className={styles.uploadWarning}>
-          {"ERR_MSG"}
-        </Body>
       </Modal>
     </div>
   );

@@ -19,7 +19,7 @@ export const ActivityTable = ({ subActivity, setTotalScore}) => {
             total += element.max_score
         });
         setTotalScore(total)
-       
+       // eslint-disable-next-line
     }, [data])
 
     const EditableCell = ({

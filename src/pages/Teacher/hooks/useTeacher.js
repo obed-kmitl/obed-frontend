@@ -50,6 +50,7 @@ export const useTeacher = () => {
             lastname: user.lastname,
             username: user.username,
             email: user.email,
+            role: user.role,
           }))
         );
         return Promise.resolve(response.data.data);
@@ -98,6 +99,7 @@ export const useTeacher = () => {
               prefix: getThPrefix[response.data.data.prefix],
               firstname: response.data.data.firstname,
               lastname: response.data.data.lastname,
+              role: response.data.data.role,
             };
           }
           return value;

@@ -112,7 +112,7 @@ const activityRubric = [
   },
 ];
 
-export const ActivityRubric = ({}) => {
+export const ActivityRubric = () => {
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
   const [defRubric, setDefRubric] = useState();
@@ -132,7 +132,7 @@ export const ActivityRubric = ({}) => {
     //       "User " + values.username + " has been saved."
     //     );
     setAddVisible(false);
-    //     setConfirmLoading(false);
+    setConfirmLoading(false);
     form.resetFields();
     //   })
     //   .catch(() => {

@@ -3,37 +3,6 @@ import { Form } from 'antd'
 import httpClient from "../../../utils/httpClient";
 import { useParams } from "react-router-dom";
 
-const mockSubActivity = [
-    {
-        id: 1,
-        title: "ข้อ 1",
-        detail: "จงแปลงเลขฐาน 2 จาก 1010 1111 0010 เป็นเลขฐาน 10 และเลขฐาน 16",
-        clo: [1, 2],
-        point: 2
-    },
-    {
-        id: 2,
-        title: "ข้อ 2",
-        detail: "จงแปลงเลขฐาน 2 จาก 1000 1101 0110 เป็นเลขฐาน 10 และเลขฐาน 16",
-        clo: [1, 2],
-        point: 2
-    },
-    {
-        id: 3,
-        title: "ข้อ 3",
-        detail: "จงแปลงเลขฐาน 10 จาก 178 เป็นเลขฐาน 2 และเลขฐาน 16",
-        clo: [1, 3],
-        point: 2
-    },
-    {
-        id: 4,
-        title: "ข้อ 4",
-        detail: "จงแปลงเลขฐาน 16 จาก 57FA เป็นเลขฐาน 10 และเลขฐาน 2",
-        clo: [2, 3],
-        point: 2
-    }
-]
-
 const mockCLO = [
     {
         clo_id: 1,
@@ -218,6 +187,7 @@ export const useActivityTable = (subActivity) => {
 
     useEffect(() => {
         fetchClo()
+        // eslint-disable-next-line
     }, []);
 
     useEffect(() => {

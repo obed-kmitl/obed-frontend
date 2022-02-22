@@ -230,7 +230,7 @@ function TeacherReportForm() {
     //       "User " + values.username + " has been saved."
     //     );
     setAddVisible(false);
-    //     setConfirmLoading(false);
+    setConfirmLoading(false);
     //     form.resetFields();
     //   })
     //   .catch(() => {
@@ -343,10 +343,12 @@ function TeacherReportForm() {
     //  Set fetched data
     setSuggest(improvement);
     setGrade(data);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     gradeForm.setFieldsValue(grade);
+    // eslint-disable-next-line
   }, [grade]);
 
   return (

@@ -114,7 +114,7 @@ export const ActivityGrading = ({ activity }) => {
                                                     <div style={{ display: "flex", alignItems: "center" }}>
                                                         {editingScore[0] === student.student_id && editingScore[1] === subAct.sub_activity_id ?
                                                             <>
-                                                                <div style={{ width: '150px', display: 'flex', justifyContent: 'flex-end' }}>
+                                                                <div style={{ width: '150px', display: 'flex', justifyContent: 'flex-end',alignItems:"center" }}>
                                                                     <InputNumber
                                                                         style={{ width: "60px" }}
                                                                         min={0}
@@ -127,7 +127,7 @@ export const ActivityGrading = ({ activity }) => {
                                                                     <Body level={1}> &nbsp;{" / " + subAct.max_score}&nbsp;</Body>
                                                                 </div>
                                                                 <Button
-                                                                    style={{ color: "#009fc7", cursor: "pointer", marginLeft: '1rem' }}
+                                                                    style={{ marginLeft: '1rem' }}
                                                                     onClick={() => saveScore(student.student_id, subAct.sub_activity_id)}
                                                                 >
                                                                     Save Score
@@ -137,7 +137,7 @@ export const ActivityGrading = ({ activity }) => {
 
                                                             :
                                                             <>
-                                                                <div style={{ width: '150px', display: 'flex', justifyContent: 'flex-end' }}>
+                                                                <div style={{ width: '150px', display: 'flex', justifyContent: 'flex-end',alignItems:"center" }}>
                                                                     <Body level={1}>
                                                                         {student.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score}
                                                                     </Body>
@@ -145,7 +145,7 @@ export const ActivityGrading = ({ activity }) => {
                                                                     <Body level={1}> &nbsp;{" / " + subAct.max_score}&nbsp;</Body>
                                                                 </div>
                                                                 <Button
-                                                                    style={{ color: "#009fc7", cursor: "pointer", marginLeft: '1rem' }}
+                                                                    style={{marginLeft: '1rem' }}
                                                                     onClick={() => {
                                                                         setEditingScore([student.student_id, subAct.sub_activity_id]);
                                                                         setScoreValue(student.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0].obtained_score)

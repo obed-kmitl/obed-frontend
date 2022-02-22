@@ -146,7 +146,7 @@ export const ActivityGroup = () => {
                     <Panel
                         header={
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                <Header level={3}>{g.title}</Header>
+                                <Header level={4}>{g.title}</Header>
                                 <div style={{ display: "flex", gap: "0.5rem" }}>
                                     <EditOutlined style={{ color: "#009fc7" }} onClick={(e) => { e.stopPropagation(); setEditingGroup(g.group_id) }} />
                                     <Popconfirm title="Delete this group?" onConfirm={() => handleDeleteGroup(g.group_id)}>

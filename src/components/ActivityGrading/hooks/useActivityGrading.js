@@ -3,29 +3,28 @@ import { useState, useEffect } from "react";
 import httpClient from "../../../utils/httpClient";
 import { useParams } from "react-router-dom";
 
-const rubrics = [
-    {
-        point: 0,
-        desc: "ไม่ส่งงานในเวลาที่กำหนด",
-    },
-    {
-        point: 0.5,
-        desc: "ไม่ผ่านตามมาตรฐาน",
-    },
-    {
-        point: 1,
-        desc: "ผ่านตามมาตรฐานที่กำหนด",
-    },
-    {
-        point: 1.5,
-        desc: "ผ่านตามมาตรฐานที่กำหนดและถูกต้องสมบูรณ์",
-    },
-    {
-        point: 2,
-        desc: "ผ่านตามมาตรฐานที่กำหนดและถูกต้องสมบูรณ์ และมีความคิดสร้างสรรค์ Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-    },
-];
-
+// const rubrics = [
+//     {
+//         point: 0,
+//         desc: "ไม่ส่งงานในเวลาที่กำหนด",
+//     },
+//     {
+//         point: 0.5,
+//         desc: "ไม่ผ่านตามมาตรฐาน",
+//     },
+//     {
+//         point: 1,
+//         desc: "ผ่านตามมาตรฐานที่กำหนด",
+//     },
+//     {
+//         point: 1.5,
+//         desc: "ผ่านตามมาตรฐานที่กำหนดและถูกต้องสมบูรณ์",
+//     },
+//     {
+//         point: 2,
+//         desc: "ผ่านตามมาตรฐานที่กำหนดและถูกต้องสมบูรณ์ และมีความคิดสร้างสรรค์ Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+//     },
+// ];
 
 export const useActivityGrading = () => {
     //const [students, setStudents] = useState([])
@@ -96,7 +95,6 @@ export const useActivityGrading = () => {
             .then(() => {
                 const updateStatusScore = updateStatus(updatedScoreStudent)
                 setStdWithScore(updateStatusScore)
-                console.log(updateStatusScore)
                 setEditingScore([])
             })
             .catch((error) => {
@@ -108,7 +106,7 @@ export const useActivityGrading = () => {
         return await httpClient
             .get(`/assessment/getAllIndividualByActivity/${sectionId}/${activityId}`)
             .then((response) => {
-                console.log(updateStatus(response.data.data))
+                //console.log(updateStatus(response.data.data))
                 setStdWithScore(updateStatus(response.data.data))
                 return Promise.resolve(response.data.data);
             })
@@ -137,15 +135,11 @@ export const useActivityGrading = () => {
 
     }, [])
 
-    // useEffect(() => {
-    //     console.log(stdWithScore);
-    // }, [stdWithScore])
-
-
-    return { /*students,*/
+    return { 
+        /*students,*/
         stdWithScore,
         subActivity,
-        rubrics,
+        //rubrics,
         // handleSelectRubric,
         editingScore,
         setEditingScore,

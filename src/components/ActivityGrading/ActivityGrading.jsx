@@ -1,6 +1,6 @@
 import { useActivityGrading } from "./hooks/useActivityGrading";
-import { Tooltip, Tabs, InputNumber, Table } from "antd";
-import { Button, Collapse, Panel, Header, Body } from "..";
+import { Tooltip, InputNumber, Table } from "antd";
+import { Header, Body } from "..";
 import styles from './ActivityGrading.module.scss'
 import {
     CheckCircleFilled,
@@ -22,6 +22,10 @@ export const ActivityGrading = ({ activity }) => {
         setScoreValue
     } = useActivityGrading()
 
+    let totalMaxScore = 0
+    subActivity?.forEach(element => {
+        totalMaxScore = totalMaxScore + element.max_score || 0
+    })
 
     // const Rubric = ({ studentId, sub_activity_id }) => {
     //     const [defRubric, setDefRubric] = useState();
@@ -48,10 +52,7 @@ export const ActivityGrading = ({ activity }) => {
     //     )
     // }
 
-    let totalMaxScore = 0
-    subActivity?.forEach(element => {
-        totalMaxScore = totalMaxScore + element.max_score || 0
-    })
+ 
 
     return (
         <>

@@ -1,11 +1,32 @@
 import { useActivityGradingGroup } from "./hooks/useActivityGradingGroup";
-import { Tooltip, Tabs, InputNumber } from "antd";
+import { Tooltip, Tabs, InputNumber, Table } from "antd";
 import { Button, Collapse, Panel, Header, Body } from "..";
 import styles from './ActivityGradingGroup.module.scss'
 import { EyeOutlined, WarningOutlined } from "@ant-design/icons";
 
+import {
+    CheckCircleFilled,
+    ExclamationCircleFilled,
+    CloseCircleFilled
+} from "@ant-design/icons";
+
 export const ActivityGradingGroup = ({ activity }) => {
-    const { group, subActivity,/* rubrics, handleSelectRubric,*/ editingScore, setEditingScore, onScoreChange, saveScore } = useActivityGradingGroup()
+    const { Column } = Table
+    const {
+        group,
+        subActivity,
+        /* rubrics, 
+        handleSelectRubric,*/
+        editingScore,
+        setEditingScore,
+        onScoreChange,
+        saveScore
+    } = useActivityGradingGroup()
+
+    let totalMaxScore = 0
+    subActivity?.forEach(element => {
+        totalMaxScore = totalMaxScore + element.max_score || 0
+    })
 
     // const Rubric = ({ groupId, sub_activity_id }) => {
     //     const [defRubric, setDefRubric] = useState();
@@ -50,7 +71,128 @@ export const ActivityGradingGroup = ({ activity }) => {
                 </Tooltip>
                 <Button >Import</Button>
             </div>
-            <Collapse accordion >
+            <Table
+                dataSource={group}
+                rowKey="group_id"
+                bordered
+                scroll={{ x: 'max-content' }}
+                pagination={false}
+            >
+                <Column
+                    title="Group"
+                    dataIndex="title"
+                    key="title"
+                    fixed="left"
+                    width={230}
+                    render={(title, record) =>
+                        <div style={{display:"flex",alignItems:"center",gap:"0.25rem"}}>
+                            {title + " "}
+                            {record.member[0].student_id !== null ?
+                                <Tooltip title={record.member.map((student) => {
+                                    return (
+                                        <>
+                                            {student.student_number + " " + student.prefix + student.firstname + " " + student.lastname}
+                                            <br />
+                                        </>)
+                                }
+
+                                )}
+                                >
+                                    <EyeOutlined />
+                                </Tooltip>
+                                :
+                                <Tooltip title="There is NO Student in this group">
+                                    <Body style={{ color: "#C73535" }}>
+                                        <WarningOutlined />
+                                    </Body>
+                                </Tooltip>
+                            }
+                        </div>
+                    }
+                />
+                {
+                    subActivity?.map((subAct, i) =>
+                        <Column
+                            title={<Tooltip width={300} title={subAct.detail}>{`ข้อที่ ${i + 1} (${subAct.max_score} pts)`}</Tooltip>}
+                            editable={true}
+                            key="student_number"
+                            render={(_, record) => {
+                                if (editingScore[0] === record.group_id && editingScore[1] === subAct.sub_activity_id) {
+                                    return (
+                                        <InputNumber
+                                            min={0}
+                                            max={subAct.max_score}
+                                            step={0.5}
+                                            style={{ width: "95px", margin: "-10px 0" }}
+                                            onChange={onScoreChange}
+                                            defaultValue={record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score}
+                                            onBlur={() => saveScore(record.group_id, subAct.sub_activity_id)}
+                                            onPressEnter={() => saveScore(record.group_id, subAct.sub_activity_id)}
+                                        />)
+                                }
+                                else
+                                    return (
+                                        <div onClick={() => {
+                                            console.log(editingScore)
+                                            setEditingScore([record.group_id, subAct.sub_activity_id]);
+
+                                        }}
+                                        >
+                                            {record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score || <Body>&nbsp;</Body>}
+
+                                        </div>
+                                    )
+                            }
+                            }
+                        />
+                    )
+                }
+                <Column
+                    title={`Total (${totalMaxScore} pts)`}
+                    key="scores"
+                    fixed="right"
+                    width={150}
+                    render={(_, record) => {
+                        let calculatedScore = 0
+                        record.scores.forEach(element => {
+                            calculatedScore = calculatedScore + element.obtained_score || 0
+                        })
+                        return (
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                {calculatedScore + " pts"}
+                                <div style={{}}>
+                                    {
+                                        record.score_status === "Finished" &&
+                                        <div style={{ color: "#68A028" }}>
+                                            <Tooltip title={record.score_status}>
+                                                <CheckCircleFilled />
+                                            </Tooltip>
+                                        </div>
+                                    }
+                                    {
+                                        record.score_status === "Not Finished" &&
+                                        <div style={{ color: "#F7941D" }}>
+                                            <Tooltip title={record.score_status}>
+                                                <ExclamationCircleFilled />
+                                            </Tooltip>
+                                        </div>
+                                    }
+                                    {
+                                        record.score_status === "Not Submitted" &&
+                                        <div style={{ color: "#C73535" }}>
+                                            <Tooltip title={record.score_status}>
+                                                <CloseCircleFilled />
+                                            </Tooltip>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        )
+                    }}
+                />
+            </Table>
+
+            {/* <Collapse accordion >
                 {group?.map((g, index) => {
 
                     let calculatedScore = 0
@@ -77,10 +219,10 @@ export const ActivityGradingGroup = ({ activity }) => {
                                     </Header>
                                     <div style={{ display: "flex", gap: "3rem", alignItems: "center", fontSize: "16px" }}>
                                         {g.member[0].student_id === null ?
-                                                <Body style={{ color: "#C73535" }}>
-                                                    There is no student in this group&nbsp;
-                                                    <WarningOutlined />
-                                                </Body>
+                                            <Body style={{ color: "#C73535" }}>
+                                                There is no student in this group&nbsp;
+                                                <WarningOutlined />
+                                            </Body>
                                             :
                                             <>
                                                 <div>
@@ -162,7 +304,7 @@ export const ActivityGradingGroup = ({ activity }) => {
                                                         }
                                                     </div>
                                                 </div>
-                                                {/* <Rubric groupId={g.id} sub_activity_id={subAct.id} /> */}
+                                                {/* <Rubric groupId={g.id} sub_activity_id={subAct.id} /> }
                                             </Tabs.TabPane>
                                         ))}
 
@@ -172,7 +314,7 @@ export const ActivityGradingGroup = ({ activity }) => {
                         </Panel>
                     )
                 })}
-            </Collapse>
+            </Collapse> */}
         </>
     )
 }

@@ -105,9 +105,9 @@ export const useActivityGrading = () => {
         return await httpClient
             .get(`/assessment/getAllIndividualByActivity/${sectionId}/${activityId}`)
             .then((response) => {
-                //console.log(updateStatus(response.data.data))
+                console.log(updateStatus(response.data.data))
                 setStdWithScore(updateStatus(response.data.data))
-                return Promise.resolve(response.data.data);
+               
             })
             .catch((error) => {
                 console.log(error)
@@ -120,7 +120,6 @@ export const useActivityGrading = () => {
             .get(`/activity/get/${activityId}`)
             .then((response) => {
                 setSubActivity(response.data.data.subActivities)
-                return Promise.resolve(response.data.data);
             })
             .catch((error) => {
                 console.log(error)

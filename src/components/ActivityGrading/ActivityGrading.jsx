@@ -1,11 +1,17 @@
-// import { useState, useEffect } from "react";
 import { useActivityGrading } from "./hooks/useActivityGrading";
-import { Tooltip, Tabs, InputNumber } from "antd";
+import { Tooltip, Tabs, InputNumber, Table } from "antd";
 import { Button, Collapse, Panel, Header, Body } from "..";
 import styles from './ActivityGrading.module.scss'
+import {
+    CheckCircleFilled,
+    ExclamationCircleFilled,
+    CloseCircleFilled
+} from "@ant-design/icons";
 
 export const ActivityGrading = ({ activity }) => {
-    const { stdWithScore,
+    const { Column } = Table
+    const {
+        stdWithScore,
         subActivity,
         //rubrics,
         // handleSelectRubric,
@@ -42,9 +48,15 @@ export const ActivityGrading = ({ activity }) => {
     //     )
     // }
 
+    let totalMaxScore = 0
+    subActivity?.forEach(element => {
+        totalMaxScore = totalMaxScore + element.max_score || 0
+    })
+
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: "flex-end", gap: "0.5rem", paddingBottom: "1rem" }}>
+            <div style={{ display: 'flex', justifyContent: "space-between", gap: "0.5rem", paddingBottom: "1rem",width:"100%" }}>
+                <Header level={2}>Assessment</Header>
                 <Tooltip title="กรอกครบแล้ว/ยังกรอกไม่ครบ/ยังไม่ได้กรอก" overlayStyle={{ maxWidth: '500px' }}>
                     <div style={{ color: "white", display: "flex", textAlign: "center", fontSize: "18px" }}>
                         <div style={{ backgroundColor: "#68A028", width: "32px", height: "32px", paddingTop: "0.2rem" }}>
@@ -58,9 +70,115 @@ export const ActivityGrading = ({ activity }) => {
                         </div>
                     </div>
                 </Tooltip>
-                <Button >Import</Button>
+                {/* <Button >Import</Button> */}
             </div>
-            <Collapse accordion >
+            <Table
+                dataSource={stdWithScore}
+                rowKey="student_id"
+                bordered
+                scroll={{ x: 'max-content' }}
+                pagination={false}
+            >
+                <Column
+                    title="Student ID"
+                    dataIndex="student_number"
+                    key="student_number"
+                    width={120}
+                    fixed="left"
+                />
+                <Column
+                    title="Name"
+                    dataIndex="firstname"
+                    key="firstname"
+                    fixed="left"
+                    width={230}
+                    render={(text, record) =>
+                        record.prefix + text + " " + record.lastname
+                    }
+                />
+                {
+                    subActivity?.map((subAct, i) =>
+                        <Column
+                            title={<Tooltip width={300} title={subAct.detail}>{`ข้อที่ ${i + 1} (${subAct.max_score} pts)`}</Tooltip>}
+                            editable={true}
+                            key="student_number"
+                            render={(_, record) => {
+                                if (editingScore[0] === record.student_id && editingScore[1] === subAct.sub_activity_id) {
+                                    return (
+                                        <InputNumber
+                                            min={0}
+                                            max={subAct.max_score}
+                                            step={0.5}
+                                            style={{ width: "95px", margin: "-10px 0" }}
+                                            onChange={onScoreChange}
+                                            defaultValue={record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score}
+                                            onBlur={() => saveScore(record.student_id, subAct.sub_activity_id)}
+                                            onPressEnter={() => saveScore(record.student_id, subAct.sub_activity_id)}
+                                        />)
+                                }
+                                else
+                                    return (
+                                        <div onClick={() => {
+                                            console.log(editingScore)
+                                            setEditingScore([record.student_id, subAct.sub_activity_id]);
+
+                                        }}
+                                        >
+                                            {record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score || <Body>&nbsp;</Body>}
+
+                                        </div>
+                                    )
+                            }
+                            }
+                        />
+                    )
+                }
+                <Column
+                    title={`Total (${totalMaxScore} pts)`}
+                    key="scores"
+                    fixed="right"
+                    width={150}
+                    render={(_, record) => {
+                        let calculatedScore = 0
+                        record.scores.forEach(element => {
+                            calculatedScore = calculatedScore + element.obtained_score || 0
+                        })
+                        return (
+                            <div style={{display:"flex",justifyContent:"space-between"}}>
+                                {calculatedScore + " pts"}
+                                <div style={{   }}>
+                                    {
+                                        record.score_status === "Finished" &&
+                                        <div style={{ color: "#68A028" }}>
+                                            <Tooltip title={record.score_status}>
+                                                <CheckCircleFilled />
+                                            </Tooltip>
+                                        </div>
+                                    }
+                                    {
+                                        record.score_status === "Not Finished" &&
+                                        <div style={{ color: "#F7941D" }}>
+                                            <Tooltip title={record.score_status}>
+                                                <ExclamationCircleFilled />
+                                            </Tooltip>
+                                        </div>
+                                    }
+                                    {
+                                        record.score_status === "Not Submitted" &&
+                                        <div style={{ color: "#C73535" }}>
+                                            <Tooltip title={record.score_status}>
+                                                <CloseCircleFilled />
+                                            </Tooltip>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        )
+                    }}
+                />
+            </Table>
+            {/*
+             <Collapse accordion >
                 {stdWithScore?.map((student, index) => {
 
                     let calculatedScore = 0
@@ -104,7 +222,7 @@ export const ActivityGrading = ({ activity }) => {
                             }
                             key={index}
                         >
-                            <div style={{ /*height: "150px",*/ overflow: "hidden" }}>
+                            <div style={{ height: "150px",overflow: "hidden" }}>
                                 <div>
                                     <Tabs defaultActiveKey="0" tabPosition={"top"} >
                                         {subActivity?.map((subAct, i) => (
@@ -114,7 +232,7 @@ export const ActivityGrading = ({ activity }) => {
                                                     <div style={{ display: "flex", alignItems: "center" }}>
                                                         {editingScore[0] === student.student_id && editingScore[1] === subAct.sub_activity_id ?
                                                             <>
-                                                                <div style={{ width: '150px', display: 'flex', justifyContent: 'flex-end',alignItems:"center" }}>
+                                                                <div style={{ width: '150px', display: 'flex', justifyContent: 'flex-end', alignItems: "center" }}>
                                                                     <InputNumber
                                                                         style={{ width: "60px" }}
                                                                         min={0}
@@ -137,7 +255,7 @@ export const ActivityGrading = ({ activity }) => {
 
                                                             :
                                                             <>
-                                                                <div style={{ width: '150px', display: 'flex', justifyContent: 'flex-end',alignItems:"center" }}>
+                                                                <div style={{ width: '150px', display: 'flex', justifyContent: 'flex-end', alignItems: "center" }}>
                                                                     <Body level={1}>
                                                                         {student.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score}
                                                                     </Body>
@@ -145,7 +263,7 @@ export const ActivityGrading = ({ activity }) => {
                                                                     <Body level={1}> &nbsp;{" / " + subAct.max_score}&nbsp;</Body>
                                                                 </div>
                                                                 <Button
-                                                                    style={{marginLeft: '1rem' }}
+                                                                    style={{ marginLeft: '1rem' }}
                                                                     onClick={() => {
                                                                         setEditingScore([student.student_id, subAct.sub_activity_id]);
                                                                         setScoreValue(student.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0].obtained_score)
@@ -158,7 +276,7 @@ export const ActivityGrading = ({ activity }) => {
                                                         }
                                                     </div>
                                                 </div>
-                                                {/* <Rubric studentId={student.id} sub_activity_id={subAct.id} /> */}
+                                                { <Rubric studentId={student.id} sub_activity_id={subAct.id} /> }
                                             </Tabs.TabPane>
                                         ))}
 
@@ -169,6 +287,8 @@ export const ActivityGrading = ({ activity }) => {
                     )
                 })}
             </Collapse>
+ */}
+
         </>
     )
 }

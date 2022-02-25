@@ -26,7 +26,6 @@
     cursor: pointer;
     &:hover {
       box-shadow: 0 0 10px 0 $color-grey-200;
-      
     }
 
     .level {
@@ -54,9 +53,31 @@
   }
 }
 
-.subActivityHeader{
+.subActivityHeader {
   width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 0;
+}
+
+/* width */
+::-webkit-scrollbar {
+  height:10px;
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $color-grey-300;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $color-grey-400;
 }

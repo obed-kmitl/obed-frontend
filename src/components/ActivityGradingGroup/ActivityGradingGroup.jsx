@@ -55,7 +55,8 @@ export const ActivityGradingGroup = ({ activity }) => {
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: "flex-end", gap: "0.5rem", paddingBottom: "1rem" }}>
+            <div style={{ display: 'flex', justifyContent: "space-between", gap: "0.5rem", paddingBottom: "1rem", width: "100%" }}>
+                <Header level={2}>Assessment</Header>
                 <Tooltip title="กรอกครบแล้ว/ยังกรอกไม่ครบ/ยังไม่ได้กรอก" overlayStyle={{ maxWidth: '500px' }}>
                     <div style={{ color: "white", display: "flex", textAlign: "center", fontSize: "18px" }}>
                         <div style={{ backgroundColor: "#68A028", width: "32px", height: "32px", paddingTop: "0.2rem" }}>
@@ -69,7 +70,7 @@ export const ActivityGradingGroup = ({ activity }) => {
                         </div>
                     </div>
                 </Tooltip>
-                <Button >Import</Button>
+                {/* <Button >Import</Button> */}
             </div>
             <Table
                 dataSource={group}
@@ -85,7 +86,7 @@ export const ActivityGradingGroup = ({ activity }) => {
                     fixed="left"
                     width={230}
                     render={(title, record) =>
-                        <div style={{display:"flex",alignItems:"center",gap:"0.25rem"}}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
                             {title + " "}
                             {record.member[0].student_id !== null ?
                                 <Tooltip title={record.member.map((student) => {

@@ -8,7 +8,7 @@ import {
   Option,
   Input,
 } from "../../components";
-import { Divider } from "antd";
+import { Divider, Empty } from "antd";
 import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SectionContext from "../../contexts/SectionContext";
@@ -134,52 +134,65 @@ export const Home = () => {
           <Input search placeholder="Search" onSearch={search} allowClear />
         </div>
       </div>
-      {filteredCourse
-        .filter((item) => {
-          if (filterSelected) {
-            return (
-              item.semester === filterSelected[0] &&
-              item.year === filterSelected[1]
-            );
-          } else {
-            return item;
-          }
-        })
-        .map((semesterCourse, index) => (
-          <div key={semesterCourse.year + "/" + semesterCourse.semester}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                margin: "1rem 0",
-              }}
-            >
-              <Header level={2}>
-                {semesterCourse.semester}
-                {"/"}
-                {semesterCourse.year}
-              </Header>
-              <Divider style={{ minWidth: "0", marginLeft: "8px" }} />
+      {filteredCourse.length === 0 ? (
+        <Empty
+          style={{
+            marginTop: "100px",
+            color: "#c3c3c4",
+            fontSize: "20px",
+            fontWeight: "500",
+          }}
+          imageStyle={{ height: 100 }}
+          description="No course found. Contact administrator if your course is not showing."
+        />
+      ) : (
+        filteredCourse
+          .filter((item) => {
+            if (filterSelected) {
+              return (
+                item.semester === filterSelected[0] &&
+                item.year === filterSelected[1]
+              );
+            } else {
+              return item;
+            }
+          })
+          .map((semesterCourse, index) => (
+            <div key={semesterCourse.year + "/" + semesterCourse.semester}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  margin: "1rem 0",
+                }}
+              >
+                <Header level={2}>
+                  {semesterCourse.semester}
+                  {"/"}
+                  {semesterCourse.year}
+                </Header>
+                <Divider style={{ minWidth: "0", marginLeft: "8px" }} />
+              </div>
+              <div className={styles.cards}>
+                {semesterCourse.courses.map((course, i) => (
+                  <div
+                    onClick={() => setSection(course.id)}
+                    className={styles.card}
+                    key={course.id}
+                  >
+                    <Link to={`${course.id}/overview`}>
+                      <CourseCard
+                        details={course}
+                        ended={false}
+                        key={index + i}
+                      />
+                    </Link>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className={styles.cards}>
-              {semesterCourse.courses.map((course, i) => (
-                <div
-                  onClick={() => setSection(course.id)}
-                  className={styles.card}
-                  key={course.id}
-                >
-                  <Link to={`${course.id}/overview`}>
-                    <CourseCard
-                      details={course}
-                      ended={false}
-                      key={index + i}
-                    />
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+          ))
+      )}
     </div>
   );
 };

@@ -22,10 +22,12 @@ export const ActivityGrading = ({ activity }) => {
         setScoreValue
     } = useActivityGrading()
 
+
     let totalMaxScore = 0
     subActivity?.forEach(element => {
         totalMaxScore = totalMaxScore + element.max_score || 0
     })
+
 
     // const Rubric = ({ studentId, sub_activity_id }) => {
     //     const [defRubric, setDefRubric] = useState();
@@ -52,11 +54,11 @@ export const ActivityGrading = ({ activity }) => {
     //     )
     // }
 
- 
+
 
     return (
-        <>
-            <div style={{ display: 'flex', justifyContent: "space-between", gap: "0.5rem", paddingBottom: "1rem",width:"100%" }}>
+        <div className={styles.container}>
+            <div style={{ display: 'flex', justifyContent: "space-between", gap: "0.5rem", paddingBottom: "1rem", width: "100%" }}>
                 <Header level={2}>Assessment</Header>
                 <Tooltip title="กรอกครบแล้ว/ยังกรอกไม่ครบ/ยังไม่ได้กรอก" overlayStyle={{ maxWidth: '500px' }}>
                     <div style={{ color: "white", display: "flex", textAlign: "center", fontSize: "18px" }}>
@@ -79,6 +81,7 @@ export const ActivityGrading = ({ activity }) => {
                 bordered
                 scroll={{ x: 'max-content' }}
                 pagination={false}
+                id="table"
             >
                 <Column
                     title="Student ID"
@@ -92,7 +95,6 @@ export const ActivityGrading = ({ activity }) => {
                     dataIndex="firstname"
                     key="firstname"
                     fixed="left"
-                    width={230}
                     render={(text, record) =>
                         record.prefix + text + " " + record.lastname
                     }
@@ -103,6 +105,7 @@ export const ActivityGrading = ({ activity }) => {
                             title={<Tooltip width={300} title={subAct.detail}>{`ข้อที่ ${i + 1} (${subAct.max_score} pts)`}</Tooltip>}
                             editable={true}
                             key="student_number"
+                            width={150}
                             render={(_, record) => {
                                 if (editingScore[0] === record.student_id && editingScore[1] === subAct.sub_activity_id) {
                                     return (
@@ -110,22 +113,31 @@ export const ActivityGrading = ({ activity }) => {
                                             min={0}
                                             max={subAct.max_score}
                                             step={0.5}
-                                            style={{ width: "95px", margin: "-10px 0" }}
+                                            style={{ width: "100%", margin: "-10px 0",borderBottom:"2px solid #009fc7" }}
                                             onChange={onScoreChange}
                                             defaultValue={record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score}
                                             onBlur={() => saveScore(record.student_id, subAct.sub_activity_id)}
                                             onPressEnter={() => saveScore(record.student_id, subAct.sub_activity_id)}
+                                            autoFocus
+                                            bordered={false}
+                                     
                                         />)
                                 }
                                 else
                                     return (
-                                        <div onClick={() => {
-                                            console.log(editingScore)
-                                            setEditingScore([record.student_id, subAct.sub_activity_id]);
-
-                                        }}
+                                        <div
+                                            onClick={() => {
+                                                console.log(editingScore)
+                                                setEditingScore([record.student_id, subAct.sub_activity_id]);
+                                                setScoreValue(record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score)
+                                            }}
+                                            style={{ cursor: "pointer" }}
                                         >
-                                            {record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score || <Body>&nbsp;</Body>}
+                                            {
+                                                record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score === 0 ? 0
+                                                    : record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score
+                                                    || <Body>&nbsp;</Body>
+                                            }
 
                                         </div>
                                     )
@@ -145,9 +157,9 @@ export const ActivityGrading = ({ activity }) => {
                             calculatedScore = calculatedScore + element.obtained_score || 0
                         })
                         return (
-                            <div style={{display:"flex",justifyContent:"space-between"}}>
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 {calculatedScore + " pts"}
-                                <div style={{   }}>
+                                <div style={{}}>
                                     {
                                         record.score_status === "Finished" &&
                                         <div style={{ color: "#68A028" }}>
@@ -290,6 +302,6 @@ export const ActivityGrading = ({ activity }) => {
             </Collapse>
  */}
 
-        </>
+        </div>
     )
 }

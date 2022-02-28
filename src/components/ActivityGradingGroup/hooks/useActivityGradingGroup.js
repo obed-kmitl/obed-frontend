@@ -384,6 +384,7 @@ export const useActivityGradingGroup = () => {
         editingScore,
         setEditingScore,
         onScoreChange,
-        saveScore
+        saveScore,
+        setScoreValue
     }
 }

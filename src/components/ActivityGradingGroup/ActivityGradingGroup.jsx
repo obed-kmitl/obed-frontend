@@ -20,7 +20,8 @@ export const ActivityGradingGroup = ({ activity }) => {
         editingScore,
         setEditingScore,
         onScoreChange,
-        saveScore
+        saveScore,
+        setScoreValue
     } = useActivityGradingGroup()
 
     let totalMaxScore = 0
@@ -54,7 +55,7 @@ export const ActivityGradingGroup = ({ activity }) => {
     // }
 
     return (
-        <>
+        <div className={styles.container}>
             <div style={{ display: 'flex', justifyContent: "space-between", gap: "0.5rem", paddingBottom: "1rem", width: "100%" }}>
                 <Header level={2}>Assessment</Header>
                 <Tooltip title="กรอกครบแล้ว/ยังกรอกไม่ครบ/ยังไม่ได้กรอก" overlayStyle={{ maxWidth: '500px' }}>
@@ -84,7 +85,6 @@ export const ActivityGradingGroup = ({ activity }) => {
                     dataIndex="title"
                     key="title"
                     fixed="left"
-                    width={230}
                     render={(title, record) =>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
                             {title + " "}
@@ -117,6 +117,7 @@ export const ActivityGradingGroup = ({ activity }) => {
                             title={<Tooltip width={300} title={subAct.detail}>{`ข้อที่ ${i + 1} (${subAct.max_score} pts)`}</Tooltip>}
                             editable={true}
                             key="student_number"
+                            width={150}
                             render={(_, record) => {
                                 if (editingScore[0] === record.group_id && editingScore[1] === subAct.sub_activity_id) {
                                     return (
@@ -124,11 +125,13 @@ export const ActivityGradingGroup = ({ activity }) => {
                                             min={0}
                                             max={subAct.max_score}
                                             step={0.5}
-                                            style={{ width: "95px", margin: "-10px 0" }}
+                                            style={{ width: "100%", margin: "-10px 0",borderBottom:"2px solid #009fc7" }}
                                             onChange={onScoreChange}
                                             defaultValue={record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score}
                                             onBlur={() => saveScore(record.group_id, subAct.sub_activity_id)}
                                             onPressEnter={() => saveScore(record.group_id, subAct.sub_activity_id)}
+                                            autoFocus
+                                            bordered={false}
                                         />)
                                 }
                                 else
@@ -136,10 +139,12 @@ export const ActivityGradingGroup = ({ activity }) => {
                                         <div onClick={() => {
                                             console.log(editingScore)
                                             setEditingScore([record.group_id, subAct.sub_activity_id]);
-
+                                            setScoreValue(record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score)
                                         }}
                                         >
-                                            {record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score || <Body>&nbsp;</Body>}
+                                            {record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score === 0 ? 0
+                                                : record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score
+                                                || <Body>&nbsp;</Body>}
 
                                         </div>
                                     )
@@ -316,7 +321,7 @@ export const ActivityGradingGroup = ({ activity }) => {
                     )
                 })}
             </Collapse> */}
-        </>
+        </div>
     )
 }
 

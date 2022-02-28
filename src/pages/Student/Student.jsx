@@ -65,7 +65,7 @@ export const Student = () => {
     >
       <Select
         className="select-before"
-        style={{ width: "90px" }}
+        style={{ width: "100px" }}
         placeholder="Prefix"
       >
         <Option value="นาย">นาย</Option>
@@ -290,6 +290,7 @@ export const Student = () => {
           sorter={(a, b) => a.id - b.id}
           defaultSortOrder="ascend"
           sortDirections={["ascend", "descend", "ascend"]}
+          width="100px"
         />
         <Column
           title="Name"

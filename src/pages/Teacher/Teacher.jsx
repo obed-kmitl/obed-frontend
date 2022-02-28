@@ -31,6 +31,7 @@ export const Teacher = () => {
     register,
     editTeacher,
     deleteTeacher,
+    forceUpdatePassword,
     message,
     setMessage,
   ] = useTeacher();
@@ -125,6 +126,7 @@ export const Teacher = () => {
         setVisible(false);
         setTeachers([...teachers, newTeacher]);
         form.resetFields();
+        setMessage("");
       })
       .catch(() => {
         setConfirmLoading(false);
@@ -149,6 +151,8 @@ export const Teacher = () => {
         setVisible(false);
         setConfirmLoading(false);
         form.resetFields();
+        setMessage("");
+        setEdit(false);
       })
       .catch(() => {
         setConfirmLoading(false);
@@ -193,23 +197,25 @@ export const Teacher = () => {
 
   function changePassword(value) {
     let newValue = {
-      ...value,
       id: selectedData?.id,
       username: selectedData?.username,
+      password: value.newPassword,
     };
-    let success = true;
-    if (success) {
-      openNotificationWithIcon(
-        "success",
-        newValue.username + " password changed"
-      );
-      setPasswordVisible(false);
-    } else
-      openNotificationWithIcon(
-        "error",
-        "Cannot change password",
-        "Unexpected error, Please try again."
-      );
+    forceUpdatePassword(newValue)
+      .then(() => {
+        openNotificationWithIcon(
+          "success",
+          newValue.username + " password changed"
+        );
+        setPasswordVisible(false);
+      })
+      .catch(() => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot change password",
+          "Unexpected error, Please try again."
+        );
+      });
   }
 
   function deleteAccount(record) {
@@ -528,9 +534,9 @@ export const Teacher = () => {
                 rules={[
                   {
                     required: true,
-                    min: 6,
+                    min: 8,
                     message:
-                      "Please input your password! (Minimum 6 characters)",
+                      "Please input your password! (Minimum 8 characters)",
                   },
                 ]}
                 hasFeedback
@@ -587,14 +593,6 @@ export const Teacher = () => {
         maskClosable={false}
         centered
       >
-        {message !== "" && (
-          <Alert
-            style={{ marginBottom: "1rem" }}
-            message={message}
-            type="error"
-            showIcon
-          />
-        )}
         <Form
           form={passwordForm}
           name="password"
@@ -605,28 +603,14 @@ export const Teacher = () => {
           requiredMark={"required"}
         >
           <Form.Item
-            name="oldPassword"
-            label="Old Password"
-            rules={[
-              {
-                required: true,
-                min: 6,
-                message: "Please input your old password!",
-              },
-            ]}
-            hasFeedback
-          >
-            <Input.Password placeholder="Old Password" />
-          </Form.Item>
-          <Form.Item
             name="newPassword"
             label="New Password"
             rules={[
               {
                 required: true,
-                min: 6,
+                min: 8,
                 message:
-                  "Please input your new password! (Minimum 6 characters)",
+                  "Please input your new password! (Minimum 8 characters)",
               },
             ]}
             hasFeedback

@@ -613,7 +613,7 @@ export const CourseTable = ({ selectedCur }) => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="PLOs" name="relative_standards" required>
+          <Form.Item label="PLOs" name="relative_standards">
             <Select
               mode="multiple"
               placeholder="PLO"

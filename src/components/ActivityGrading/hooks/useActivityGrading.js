@@ -2,37 +2,15 @@ import { useState, useEffect } from "react";
 import httpClient from "../../../utils/httpClient";
 import { useParams } from "react-router-dom";
 
-// const rubrics = [
-//     {
-//         point: 0,
-//         desc: "ไม่ส่งงานในเวลาที่กำหนด",
-//     },
-//     {
-//         point: 0.5,
-//         desc: "ไม่ผ่านตามมาตรฐาน",
-//     },
-//     {
-//         point: 1,
-//         desc: "ผ่านตามมาตรฐานที่กำหนด",
-//     },
-//     {
-//         point: 1.5,
-//         desc: "ผ่านตามมาตรฐานที่กำหนดและถูกต้องสมบูรณ์",
-//     },
-//     {
-//         point: 2,
-//         desc: "ผ่านตามมาตรฐานที่กำหนดและถูกต้องสมบูรณ์ และมีความคิดสร้างสรรค์ Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-//     },
-// ];
-
 export const useActivityGrading = () => {
-    //const [students, setStudents] = useState([])
+    let { activityId, sectionId } = useParams()
+
     const [stdWithScore, setStdWithScore] = useState([])
     const [subActivity, setSubActivity] = useState()
     const [editingScore, setEditingScore] = useState([])
     const [scoreValue, setScoreValue] = useState()
-
-    let { activityId, sectionId } = useParams();
+    const [importData, setImportData] = useState()
+    const [importModalVisible, setImportModalVisible] = useState(false)
 
     // const handleSelectRubric = (point, studentId, sub_activity_id) => {
     //     // let updatedScoreStudent = [...students]
@@ -105,9 +83,9 @@ export const useActivityGrading = () => {
         return await httpClient
             .get(`/assessment/getAllIndividualByActivity/${sectionId}/${activityId}`)
             .then((response) => {
-                //console.log(updateStatus(response.data.data))
+                console.log(updateStatus(response.data.data))
                 setStdWithScore(updateStatus(response.data.data))
-                return Promise.resolve(response.data.data);
+
             })
             .catch((error) => {
                 console.log(error)
@@ -120,7 +98,33 @@ export const useActivityGrading = () => {
             .get(`/activity/get/${activityId}`)
             .then((response) => {
                 setSubActivity(response.data.data.subActivities)
-                return Promise.resolve(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+    }
+
+    function handleImportScore(data) {
+        setImportData(data)
+    }
+
+    async function confirmImport() {
+        const nowData = stdWithScore.map(item=>({...item})) 
+        const updateStdWithScore = importData.map((std) => {
+            let student = nowData.find(s => s.student_number === std.student_number)
+            student.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
+                item.obtained_score = std[`ข้อ${i + 1}(${item.max_score})`] || null
+            })
+            return student
+        })
+        return await httpClient
+            .post(`/assessment/saveIndividual`, {
+                individualAssessments: updateStdWithScore
+            })
+            .then(() => {
+                const updateStatusScore = updateStatus(updateStdWithScore)
+                setStdWithScore(updateStatusScore)
+                setImportModalVisible(false)
             })
             .catch((error) => {
                 console.log(error)
@@ -131,10 +135,9 @@ export const useActivityGrading = () => {
     useEffect(() => {
         fetchStudentScore()
         fetchSubActivity()
-
     }, [])
 
-    return { 
+    return {
         /*students,*/
         stdWithScore,
         subActivity,
@@ -144,6 +147,10 @@ export const useActivityGrading = () => {
         setEditingScore,
         onScoreChange,
         saveScore,
-        setScoreValue
+        setScoreValue,
+        handleImportScore,
+        importModalVisible,
+        setImportModalVisible,
+        confirmImport
     }
 }

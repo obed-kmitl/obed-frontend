@@ -3,13 +3,14 @@ import httpClient from "../../../utils/httpClient";
 import { useParams } from "react-router-dom";
 
 export const useActivityGrading = () => {
+    let { activityId, sectionId } = useParams()
+
     const [stdWithScore, setStdWithScore] = useState([])
     const [subActivity, setSubActivity] = useState()
     const [editingScore, setEditingScore] = useState([])
     const [scoreValue, setScoreValue] = useState()
     const [importData, setImportData] = useState()
-    let { activityId, sectionId } = useParams();
-    const [importModalVisible, setImportModalVisible] = useState(false);
+    const [importModalVisible, setImportModalVisible] = useState(false)
 
     // const handleSelectRubric = (point, studentId, sub_activity_id) => {
     //     // let updatedScoreStudent = [...students]
@@ -104,14 +105,6 @@ export const useActivityGrading = () => {
     }
 
     function handleImportScore(data) {
-        // const nowData = stdWithScore.map(item=>({...item})) 
-        // const updateStdWithScore = data.map((std) => {
-        //     let student = nowData.find(s => s.student_number === std.student_number)
-        //     student.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
-        //         item.obtained_score = std[`ข้อ${i + 1}(${item.max_score})`] || null
-        //     })
-        //     return student
-        // })
         setImportData(data)
     }
 

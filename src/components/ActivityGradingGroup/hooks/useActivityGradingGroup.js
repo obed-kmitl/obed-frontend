@@ -263,13 +263,13 @@ import { useParams } from "react-router-dom";
 // ];
 
 export const useActivityGradingGroup = () => {
-
+    let { activityId } = useParams();
     const [group, setGroup] = useState([])
     const [subActivity, setSubActivity] = useState()
     const [editingScore, setEditingScore] = useState([])
     const [scoreValue, setScoreValue] = useState()
-
-    let { activityId } = useParams();
+    const [importData, setImportData] = useState()
+    const [importModalVisible, setImportModalVisible] = useState(false);
 
     // const handleSelectRubric = (point, groupId, sub_activity_id) => {
     //     let updatedScoreGroup = [...group]
@@ -369,6 +369,35 @@ export const useActivityGradingGroup = () => {
             });
     }
 
+    function handleImportScore(data) {
+        setImportData(data)
+        console.log(importData)
+    }
+
+    async function confirmImport() {
+        const nowData = group.map(item=>({...item})) 
+        const updateGroupWithScore = importData.map((group) => {
+            let importGroup = nowData.find(g=> g.title === group.group)
+            importGroup.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
+                item.obtained_score = group[`ข้อ${i + 1}(${item.max_score})`] || null
+            })
+            return importGroup
+        })
+        return await httpClient
+            .post(`/assessment/saveGroupAssessment`, {
+                groupAssessments: updateGroupWithScore
+            })
+            .then(() => {
+                const updateStatusScore = updateStatus(updateGroupWithScore)
+                setGroup(updateStatusScore)
+                setImportModalVisible(false)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+    }
+
+
     useEffect(() => {
         fetchGroup();
         fetchSubActivity();
@@ -385,6 +414,10 @@ export const useActivityGradingGroup = () => {
         setEditingScore,
         onScoreChange,
         saveScore,
-        setScoreValue
+        setScoreValue,
+        handleImportScore,
+        importModalVisible,
+        setImportModalVisible,
+        confirmImport
     }
 }

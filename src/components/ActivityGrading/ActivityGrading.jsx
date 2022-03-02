@@ -216,7 +216,7 @@ export const ActivityGrading = ({ activity }) => {
             </Table>
 
             <Modal
-                title={<Header level={3}>Import Standard</Header>}
+                title={<Header level={3}>Import Score</Header>}
                 visible={importModalVisible}
                 okText="Import"
                 onOk={() => confirmImport()}

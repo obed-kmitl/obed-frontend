@@ -375,11 +375,24 @@ export const useActivityGradingGroup = () => {
     }
 
     async function confirmImport() {
-        const nowData = group.map(item=>({...item})) 
+        const nowData = group.map(item => ({ ...item }))
         const updateGroupWithScore = importData.map((group) => {
-            let importGroup = nowData.find(g=> g.title === group.group)
+            let importGroup = nowData.find(g => g.title === group.group)
             importGroup.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
-                item.obtained_score = group[`ข้อ${i + 1}(${item.max_score})`] || null
+                if(group[`ข้อ${i + 1}(${item.max_score})`] === 0){
+                    item.obtained_score = 0
+                    return;
+                }
+                if(!group[`ข้อ${i + 1}(${item.max_score})`]){
+                    item.obtained_score = null
+                    return;
+                }
+                const trimedScore = parseFloat(group[`ข้อ${i + 1}(${item.max_score})`].toString().trim())
+                if (trimedScore <= item.max_score) {
+                    item.obtained_score = trimedScore
+                    return;
+                }
+                item.obtained_score = null
             })
             return importGroup
         })

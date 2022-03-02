@@ -106,14 +106,28 @@ export const useActivityGrading = () => {
 
     function handleImportScore(data) {
         setImportData(data)
+        console.log(data)
     }
 
     async function confirmImport() {
-        const nowData = stdWithScore.map(item=>({...item})) 
+        const nowData = stdWithScore.map(item => ({ ...item }))
         const updateStdWithScore = importData.map((std) => {
             let student = nowData.find(s => s.student_number === std.student_number)
             student.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
-                item.obtained_score = std[`ข้อ${i + 1}(${item.max_score})`] || null
+                if(std[`ข้อ${i + 1}(${item.max_score})`] === 0){
+                    item.obtained_score = 0
+                    return;
+                }
+                if(!std[`ข้อ${i + 1}(${item.max_score})`]){
+                    item.obtained_score = null
+                    return;
+                }
+                const trimedScore = parseFloat(std[`ข้อ${i + 1}(${item.max_score})`].toString().trim())
+                if (trimedScore <= item.max_score) {
+                    item.obtained_score = trimedScore
+                    return;
+                }
+                item.obtained_score = null
             })
             return student
         })

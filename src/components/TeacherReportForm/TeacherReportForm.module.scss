@@ -36,6 +36,14 @@
   margin: 0;
 }
 
+.emptyLi {
+  list-style: none;
+  padding: 8px 0;
+  margin: 0;
+  color: $color-grey-300;
+  text-align: center;
+}
+
 li.addLi {
   list-style-type: none;
   line-height: 32px;

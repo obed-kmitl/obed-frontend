@@ -10,44 +10,45 @@ import {
   Modal,
   Form,
   Popconfirm,
+  notification,
 } from "antd";
 import { useState, useEffect } from "react";
+import { useParams, Prompt } from "react-router-dom";
 import {
   MinusCircleOutlined,
   PlusCircleOutlined,
   DeleteOutlined,
   EditOutlined,
 } from "@ant-design/icons";
+import { useTeacherReport } from "./hooks/useTeacherReport";
 
 const { Column } = Table;
 const { Panel } = Collapse;
 
-const data = {
-  A: 9,
-  BP: 27,
-  B: 22,
-  CP: 11,
-  C: 8,
-  DP: 3,
-  D: 2,
+const mockTableScheme = {
+  A: 0,
+  BP: 0,
+  B: 0,
+  CP: 0,
+  C: 0,
+  DP: 0,
+  D: 0,
   F: 0,
 };
 
 function TeacherReportForm() {
+  const { sectionId } = useParams();
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
   const [gradeForm] = Form.useForm();
-  const [improvedList, setImprovedList] = useState([
-    "เพิ่มเนื้อหา",
-    "ลดเนื้อหา",
-  ]);
-  const [methodList, setMethodList] = useState(["เพิ่มเนื้อหา", "ลดเนื้อหา"]);
-  const [sumList, setSumList] = useState(["เพิ่มเนื้อหา", "ลดเนื้อหา"]);
+  const [improvedList, setImprovedList] = useState([]);
+  const [methodList, setMethodList] = useState([]);
+  const [sumList, setSumList] = useState([]);
   const [addVisible, setAddVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [suggest, setSuggest] = useState();
+  const [suggest, setSuggest] = useState([]);
   const [improveInput, setImproveInput] = useState("");
   const [reasonInput, setReasonInput] = useState("");
   const [solutionInput, setSolutionInput] = useState("");
@@ -55,203 +56,224 @@ function TeacherReportForm() {
   const [methodInput, setMethodInput] = useState("");
   const [sumInput, setSumInput] = useState("");
   const [newSuggest, setNewSuggest] = useState({
-    reason: [],
-    solution: [],
+    cause: [],
+    work: [],
     evaluation: [],
   });
   const [grade, setGrade] = useState();
-
-  const improvement = [
-    {
-      title: "ปรับปรุง Learning Outcome",
-      reason: [
-        "เนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LOเนื่องจาก LO",
-        "ในปีการศึกษานี้ A",
-      ],
-      solution: ["เนื่องจาก LO", "ในปีการศึกษานี้ B"],
-      evaluation: ["เนื่องจาก LO", "ในปีการศึกษานี้ C"],
-    },
-    {
-      title: "ปรับปรุงเนื้อหาบทเรียน",
-      reason: ["เนื่องจากบทเรียน", "ในปีการศึกษานี้ D"],
-      solution: ["เนื่องจากบทเรียน", "ในปีการศึกษานี้ E"],
-      evaluation: ["เนื่องจากบทเรียน", "ในปีการศึกษานี้ F"],
-    },
-  ];
+  const [dirty, setDirty] = useState(false);
+  const { getReport, saveReport } = useTeacherReport();
 
   function popIndex(arr, index) {
     let newArr = [...arr.slice(0, index), ...arr.slice(index + 1)];
     return newArr;
   }
 
+  // เพิ่ม การปรับปรุงการเรียนการสอนจากครั้งที่ผ่านมา ใน list
   function onAddImprove() {
-    if (improveInput.trim() !== "")
+    if (improveInput.trim() !== "") {
       setImprovedList([...improvedList, improveInput]);
+      setDirty(true);
+    }
     setImproveInput("");
   }
 
+  // ลบ การปรับปรุงการเรียนการสอนจากครั้งที่ผ่านมา ใน list
   function onDeleteImprove(index) {
     setImprovedList([
       ...improvedList.slice(0, index),
       ...improvedList.slice(index + 1),
     ]);
+    setDirty(true);
   }
 
+  // เพิ่ม ที่มา/เหตุผล ใน Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onAddReason() {
     if (reasonInput.trim() !== "") {
       setSelectedData({
-        reason: selectedData?.reason.push(reasonInput),
+        cause: selectedData?.cause.push(reasonInput),
         ...selectedData,
       });
+      setDirty(true);
     }
     setReasonInput("");
   }
 
+  // ลบ ที่มา/เหตุผล ใน Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onDeleteReason(index) {
     setSelectedData({
       ...selectedData,
-      reason: popIndex(selectedData?.reason, index),
+      cause: popIndex(selectedData?.cause, index),
     });
+    setDirty(true);
   }
 
+  // เพิ่ม การดำเนินการ ใน Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onAddSolution() {
     if (solutionInput.trim() !== "") {
       setSelectedData({
-        solution: selectedData?.solution.push(solutionInput),
+        work: selectedData?.work.push(solutionInput),
         ...selectedData,
       });
+      setDirty(true);
     }
     setSolutionInput("");
   }
 
+  // ลบ การดำเนินการ ใน Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onDeleteSolution(index) {
     setSelectedData({
       ...selectedData,
-      solution: popIndex(selectedData?.solution, index),
+      work: popIndex(selectedData?.work, index),
     });
+    setDirty(true);
   }
+
+  // เพิ่ม การประเมิณผล ใน Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onAddEvaluation() {
     if (evaluationInput.trim() !== "") {
       setSelectedData({
         evaluation: selectedData?.evaluation.push(evaluationInput),
         ...selectedData,
       });
+      setDirty(true);
     }
     setEvaluationInput("");
   }
 
+  // ลบ การประเมิณผล ใน Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onDeleteEvaluation(index) {
     setSelectedData({
       ...selectedData,
       evaluation: popIndex(selectedData?.evaluation, index),
     });
+    setDirty(true);
   }
 
+  // เพิ่ม ที่มา/เหตุผล ใน Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onAddNewReason() {
     if (reasonInput.trim() !== "") {
       setNewSuggest({
-        reason: newSuggest?.reason.push(reasonInput),
+        cause: newSuggest?.cause.push(reasonInput),
         ...newSuggest,
       });
+      setDirty(true);
     }
     setReasonInput("");
   }
 
+  // ลบ ที่มา/เหตุผล ใน Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onDeleteNewReason(index) {
     setNewSuggest({
       ...newSuggest,
-      reason: popIndex(newSuggest?.reason, index),
+      cause: popIndex(newSuggest?.cause, index),
     });
+    setDirty(true);
   }
 
+  // เพิ่ม การดำเนินการ ใน Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onAddNewSolution() {
     if (solutionInput.trim() !== "") {
       setNewSuggest({
-        solution: newSuggest?.solution.push(solutionInput),
+        work: newSuggest?.work.push(solutionInput),
         ...newSuggest,
       });
+      setDirty(true);
     }
     setSolutionInput("");
   }
 
+  // ลบ การดำเนินการ ใน Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onDeleteNewSolution(index) {
     setNewSuggest({
       ...newSuggest,
-      solution: popIndex(newSuggest?.solution, index),
+      work: popIndex(newSuggest?.work, index),
     });
+    setDirty(true);
   }
+
+  // เพิ่ม การประเมิณผล ใน Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onAddNewEvaluation() {
     if (evaluationInput.trim() !== "") {
       setNewSuggest({
         evaluation: newSuggest?.evaluation.push(evaluationInput),
         ...newSuggest,
       });
+      setDirty(true);
     }
     setEvaluationInput("");
   }
 
+  // ลบ การประเมิณผล ใน Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onDeleteNewEvaluation(index) {
     setNewSuggest({
       ...newSuggest,
       evaluation: popIndex(newSuggest?.evaluation, index),
     });
+    setDirty(true);
   }
 
+  // ลบ ข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป จาก list
+  function onDeleteNextImprove(index) {
+    setSuggest(popIndex(suggest, index));
+    setDirty(true);
+  }
+
+  // เพิ่ม วิธีการทวนสอบ ใน list
   function onAddMethod() {
-    if (methodInput.trim() !== "") setMethodList([...methodList, methodInput]);
+    if (methodInput.trim() !== "") {
+      setMethodList([...methodList, methodInput]);
+      setDirty(true);
+    }
     setMethodInput("");
   }
 
+  // ลบ วิธีการทวนสอบ ใน list
   function onDeleteMethod(index) {
     setMethodList(popIndex(methodList, index));
+    setDirty(true);
   }
 
+  // เพิ่ม สรุปผล ใน list
   function onAddSum() {
-    if (sumInput.trim() !== "") setSumList([...sumList, sumInput]);
+    if (sumInput.trim() !== "") {
+      setSumList([...sumList, sumInput]);
+      setDirty(true);
+    }
     setSumInput("");
   }
 
+  // ลบ สรุปผล ใน list
   function onDeleteSum(index) {
     setSumList(popIndex(sumList, index));
+    setDirty(true);
   }
 
+  // สร้าง ข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป ใหม่จาก Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function handleSubmit(values) {
     let newItem = {
       ...values,
       ...newSuggest,
     };
-    // setConfirmLoading(true);
     console.log("Recieved values of form: ", newItem);
-    // addSuggest(values)
-    //   .then(() => {
-    //     openNotificationWithIcon(
-    //       "success",
-    //       "Teacher edited",
-    //       "User " + values.username + " has been saved."
-    //     );
     setAddVisible(false);
     setConfirmLoading(false);
-    //     form.resetFields();
-    //   })
-    //   .catch(() => {
-    //     setConfirmLoading(false);
-    //     openNotificationWithIcon(
-    //       "error",
-    //       "Cannot edit user",
-    //       "Unexpected error occured, Please try again."
-    //     );
-    //   });
     setSuggest([...suggest, newItem]);
-    setNewSuggest({ reason: [], solution: [], evaluation: [] });
+    setNewSuggest({ cause: [], work: [], evaluation: [] });
+    setDirty(true);
   }
 
+  // บันทึกการแก้ไข ข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป ใหม่จาก Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function handleEdit(values) {
     let newItem = {
-      ...values,
       ...selectedData,
+      title: values.title,
     };
-    console.log("Recieved values of form: ", newItem);
-    // setConfirmLoading(true);
+    let newSuggest = [...suggest];
+    newSuggest[selectedData.index] = newItem;
+    setSuggest(newSuggest);
+    setEditVisible(false);
+    setDirty(true);
   }
 
   function handleCancel() {
@@ -263,6 +285,14 @@ function TeacherReportForm() {
     clearEdit();
   }
 
+  function openNotificationWithIcon(type, message, desc) {
+    notification[type]({
+      message: message,
+      description: desc,
+      duration: 5,
+    });
+  }
+
   function onFinish(values) {
     console.log("Success:", values);
   }
@@ -271,18 +301,16 @@ function TeacherReportForm() {
     console.log("Failed:", errorInfo);
   }
 
-  function onDeleteNextImprove(id) {
-    alert("Delete " + id);
-  }
-
   function initEdit(i) {
-    let values = {
-      title: suggest[i].title,
-      reason: suggest[i].reason,
-      solution: suggest[i].solution,
-      evaluation: suggest[i].evaluation,
+    const _suggest = JSON.parse(JSON.stringify(suggest));
+    const values = {
+      title: _suggest[i].title,
+      cause: _suggest[i].cause,
+      work: _suggest[i].work,
+      evaluation: _suggest[i].evaluation,
     };
-    setSelectedData(values);
+    console.log("SELECTED_DATA ", { ...values, index: i });
+    setSelectedData({ ...values, index: i });
     editForm.setFieldsValue(values);
     setEditVisible(true);
   }
@@ -295,15 +323,36 @@ function TeacherReportForm() {
     setEvaluationInput("");
   }
 
-  function onSave() {
-    let data = {
-      grade: gradeForm.getFieldsValue(),
-      improvement: improvedList,
-      suggest: suggest,
-      method: methodList,
-      sum: sumList,
+  function onSave(silent = true) {
+    const grades = gradeForm.getFieldsValue();
+    const data = {
+      section_id: 1,
+      grade: [
+        grades.A || 0,
+        grades.BP || 0,
+        grades.B || 0,
+        grades.CP || 0,
+        grades.C || 0,
+        grades.DP || 0,
+        grades.D || 0,
+        grades.F || 0,
+      ],
+      prev_improvement: improvedList,
+      next_improvements: suggest,
+      verify_method: methodList,
+      summary: sumList,
     };
-    console.log("Save :", data);
+    saveReport(data)
+      .then(() => {
+        if (!silent) openNotificationWithIcon("success", "Report saved");
+        setDirty(false);
+      })
+      .catch((message) => {
+        openNotificationWithIcon("error", "Save failed", message);
+      })
+      .finally(() => {
+        fetchReportData();
+      });
   }
 
   function genExtra(i) {
@@ -313,7 +362,6 @@ function TeacherReportForm() {
           <EditOutlined
             style={{ marginRight: "1rem", color: "#009FC7" }}
             onClick={(e) => {
-              // If you don't want click extra trigger collapse, you can prevent this:
               e.stopPropagation();
               initEdit(i);
             }}
@@ -329,7 +377,6 @@ function TeacherReportForm() {
             <DeleteOutlined
               style={{ color: "#C73535" }}
               onClick={(event) => {
-                // If you don't want click extra trigger collapse, you can prevent this:
                 event.stopPropagation();
               }}
             />
@@ -339,10 +386,28 @@ function TeacherReportForm() {
     );
   }
 
+  function fetchReportData() {
+    getReport(sectionId).then((data) => {
+      let grades = {
+        A: data.grade[0] || 0,
+        BP: data.grade[1] || 0,
+        B: data.grade[2] || 0,
+        CP: data.grade[3] || 0,
+        C: data.grade[4] || 0,
+        DP: data.grade[5] || 0,
+        D: data.grade[6] || 0,
+        F: data.grade[7] || 0,
+      };
+      setGrade(grades);
+      setSuggest(data?.next_improvements);
+      setSumList(data?.summary);
+      setImprovedList(data?.prev_improvement);
+      setMethodList(data?.verify_method);
+    });
+  }
+
   useEffect(() => {
-    //  Set fetched data
-    setSuggest(improvement);
-    setGrade(data);
+    fetchReportData();
     // eslint-disable-next-line
   }, []);
 
@@ -369,7 +434,7 @@ function TeacherReportForm() {
           initialValues={grade}
         >
           <Table
-            dataSource={[data]}
+            dataSource={[mockTableScheme]}
             pagination={{ position: ["none", "none"] }}
             bordered
           >
@@ -379,7 +444,7 @@ function TeacherReportForm() {
               key="a"
               render={() => (
                 <Form.Item name="A">
-                  <InputNumber min={0} />
+                  <InputNumber min={0} onChange={() => setDirty(true)} />
                 </Form.Item>
               )}
             />
@@ -389,7 +454,7 @@ function TeacherReportForm() {
               key="b+"
               render={() => (
                 <Form.Item name="BP">
-                  <InputNumber min={0} />
+                  <InputNumber min={0} onChange={() => setDirty(true)} />
                 </Form.Item>
               )}
             />
@@ -399,7 +464,7 @@ function TeacherReportForm() {
               key="b"
               render={() => (
                 <Form.Item name="B">
-                  <InputNumber min={0} />
+                  <InputNumber min={0} onChange={() => setDirty(true)} />
                 </Form.Item>
               )}
             />
@@ -409,7 +474,7 @@ function TeacherReportForm() {
               key="c+"
               render={() => (
                 <Form.Item name="CP">
-                  <InputNumber min={0} />
+                  <InputNumber min={0} onChange={() => setDirty(true)} />
                 </Form.Item>
               )}
             />
@@ -419,7 +484,7 @@ function TeacherReportForm() {
               key="c"
               render={() => (
                 <Form.Item name="C">
-                  <InputNumber min={0} />
+                  <InputNumber min={0} onChange={() => setDirty(true)} />
                 </Form.Item>
               )}
             />
@@ -429,7 +494,7 @@ function TeacherReportForm() {
               key="d+"
               render={() => (
                 <Form.Item name="DP">
-                  <InputNumber min={0} />
+                  <InputNumber min={0} onChange={() => setDirty(true)} />
                 </Form.Item>
               )}
             />
@@ -439,7 +504,7 @@ function TeacherReportForm() {
               key="d"
               render={() => (
                 <Form.Item name="D">
-                  <InputNumber min={0} />
+                  <InputNumber min={0} onChange={() => setDirty(true)} />
                 </Form.Item>
               )}
             />
@@ -449,7 +514,7 @@ function TeacherReportForm() {
               key="f"
               render={() => (
                 <Form.Item name="F">
-                  <InputNumber min={0} />
+                  <InputNumber min={0} onChange={() => setDirty(true)} />
                 </Form.Item>
               )}
             />
@@ -462,19 +527,23 @@ function TeacherReportForm() {
           <div className={styles.topicLine} />
         </div>
         <ul className={styles.addUl}>
-          {improvedList.map((ele, i) => (
-            <li key={"improved" + i} className={styles.addLi}>
-              {"- " + ele}
-              <Tooltip title="Delete">
-                <button
-                  className={styles.liRmBtn}
-                  onClick={() => onDeleteImprove(i)}
-                >
-                  <MinusCircleOutlined />
-                </button>
-              </Tooltip>
-            </li>
-          ))}
+          {improvedList?.length !== 0 ? (
+            improvedList?.map((ele, i) => (
+              <li key={"improved" + i} className={styles.addLi}>
+                {"- " + ele}
+                <Tooltip title="Delete">
+                  <button
+                    className={styles.liRmBtn}
+                    onClick={() => onDeleteImprove(i)}
+                  >
+                    <MinusCircleOutlined />
+                  </button>
+                </Tooltip>
+              </li>
+            ))
+          ) : (
+            <li className={styles.emptyLi}>ยังไม่มีรายการ</li>
+          )}
         </ul>
         <Input.Group compact>
           <Input
@@ -493,29 +562,35 @@ function TeacherReportForm() {
           </Header>
           <div className={styles.topicLine} />
         </div>
-        <Collapse defaultActiveKey={["1"]} expandIconPosition="right">
-          {suggest?.map((ele, i) => (
-            <Panel header={ele.title} key={i} extra={genExtra(i)}>
-              <Header level={4}>ที่มา/เหตุผล</Header>
-              <ul>
-                {ele.reason.map((reason, j) => (
-                  <li key={"reason-table-" + i + "-" + j}>{reason}</li>
-                ))}
-              </ul>
-              <Header level={4}>การดำเนินการ</Header>
-              <ul>
-                {ele.solution.map((solution, j) => (
-                  <li key={"solution-table-" + i + "-" + j}>{solution}</li>
-                ))}
-              </ul>
-              <Header level={4}>การประเมิณผล</Header>
-              <ul>
-                {ele.evaluation.map((evaluation, j) => (
-                  <li key={"evaluation-table-" + i + "-" + j}>{evaluation}</li>
-                ))}
-              </ul>
-            </Panel>
-          ))}
+        <Collapse defaultActiveKey={[0]} expandIconPosition="right">
+          {suggest?.length !== 0 ? (
+            suggest.map((ele, i) => (
+              <Panel header={ele.title} key={i} extra={genExtra(i)}>
+                <Header level={4}>ที่มา/เหตุผล</Header>
+                <ul>
+                  {ele.cause.map((cause, j) => (
+                    <li key={"cause-table-" + i + "-" + j}>{cause}</li>
+                  ))}
+                </ul>
+                <Header level={4}>การดำเนินการ</Header>
+                <ul>
+                  {ele.work.map((work, j) => (
+                    <li key={"work-table-" + i + "-" + j}>{work}</li>
+                  ))}
+                </ul>
+                <Header level={4}>การประเมิณผล</Header>
+                <ul>
+                  {ele.evaluation.map((evaluation, j) => (
+                    <li key={"evaluation-table-" + i + "-" + j}>
+                      {evaluation}
+                    </li>
+                  ))}
+                </ul>
+              </Panel>
+            ))
+          ) : (
+            <li className={styles.emptyLi}>ยังไม่มีรายการ</li>
+          )}
         </Collapse>
         <MyBtn className={styles.addBtn} onClick={() => setAddVisible(true)}>
           Add
@@ -529,19 +604,23 @@ function TeacherReportForm() {
         <div className={styles.lastWrap}>
           <Header level={4}>วิธีการทวนสอบ</Header>
           <ul className={styles.addUl}>
-            {methodList.map((ele, i) => (
-              <li key={"method" + i} className={styles.addLi}>
-                {"- " + ele}
-                <Tooltip title="Delete">
-                  <button
-                    className={styles.liRmBtn}
-                    onClick={() => onDeleteMethod(i)}
-                  >
-                    <MinusCircleOutlined />
-                  </button>
-                </Tooltip>
-              </li>
-            ))}
+            {methodList?.length !== 0 ? (
+              methodList.map((ele, i) => (
+                <li key={"method" + i} className={styles.addLi}>
+                  {"- " + ele}
+                  <Tooltip title="Delete">
+                    <button
+                      className={styles.liRmBtn}
+                      onClick={() => onDeleteMethod(i)}
+                    >
+                      <MinusCircleOutlined />
+                    </button>
+                  </Tooltip>
+                </li>
+              ))
+            ) : (
+              <li className={styles.emptyLi}>ยังไม่มีรายการ</li>
+            )}
           </ul>
           <Input.Group compact>
             <Input
@@ -556,19 +635,23 @@ function TeacherReportForm() {
           </Input.Group>
           <Header level={4}>สรุปผล</Header>
           <ul className={styles.addUl}>
-            {sumList.map((ele, i) => (
-              <li key={"sum" + i} className={styles.addLi}>
-                {"- " + ele}
-                <Tooltip title="Delete">
-                  <button
-                    className={styles.liRmBtn}
-                    onClick={() => onDeleteSum(i)}
-                  >
-                    <MinusCircleOutlined />
-                  </button>
-                </Tooltip>
-              </li>
-            ))}
+            {sumList?.length !== 0 ? (
+              sumList.map((ele, i) => (
+                <li key={"sum" + i} className={styles.addLi}>
+                  {"- " + ele}
+                  <Tooltip title="Delete">
+                    <button
+                      className={styles.liRmBtn}
+                      onClick={() => onDeleteSum(i)}
+                    >
+                      <MinusCircleOutlined />
+                    </button>
+                  </Tooltip>
+                </li>
+              ))
+            ) : (
+              <li className={styles.emptyLi}>ยังไม่มีรายการ</li>
+            )}
           </ul>
           <Input.Group compact>
             <Input
@@ -586,7 +669,7 @@ function TeacherReportForm() {
           <MyBtn className={styles.addBtn} onClick={() => alert("PDF")}>
             Export PDF
           </MyBtn>
-          <MyBtn className={styles.addBtn} onClick={() => onSave()}>
+          <MyBtn className={styles.addBtn} onClick={() => onSave(false)}>
             Save
           </MyBtn>
         </div>
@@ -630,8 +713,8 @@ function TeacherReportForm() {
           </Form.Item>
           <Form.Item label="ที่มา/เหตุผล">
             <ul className={styles.addUl}>
-              {newSuggest?.reason.map((ele, i) => (
-                <li key={"reason" + i} className={styles.addLi}>
+              {newSuggest?.cause.map((ele, i) => (
+                <li key={"cause" + i} className={styles.addLi}>
                   {"- " + ele}
                   <Tooltip title="Delete">
                     <button
@@ -659,8 +742,8 @@ function TeacherReportForm() {
           </Form.Item>
           <Form.Item label="การดำเนินการ">
             <ul className={styles.addUl}>
-              {newSuggest?.solution.map((ele, i) => (
-                <li key={"solution" + i} className={styles.addLi}>
+              {newSuggest?.work.map((ele, i) => (
+                <li key={"work" + i} className={styles.addLi}>
                   {"- " + ele}
                   <Tooltip title="Delete">
                     <button
@@ -757,8 +840,8 @@ function TeacherReportForm() {
           </Form.Item>
           <Form.Item label="ที่มา/เหตุผล">
             <ul className={styles.addUl}>
-              {selectedData?.reason.map((ele, i) => (
-                <li key={"reason" + i} className={styles.addLi}>
+              {selectedData?.cause.map((ele, i) => (
+                <li key={"cause" + i} className={styles.addLi}>
                   {"- " + ele}
                   <Tooltip title="Delete">
                     <button
@@ -786,8 +869,8 @@ function TeacherReportForm() {
           </Form.Item>
           <Form.Item label="การดำเนินการ">
             <ul className={styles.addUl}>
-              {selectedData?.solution.map((ele, i) => (
-                <li key={"solution" + i} className={styles.addLi}>
+              {selectedData?.work.map((ele, i) => (
+                <li key={"work" + i} className={styles.addLi}>
                   {"- " + ele}
                   <Tooltip title="Delete">
                     <button
@@ -844,6 +927,10 @@ function TeacherReportForm() {
           </Form.Item>
         </Form>
       </Modal>
+      <Prompt
+        when={dirty}
+        message="ระบบยังไม่ได้บันทึกการเปลี่ยนแปลง คุณต้องการออกจากหน้านี้หรือไม่?"
+      />
     </div>
   );
 }

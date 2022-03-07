@@ -13,6 +13,7 @@ import {
 import googleClassroomLogo from "../../assets/img/logo_google_classroom.svg"
 import { useState } from "react";
 import { useGoogleClassroom } from "./hooks/useGoogleClassroom";
+import { useOverview } from "./hooks/useOverview";
 
 const mockCourse =
 {
@@ -53,7 +54,8 @@ const GoogleClassroomCard = ({ name, code, selected, hasAction, handleChangeGCla
           <Header level={1}>{name}</Header><LinkOutlined className={styles.linkicon} />
         </div>
         <Body level={2} >{code}</Body>
-      </div> :
+      </div>
+      :
       <div className={styles.selectedCard} >
         <div className={styles.flexrowspace}>
           <div>
@@ -90,8 +92,8 @@ const GoogleClassroomCard = ({ name, code, selected, hasAction, handleChangeGCla
 }
 
 export const Overview = () => {
-  //let { sectionId } = useParams();
-  const [course, setCourse] = useState(mockCourse);
+
+  const { courseData } = useOverview()
   const [
     allGClass,
     selectedGClass,
@@ -107,10 +109,23 @@ export const Overview = () => {
   ] = useGoogleClassroom()
 
 
+  const getThPrefix = {
+    PROF_DR: "ศ.ดร.",
+    PROF: "ศ.",
+    ASSOC_PROF_DR: "รศ.ดร.",
+    ASSOC_PROF: "รศ.",
+    ASST_PROF_DR: "ผศ.ดร.",
+    ASST_PROF: "ผศ.",
+    DR: "ดร.",
+    INSTRUCTOR: "อ.",
+  };
+
+
+
   return (
     <div className={styles.overview}>
       <Helmet>
-        <title>{course.course_id} Overview - OBED</title>
+        <title>Overview - OBED</title>
       </Helmet>
       <div className={styles.head}>
         <Header level={1}>Overview</Header>
@@ -119,71 +134,77 @@ export const Overview = () => {
       <div className={styles.details}>
         <div className={styles.flexrow}>
           <Header level={2}>Class Information</Header>
-          {/* <Typography.Link
-            style={{ fontSize: "20px" }}
-          >
-            <EditOutlined />
-          </Typography.Link> */}
         </div>
         <table className={styles.table}>
-          <tr>
-            <td style={{ width: "20%", minWidth: "200px" }}>
-              <Header level={5}>Course Id</Header>
-            </td>
-            <td><Body level={2}>{course.course_id}</Body></td>
-          </tr>
-          <tr>
-            <td><Header level={5}>Section</Header></td>
-            <td><Body level={2}>{course.section}</Body></td>
-          </tr>
-          <tr>
-            <td><Header level={5}>Course Name (EN)</Header></td>
-            <td><Body level={2}>{course.course_name_en}</Body></td>
-          </tr>
-          <tr>
-            <td><Header level={5}>Course Name (TH)</Header></td>
-            <td><Body level={2}>{course.course_name_th}</Body></td>
-          </tr>
-          <tr className={styles.nestTableTitle}>
-            <td><Header level={5}>Instructor</Header></td>
-            <td>
-              {course.teacher.map((teacher) =>
-                <tr><Body level={2}>{teacher.prefix}{teacher.firstname}{" "}{teacher.lastname}</Body></tr>
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td><Header level={5}>Pre-Requisite</Header></td>
-            <td><Body level={2}>{course.prerequisite_id}{" "}{course.prerequisite_name}</Body></td>
-          </tr>
-          <tr className={styles.nestTableTitle}>
-            <td><Header level={5}>Google Classroom</Header></td>
-            <td style={{ verticalAlign: "bottom" }}>
-              {linkedGClass === null ?
-                <Button className={styles.googleClassroomBtn} onClick={() => handleAddGClass()}>
-                  <img
-                    src={googleClassroomLogo}
-                    alt="google classroom"
-                    className={styles.logo}
-                  />
-                  Import Course from Google Classroom
-                </Button> :
-                <div>
-                  <div className={styles.flexrow}>
-                    <GoogleClassroomCard
-                      name={linkedGClass.googleClassroom_name}
-                      code={linkedGClass.googleClassroom_code}
-                      key={linkedGClass.id}
-                      selected={true}
-                      hasAction={true}
-                      handleChangeGClass={handleChangeGClass}
-                      handleDeleteGClass={handleDeleteGClass}
-                    />
+          <tbody>
+            <tr>
+              <td style={{ width: "20%", minWidth: "200px" }}>
+                <Header level={5}>Course Id</Header>
+              </td>
+              <td><Body level={2}>{courseData?.course_number || ""}</Body></td>
+            </tr>
+            <tr>
+              <td><Header level={5}>Section</Header></td>
+              <td><Body level={2}>{courseData?.section_number || ""}</Body></td>
+            </tr>
+            <tr>
+              <td><Header level={5}>Course Name (EN)</Header></td>
+              <td><Body level={2}>{courseData?.course_name_en || ""}</Body></td>
+            </tr>
+            <tr>
+              <td><Header level={5}>Course Name (TH)</Header></td>
+              <td><Body level={2}>{courseData?.course_name_th || ""}</Body></td>
+            </tr>
+            <tr className={styles.nestTableTitle}>
+              <td><Header level={5}>Instructor</Header></td>
+              <td>
+                {courseData?.teachers.map((teacher, i) =>
+                  <div key={teacher.firstname + i}>
+                    <Body level={2}>{getThPrefix[teacher.prefix]}{teacher.firstname}{" "}{teacher.lastname}</Body>
                   </div>
-                </div>
-              }
-            </td>
-          </tr>
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td><Header level={5}>Pre-Requisite</Header></td>
+              <td>
+                <Body level={2}>{
+                  courseData?.pre_course.course_id === null ?
+                    "None" :
+                    courseData?.pre_course.course_id + " " + courseData?.pre_course.course_name_en
+                }
+                </Body>
+              </td>
+            </tr>
+            <tr className={styles.nestTableTitle}>
+              <td><Header level={5}>Google Classroom</Header></td>
+              <td style={{ verticalAlign: "bottom" }}>
+                {linkedGClass === null ?
+                  <Button className={styles.googleClassroomBtn} onClick={() => handleAddGClass()}>
+                    <img
+                      src={googleClassroomLogo}
+                      alt="google classroom"
+                      className={styles.logo}
+                    />
+                    Import Course from Google Classroom
+                  </Button> :
+                  <div>
+                    <div className={styles.flexrow}>
+                      <GoogleClassroomCard
+                        name={linkedGClass.googleClassroom_name}
+                        code={linkedGClass.googleClassroom_code}
+                        key={linkedGClass.id}
+                        selected={true}
+                        hasAction={true}
+                        handleChangeGClass={handleChangeGClass}
+                        handleDeleteGClass={handleDeleteGClass}
+                      />
+                    </div>
+                  </div>
+                }
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
       <Modal
@@ -195,7 +216,7 @@ export const Overview = () => {
       >
         <div className={styles.cardList}>
           {allGClass.map((course) =>
-            <div onClick={() => handleCardClick(course.id)}>
+            <div onClick={() => handleCardClick(course.id)} key={course.id}>
               <GoogleClassroomCard
                 name={course.googleClassroom_name}
                 code={course.googleClassroom_code}

@@ -7,8 +7,8 @@ import {
 } from "../../components";
 
 export const Activity = () => {
-    let { sectionId } = useParams();
-  
+    // let { sectionId } = useParams();
+
     return (
         <div className={styles.activity}>
             <Helmet>
@@ -21,10 +21,7 @@ export const Activity = () => {
                 <TabPane tab="Active" key="1">
                     <ActivityList />
                 </TabPane>
-                <TabPane tab="Archived" key="2">
-                    <ActivityList archrive />
-                </TabPane>
-                <TabPane tab="Google Classsroom" key="3">
+                <TabPane tab="Google Classsroom" key="2">
                     <ClassroomTab />
                 </TabPane>
             </Tabs>

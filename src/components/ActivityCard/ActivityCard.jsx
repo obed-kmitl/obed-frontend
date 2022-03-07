@@ -1,25 +1,37 @@
 import styles from "./ActivityCard.module.scss"
-import { Body, Header ,Button} from ".."
-import { Tag, Typography, Dropdown, Menu } from "antd"
+import { Body, Header, Button } from ".."
+import { Tag, Popconfirm } from "antd"
 import {
-    MoreOutlined
+    DeleteOutlined
 } from "@ant-design/icons";
 import googleClassroomLogo from "../../assets/img/logo_google_classroom.svg"
+import { useState, useEffect } from "react";
+import httpClient from '../../utils/httpClient';
 
-const menu = (
-    <Menu>
-        <Menu.Item onClick={() => console.log("edit")}>
-            Edit
-        </Menu.Item>
-        <Menu.Item danger onClick={() => console.log("archrive")}>
-            Archrive
-        </Menu.Item>
-    </Menu>
-);
+function Capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 
+export const ActivityCard = ({ google, activity, index, deleteActivity }) => {
+    const [score, setScore] = useState(0)
 
+    useEffect(async () => {
+        return await httpClient
+            .get(`/activity/get/${activity.activity_id}`)
+            .then((response) => {
+                let total = 0;
+                response.data.data.subActivities?.forEach(element => {
+                    total += element.max_score
+                });
+                setScore(total)
+                return Promise.resolve(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error)
+            });
 
-export const ActivityCard = ({ google, activity, index }) => {
+    }, [])
+
 
     return (
         <div className={styles.card}>
@@ -40,33 +52,23 @@ export const ActivityCard = ({ google, activity, index }) => {
                         <Header level={3} className={styles.title}>{activity.title}</Header>
                         {!google &&
                             <>
-                                <Tag className={styles.tag} color="orange">{activity.type}</Tag>
-                                {/* <Tag className={styles.tag} color="green" >{activity.sub_activity}</Tag> */}
+                                <Tag className={styles.tag} color="orange">{Capitalize(activity?.type)}</Tag>
+
                             </>
                         }
                     </div>
-                    <Body level={2} className={styles.description}>{activity.description}</Body>
+                    <Body level={2} className={styles.description}>{activity.detail}</Body>
                 </div>
                 <div className={styles.score}>
                     {google ?
                         <Button>Add to Activity</Button>
                         :
-                        <Body level={1}>{activity.total_score}pts</Body>
+                        <Body level={1}>{score}pts</Body>
                     }
-                    <Dropdown overlay={menu} placement="bottomLeft">
-                        <Typography
-                            style={{
-                                marginLeft: 12,
-                                fontSize: "20px",
-                                color: "#1d1d1d"
-                            }}
-                        >
-                            <MoreOutlined style={{ margin: "1rem 0" }} />
-                        </Typography>
-                    </Dropdown>
-
                 </div>
-
+                <Popconfirm title="Delete this Activity?" onConfirm={(e) => { deleteActivity(activity.activity_id); e.stopPropagation(); }} >
+                    <DeleteOutlined style={{ color: "#C73535", fontSize: "18px" }} onClick={(e) => { e.stopPropagation(); }} />
+                </Popconfirm>
             </div>
         </div >
     )

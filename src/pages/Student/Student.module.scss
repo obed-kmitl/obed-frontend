@@ -28,7 +28,7 @@
   .listWrap {
     display: flex;
     flex-flow: column;
-    height: 400px;
+    height: 300px;
   }
 
   .addList {
@@ -68,4 +68,9 @@
       }
     }
   }
+}
+
+.uploadWarning {
+  color: red;
+  font-size: 14px;
 }

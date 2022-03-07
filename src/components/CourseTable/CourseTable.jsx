@@ -56,7 +56,8 @@ export const CourseTable = ({ selectedCur }) => {
     });
   }
 
-  function search(keyword) {
+  function search(kw) {
+    let keyword = kw.trim();
     if (keyword !== "") {
       setIsSearch(true);
       let results = fetchCourse.filter((course) => {
@@ -612,7 +613,7 @@ export const CourseTable = ({ selectedCur }) => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="PLOs" name="relative_standards" required>
+          <Form.Item label="PLOs" name="relative_standards">
             <Select
               mode="multiple"
               placeholder="PLO"

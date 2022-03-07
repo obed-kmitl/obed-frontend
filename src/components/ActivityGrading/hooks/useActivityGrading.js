@@ -1,452 +1,36 @@
-import { number } from "prop-types";
 import { useState, useEffect } from "react";
-
-const students_score = [
-    {
-        id: 61010001,
-        prefix: "นางสาว",
-        firstname: "กมลชนก",
-        lastname: "ศรีไทย",
-        email: "61010001@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: 1.5
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: 2
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: 0.5
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: 2
-
-            }
-        ]
-    },
-    {
-        id: 61010002,
-        prefix: "นาย",
-        firstname: "ธนวัฒน์",
-        lastname: "สมมุติ",
-        email: "61010002@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: 1.5
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: 2
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: 2
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: 2
-
-            }
-        ]
-    },
-    {
-        id: 61010003,
-        prefix: "นาย",
-        firstname: "สมปอง",
-        lastname: "สุขสบาย",
-        email: "61010003@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: 1.5
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: 2
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: 0.5
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: 0
-
-            }
-        ]
-    },
-    {
-        id: 61010004,
-        prefix: "นาย",
-        firstname: "สมปราชญ์",
-        lastname: "สดใส",
-        email: "61010004@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: 1.5
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: 2
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: 2
-
-            }
-        ]
-    },
-    {
-        id: 61010005,
-        prefix: "นาย",
-        firstname: "สมหมาย",
-        lastname: "สายไทย",
-        email: "61010005@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: 1
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: 2
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: 0.5
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: null
-
-            }
-        ]
-    },
-    {
-        id: 61010006,
-        prefix: "นาย",
-        firstname: "สมหมาย",
-        lastname: "รักไทย",
-        email: "61010006@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: 1.5
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: 2
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: 0.5
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: 1
-
-            }
-        ]
-    },
-    {
-        id: 61010007,
-        prefix: "นาย",
-        firstname: "สมศักดิ์",
-        lastname: "ใฝ่รู้",
-        email: "61010007@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: 1.5
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: 2
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: 2
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: 1.5
-
-            }
-        ]
-    },
-    {
-        id: 61010008,
-        prefix: "นาย",
-        firstname: "สมชาย",
-        lastname: "ใจดี",
-        email: "61010008@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: null
-
-            }
-        ]
-    },
-    {
-        id: 61010009,
-        prefix: "นาย",
-        firstname: "สมพงศ์",
-        lastname: "ชัยชนะ",
-        email: "61010009@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: null
-
-            }
-        ]
-    },
-    {
-        id: 61010010,
-        prefix: "นางสาว",
-        firstname: "สมสง่า",
-        lastname: "ราศี",
-        email: "61010010@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: null
-
-            }
-        ]
-    },
-    {
-        id: 61010011,
-        prefix: "นางสาว",
-        firstname: "สมหญิง",
-        lastname: "จริงใจ",
-        email: "61010011@kmitl.ac.th",
-        score: [
-            {
-                sub_activity_id: 1,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 2,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 3,
-                max_score: 2,
-                obtained_score: null
-
-            },
-            {
-                sub_activity_id: 4,
-                max_score: 2,
-                obtained_score: null
-
-            }
-        ]
-    },
-];
-
-const mockSubActivity = [
-    {
-        id: 1,
-        title: "ข้อ 1",
-        detail: "จงแปลงเลขฐาน 2 จาก 1010 1111 0010 เป็นเลขฐาน 10 และเลขฐาน 16",
-        clo: [1, 2],
-        point: 2
-    },
-    {
-        id: 2,
-        title: "ข้อ 2",
-        detail: "จงแปลงเลขฐาน 2 จาก 1000 1101 0110 เป็นเลขฐาน 10 และเลขฐาน 16",
-        clo: [1, 2],
-        point: 2
-    },
-    {
-        id: 3,
-        title: "ข้อ 3",
-        detail: "จงแปลงเลขฐาน 10 จาก 178 เป็นเลขฐาน 2 และเลขฐาน 16",
-        clo: [1, 3],
-        point: 2
-    },
-    {
-        id: 4,
-        title: "ข้อ 4",
-        detail: "จงแปลงเลขฐาน 16 จาก 57FA เป็นเลขฐาน 10 และเลขฐาน 2",
-        clo: [2, 3],
-        point: 2
-    }
-]
-
-const rubrics = [
-    {
-        point: 0,
-        desc: "ไม่ส่งงานในเวลาที่กำหนด",
-    },
-    {
-        point: 0.5,
-        desc: "ไม่ผ่านตามมาตรฐาน",
-    },
-    {
-        point: 1,
-        desc: "ผ่านตามมาตรฐานที่กำหนด",
-    },
-    {
-        point: 1.5,
-        desc: "ผ่านตามมาตรฐานที่กำหนดและถูกต้องสมบูรณ์",
-    },
-    {
-        point: 2,
-        desc: "ผ่านตามมาตรฐานที่กำหนดและถูกต้องสมบูรณ์ และมีความคิดสร้างสรรค์ Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-    },
-];
-
+import httpClient from "../../../utils/httpClient";
+import { useParams } from "react-router-dom";
 
 export const useActivityGrading = () => {
-    const [students, setStudents] = useState([])
+    let { activityId, sectionId } = useParams()
+
+    const [stdWithScore, setStdWithScore] = useState([])
     const [subActivity, setSubActivity] = useState()
     const [editingScore, setEditingScore] = useState([])
-    const [scoreValue,setScoreValue] = useState()
+    const [scoreValue, setScoreValue] = useState()
+    const [importData, setImportData] = useState()
+    const [importModalVisible, setImportModalVisible] = useState(false)
 
-    const handleSelectRubric = (point, studentId, sub_activity_id) => {
-        let updatedScoreStudent = [...students]
-        const studentIndex = updatedScoreStudent.findIndex(
-            (item) => item.id === studentId
-        );
-        const scoreIndex = updatedScoreStudent[studentIndex].score.findIndex(
-            (item) => item.sub_activity_id === sub_activity_id
-        );
-        updatedScoreStudent[studentIndex].score[scoreIndex].obtained_score = point
-        const updateStatusScore = updateStatus(updatedScoreStudent)
-        setStudents(updateStatusScore)
+    // const handleSelectRubric = (point, studentId, sub_activity_id) => {
+    //     // let updatedScoreStudent = [...students]
+    //     // const studentIndex = updatedScoreStudent.findIndex(
+    //     //     (item) => item.id === studentId
+    //     // );
+    //     // const scoreIndex = updatedScoreStudent[studentIndex].score.findIndex(
+    //     //     (item) => item.sub_activity_id === sub_activity_id
+    //     // );
+    //     // updatedScoreStudent[studentIndex].score[scoreIndex].obtained_score = point
+    //     // const updateStatusScore = updateStatus(updatedScoreStudent)
+    //     // setStudents(updateStatusScore)
 
-    }
+    // }
 
-    const updateStatus = (data) =>{
+    const updateStatus = (data) => {
         let retriveStudent = data
         const addedStatusStudent = []
         retriveStudent.forEach(student => {
-            const allScore = student.score.map((e) => (e.obtained_score))
+            const allScore = student.scores?.map((e) => (e.obtained_score)) || []
             const status = () => {
                 if (!allScore.includes(null)) {
                     return "Finished"
@@ -459,41 +43,128 @@ export const useActivityGrading = () => {
                 }
             }
             addedStatusStudent.push({
-                id: student.id,
-                prefix: student.prefix,
-                firstname: student.firstname,
-                lastname: student.lastname,
-                email: student.email,
-                score: student.score,
+                ...student,
                 score_status: status(),
             })
         });
         return addedStatusStudent
     }
 
-    const onScoreChange = (value) =>{
-       setScoreValue(value)
+    const onScoreChange = (value) => {
+        setScoreValue(value)
     }
 
-    const saveScore = () => {
-        handleSelectRubric(scoreValue, editingScore[0], editingScore[1])
-        setScoreValue(null)
-        setEditingScore([])
+    const saveScore = async (studentId, sub_activity_id) => {
+
+        let updatedScoreStudent = [...stdWithScore]
+        const studentIndex = updatedScoreStudent.findIndex(
+            (item) => item.student_id === studentId
+        );
+        const scoreIndex = updatedScoreStudent[studentIndex]?.scores.findIndex(
+            (item) => item.sub_activity_id === sub_activity_id
+        );
+        updatedScoreStudent[studentIndex].scores[scoreIndex].obtained_score = scoreValue
+
+        return await httpClient
+            .post(`/assessment/saveIndividual`, {
+                individualAssessments: updatedScoreStudent
+            })
+            .then(() => {
+                const updateStatusScore = updateStatus(updatedScoreStudent)
+                setStdWithScore(updateStatusScore)
+                setEditingScore([])
+            })
+            .catch((error) => {
+                console.log(error)
+            });
     }
 
+    const fetchStudentScore = async () => {
+        return await httpClient
+            .get(`/assessment/getAllIndividualByActivity/${sectionId}/${activityId}`)
+            .then((response) => {
+                console.log(updateStatus(response.data.data))
+                setStdWithScore(updateStatus(response.data.data))
+
+            })
+            .catch((error) => {
+                console.log(error)
+                return Promise.reject(error);
+            });
+    }
+
+    async function fetchSubActivity() {
+        return await httpClient
+            .get(`/activity/get/${activityId}`)
+            .then((response) => {
+                setSubActivity(response.data.data.subActivities)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+    }
+
+    function handleImportScore(data) {
+        setImportData(data)
+        console.log(data)
+    }
+
+    async function confirmImport() {
+        const nowData = stdWithScore.map(item => ({ ...item }))
+        const updateStdWithScore = importData.map((std) => {
+            let student = nowData.find(s => s.student_number === std.student_number)
+            student.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
+                if(std[`ข้อ${i + 1}(${item.max_score})`] === 0){
+                    item.obtained_score = 0
+                    return;
+                }
+                if(!std[`ข้อ${i + 1}(${item.max_score})`]){
+                    item.obtained_score = null
+                    return;
+                }
+                const trimedScore = parseFloat(std[`ข้อ${i + 1}(${item.max_score})`].toString().trim())
+                if (trimedScore <= item.max_score) {
+                    item.obtained_score = trimedScore
+                    return;
+                }
+                item.obtained_score = null
+            })
+            return student
+        })
+        return await httpClient
+            .post(`/assessment/saveIndividual`, {
+                individualAssessments: updateStdWithScore
+            })
+            .then(() => {
+                const updateStatusScore = updateStatus(updateStdWithScore)
+                setStdWithScore(updateStatusScore)
+                setImportModalVisible(false)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+    }
+
+    //fetch initial data
     useEffect(() => {
-        const addedStatusStudent = updateStatus(students_score)
-        setStudents(addedStatusStudent)
-
-    }, [])
-    useEffect(() => {
-        setSubActivity(mockSubActivity)
+        fetchStudentScore()
+        fetchSubActivity()
     }, [])
 
-    // useEffect(() => {
-    //     console.log(students);
-    // }, [students])
-
-
-    return { students, subActivity, rubrics, handleSelectRubric, editingScore, setEditingScore, onScoreChange, saveScore }
+    return {
+        /*students,*/
+        stdWithScore,
+        subActivity,
+        //rubrics,
+        // handleSelectRubric,
+        editingScore,
+        setEditingScore,
+        onScoreChange,
+        saveScore,
+        setScoreValue,
+        handleImportScore,
+        importModalVisible,
+        setImportModalVisible,
+        confirmImport
+    }
 }

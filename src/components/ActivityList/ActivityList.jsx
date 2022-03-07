@@ -4,15 +4,15 @@ import { ActivityCard } from '..'
 // import googleClassroomLogo from "../../assets/img/logo_google_classroom.svg"
 import { useActivity } from './hooks/useActivity'
 import { Link } from 'react-router-dom'
-import { Modal, Form, InputNumber } from 'antd';
+import { Modal, Form } from 'antd';
 import TextArea from 'antd/lib/input/TextArea'
 
 
-export const ActivityList = ({ archrive, google }) => {
+export const ActivityList = ({ google }) => {
 
     const {
-        catagory, filteredActivity, filteredArchriveActivity, changeGroup, changeCatagory,
-        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel
+        category, filteredActivity, changeGroup,
+        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity,
     } = useActivity()
 
     return (
@@ -30,43 +30,19 @@ export const ActivityList = ({ archrive, google }) => {
                 //     :
                 <div className={styles.filter}>
                     <Body level={1}>Group:</Body>
-                    <Select width={150} defaultValue="All" onChange={(value) => changeGroup(value, archrive)}>
+                    <Select width={150} defaultValue="All" onChange={(value) => changeGroup(value)}>
                         <Option value="All">All</Option>
                         <Option value="Individual">Individual</Option>
                         <Option value="Group">Group</Option>
                     </Select>
-                    {/* <Body level={1}>Type:</Body>
-                    <Select width={150} defaultValue="All" onChange={(value) => changeType(value, archrive)}>
-                        <Option value="All">All</Option>
-                        <Option value="Single">Single</Option>
-                        <Option value="Multiple">Multiple</Option>
-                    </Select> */}
-                    {archrive ?
-                        <>
-                            <Body level={1}>Catagory:</Body>
-                            <Select width={150} defaultValue="All" onChange={(value) => changeCatagory(value)}>
-                                <Option value="All">All</Option>
-                                {catagory.map((cat) =>
-                                    <Option value={cat.id}>{cat.catagory}</Option>
-                                )}
-                            </Select>
-                        </>
-                        :
-                        <div>
+               
+                        
                             <Button onClick={() => handleAddActivity()} >New</Button>
-                        </div>
-                    }
+                        
+                   
                 </div>
             }
-            {archrive ?
-                <div style={{ padding: "1rem 0 0" }}>
-                    {
-                        filteredArchriveActivity?.map((activity, index) =>
-                            <ActivityCard activity={activity} key={activity.id} index={index + 1} />
-                        )
-                    }
-                </div>
-                :
+            {category.length>0&&
                 // google ?
                 //     <div style={{ padding: "1rem 0 0" }}>
                 //         {
@@ -78,21 +54,22 @@ export const ActivityList = ({ archrive, google }) => {
                 //     :
                 <Collapse
                     ghost
-                    defaultActiveKey={catagory.map((cat) => cat.id)}
+                    defaultActiveKey={category.map((cat) => cat.category_id)}
                 >
-                    {catagory.map((cat) =>
+                    {category.map((cat) =>
                         <Panel
                             header={
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                    <Header level={3}>{cat.catagory}</Header>
-                                    <Header style={{ color: "#F7941D" }} level={4}>{cat.weight}%</Header>
+                                    <Header level={3}>{cat.title}</Header>
+                                    {cat.title !== "Unassigned" &&<Header style={{ color: "#F7941D" }} level={4}>{cat.weight}%</Header>}
                                 </div>
                             }
-                            key={cat.id}
+                            key={cat.category_id}
+                            
                         >
-                            {filteredActivity?.filter((atv) => atv.catagory_id === cat.id).map((activity, index) =>
-                                <Link to={`${window.location.pathname.split("/")[3]}/${activity.id}`} className={styles.link}>
-                                    <ActivityCard activity={activity} key={activity.id} index={index + 1} />
+                            {filteredActivity?.filter((atv) => atv.category_id === cat.category_id).map((activity, index) =>
+                                <Link to={`${window.location.pathname.split("/")[3]}/${activity.activity_id}`} className={styles.link}>
+                                    <ActivityCard activity={activity} key={activity.activity_id} index={index + 1} deleteActivity={deleteActivity} />
                                 </Link>
                             )}
                         </Panel>
@@ -132,7 +109,7 @@ export const ActivityList = ({ archrive, google }) => {
                             { required: true, message: "Please input Activity Name!" },
                         ]}
                     >
-                        <Input placeholder="Activity Name" />
+                        <Input placeholder="Activity Name" maxLength={50} />
                     </Form.Item>
                     <Form.Item
                         label="Description"
@@ -141,43 +118,34 @@ export const ActivityList = ({ archrive, google }) => {
                             { required: true, message: "Please input Description!" },
                         ]}
                     >
-                        <TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 3 }}/>
+                        <TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 3 }} showCount maxLength={400} />
                     </Form.Item>
-                    <div style={{ display: 'flex', justifyContent: "space-between", }}>
-                        <Form.Item
-                            label="Group Type"
-                            name="group"
-                            rules={[
-                                { required: true, message: "Please Select Group Type" },
-                            ]}
-                        >
-                            <Select width={200} defaultValue="None">
-                                <Option value="Individual">Individual</Option>
-                                <Option value="Group">Group</Option>
-                            </Select>
-                        </Form.Item>
-                        <Form.Item
-                            label="Catagory"
-                            name="catagory_id"
-                            rules={[
-                                { required: true, message: "Please Select Catagory" },
-                            ]}
-                        >
-                            <Select width={200} defaultValue="None">
-                                {catagory.map((cat) =>
-                                    <Option value={cat.id}>{cat.catagory}</Option>
-                                )}
-                            </Select>
-                        </Form.Item>
-                    </div>
                     <Form.Item
-                        label="Point"
-                        name="point"
+                        label="Group Type"
+                        name="group"
+                        extra="Once an activity has been created, Group type cannot be changed."
+
                         rules={[
-                            { required: true, message: "Please input total point!" },
+                            { required: true, message: "Please Select Group Type" },
                         ]}
                     >
-                        <InputNumber min={0} />
+                        <Select defaultValue="None">
+                            <Option value="Individual">Individual</Option>
+                            <Option value="Group">Group</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        label="Category"
+                        name="category_id"
+                        rules={[
+                            { required: true, message: "Please Select category" },
+                        ]}
+                    >
+                        <Select defaultValue="None">
+                            {category.map((cat) =>
+                                <Option value={cat.category_id || 0}>{cat.title}</Option> //Unassigned Activity => id 0
+                            )}
+                        </Select>
                     </Form.Item>
                 </Form>
             </Modal>

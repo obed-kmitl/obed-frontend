@@ -50,6 +50,7 @@ export const useTeacher = () => {
             lastname: user.lastname,
             username: user.username,
             email: user.email,
+            role: user.role,
           }))
         );
         return Promise.resolve(response.data.data);
@@ -68,6 +69,7 @@ export const useTeacher = () => {
         prefix: getEnPrefix[values.prefix],
         firstname: values.firstname,
         lastname: values.lastname,
+        password: values.password,
       })
       .then((response) => {
         return Promise.resolve(response.data.data);
@@ -98,6 +100,7 @@ export const useTeacher = () => {
               prefix: getThPrefix[response.data.data.prefix],
               firstname: response.data.data.firstname,
               lastname: response.data.data.lastname,
+              role: response.data.data.role,
             };
           }
           return value;
@@ -123,6 +126,20 @@ export const useTeacher = () => {
       });
   }
 
+  async function forceUpdatePassword(values) {
+    return await httpClient
+      .put(`/auth/forceUpdatePassword/${values.id}`, {
+        password: values.password,
+      })
+      .then((response) => {
+        return Promise.resolve(response.data.data);
+      })
+      .catch((error) => {
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
+      });
+  }
+
   useEffect(() => {
     fetchAllUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,6 +152,7 @@ export const useTeacher = () => {
     register,
     editTeacher,
     deleteTeacher,
+    forceUpdatePassword,
     message,
     setMessage,
   ];

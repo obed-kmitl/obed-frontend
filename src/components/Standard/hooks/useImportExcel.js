@@ -48,7 +48,7 @@ export const useImportExcel = (setStandard) => {
             })
         });
         setImportStandard(mainStandard)
-        console.log(importStandard)
+        //console.log(importStandard)
 
         //console.log(mainStandard, subStandards)
     }

@@ -1,5 +1,5 @@
 import styles from "./AdminReport.module.scss";
-import { Divider, Space } from "antd";
+import { Divider } from "antd";
 import { Helmet } from "react-helmet";
 import { Header } from "../../components";
 import { Link } from "react-router-dom";

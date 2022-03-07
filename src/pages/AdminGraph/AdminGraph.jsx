@@ -1,7 +1,7 @@
 import styles from "./AdminGraph.module.scss";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
-import { Divider, Form, Select } from "antd";
+import { Divider, Select } from "antd";
 import { Header, Option } from "../../components";
 import { Link } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";

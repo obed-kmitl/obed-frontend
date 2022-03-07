@@ -12,61 +12,12 @@ import {
   notification,
   Tag,
   Space,
+  InputNumber,
 } from "antd";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import { useState } from "react";
-
-const mock = [
-  {
-    id: 1,
-    title: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 10 ทั้งคิดและไม่คิดเครื่องหมาย",
-    activity: ["Homework 1 ข้อ 1", "Homework 1 ข้อ 2"],
-    plo: [1.1, 1.2],
-    tqf: [1.1, 1.2, 1.3, 2.1, 6.1],
-  },
-  {
-    id: 2,
-    title: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 16 ทั้งคิดและไม่คิดเครื่องหมาย",
-    activity: ["Homework 1 ข้อ 3", "Homework 1 ข้อ 4"],
-    plo: [1.1, 1.2, 1.5],
-    tqf: [1.1, 1.2, 1.3, 2.1, 6.1],
-  },
-];
-
-const mockPLO = [
-  {
-    id: 1.1,
-    desc: "1.1",
-  },
-  {
-    id: 1.2,
-    desc: "1.2",
-  },
-  {
-    id: 1.3,
-    desc: "1.3",
-  },
-  {
-    id: 1.4,
-    desc: "2.1",
-  },
-  {
-    id: 1.5,
-    desc: "2.2",
-  },
-  {
-    id: 1.6,
-    desc: "2.3",
-  },
-  {
-    id: 1.7,
-    desc: "2.4",
-  },
-];
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { useState, useEffect } from "react";
+import httpClient from "../../utils/httpClient";
+import { useParams } from "react-router-dom";
 
 export const LearningOutcome = () => {
   const { Option } = Select;
@@ -74,10 +25,35 @@ export const LearningOutcome = () => {
   const [page, setPage] = useState(1);
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
+  const [clo, setClo] = useState();
+  const [plo, setPlo] = useState();
   const [addVisible, setAddVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  let { sectionId } = useParams();
+
+  async function fetchClo() {
+    return await httpClient
+      .get(`/clo/getAllBySection/${sectionId}`)
+      .then((res) => {
+        setClo(res.data.data);
+      })
+      .catch((error) => {
+        openNotificationWithIcon("error", "Cannot fetch CLO", error);
+      });
+  }
+
+  async function fetchPlo() {
+    return await httpClient
+      .get(`/mapStandard/getRelativeStandardBySection/${sectionId}`)
+      .then((res) => {
+        setPlo(res.data.data);
+      })
+      .catch((error) => {
+        openNotificationWithIcon("error", "Cannot fetch PLO", error);
+      });
+  }
 
   function openNotificationWithIcon(type, message, desc) {
     notification[type]({
@@ -87,33 +63,62 @@ export const LearningOutcome = () => {
     });
   }
 
-  function handleSubmit(values) {
-    console.log("Recieved values of form: ", values);
+  async function handleAdd(values) {
+    // console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
+    return await httpClient
+      .post(`/clo/create`, {
+        section_id: parseInt(sectionId),
+        detail: values.detail,
+        order_number: values.order_number.toString(),
+        relative_standards: values.relative_sub_standards || [],
+      })
+      .then((res) => {
+        setClo([...clo, res.data.data]);
+        setAddVisible(false);
+        openNotificationWithIcon(
+          "success",
+          "CLO created",
+          "CLO " + res?.data?.data?.order_number + " has been created."
+        );
+      })
+      .catch((error) => {
+        openNotificationWithIcon("error", "Cannot remove CLO", error);
+      })
+      .finally(() => {
+        setConfirmLoading(false);
+      });
   }
 
-  function handleEdit(values) {
-    console.log("Recieved values of form: ", values);
+  async function handleEdit(values) {
+    //console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
-    // editTeacher(values)
-    //   .then(() => {
-    //     openNotificationWithIcon(
-    //       "success",
-    //       "Teacher edited",
-    //       "User " + values.username + " has been saved."
-    //     );
-    //     setVisible(false);
-    //     setConfirmLoading(false);
-    //     form.resetFields();
-    //   })
-    //   .catch(() => {
-    //     setConfirmLoading(false);
-    //     openNotificationWithIcon(
-    //       "error",
-    //       "Cannot edit user",
-    //       "Unexpected error occured, Please try again."
-    //     );
-    //   });
+    return await httpClient
+      .put(`/clo/update/${values.clo_id}`, {
+        detail: values.detail,
+        order_number: values.order_number.toString(),
+        relative_standards: values.relative_sub_standards,
+      })
+      .then((res) => {
+        const index = clo.findIndex((e) => e.clo_id === values.clo_id);
+        let editClo = [...clo];
+        editClo[index] = res.data.data;
+        setClo(editClo);
+        setEditVisible(false);
+        openNotificationWithIcon(
+          "success",
+          "CLO saved",
+          "Changes made to CLO " +
+            res?.data?.data?.order_number +
+            " has been saved."
+        );
+      })
+      .catch((error) => {
+        openNotificationWithIcon("error", "Cannot edit CLO", error);
+      })
+      .finally(() => {
+        setConfirmLoading(false);
+      });
   }
 
   function handleCancel() {
@@ -132,9 +137,27 @@ export const LearningOutcome = () => {
     console.log("Failed:", errorInfo);
   }
 
-  function deleteLO(values) {
-    alert(JSON.stringify(values));
+  async function deleteLO(values) {
+    return await httpClient
+      .delete(`/clo/remove/${values.clo_id}`)
+      .then((res) => {
+        setClo(clo.filter((e) => e.clo_id !== values.clo_id));
+        openNotificationWithIcon(
+          "success",
+          "CLO deleted",
+          "CLO " + res?.data?.data?.order_number + " has been deleted."
+        );
+      })
+      .catch((error) => {
+        openNotificationWithIcon("error", "Cannot delete CLO", error);
+      });
   }
+
+  useEffect(() => {
+    fetchClo();
+    fetchPlo();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <div>
@@ -149,7 +172,7 @@ export const LearningOutcome = () => {
       </div>
       <Divider />
       <Table
-        dataSource={mock}
+        dataSource={clo}
         rowKey="id"
         pagination={{
           onChange(current) {
@@ -166,40 +189,46 @@ export const LearningOutcome = () => {
           render={(value, item, index) => (page - 1) * 10 + index + 1}
         />
         <Column
-          title="Learning Outcomes"
-          dataIndex="title"
-          key="lo"
-          width="400px"
+          title="Title"
+          dataIndex="order_number"
+          key="order_number"
+          width="60px"
         />
         <Column
-          title="Activity"
-          dataIndex="activity"
-          key="activity"
-          width="300px"
-          render={(activity) =>
-            activity.map((ele) => (
-              <Tooltip title={ele} placement="topLeft">
-                <p>{ele}</p>
-              </Tooltip>
-            ))
-          }
+          title="Learning Outcomes"
+          dataIndex="detail"
+          key="detail"
+          width="100%"
         />
         <Column
           title="PLO"
-          dataIndex="plo"
-          key="plo"
+          dataIndex="relative_sub_standards"
+          key="relative_sub_standards"
           width="100px"
           render={(plo) => {
-            const moreList = plo.map((ele, i) => {
-              if (i >= 3) return <Tag>{ele}</Tag>;
+            const moreList = plo?.map((ele, i) => {
+              if (i >= 3)
+                return (
+                  <Tag key={ele.sub_std_id}>
+                    {ele.group_sub_order_number + "." + ele.sub_order_number}
+                  </Tag>
+                );
+              return null;
             });
             return (
               <>
-                {plo.map((ele, i) => {
-                  if (i < 3) return <Tag key={ele}>{ele}</Tag>;
+                {plo?.map((ele, i) => {
+                  if (i < 3)
+                    return (
+                      <Tag key={ele.sub_std_id}>
+                        {ele.group_sub_order_number +
+                          "." +
+                          ele.sub_order_number}
+                      </Tag>
+                    );
                   return null;
                 })}
-                {plo.length > 3 && (
+                {plo?.length > 3 && (
                   <Tooltip title={moreList} placement="right">
                     <Tag>+{plo.length - 3} more</Tag>
                   </Tooltip>
@@ -210,17 +239,30 @@ export const LearningOutcome = () => {
         />
         <Column
           title="มคอ.2"
-          dataIndex="tqf"
-          key="tqf"
+          dataIndex="main_sub_standards"
+          key="main_sub_standards"
           width="100px"
           render={(tqf) => {
             const moreList = tqf.map((ele, i) => {
-              if (i >= 3) return <Tag>{ele}</Tag>;
+              if (i >= 3)
+                return (
+                  <Tag key={ele.sub_std_id}>
+                    {ele.group_sub_order_number + "." + ele.sub_order_number}
+                  </Tag>
+                );
+              return null;
             });
             return (
               <>
                 {tqf.map((ele, i) => {
-                  if (i < 3) return <Tag key={ele}>{ele}</Tag>;
+                  if (i < 3)
+                    return (
+                      <Tag key={ele.sub_std_id}>
+                        {ele.group_sub_order_number +
+                          "." +
+                          ele.sub_order_number}
+                      </Tag>
+                    );
                   return null;
                 })}
                 {tqf.length > 3 && (
@@ -237,37 +279,50 @@ export const LearningOutcome = () => {
           key="action"
           width="30px"
           render={(ele, record) => (
-            <Space size="large">
+            <Space size="small">
               <Tooltip title="Edit">
-                <a
-                  href="#"
+                <button
                   onClick={() => {
-                    editForm.setFieldsValue(record);
-                    setSelectedData(record);
+                    editForm.setFieldsValue({
+                      clo_id: record.clo_id,
+                      detail: record.detail,
+                      order_number: record.order_number,
+                      relative_sub_standards:
+                        record?.relative_sub_standards.map(
+                          (e) => e.sub_std_id
+                        ) || null,
+                    });
                     setEditVisible(true);
+                    console.log(
+                      record?.relative_sub_standards.map((e) => e.sub_std_id) ||
+                        null
+                    );
                   }}
                   style={{
-                    fontSize: "20px",
+                    fontSize: "18px",
                     color: "#009FC7",
+                    background: "none",
+                    border: "none",
                   }}
                 >
                   <EditOutlined />
-                </a>
+                </button>
               </Tooltip>
               <Tooltip title="Delete">
                 <Popconfirm
                   title="Sure to delete this learning outcome?"
                   onConfirm={() => deleteLO(record)}
                 >
-                  <a
-                    href="#"
+                  <button
                     style={{
-                      fontSize: "20px",
+                      fontSize: "18px",
                       color: "#C73535",
+                      background: "none",
+                      border: "none",
                     }}
                   >
                     <DeleteOutlined />
-                  </a>
+                  </button>
                 </Popconfirm>
               </Tooltip>
             </Space>
@@ -282,7 +337,7 @@ export const LearningOutcome = () => {
           form
             .validateFields()
             .then((values) => {
-              handleSubmit(values);
+              handleAdd(values);
             })
             .catch((info) => {
               console.log("Validate Failed", info);
@@ -294,14 +349,6 @@ export const LearningOutcome = () => {
         maskClosable={false}
         centered
       >
-        {/* {message !== "" && (
-          <Alert
-            style={{ marginBottom: "1rem" }}
-            message={message}
-            type="error"
-            showIcon
-          />
-        )} */}
         <Form
           form={form}
           name="lo"
@@ -312,20 +359,31 @@ export const LearningOutcome = () => {
           requiredMark={"required"}
         >
           <Form.Item
+            label="Title"
+            extra="Enter number (ex:1, 2, 3) or decimal (ex:1.1, 1.2)"
+            name="order_number"
+            rules={[{ required: true, message: "Please input No." }]}
+          >
+            <InputNumber min={0} placeholder="No." />
+          </Form.Item>
+          <Form.Item
             label="Learning Outcome"
-            name="title"
+            name="detail"
             rules={[
               { required: true, message: "Please input learning outcome!" },
             ]}
           >
             <TextArea rows={4} placeholder="Description" />
           </Form.Item>
-          {/* #TODO : Add required to Select PLOs */}
-          <Form.Item label="PLOs" name="plo">
+          <Form.Item label="PLOs" name="relative_sub_standards">
             <Select mode="multiple" placeholder="PLO">
-              {mockPLO.map((e) => (
-                <Option value={e.desc} key={e.id}>
-                  {e.desc}
+              {plo?.map((e) => (
+                <Option value={e.sub_std_id} key={e.sub_std_id}>
+                  {e.group_sub_order_number +
+                    "." +
+                    e.sub_order_number +
+                    " " +
+                    e.group_sub_title}
                 </Option>
               ))}
             </Select>
@@ -364,30 +422,39 @@ export const LearningOutcome = () => {
           form={editForm}
           name="lo"
           layout="vertical"
-          initialValues={selectedData}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           requiredMark={"required"}
         >
-          <Form.Item name="id" hidden>
+          <Form.Item name="clo_id" hidden>
             <Input />
           </Form.Item>
           <Form.Item
+            label="No."
+            name="order_number"
+            rules={[{ required: true, message: "Please input No." }]}
+          >
+            <InputNumber min={0} placeholder="No." />
+          </Form.Item>
+          <Form.Item
             label="Learning Outcome"
-            name="title"
+            name="detail"
             rules={[
               { required: true, message: "Please input learning outcome!" },
             ]}
           >
             <TextArea rows={4} placeholder="Description" />
           </Form.Item>
-          {/* #TODO : Add required to Select PLOs */}
-          <Form.Item label="PLOs" name="plo">
+          <Form.Item label="PLOs" name="relative_sub_standards">
             <Select mode="multiple" placeholder="PLO">
-              {mockPLO.map((e) => (
-                <Option value={e.desc} key={e.id}>
-                  {e.desc}
+              {plo?.map((e) => (
+                <Option value={e.sub_std_id} key={e.sub_std_id}>
+                  {e.group_sub_order_number +
+                    "." +
+                    e.sub_order_number +
+                    " " +
+                    e.group_sub_title}
                 </Option>
               ))}
             </Select>

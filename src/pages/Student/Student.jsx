@@ -13,6 +13,7 @@ import {
   notification,
   Space,
   Upload,
+  message,
 } from "antd";
 import {
   DeleteOutlined,
@@ -21,90 +22,23 @@ import {
   RightOutlined,
   MinusCircleOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useStudent } from "./hooks/useStudent";
+import { useImportStudent } from "./hooks/useImportStudent";
+import excelReader from "../../utils/excelReader";
+import SectionContext from "../../contexts/SectionContext";
 
 export const Student = () => {
   const { Column } = Table;
-  const data = [
-    {
-      id: 61010001,
-      prefix: "นางสาว",
-      firstname: "กมลชนก",
-      lastname: "ศรีไทย",
-      email: "61010001@kmitl.ac.th",
-    },
-    {
-      id: 61010002,
-      prefix: "นาย",
-      firstname: "ธนวัฒน์",
-      lastname: "สมมุติ",
-      email: "61010002@kmitl.ac.th",
-    },
-    {
-      id: 61010003,
-      prefix: "นาย",
-      firstname: "สมปอง",
-      lastname: "สุขสบาย",
-      email: "61010003@kmitl.ac.th",
-    },
-    {
-      id: 61010004,
-      prefix: "นาย",
-      firstname: "สมปราชญ์",
-      lastname: "สดใส",
-      email: "61010004@kmitl.ac.th",
-    },
-    {
-      id: 61010005,
-      prefix: "นาย",
-      firstname: "สมหมาย",
-      lastname: "สายไทย",
-      email: "61010005@kmitl.ac.th",
-    },
-    {
-      id: 61010006,
-      prefix: "นาย",
-      firstname: "สมหมาย",
-      lastname: "รักไทย",
-      email: "61010006@kmitl.ac.th",
-    },
-    {
-      id: 61010007,
-      prefix: "นาย",
-      firstname: "สมศักดิ์",
-      lastname: "ใฝ่รู้",
-      email: "61010007@kmitl.ac.th",
-    },
-    {
-      id: 61010008,
-      prefix: "นาย",
-      firstname: "สมชาย",
-      lastname: "ใจดี",
-      email: "61010008@kmitl.ac.th",
-    },
-    {
-      id: 61010009,
-      prefix: "นาย",
-      firstname: "สมพงศ์",
-      lastname: "ชัยชนะ",
-      email: "61010009@kmitl.ac.th",
-    },
-    {
-      id: 61010010,
-      prefix: "นางสาว",
-      firstname: "สมสง่า",
-      lastname: "ราศี",
-      email: "61010010@kmitl.ac.th",
-    },
-    {
-      id: 61010011,
-      prefix: "นางสาว",
-      firstname: "สมหญิง",
-      lastname: "จริงใจ",
-      email: "61010011@kmitl.ac.th",
-    },
-  ];
-  const [retrived] = useState(data);
+  const { section } = useContext(SectionContext);
+  const {
+    students,
+    fetchStudents,
+    createStudents,
+    updateStudent,
+    removeStudent,
+  } = useStudent();
+  const [retrived, setRetrieve] = useState(students);
   const [filterList, setFilterList] = useState(retrived);
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
@@ -114,8 +48,15 @@ export const Student = () => {
   const [editForm] = Form.useForm();
   const [selectedData, setSelectedData] = useState(null);
   const [searching, setSearching] = useState(false);
+  const [isEditList, setIsEditList] = useState(false);
   const [importVisible, setImportVisible] = useState(false);
   const [addList, setAddList] = useState([]);
+  const [uploadList, setUploadList] = useState([]);
+  const [studentListValid, setStudentListValid] = useState(true);
+  const { getStudentListFromExcel } = useImportStudent(
+    section,
+    setStudentListValid
+  );
   const selectBefore = (
     <Form.Item
       name="prefix"
@@ -124,7 +65,7 @@ export const Student = () => {
     >
       <Select
         className="select-before"
-        style={{ width: "90px" }}
+        style={{ width: "100px" }}
         placeholder="Prefix"
       >
         <Option value="นาย">นาย</Option>
@@ -135,14 +76,15 @@ export const Student = () => {
     </Form.Item>
   );
 
-  function search(keyword) {
+  function search(kw) {
+    let keyword = kw.trim();
     if (keyword !== "") {
       const results = retrived.filter((student) => {
         return (
           student.firstname.toLowerCase().includes(keyword.toLowerCase()) ||
           student.lastname.toLowerCase().includes(keyword.toLowerCase()) ||
-          student.id.toLowerCase().includes(keyword.toLowerCase()) ||
-          student.email.toLowerCase().includes(keyword.toLowerCase())
+          student.student_number.toLowerCase().includes(keyword.toLowerCase())
+          // || student.email.toLowerCase().includes(keyword.toLowerCase())
         );
       });
       setFilterList(results);
@@ -156,24 +98,43 @@ export const Student = () => {
   function handleSubmit(values) {
     console.log("Recieved values of form[ADD]: ", values);
     setConfirmLoading(true);
-    openNotificationWithIcon("success", values.length + " Student added");
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-      // setRetrived([...retrived, values.map((item) => item)]);
-      setAddList([]);
-    }, 2000);
+    createStudents(values)
+      .then(() => {
+        openNotificationWithIcon(
+          "success",
+          values.length + " Student(s) added"
+        );
+        setVisible(false);
+        setAddList([]);
+      })
+      .catch((message) => {
+        openNotificationWithIcon("error", "Cannot add student", message);
+      })
+      .finally(() => {
+        setConfirmLoading(false);
+        _fetchStudent();
+      });
   }
 
-  function handleEdit(values) {
+  function handleEdit(values, id) {
     console.log("Recieved values of form[EDIT]: ", values);
     setConfirmLoading(true);
-    openNotificationWithIcon("success", "Student " + values.id + " saved");
-    setTimeout(() => {
-      setEditVisible(false);
-      setConfirmLoading(false);
-      setAddList([]);
-    }, 2000);
+    updateStudent({ ...values, section_id: section }, id)
+      .then(() => {
+        openNotificationWithIcon(
+          "success",
+          "Student " + values.student_number + " saved"
+        );
+        setEditVisible(false);
+        editForm.resetFields();
+      })
+      .catch((message) => {
+        openNotificationWithIcon("error", "Cannot edit student", message);
+      })
+      .finally(() => {
+        setConfirmLoading(false);
+        _fetchStudent();
+      });
   }
 
   function handleCancel() {
@@ -184,12 +145,12 @@ export const Student = () => {
     editForm.resetFields();
     setSelectedData(null);
     setAddList([]);
+    setUploadList([]);
   }
 
   function onFinish(values) {
-    setAddList([...addList, values]);
+    setAddList([...addList, { ...values, section_id: section }]);
     form.resetFields();
-    editForm.resetFields();
     console.log("Success:", values);
   }
 
@@ -206,21 +167,90 @@ export const Student = () => {
   }
 
   function deleteStudent(record) {
-    let temp = filterList.filter((e) => e.id !== record.id);
-    setFilterList(temp);
-    console.log(temp);
+    removeStudent(record.student_id)
+      .then(() => {
+        openNotificationWithIcon("success", record.student_number + " deleted");
+      })
+      .catch((message) => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot delete " + record.student_number,
+          message
+        );
+      })
+      .finally(() => {
+        _fetchStudent();
+      });
   }
 
-  function removeFromList(id) {
-    let result = addList.filter((item) => item.id !== id);
+  function removeFromList(student_number) {
+    let result = addList.filter(
+      (item) => item.student_number !== student_number
+    );
     setAddList(result);
   }
 
-  function editFromList(id) {
-    let edit = addList.find((item) => item.id === id);
+  function editFromList(student_number) {
+    let edit = addList.find((item) => item.student_number === student_number);
     form.setFieldsValue(edit);
-    removeFromList(id);
+    removeFromList(student_number);
   }
+
+  function _fetchStudent() {
+    if (section) {
+      fetchStudents(section).then((data) => {
+        setRetrieve(data);
+        setFilterList(data);
+      });
+    }
+  }
+
+  function submitUploadList(list) {
+    if (list.length > 0) {
+      setConfirmLoading(true);
+      createStudents(list)
+        .then(() => {
+          openNotificationWithIcon(
+            "success",
+            list.length + " Student(s) added"
+          );
+          setUploadList([]);
+          setImportVisible(false);
+        })
+        .catch((message) => {
+          openNotificationWithIcon("error", "Cannot add student", message);
+        })
+        .finally(() => {
+          _fetchStudent();
+          setConfirmLoading(false);
+        });
+    } else {
+      setImportVisible(false);
+    }
+  }
+
+  const uploadProps = {
+    name: "file",
+    beforeUpload: () => false,
+    maxCount: 1,
+    accept: ".xlsx, .xls",
+    async onChange({ file }) {
+      setStudentListValid(true);
+      if (file.status !== "removed") {
+        const datafromExcel = await excelReader(file);
+        let list = getStudentListFromExcel(datafromExcel);
+        setUploadList(list);
+        if (list.length === 0) setStudentListValid(false);
+        else setStudentListValid(true);
+        message.success(`${file.name} file uploaded successfully`);
+      }
+    },
+  };
+
+  useEffect(() => {
+    _fetchStudent();
+    // eslint-disable-next-line
+  }, [section]);
 
   return (
     <div className={styles.student}>
@@ -238,7 +268,7 @@ export const Student = () => {
       <Divider />
       <Table
         dataSource={searching ? filterList : retrived}
-        rowKey="id"
+        rowKey="student_number"
         pagination={{
           onChange(current) {
             setPage(current);
@@ -255,11 +285,12 @@ export const Student = () => {
         />
         <Column
           title="ID"
-          dataIndex="id"
-          key="id"
+          dataIndex="student_number"
+          key="student_number"
           sorter={(a, b) => a.id - b.id}
           defaultSortOrder="ascend"
           sortDirections={["ascend", "descend", "ascend"]}
+          width="100px"
         />
         <Column
           title="Name"
@@ -270,11 +301,11 @@ export const Student = () => {
             record.prefix + " " + text + " " + record.lastname
           }
         />
-        <Column
+        {/* <Column
           title="Google Classroom Account"
           dataIndex="email"
           key="email"
-        />
+        /> */}
         <Column
           title="Action"
           key="action"
@@ -342,17 +373,17 @@ export const Student = () => {
           >
             <Form.Item
               label="Student ID"
-              name="id"
+              name="student_number"
               rules={[
                 { required: true, message: "Please input student id!" },
                 {
                   validator: (rule, value, callback) => {
-                    let alreadyExistId = retrived.map((e) => e.id.toString());
-                    // console.log(selectedData.id);
-                    // console.log(alreadyExistId);
+                    let alreadyExistId = retrived.map((e) =>
+                      e.student_number.toString()
+                    );
                     if (
                       alreadyExistId.includes(value) ||
-                      addList.find((item) => item.id === value)
+                      addList.find((item) => item.student_number === value)
                     ) {
                       return Promise.reject("Already exist!");
                     }
@@ -377,7 +408,7 @@ export const Student = () => {
             >
               <Input placeholder="Lastname" />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Google Account Email"
               name="email"
               rules={[
@@ -400,8 +431,14 @@ export const Student = () => {
               ]}
             >
               <Input placeholder="Email" />
-            </Form.Item>
-            <Button htmlType="submit" style={{ width: "100%" }}>
+            </Form.Item> */}
+            <Button
+              htmlType="submit"
+              style={{ width: "100%" }}
+              onClick={() => {
+                setIsEditList(false);
+              }}
+            >
               Add to List <RightOutlined />
             </Button>
           </Form>
@@ -421,18 +458,24 @@ export const Student = () => {
               <ul>
                 {addList.map((ele) => (
                   <li key={ele.id}>
-                    {ele.id} - {ele.firstname} {ele.lastname}
+                    {ele.student_number} - {ele.firstname} {ele.lastname}
                     <Space className={styles.btn}>
                       <Tooltip title="Edit">
                         <EditOutlined
-                          style={{ color: "#009FC7" }}
-                          onClick={() => editFromList(ele.id)}
+                          style={{
+                            color: "#009FC7",
+                            display: isEditList ? "none" : "block",
+                          }}
+                          onClick={() => {
+                            setIsEditList(true);
+                            editFromList(ele.student_number);
+                          }}
                         />
                       </Tooltip>
                       <Tooltip title="Remove">
                         <MinusCircleOutlined
                           style={{ color: "#C73535" }}
-                          onClick={() => removeFromList(ele.id)}
+                          onClick={() => removeFromList(ele.student_number)}
                         />
                       </Tooltip>
                     </Space>
@@ -451,7 +494,7 @@ export const Student = () => {
           editForm
             .validateFields()
             .then((values) => {
-              handleEdit(editForm.getFieldsValue());
+              handleEdit(editForm.getFieldsValue(), selectedData.student_id);
               editForm.resetFields();
             })
             .catch((info) => {
@@ -474,14 +517,16 @@ export const Student = () => {
           >
             <Form.Item
               label="Student ID"
-              name="id"
+              name="student_number"
               rules={[
                 { required: true, message: "Please input student id!" },
                 {
                   validator: (rule, value, callback) => {
                     let alreadyExistId = retrived
-                      .map((e) => e.id.toString())
-                      .filter((e) => e !== selectedData.id.toString());
+                      .map((e) => e.student_number.toString())
+                      .filter(
+                        (e) => e !== selectedData.student_number.toString()
+                      );
                     if (alreadyExistId.includes(value)) {
                       return Promise.reject("Already exist!");
                     }
@@ -506,7 +551,7 @@ export const Student = () => {
             >
               <Input placeholder="Lastname" />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Google Account Email"
               name="email"
               rules={[
@@ -526,7 +571,7 @@ export const Student = () => {
               ]}
             >
               <Input placeholder="Email" />
-            </Form.Item>
+            </Form.Item> */}
           </Form>
         </div>
       </Modal>
@@ -534,18 +579,21 @@ export const Student = () => {
         title="Import Student"
         visible={importVisible}
         okText="OK"
-        onOk={() => {}}
+        onOk={() => {
+          submitUploadList(uploadList);
+        }}
         onCancel={handleCancel}
+        okButtonProps={{ disabled: uploadList.length === 0 }}
         maskClosable={false}
         confirmLoading={confirmLoading}
       >
-        <Upload accept=".xlsx, .xls, .csv">
-          <Header level={4}>Upload (ใช้ Template ของสำนักทะเบียน)</Header>
+        <Header level={4}>Upload (Use KMITL REG Excel template only)</Header>
+        <Upload {...uploadProps}>
           <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          <Body level={2} className={styles.uploadWarning}>
+            {!studentListValid && "Student list not found"}
+          </Body>
         </Upload>
-        <Body level={2} className={styles.uploadWarning}>
-          {"ERR_MSG"}
-        </Body>
       </Modal>
     </div>
   );

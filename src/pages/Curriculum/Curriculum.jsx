@@ -27,8 +27,16 @@ import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useCurriculum } from "./hooks/useCurriculum";
 
 export function Curriculum() {
-  const { create, getAll, update, remove, curriculum, message, setMessage } =
-    useCurriculum();
+  const {
+    create,
+    getAll,
+    update,
+    remove,
+    clone,
+    curriculum,
+    message,
+    setMessage,
+  } = useCurriculum();
   const [selected, setSelected] = useState(null);
   const [editCurVisible, setEditCurVisible] = useState(false);
   const [newCurVisible, setNewCurVisible] = useState(false);
@@ -68,22 +76,53 @@ export function Curriculum() {
 
   function handleCreateSubmit(values) {
     setConfirmLoading(true);
-    create(values)
-      .then((data) => {
-        setSelected(data);
-        setConfirmLoading(false);
-        setNewCurVisible(false);
-        newForm.resetFields();
-        openNotificationWithIcon(
-          "success",
-          "Curriculum created",
-          data.title + " have been created."
-        );
-      })
-      .catch((message) => {
-        setConfirmLoading(false);
-        openNotificationWithIcon("error", "Cannot create curriculum", message);
-      });
+    if (values.clone !== "") {
+      clone(values)
+        .then((data) => {
+          setSelected(data);
+          setNewCurVisible(false);
+          newForm.resetFields();
+          openNotificationWithIcon(
+            "success",
+            "Curriculum created",
+            data.title + " have been created."
+          );
+        })
+        .catch((message) => {
+          setConfirmLoading(false);
+          openNotificationWithIcon(
+            "error",
+            "Cannot create curriculum",
+            message
+          );
+        })
+        .finally(() => {
+          setConfirmLoading(false);
+        });
+    } else {
+      create(values)
+        .then((data) => {
+          setSelected(data);
+          setNewCurVisible(false);
+          newForm.resetFields();
+          openNotificationWithIcon(
+            "success",
+            "Curriculum created",
+            data.title + " have been created."
+          );
+        })
+        .catch((message) => {
+          setConfirmLoading(false);
+          openNotificationWithIcon(
+            "error",
+            "Cannot create curriculum",
+            message
+          );
+        })
+        .finally(() => {
+          setConfirmLoading(false);
+        });
+    }
   }
 
   function handleEditSubmit(values) {
@@ -161,11 +200,13 @@ export function Curriculum() {
           <Option value={null} disabled>
             None
           </Option>
-          {curriculum.map((e) => (
-            <Option value={e.curriculum_id} key={e.curriculum_id}>
-              {e.title}
-            </Option>
-          ))}
+          {curriculum
+            ?.sort((a, b) => a.title.localeCompare(b.title))
+            .map((e) => (
+              <Option value={e.curriculum_id} key={e.curriculum_id}>
+                {e.title}
+              </Option>
+            ))}
         </Select>
         <Header level={2}>or</Header>
         <Button onClick={() => setNewCurVisible(true)}>
@@ -256,9 +297,10 @@ export function Curriculum() {
           </Form.Item>
           <Divider />
           <Form.Item
-            label="Clone Curriculum"
+            label="Clone from Curriculum"
             name="clone"
             rules={[{ required: false, message: "Please input year!" }]}
+            extra="Only standard and course data(except prerequisite and PLO) will be clone."
           >
             <Select>
               <Option value="">None</Option>
@@ -280,7 +322,10 @@ export function Curriculum() {
               <Tooltip title="Edit Curriculum Info">
                 <EditFilled
                   className={styles.editBtn}
-                  onClick={() => setEditCurVisible(true)}
+                  onClick={() => {
+                    editForm.setFieldsValue(selected);
+                    setEditCurVisible(true);
+                  }}
                 />
               </Tooltip>
             </Header>

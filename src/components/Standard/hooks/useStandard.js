@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
-import httpClient from '../../../utils/httpClient';
-import { Form } from 'antd'
+import { useState, useEffect } from "react";
+import httpClient from "../../../utils/httpClient";
+import { Form } from "antd";
+import openNotificationWithIcon from "../../../utils/notification";
 
 // const standardList = [
 //     {
@@ -71,239 +72,304 @@ import { Form } from 'antd'
 // ]
 
 export const useStandard = (selectedCurriculum) => {
-    const [standard, setStandard] = useState([]);
-    //Title
-    const [newStdVisible, setNewStdVisible] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const [editingTitleIndex, setEditingTitleIndex] = useState();
-    //Standard 
-    const [addStdVisible, setAddStdVisible] = useState(false);
-    const [addingStandardId, setAddingStandardId] = useState();
-    const [isEditingName, setIsEditingName] = useState(false);
-    const [editingNameIndex, setEditingNameIndex] = useState();
-    const [editingGroupStdId, setEditingGroupStdId] = useState();
-    //Forms
-    const [createStdForm] = Form.useForm();
-    const [editTitleForm] = Form.useForm();
-    const [addStdForm] = Form.useForm();
-    const [editNameForm] = Form.useForm();
+  const [standard, setStandard] = useState([]);
+  //Title
+  const [newStdVisible, setNewStdVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingTitleIndex, setEditingTitleIndex] = useState();
+  //Standard
+  const [addStdVisible, setAddStdVisible] = useState(false);
+  const [addingStandardId, setAddingStandardId] = useState();
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editingNameIndex, setEditingNameIndex] = useState();
+  const [editingGroupStdId, setEditingGroupStdId] = useState();
+  //Forms
+  const [createStdForm] = Form.useForm();
+  const [editTitleForm] = Form.useForm();
+  const [addStdForm] = Form.useForm();
+  const [editNameForm] = Form.useForm();
 
-    async function fetchAllStandards() {
-        return await httpClient
-            .get(`/standard/getAllByCurriculum/${selectedCurriculum}`)
-            .then((response) => {
-                const receivedStandard = response?.data.data.map((std) => ({
-                    id: std.standard_id,
-                    standardTitle: std.title,
-                    curriculumId: std.curriculum_id,
-                    details: std.group_sub_standards.map((groupSubStd) => ({
-                        groupSubStdId: groupSubStd.group_sub_std_id,
-                        standardId: groupSubStd.standard_id,
-                        standardNo: groupSubStd.order_number,
-                        standardName: groupSubStd.title,
-                        subStandard: groupSubStd.sub_standards.map((subStd) => ({
-                            groupSubStdId: subStd.group_sub_std_id,
-                            subStandardId: subStd.sub_std_id,
-                            subStandardNo: subStd.order_number,
-                            subStandardName: subStd.title,
-                        }))
-                    }))
-                }))
-                setStandard(receivedStandard)
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+  async function fetchAllStandards() {
+    return await httpClient
+      .get(`/standard/getAllByCurriculum/${selectedCurriculum}`)
+      .then((response) => {
+        const receivedStandard = response?.data.data.map((std) => ({
+          id: std.standard_id,
+          standardTitle: std.title,
+          curriculumId: std.curriculum_id,
+          details: std.group_sub_standards.map((groupSubStd) => ({
+            groupSubStdId: groupSubStd.group_sub_std_id,
+            standardId: groupSubStd.standard_id,
+            standardNo: groupSubStd.order_number,
+            standardName: groupSubStd.title,
+            subStandard: groupSubStd.sub_standards.map((subStd) => ({
+              groupSubStdId: subStd.group_sub_std_id,
+              subStandardId: subStd.sub_std_id,
+              subStandardNo: subStd.order_number,
+              subStandardName: subStd.title,
+            })),
+          })),
+        }));
+        setStandard(receivedStandard);
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot fetch standard",
+          error.toString()
+        );
+        console.log(error);
+      });
+  }
 
-    function handleCancel() {
+  function handleCancel() {
+    setNewStdVisible(false);
+    setAddStdVisible(false);
+    createStdForm.resetFields();
+    addStdForm.resetFields();
+  }
+
+  // Title Add,Delete,Update
+  function handleCreateStdBtn() {
+    setNewStdVisible(true);
+  }
+
+  async function handleCreateSubmit(value) {
+    return await httpClient
+      .post("/standard/create", {
+        curriculum_id: selectedCurriculum,
+        title: value.standardTitle,
+      })
+      .then((response) => {
         setNewStdVisible(false);
+        setStandard([
+          ...standard,
+          {
+            id: response.data.data.standard_id,
+            standardTitle: response.data.data.title,
+            curriculumId: response.data.data.curriculum_id,
+            details: [],
+          },
+        ]);
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot create standard",
+          error.toString()
+        );
+        console.log(error);
+      });
+  }
+
+  async function handleDeleteTitle(id) {
+    return await httpClient
+      .delete(`/standard/remove/${id}`)
+      .then(() => {
+        setStandard(standard.filter((item) => item.id !== id));
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot delete standard",
+          error.toString()
+        );
+        console.log(error);
+      });
+  }
+
+  function handleEditTitle(i) {
+    setIsEditing(true);
+    setEditingTitleIndex(i);
+  }
+
+  async function handleEditTitleSubmit(value) {
+    const i = editingTitleIndex;
+    return await httpClient
+      .put(`/standard/update/${standard[editingTitleIndex].id}`, {
+        title: value.standardTitle,
+      })
+      .then(() => {
+        setStandard((prev) => {
+          return [
+            ...prev.slice(0, i),
+            {
+              ...prev[i],
+              standardTitle: value.standardTitle,
+            },
+            ...prev.slice(i + 1),
+          ];
+        });
+        setEditingTitleIndex(null);
+        setIsEditing(false);
+        editTitleForm.resetFields();
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot edit standard",
+          error.toString()
+        );
+        console.log(error);
+      });
+  }
+
+  //Standard Add,Delete,Update
+  function handleAddStdBtn(i) {
+    setAddStdVisible(true);
+    setAddingStandardId(i);
+  }
+
+  async function handleAddSubmit(value) {
+    const i = addingStandardId;
+    return await httpClient
+      .post(`/standard/createGroupSubStandard`, {
+        standard_id: standard[addingStandardId].id,
+        order_number: value.standardNo,
+        title: value.standardName,
+      })
+      .then((res) => {
+        setStandard((prev) => {
+          return [
+            ...prev.slice(0, i),
+            {
+              ...prev[i],
+              details: [
+                ...prev[i].details,
+                {
+                  groupSubStdId: res.data.data.group_sub_std_id,
+                  standardId: res.data.data.standard_id,
+                  standardNo: res.data.data.order_number,
+                  standardName: res.data.data.title,
+                  subStandard: [],
+                },
+              ].sort(
+                (
+                  { standardNo: firstStandardNo },
+                  { standardNo: secondStandardNo }
+                ) => firstStandardNo - secondStandardNo
+              ),
+            },
+            ...prev.slice(i + 1),
+          ];
+        });
+        setAddingStandardId(null);
         setAddStdVisible(false);
-        createStdForm.resetFields();
-        addStdForm.resetFields();
-    }
-
-    // Title Add,Delete,Update
-    function handleCreateStdBtn() {
-        setNewStdVisible(true)
-    }
-
-    async function handleCreateSubmit(value) {
-        return await httpClient
-            .post('/standard/create', {
-                curriculum_id: selectedCurriculum,
-                title: value.standardTitle
-            })
-            .then((response) => {
-                setNewStdVisible(false);
-                setStandard(
-                    [...standard, {
-                        id: response.data.data.standard_id,
-                        standardTitle: response.data.data.title,
-                        curriculumId: response.data.data.curriculum_id,
-                        details: []
-                    }]
-                )
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    async function handleDeleteTitle(id) {
-        return await httpClient
-            .delete(`/standard/remove/${id}`)
-            .then(() => {
-                setStandard(standard.filter(item => item.id !== id))
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    function handleEditTitle(i) {
-        setIsEditing(true)
-        setEditingTitleIndex(i)
-    }
-
-    async function handleEditTitleSubmit(value) {
-        const i = editingTitleIndex
-        return await httpClient.put(`/standard/update/${standard[editingTitleIndex].id}`, {
-            title: value.standardTitle
-        }).then(() => {
-            setStandard(prev => {
-                return [
-                    ...prev.slice(0, i),
-                    {
-                        ...prev[i], standardTitle: value.standardTitle
-                    },
-                    ...prev.slice(i + 1)]
-            });
-            setEditingTitleIndex(null);
-            setIsEditing(false)
-            editTitleForm.resetFields();
-        }).catch((error) => {
-            console.log(error);
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot create group sub standard",
+          error.toString()
+        );
+        console.log(error);
+      });
+  }
+  async function handleDeleteStandard(stdNo, groupSubStdId, id) {
+    const index = standard.findIndex((item) => {
+      return item.id === id;
+    });
+    return await httpClient
+      .delete(`/standard/removeGroupSubStandard/${groupSubStdId}`)
+      .then(() => {
+        setStandard((prev) => {
+          return [
+            ...prev.slice(0, index),
+            {
+              ...prev[index],
+              details: prev[index].details.filter(
+                (item) => item.standardNo !== stdNo
+              ),
+            },
+            ...prev.slice(index + 1),
+          ];
         });
-    }
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot delete group sub standard",
+          error.toString()
+        );
+        console.log(error);
+      });
+  }
+  function handleEditName(index, id, groupStdId) {
+    setIsEditingName(true);
+    setEditingTitleIndex(index);
+    setEditingNameIndex(id);
+    setEditingGroupStdId(groupStdId);
+  }
 
-    //Standard Add,Delete,Update
-    function handleAddStdBtn(i) {
-        setAddStdVisible(true)
-        setAddingStandardId(i)
-    }
+  async function handleEditNameSubmit(values) {
+    let newStandard = [...standard];
+    newStandard[editingTitleIndex].details[editingNameIndex].standardName =
+      values.standardName;
+    newStandard[editingTitleIndex].details[editingNameIndex].standardNo =
+      values.standardNo;
+    newStandard = newStandard.map((std) => ({
+      ...std,
+      details: std.details.sort(
+        ({ standardNo: firstStandardNo }, { standardNo: secondStandardNo }) =>
+          firstStandardNo - secondStandardNo
+      ),
+    }));
+    return await httpClient
+      .put(`/standard/updateGroupSubStandard/${editingGroupStdId}`, {
+        order_number: values.standardNo,
+        title: values.standardName,
+      })
+      .then(() => {
+        setStandard(newStandard);
+        setEditingTitleIndex(null);
+        setIsEditingName(false);
+        setEditingNameIndex(null);
+        editNameForm.resetFields();
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          "error",
+          "Cannot edit group sub standard",
+          error.toString()
+        );
+        console.log(error);
+      });
+  }
 
-    async function handleAddSubmit(value) {
-        const i = addingStandardId;
-        return await httpClient.post(`/standard/createGroupSubStandard`, {
-            standard_id: standard[addingStandardId].id,
-            order_number: value.standardNo,
-            title: value.standardName
-        }).then((res) => {
-            setStandard(prev => {
-                return [
-                    ...prev.slice(0, i),
-                    {
-                        ...prev[i],
-                        details: [...prev[i].details, {
-                            groupSubStdId: res.data.data.group_sub_std_id,
-                            standardId: res.data.data.standard_id,
-                            standardNo: res.data.data.order_number,
-                            standardName: res.data.data.title,
-                            subStandard: []
-                        }].sort(({ standardNo: firstStandardNo }, { standardNo: secondStandardNo }) => firstStandardNo - secondStandardNo)
-                    },
-                    ...prev.slice(i + 1)]
-            });
-            setAddingStandardId(null)
-            setAddStdVisible(false);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-    async function handleDeleteStandard(stdNo, groupSubStdId, id) {
-        const index = standard.findIndex((item) => {
-            return item.id === id
-        })
-        return await httpClient
-            .delete(`/standard/removeGroupSubStandard/${groupSubStdId}`)
-            .then(() => {
-                setStandard(prev => {
-                    return [
-                        ...prev.slice(0, index),
-                        {
-                            ...prev[index], details: prev[index].details.filter(item => item.standardNo !== stdNo)
-                        },
-                        ...prev.slice(index + 1)]
-                });
-            }).catch((error) => {
-                console.log(error);
-            })
-    }
-    function handleEditName(index, id, groupStdId) {
-        setIsEditingName(true)
-        setEditingTitleIndex(index)
-        setEditingNameIndex(id)
-        setEditingGroupStdId(groupStdId)
-    }
+  useEffect(() => {
+    fetchAllStandards();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCurriculum]);
 
-    async function handleEditNameSubmit(values) {
-        let newStandard = [...standard]
-        newStandard[editingTitleIndex].details[editingNameIndex].standardName = values.standardName
-        newStandard[editingTitleIndex].details[editingNameIndex].standardNo = values.standardNo
-        newStandard = newStandard.map((std) => ({
-            ...std,
-            details: std.details.sort(({ standardNo: firstStandardNo }, { standardNo: secondStandardNo }) => firstStandardNo - secondStandardNo)
-        }))
-        return await httpClient.put(`/standard/updateGroupSubStandard/${editingGroupStdId}`, {
-            order_number: values.standardNo,
-            title: values.standardName
-        }).then(() => {
-            setStandard(newStandard)
-            setEditingTitleIndex(null);
-            setIsEditingName(false)
-            setEditingNameIndex(null);
-            editNameForm.resetFields();
-        }).catch((error) => {
-            console.log(error);
-        })
-    }
-
-    useEffect(() => {
-        fetchAllStandards();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedCurriculum]);
-
-
-    return [
-        standard,
-        setStandard,
-        handleCreateStdBtn,
-        handleCancel,
-        handleCreateSubmit,
-        handleDeleteTitle,
-        handleEditTitle,
-        handleEditTitleSubmit,
-        isEditing,
-        setIsEditing,
-        editingTitleIndex,
-        setEditingTitleIndex,
-        handleAddStdBtn,
-        handleAddSubmit,
-        addingStandardId,
-        handleDeleteStandard,
-        handleEditName,
-        handleEditNameSubmit,
-        isEditingName,
-        setIsEditingName,
-        editingNameIndex,
-        setEditingNameIndex,
-        setEditingGroupStdId,
-        createStdForm,
-        editTitleForm,
-        addStdForm,
-        editNameForm,
-        newStdVisible,
-        addStdVisible,
-    ]
-}
+  return [
+    standard,
+    setStandard,
+    handleCreateStdBtn,
+    handleCancel,
+    handleCreateSubmit,
+    handleDeleteTitle,
+    handleEditTitle,
+    handleEditTitleSubmit,
+    isEditing,
+    setIsEditing,
+    editingTitleIndex,
+    setEditingTitleIndex,
+    handleAddStdBtn,
+    handleAddSubmit,
+    addingStandardId,
+    handleDeleteStandard,
+    handleEditName,
+    handleEditNameSubmit,
+    isEditingName,
+    setIsEditingName,
+    editingNameIndex,
+    setEditingNameIndex,
+    setEditingGroupStdId,
+    createStdForm,
+    editTitleForm,
+    addStdForm,
+    editNameForm,
+    newStdVisible,
+    addStdVisible,
+  ];
+};

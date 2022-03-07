@@ -1,84 +1,50 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Form } from 'antd'
-const mockSubActivity = [
-    {
-        id: 1,
-        title: "ข้อ 1",
-        detail: "จงแปลงเลขฐาน 2 จาก 1010 1111 0010 เป็นเลขฐาน 10 และเลขฐาน 16",
-        clo: [1, 2],
-        point: 2
-    },
-    {
-        id: 2,
-        title: "ข้อ 2",
-        detail: "จงแปลงเลขฐาน 2 จาก 1000 1101 0110 เป็นเลขฐาน 10 และเลขฐาน 16",
-        clo: [1, 2],
-        point: 2
-    },
-    {
-        id: 3,
-        title: "ข้อ 3",
-        detail: "จงแปลงเลขฐาน 10 จาก 178 เป็นเลขฐาน 2 และเลขฐาน 16",
-        clo: [1, 3],
-        point: 2
-    },
-    {
-        id: 4,
-        title: "ข้อ 4",
-        detail: "จงแปลงเลขฐาน 16 จาก 57FA เป็นเลขฐาน 10 และเลขฐาน 2",
-        clo: [2, 3],
-        point: 2
-    }
-]
+import httpClient from "../../../utils/httpClient";
+import { useParams } from "react-router-dom";
 
 const mockCLO = [
     {
-        id: 1,
-        number: "1.1",
-        title: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 10 ทั้งคิดและไม่คิดเครื่องหมาย"
+        clo_id: 1,
+        order_number: "1.1",
+        detail: "test",
+
     },
     {
-        id: 2,
-        number: "1.2",
-        title: "สามารถแปลงเลขระหว่างฐาน 2 และฐาน 16 ทั้งคิดและไม่คิดเครื่องหมาย"
+        clo_id: 2,
+        order_number: "1.2",
+        detail: "test",
+
     },
     {
-        id: 3,
-        number: "1.3",
-        title: "สามารถแปลงเลขระหว่างฐาน 10 และฐาน 16 ทั้งคิดและไม่คิดเครื่องหมาย"
+        clo_id: 3,
+        order_number: "2.1",
+        detail: "test 3",
+
     },
     {
-        id: 4,
-        number: "2.1",
-        title: "อธิบายความหมายของไฟฟ้าพื้นฐาน ได้แก่ ประจุ แรงดัน กระแส กำลัง ความต้านทาน กำลัง พลังงาน"
+        clo_id: 4,
+        order_number: "2.2",
+        detail: "test 4",
+
     },
-    {
-        id: 5,
-        number: "2.2",
-        title: "ทำโจทย์โดยใช้หลักการ KCL, KVL "
-    },
-    {
-        id: 6,
-        number: "3.1",
-        title: "สามารถต่อวงจรบน Protoboard ได้อย่างถูกต้อง"
-    }
 
 ]
-export const useActivityTable = () => {
-    const [cloList, setCloList] = useState(mockCLO)
 
+export const useActivityTable = (subActivity) => {
+    const [cloList, setCloList] = useState(mockCLO)
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
-    const [data, setData] = useState(mockSubActivity);
+    const [data, setData] = useState([]);
     const [isNewAdded, setIsNewAdded] = useState(false);
-
+    let { sectionId, activityId } = useParams();
 
     const edit = (record) => {
         console.log(record)
         form.setFieldsValue({
             ...record,
         });
-        setEditingKey(record.id);
+        setEditingKey(record.sub_activity_id);
     };
 
     const cancel = () => {
@@ -93,63 +59,147 @@ export const useActivityTable = () => {
         try {
             const row = await form.validateFields();
             const newData = [...data];
-            const index = newData.findIndex((item) => id === item.id);
-            if (isNewAdded) {
-                if (index > -1) {
-                    const item = newData[index];
-                    newData.splice(index, 1, { ...item, ...row });
-                    setData(newData);
-                    setEditingKey('');
-                } else {
-                    newData.push(row);
-                    setData(newData);
-                    setEditingKey('');
-                }
-                setIsNewAdded(false);
-            } else {
-                if (index > -1) {
-                    const item = newData[index];
-                    newData.splice(index, 1, { ...item, ...row });
-                    setData(newData);
-                    setEditingKey('');
-                } else {
-                    newData.push(row);
-                    setData(newData);
-                    setEditingKey('');
-                }
+            const index = newData.findIndex((item) => id === item.sub_activity_id);
+            if (isNewAdded) { //add
+                return await httpClient
+                    .post(`/activity/createSubActivity`,
+                        {
+                            activity_id: parseInt(activityId),
+                            detail: row.detail,
+                            max_score: parseInt(row.max_score),
+                            clos: row.clos
+                        }
+                    )
+                    .then((response) => {
+                        console.log(newData)
+                        let allclos = []
+                        response.data.data.clos.forEach(e => allclos.push(e.clo_id))
+                        const newSubActivity = {
+                            activity_id: response.data.data.activityId,
+                            clos: allclos,
+                            detail: response.data.data.detail,
+                            max_score: response.data.data.max_score,
+                            sub_activity_id: response.data.data.sub_activity_id,
+                        }
+                        if (index > -1) {
+                            newData.splice(index, 1, newSubActivity );
+                            setData(newData);
+                            setEditingKey('');
+                        } else {
+                            newData.push(newSubActivity);
+                            setData(newData);
+                            setEditingKey('');
+                        }
+                        setIsNewAdded(false);
+                        return Promise.resolve(response.data.data);
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+            } else { //edit
+                return await httpClient
+                .put(`activity/updateSubActivity/${id}`,
+                    {
+                        detail: row.detail,
+                        max_score: parseInt(row.max_score),
+                        clos: row.clos
+                    }
+                )
+                .then((response) => {
+                    console.log(newData)
+                    let allclos = []
+                    response.data.data.clos.forEach(e => allclos.push(e.clo_id))
+                    const newSubActivity = {
+                        activity_id: response.data.data.activityId,
+                        clos: allclos,
+                        detail: response.data.data.detail,
+                        max_score: response.data.data.max_score,
+                        sub_activity_id: response.data.data.sub_activity_id,
+                    }
+                    if (index > -1) {
+                        newData.splice(index, 1, newSubActivity );
+                        setData(newData);
+                        setEditingKey('');
+                    } else {
+                        newData.push(newSubActivity);
+                        setData(newData);
+                        setEditingKey('');
+                    }
+                    setIsNewAdded(false);
+                    return Promise.resolve(response.data.data);
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
             }
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
     };
 
-    const deleteSubActivity = (record) => {
-        setData(data.filter(item => item.id !== record.id))
+    const deleteSubActivity = async (id) => {
+        return await httpClient
+        .delete(`/activity/removeSubActivity/${id}`)
+        .then((response) => {
+            setData(data.filter(item => item.sub_activity_id !== id))
+            return Promise.resolve(response.data.data);
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+      
     }
+
     const add = () => {
         setIsNewAdded(true)
         const newData = {
             id: Date.now(), //random id for mock - wait id generate from backend to set value
             title: "",
             detail: "",
-            clo: [],
-            point: null
+            clos: [],
+            max_score: null
         };
-        setData([...data,newData]);
+        setData([...data, newData]);
         form.setFieldsValue({
             title: "",
             detail: "",
-            clo: [],
-            point: null
+            clos: [],
+            max_score: null
         })
-        setEditingKey(newData.id);
-      setTimeout(() => {
-          var table = document.getElementById("activitytable").getElementsByClassName("ant-table-container")[0].getElementsByClassName("ant-table-body")[0]
-          table.scrollTop = table.scrollHeight
-        
+        setEditingKey(newData.sub_activity_id);
+        setTimeout(() => {
+            var table = document.getElementById("activitytable").getElementsByClassName("ant-table-container")[0].getElementsByClassName("ant-table-body")[0]
+            table.scrollTop = table.scrollHeight
+
         }, 50);
     }
 
+    async function fetchClo() {
+        return await httpClient
+            .get(`/clo/getAllBySection/${sectionId}`)
+            .then((res) => {
+                setCloList(res.data.data)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    useEffect(() => {
+        fetchClo()
+        // eslint-disable-next-line
+    }, []);
+
+    useEffect(() => {
+        let simplifySubActivty = subActivity
+        simplifySubActivty?.forEach(subAct => {
+            let simplifyclos = []
+            subAct.clos.forEach(e => simplifyclos.push(e.clo_id))
+            subAct.clos = simplifyclos
+        });
+        setData(simplifySubActivty)
+
+    }, [subActivity]);
 
     return { data, form, editingKey, cloList, edit, cancel, save, deleteSubActivity, isNewAdded, add }
 }

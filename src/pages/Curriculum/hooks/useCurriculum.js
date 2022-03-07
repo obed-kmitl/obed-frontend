@@ -80,12 +80,31 @@ export const useCurriculum = () => {
       });
   }
 
+  async function clone(values) {
+    return await httpClient
+      .post(`/curriculum/duplicate/${values.clone}`, {
+        title: values.title,
+        university: values.university,
+        faculty: values.faculty,
+        department: values.department,
+      })
+      .then((response) => {
+        getAll();
+        return Promise.resolve(response.data.data);
+      })
+      .catch((error) => {
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
+      });
+  }
+
   return {
     create,
     get,
     getAll,
     update,
     remove,
+    clone,
     message,
     setMessage,
     curriculum,

@@ -93,7 +93,6 @@ const GoogleClassroomCard = ({ name, code, selected, hasAction, handleChangeGCla
 
 export const Overview = () => {
 
-  const [course, setCourse] = useState(mockCourse);
   const { courseData } = useOverview()
   const [
     allGClass,
@@ -110,11 +109,23 @@ export const Overview = () => {
   ] = useGoogleClassroom()
 
 
+  const getThPrefix = {
+    PROF_DR: "ศ.ดร.",
+    PROF: "ศ.",
+    ASSOC_PROF_DR: "รศ.ดร.",
+    ASSOC_PROF: "รศ.",
+    ASST_PROF_DR: "ผศ.ดร.",
+    ASST_PROF: "ผศ.",
+    DR: "ดร.",
+    INSTRUCTOR: "อ.",
+  };
+
+
 
   return (
     <div className={styles.overview}>
       <Helmet>
-        <title>{course.course_id} Overview - OBED</title>
+        <title>Overview - OBED</title>
       </Helmet>
       <div className={styles.head}>
         <Header level={1}>Overview</Header>
@@ -147,16 +158,23 @@ export const Overview = () => {
             <tr className={styles.nestTableTitle}>
               <td><Header level={5}>Instructor</Header></td>
               <td>
-                {course.teacher.map((teacher, i) =>
+                {courseData?.teachers.map((teacher, i) =>
                   <div key={teacher.firstname + i}>
-                    <Body level={2}>{teacher.prefix}{teacher.firstname}{" "}{teacher.lastname}</Body>
+                    <Body level={2}>{getThPrefix[teacher.prefix]}{teacher.firstname}{" "}{teacher.lastname}</Body>
                   </div>
                 )}
               </td>
             </tr>
             <tr>
               <td><Header level={5}>Pre-Requisite</Header></td>
-              <td><Body level={2}>{course.prerequisite_id}{" "}{course.prerequisite_name}</Body></td>
+              <td>
+                <Body level={2}>{
+                  courseData?.pre_course.course_id === null ?
+                    "None" :
+                    courseData?.pre_course.course_id + " " + courseData?.pre_course.course_name_en
+                }
+                </Body>
+              </td>
             </tr>
             <tr className={styles.nestTableTitle}>
               <td><Header level={5}>Google Classroom</Header></td>

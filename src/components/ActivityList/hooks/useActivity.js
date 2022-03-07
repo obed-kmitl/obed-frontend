@@ -52,8 +52,8 @@ export const useActivity = () => {
     async function deleteActivity(id) {
         return await httpClient
             .delete(`/activity/remove/${id}`)
-            .then((res)=>{
-                console.log(res)
+            .then(()=>{
+                setActivity(activity.filter((act)=>act.activity_id !== id))
             }).catch(err=>console.log(err))
     }
     /////////////////////////////////////
@@ -106,17 +106,6 @@ export const useActivity = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activity])
 
-    useEffect(() => {
-        
-        console.log(category)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [category])
-
-    useEffect(() => {
-        console.log(filteredActivity)
-      
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filteredActivity])
     useEffect(() => {
         fetchActivity()
         // eslint-disable-next-line react-hooks/exhaustive-deps

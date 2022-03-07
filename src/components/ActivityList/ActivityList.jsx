@@ -12,7 +12,7 @@ export const ActivityList = ({ google }) => {
 
     const {
         category, filteredActivity, changeGroup,
-        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity,
+        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel, deleteActivity,
     } = useActivity()
 
     return (
@@ -30,19 +30,19 @@ export const ActivityList = ({ google }) => {
                 //     :
                 <div className={styles.filter}>
                     <Body level={1}>Group:</Body>
-                    <Select width={150} defaultValue="All" onChange={(value) => changeGroup(value)}>
+                    <Select width={150} defaultValue="All" onChange={(value) => changeGroup(value)} >
                         <Option value="All">All</Option>
                         <Option value="Individual">Individual</Option>
                         <Option value="Group">Group</Option>
                     </Select>
-               
-                        
-                            <Button onClick={() => handleAddActivity()} >New</Button>
-                        
-                   
+
+
+                    <Button onClick={() => handleAddActivity()} >New</Button>
+
+
                 </div>
             }
-            {category.length>0&&
+            {category.length > 0 &&
                 // google ?
                 //     <div style={{ padding: "1rem 0 0" }}>
                 //         {
@@ -61,11 +61,11 @@ export const ActivityList = ({ google }) => {
                             header={
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <Header level={3}>{cat.title}</Header>
-                                    {cat.title !== "Unassigned" &&<Header style={{ color: "#F7941D" }} level={4}>{cat.weight}%</Header>}
+                                    {cat.title !== "Unassigned" && <Header style={{ color: "#F7941D" }} level={4}>{cat.weight}%</Header>}
                                 </div>
                             }
                             key={cat.category_id}
-                            
+
                         >
                             {filteredActivity?.filter((atv) => atv.category_id === (cat.category_id || null)).map((activity, index) =>
                                 <Link to={`${window.location.pathname.split("/")[3]}/${activity.activity_id}`} className={styles.link}>
@@ -138,12 +138,13 @@ export const ActivityList = ({ google }) => {
                         label="Category"
                         name="category_id"
                         rules={[
-                            { required: false},
+                            { required: false },
                         ]}
                     >
-                        <Select defaultValue="None">
-                            {category.map((cat) =>
-                                <Option value={cat.category_id || null}>{cat.title}</Option> //Unassigned Activity => id 0
+                        <Select defaultValue="None" placeholder="None" allowClear>
+
+                            {category.filter((e)=>e.category_id!==undefined).map((cat) =>
+                                <Option value={cat.category_id}>{cat.title}</Option> //Unassigned Activity => id 0
                             )}
                         </Select>
                     </Form.Item>

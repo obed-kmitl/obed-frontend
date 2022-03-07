@@ -55,7 +55,7 @@ export const useActivityGrading = () => {
     }
 
     const saveScore = async (studentId, sub_activity_id) => {
-
+        console.log(scoreValue)
         let updatedScoreStudent = [...stdWithScore]
         const studentIndex = updatedScoreStudent.findIndex(
             (item) => item.student_id === studentId

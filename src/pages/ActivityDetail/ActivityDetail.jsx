@@ -33,8 +33,8 @@ export const ActivityDetail = () => {
                         </Header>
                         <Header level={2} style={{ color: '#68A028' }}>{totalScore} pts</Header>
                     </div>
-                    <Tabs defaultActiveKey="1">
-                        <TabPane tab="Overview" key="1">
+                    <Tabs defaultActiveKey="1" destroyInactiveTabPane>
+                        <TabPane tab="Overview" key="1" forceRender>
                             <ActivityOverview activity={activity} category={category} setActivity={setActivity} setTotalScore={setTotalScore}/>
                         </TabPane>
                         <TabPane tab="Group" key="2" disabled={activity.type === 'INDIVIDUAL'}>

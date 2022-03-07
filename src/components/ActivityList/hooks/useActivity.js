@@ -102,9 +102,21 @@ export const useActivity = () => {
 
     useEffect(() => {
         setFilteredActivity(activity);
+        console.log(activity)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activity])
 
+    useEffect(() => {
+        
+        console.log(category)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [category])
+
+    useEffect(() => {
+        console.log(filteredActivity)
+      
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filteredActivity])
     useEffect(() => {
         fetchActivity()
         // eslint-disable-next-line react-hooks/exhaustive-deps

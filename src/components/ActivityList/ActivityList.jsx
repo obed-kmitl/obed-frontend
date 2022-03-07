@@ -67,7 +67,7 @@ export const ActivityList = ({ google }) => {
                             key={cat.category_id}
                             
                         >
-                            {filteredActivity?.filter((atv) => atv.category_id === cat.category_id).map((activity, index) =>
+                            {filteredActivity?.filter((atv) => atv.category_id === (cat.category_id || null)).map((activity, index) =>
                                 <Link to={`${window.location.pathname.split("/")[3]}/${activity.activity_id}`} className={styles.link}>
                                     <ActivityCard activity={activity} key={activity.activity_id} index={index + 1} deleteActivity={deleteActivity} />
                                 </Link>
@@ -138,12 +138,12 @@ export const ActivityList = ({ google }) => {
                         label="Category"
                         name="category_id"
                         rules={[
-                            { required: true, message: "Please Select category" },
+                            { required: false},
                         ]}
                     >
                         <Select defaultValue="None">
                             {category.map((cat) =>
-                                <Option value={cat.category_id || 0}>{cat.title}</Option> //Unassigned Activity => id 0
+                                <Option value={cat.category_id || null}>{cat.title}</Option> //Unassigned Activity => id 0
                             )}
                         </Select>
                     </Form.Item>

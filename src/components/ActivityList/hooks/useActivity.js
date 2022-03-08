@@ -52,16 +52,16 @@ export const useActivity = () => {
     async function deleteActivity(id) {
         return await httpClient
             .delete(`/activity/remove/${id}`)
-            .then(()=>{
-                setActivity(activity.filter((act)=>act.activity_id !== id))
-            }).catch(err=>console.log(err))
+            .then(() => {
+                setActivity(activity.filter((act) => act.activity_id !== id))
+            }).catch(err => console.log(err))
     }
     /////////////////////////////////////
 
     function changeGroup(value) {
-            let newFilter = [...filterOption]
-            newFilter[0] = value
-            setFilterOption(newFilter)
+        let newFilter = [...filterOption]
+        newFilter[0] = value
+        setFilterOption(newFilter)
     }
 
     useEffect(() => {
@@ -82,7 +82,17 @@ export const useActivity = () => {
             .get(`/activity/getAllBySection/${sectionId}`)
             .then((response) => {
                 console.log(response.data.data)
-                setcategory(response.data.data)
+                function addedTotalScorePerCategoryData(data){
+                    data.forEach(category => {
+                        let sum = 0
+                        category.activities.forEach(atv => {
+                            sum += atv.total_max_score
+                        })
+                        category.total_score = sum
+                    })
+                    return data
+                } 
+                setcategory(addedTotalScorePerCategoryData(response.data.data))
                 const retrivedData = response.data.data
                 const activity = []
                 retrivedData.forEach(element => {
@@ -113,6 +123,6 @@ export const useActivity = () => {
 
     return {
         category, filteredActivity, changeGroup,
-        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity
+        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel, deleteActivity
     }
 }

@@ -61,10 +61,10 @@ export const ActivityList = ({ google }) => {
                             header={
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <Header level={3}>{cat.title}</Header>
-                                    {cat.title !== "Unassigned" && <Header style={{ color: "#F7941D" }} level={4}>{cat.weight}%</Header>}
+                                    <Header style={{ color: "#F7941D" }} level={4}>{cat.total_score} pts</Header>
                                 </div>
                             }
-                            key={cat.category_id}
+                            key={cat.category_id || 0}
 
                         >
                             {filteredActivity?.filter((atv) => atv.category_id === (cat.category_id || null)).map((activity, index) =>

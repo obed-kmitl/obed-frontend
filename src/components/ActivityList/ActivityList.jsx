@@ -6,13 +6,23 @@ import { useActivity } from './hooks/useActivity'
 import { Link } from 'react-router-dom'
 import { Modal, Form } from 'antd';
 import TextArea from 'antd/lib/input/TextArea'
+import { CategoryTable } from '../CategoryTable/CategoryTable'
 
 
 export const ActivityList = ({ google }) => {
 
     const {
-        category, filteredActivity, changeGroup,
-        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel, deleteActivity,
+        category,   
+        filteredActivity, 
+        changeGroup,
+        handleAddActivity, 
+        addModalVisible, 
+        handleSubmit, 
+        form, 
+        handleCancel, 
+        deleteActivity,
+        handleEditCategory,
+        categoryModalVisible
     } = useActivity()
 
     return (
@@ -35,11 +45,9 @@ export const ActivityList = ({ google }) => {
                         <Option value="Individual">Individual</Option>
                         <Option value="Group">Group</Option>
                     </Select>
-
-
-                    <Button onClick={() => handleAddActivity()} >New</Button>
-
-
+                    <Button onClick={() => handleEditCategory()} >Category</Button>
+                    <Button onClick={() => handleAddActivity()} >New Activity</Button>
+                 
                 </div>
             }
             {category.length > 0 &&
@@ -149,6 +157,27 @@ export const ActivityList = ({ google }) => {
                         </Select>
                     </Form.Item>
                 </Form>
+            </Modal>
+            <Modal
+                title="Category"
+                visible={categoryModalVisible}
+                footer={null}
+                // onOk={() => {
+                //     form
+                //         .validateFields()
+                //         .then((values) => {
+                //             handleSubmit(values);
+                //         })
+                //         .catch((info) => {
+                //             console.log("Validate Failed", info);
+                //         });
+                // }}
+                onCancel={handleCancel}
+                // okButtonProps={{ htmlType: "submit" }}
+                maskClosable={false}
+                centered
+            >
+              <CategoryTable/>
             </Modal>
         </div>
     )

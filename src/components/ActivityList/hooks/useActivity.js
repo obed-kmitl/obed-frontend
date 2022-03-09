@@ -11,10 +11,11 @@ export const useActivity = () => {
 
     const [filteredActivity, setFilteredActivity] = useState()
     const [filterOption, setFilterOption] = useState(["All"]) // group
-
-    //add Activity/////////////////// 
-    const [addModalVisible, setAddModalVisible] = useState(false)
+  
     const [form] = Form.useForm()
+    const [addModalVisible, setAddModalVisible] = useState(false)
+    const [categoryModalVisible, setCategoryModalVisible] = useState(false)
+    
     const [errMsg, setErrMsg] = useState()
 
     let { sectionId } = useParams();
@@ -46,7 +47,9 @@ export const useActivity = () => {
     }
     function handleCancel() {
         setAddModalVisible(false)
+        setCategoryModalVisible(false)
         form.resetFields()
+        fetchActivity()
     }
 
     async function deleteActivity(id) {
@@ -109,6 +112,9 @@ export const useActivity = () => {
                 return Promise.reject(errMsg);
             });
     }
+    function handleEditCategory() {
+        setCategoryModalVisible(true)
+    }
 
     useEffect(() => {
         setFilteredActivity(activity);
@@ -122,7 +128,16 @@ export const useActivity = () => {
     }, [])
 
     return {
-        category, filteredActivity, changeGroup,
-        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel, deleteActivity
+        category,   
+        filteredActivity, 
+        changeGroup,
+        handleAddActivity, 
+        addModalVisible, 
+        handleSubmit, 
+        form, 
+        handleCancel, 
+        deleteActivity,
+        handleEditCategory,
+        categoryModalVisible
     }
 }

@@ -76,9 +76,9 @@ function App() {
               <PrivateRoute roles={["TEACHER"]} path="/:sectionId/lo">
                 <LearningOutcome />
               </PrivateRoute>
-              <PrivateRoute roles={["TEACHER"]} path="/:sectionId/planning">
+              {/* <PrivateRoute roles={["TEACHER"]} path="/:sectionId/planning">
                 <Planning />
-              </PrivateRoute>
+              </PrivateRoute> */}
               <PrivateRoute
                 roles={["TEACHER"]}
                 exact

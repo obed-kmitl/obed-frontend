@@ -114,13 +114,13 @@ const Navbar = () => {
               >
                 Student
               </NavLink>
-              <NavLink
+              {/* <NavLink
                 to={`/${section}/planning`}
                 className={styles.link}
                 activeClassName={styles.activeLink}
               >
                 Planning
-              </NavLink>
+              </NavLink> */}
               <NavLink
                 to={`/${section}/lo`}
                 className={styles.link}

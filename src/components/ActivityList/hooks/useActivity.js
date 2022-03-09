@@ -11,10 +11,11 @@ export const useActivity = () => {
 
     const [filteredActivity, setFilteredActivity] = useState()
     const [filterOption, setFilterOption] = useState(["All"]) // group
-
-    //add Activity/////////////////// 
-    const [addModalVisible, setAddModalVisible] = useState(false)
+  
     const [form] = Form.useForm()
+    const [addModalVisible, setAddModalVisible] = useState(false)
+    const [categoryModalVisible, setCategoryModalVisible] = useState(false)
+    
     const [errMsg, setErrMsg] = useState()
 
     let { sectionId } = useParams();
@@ -46,22 +47,24 @@ export const useActivity = () => {
     }
     function handleCancel() {
         setAddModalVisible(false)
+        setCategoryModalVisible(false)
         form.resetFields()
+        fetchActivity()
     }
 
     async function deleteActivity(id) {
         return await httpClient
             .delete(`/activity/remove/${id}`)
-            .then((res)=>{
-                console.log(res)
-            }).catch(err=>console.log(err))
+            .then(() => {
+                setActivity(activity.filter((act) => act.activity_id !== id))
+            }).catch(err => console.log(err))
     }
     /////////////////////////////////////
 
     function changeGroup(value) {
-            let newFilter = [...filterOption]
-            newFilter[0] = value
-            setFilterOption(newFilter)
+        let newFilter = [...filterOption]
+        newFilter[0] = value
+        setFilterOption(newFilter)
     }
 
     useEffect(() => {
@@ -82,7 +85,17 @@ export const useActivity = () => {
             .get(`/activity/getAllBySection/${sectionId}`)
             .then((response) => {
                 console.log(response.data.data)
-                setcategory(response.data.data)
+                function addedTotalScorePerCategoryData(data){
+                    data.forEach(category => {
+                        let sum = 0
+                        category.activities.forEach(atv => {
+                            sum += atv.total_max_score
+                        })
+                        category.total_score = sum
+                    })
+                    return data
+                } 
+                setcategory(addedTotalScorePerCategoryData(response.data.data))
                 const retrivedData = response.data.data
                 const activity = []
                 retrivedData.forEach(element => {
@@ -99,9 +112,13 @@ export const useActivity = () => {
                 return Promise.reject(errMsg);
             });
     }
+    function handleEditCategory() {
+        setCategoryModalVisible(true)
+    }
 
     useEffect(() => {
         setFilteredActivity(activity);
+        console.log(activity)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activity])
 
@@ -111,7 +128,16 @@ export const useActivity = () => {
     }, [])
 
     return {
-        category, filteredActivity, changeGroup,
-        handleAddActivity, addModalVisible, handleSubmit, form, handleCancel,deleteActivity
+        category,   
+        filteredActivity, 
+        changeGroup,
+        handleAddActivity, 
+        addModalVisible, 
+        handleSubmit, 
+        form, 
+        handleCancel, 
+        deleteActivity,
+        handleEditCategory,
+        categoryModalVisible
     }
 }

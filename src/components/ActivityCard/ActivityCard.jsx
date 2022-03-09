@@ -5,33 +5,12 @@ import {
     DeleteOutlined
 } from "@ant-design/icons";
 import googleClassroomLogo from "../../assets/img/logo_google_classroom.svg"
-import { useState, useEffect } from "react";
-import httpClient from '../../utils/httpClient';
 
 function Capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 export const ActivityCard = ({ google, activity, index, deleteActivity }) => {
-    const [score, setScore] = useState(0)
-
-    useEffect(async () => {
-        return await httpClient
-            .get(`/activity/get/${activity.activity_id}`)
-            .then((response) => {
-                let total = 0;
-                response.data.data.subActivities?.forEach(element => {
-                    total += element.max_score
-                });
-                setScore(total)
-                return Promise.resolve(response.data.data);
-            })
-            .catch((error) => {
-                console.log(error)
-            });
-
-    }, [])
-
 
     return (
         <div className={styles.card}>
@@ -63,7 +42,7 @@ export const ActivityCard = ({ google, activity, index, deleteActivity }) => {
                     {google ?
                         <Button>Add to Activity</Button>
                         :
-                        <Body level={1}>{score}pts</Body>
+                        <Body level={1}>{activity.total_max_score || 0} pts</Body>
                     }
                 </div>
                 <Popconfirm title="Delete this Activity?" onConfirm={(e) => { deleteActivity(activity.activity_id); e.stopPropagation(); }} >

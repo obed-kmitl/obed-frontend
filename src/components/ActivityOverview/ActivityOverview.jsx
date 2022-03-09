@@ -50,18 +50,18 @@ export const ActivityOverview = ({ activity, category, setActivity,setTotalScore
                     <Divider type="vertical" style={{ height: "100%" }} />
                     <div className={styles.right}>
                         <div className={styles.category}>
-                            <Header level={2}>category</Header>
+                            <Header level={2}>Category</Header>
                             {isEditing ?
                                 <Select
-                                    defaultValue={activity?.category_id}
+                                    defaultValue={activity?.category_id ||null}
                                     onChange={(value) => changecategory(value)}
                                 >
                                     {category.map((cat) =>
-                                        <Option value={cat.category_id}>{cat.title}</Option>
+                                        <Option value={cat.category_id||null}>{cat.title}</Option>
                                     )}
                                 </Select>
                                 :
-                                <Body level={1}>{category.filter(e => e.category_id === activity?.category_id)[0]?.title}</Body>
+                                <Body level={1}>{category.filter(e => e.category_id === activity?.category_id)[0]?.title || "Unassigned"}</Body>
                             }
 
                         </div>

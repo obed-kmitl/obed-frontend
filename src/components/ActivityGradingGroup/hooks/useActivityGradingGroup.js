@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import httpClient from "../../../utils/httpClient";
 import { useParams } from "react-router-dom";
+import { message } from "antd";
 // const student = [
 //     {
 //       id: 61010001,
@@ -375,39 +376,44 @@ export const useActivityGradingGroup = () => {
     }
 
     async function confirmImport() {
-        const nowData = group.map(item => ({ ...item }))
-        const updateGroupWithScore = importData.map((group) => {
-            let importGroup = nowData.find(g => g.title === group.group)
-            importGroup.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
-                if(group[`ข้อ${i + 1}(${item.max_score})`] === 0){
-                    item.obtained_score = 0
-                    return;
-                }
-                if(!group[`ข้อ${i + 1}(${item.max_score})`]){
+        try {
+            const nowData = group.map(item => ({ ...item }))
+            const updateGroupWithScore = importData.map((group) => {
+                let importGroup = nowData.find(g => g.title === group.group)
+
+                importGroup.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
+                    if (group[`ข้อ${i + 1}(${item.max_score})`] === 0) {
+                        item.obtained_score = 0
+                        return;
+                    }
+                    if (!group[`ข้อ${i + 1}(${item.max_score})`]) {
+                        item.obtained_score = null
+                        return;
+                    }
+                    const trimedScore = parseFloat(group[`ข้อ${i + 1}(${item.max_score})`].toString().trim())
+                    if (trimedScore <= item.max_score && trimedScore >= 0) {
+                        item.obtained_score = trimedScore
+                        return;
+                    }
                     item.obtained_score = null
-                    return;
-                }
-                const trimedScore = parseFloat(group[`ข้อ${i + 1}(${item.max_score})`].toString().trim())
-                if (trimedScore <= item.max_score) {
-                    item.obtained_score = trimedScore
-                    return;
-                }
-                item.obtained_score = null
+                })
+                return importGroup
             })
-            return importGroup
-        })
-        return await httpClient
-            .post(`/assessment/saveGroupAssessment`, {
-                groupAssessments: updateGroupWithScore
-            })
-            .then(() => {
-                const updateStatusScore = updateStatus(updateGroupWithScore)
-                setGroup(updateStatusScore)
-                setImportModalVisible(false)
-            })
-            .catch((error) => {
-                console.log(error)
-            });
+            return await httpClient
+                .post(`/assessment/saveGroupAssessment`, {
+                    groupAssessments: updateGroupWithScore
+                })
+                .then(() => {
+                    const updateStatusScore = updateStatus(updateGroupWithScore)
+                    setGroup(updateStatusScore)
+                    setImportModalVisible(false)
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
+        } catch (errInfo) {
+            message.error(`Invalid Template, file upload failed.`);
+        }
     }
 
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import httpClient from "../../../utils/httpClient";
 import { useParams } from "react-router-dom";
+import { message } from "antd";
 
 export const useActivityGrading = () => {
     let { activityId, sectionId } = useParams()
@@ -110,28 +111,29 @@ export const useActivityGrading = () => {
     }
 
     async function confirmImport() {
-        const nowData = stdWithScore.map(item => ({ ...item }))
-        const updateStdWithScore = importData.map((std) => {
-            let student = nowData.find(s => s.student_number === std.student_number)
-            student.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
-                if(std[`ข้อ${i + 1}(${item.max_score})`] === 0){
-                    item.obtained_score = 0
-                    return;
-                }
-                if(!std[`ข้อ${i + 1}(${item.max_score})`]){
+        try{
+            const nowData = stdWithScore.map(item => ({ ...item }))
+            const updateStdWithScore = importData.map((std) => {
+                let student = nowData.find(s => s.student_number === std.student_number)
+                student.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
+                    if(std[`ข้อ${i + 1}(${item.max_score})`] === 0){
+                        item.obtained_score = 0
+                        return;
+                    }
+                    if(!std[`ข้อ${i + 1}(${item.max_score})`]){
+                        item.obtained_score = null
+                        return;
+                    }
+                    const trimedScore = parseFloat(std[`ข้อ${i + 1}(${item.max_score})`].toString().trim())
+                    if (trimedScore <= item.max_score && trimedScore>=0) {
+                        item.obtained_score = trimedScore
+                        return;
+                    }
                     item.obtained_score = null
-                    return;
-                }
-                const trimedScore = parseFloat(std[`ข้อ${i + 1}(${item.max_score})`].toString().trim())
-                if (trimedScore <= item.max_score) {
-                    item.obtained_score = trimedScore
-                    return;
-                }
-                item.obtained_score = null
+                })
+                return student
             })
-            return student
-        })
-        return await httpClient
+             return await httpClient
             .post(`/assessment/saveIndividual`, {
                 individualAssessments: updateStdWithScore
             })
@@ -143,6 +145,11 @@ export const useActivityGrading = () => {
             .catch((error) => {
                 console.log(error)
             });
+        }catch(errInfo){
+            message.error(`Import failed, Invalid Template.`);
+        }
+       
+       
     }
 
     //fetch initial data

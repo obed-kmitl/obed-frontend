@@ -89,9 +89,9 @@ export const useStandard = (selectedCurriculum) => {
   const [addStdForm] = Form.useForm();
   const [editNameForm] = Form.useForm();
 
-  async function fetchAllStandards() {
+  async function fetchAllStandards(curriculum_id) {
     return await httpClient
-      .get(`/standard/getAllByCurriculum/${selectedCurriculum}`)
+      .get(`/standard/getAllByCurriculum/${curriculum_id}`)
       .then((response) => {
         const receivedStandard = response?.data.data.map((std) => ({
           id: std.standard_id,
@@ -337,11 +337,11 @@ export const useStandard = (selectedCurriculum) => {
   }
 
   useEffect(() => {
-    fetchAllStandards();
+    fetchAllStandards(selectedCurriculum);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCurriculum]);
 
-  return [
+  return {
     standard,
     setStandard,
     handleCreateStdBtn,
@@ -371,5 +371,6 @@ export const useStandard = (selectedCurriculum) => {
     editNameForm,
     newStdVisible,
     addStdVisible,
-  ];
+    fetchAllStandards
+  };
 };

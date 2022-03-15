@@ -20,9 +20,10 @@ import styles from "./Standard.module.scss";
 import excelReader from "../../utils/excelReader";
 import { useImportExcel } from "./hooks/useImportExcel";
 import { useStandard } from "./hooks/useStandard";
+import downloadAsExcel from "../../utils/jsonToExcel";
 
 export const Standard = ({ selectedCurriculum }) => {
-  const [
+  const {
     standard,
     setStandard, //standard state
     //create,remove,edit title
@@ -56,33 +57,28 @@ export const Standard = ({ selectedCurriculum }) => {
     //ModalVisible
     newStdVisible,
     addStdVisible,
-  ] = useStandard(selectedCurriculum);
-  const [
+    fetchAllStandards
+  } = useStandard(selectedCurriculum);
+  const {
     importModalVisible,
     handleImportBtnClick,
     importModalCancel,
     getDetailsfromExcel,
     confirmImport,
     importStandard,
-  ] = useImportExcel(setStandard);
+    importForm,
+  } = useImportExcel(fetchAllStandards);
 
   const uploadProps = {
     name: "file",
-    action: window.location.origin,
-    headers: {
-      authorization: "authorization-text",
-    },
-    showUploadList: { showRemoveIcon: false },
+    beforeUpload: () => false,
     maxCount: 1,
-    accept: ".xlsx,.xls",
-    async onChange(info) {
-      if (info.file.status === "done") {
-        console.log(info.file.originFileObj);
-        const datafromExcel = await excelReader(info.file.originFileObj);
+    accept: ".xlsx, .xls",
+    async onChange({ file }) {
+      if (file.status !== "removed") {
+        const datafromExcel = await excelReader(file);
         getDetailsfromExcel(datafromExcel);
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
+        message.success(`${file.name} file uploaded successfully`);
       }
     },
   };
@@ -92,6 +88,9 @@ export const Standard = ({ selectedCurriculum }) => {
       <div className={styles.tabHead}>
         <Header level={2}>Education Standard</Header>
         <div>
+          <Button onClick={() => handleImportBtnClick()}>
+            Import Standard
+          </Button>
           <Button onClick={() => handleCreateStdBtn()} disabled={isEditing}>
             Create New Standard
           </Button>
@@ -165,50 +164,47 @@ export const Standard = ({ selectedCurriculum }) => {
                     (editingTitleIndex === index && isEditing) ||
                     isEditingName
                   ) && (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                      }}
-                    >
-                      <Typography.Link
-                        disabled={isEditing}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEditTitle(index);
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
                         }}
-                      >
-                        <EditOutlined />
-                      </Typography.Link>
-
-                      <Popconfirm
-                        title="Are you sure to delete ?"
-                        onConfirm={(e) => {
-                          handleDeleteTitle(item.id);
-                          e.stopPropagation();
-                        }}
-                        onCancel={(e) => e.stopPropagation()}
                       >
                         <Typography.Link
+                          disabled={isEditing}
                           onClick={(e) => {
                             e.stopPropagation();
+                            handleEditTitle(index);
                           }}
-                          disabled={isEditing}
-                          type="danger"
                         >
-                          <DeleteOutlined />
+                          <EditOutlined />
                         </Typography.Link>
-                      </Popconfirm>
-                    </div>
-                  )}
+
+                        <Popconfirm
+                          title="Are you sure to delete ?"
+                          onConfirm={(e) => {
+                            handleDeleteTitle(item.id);
+                            e.stopPropagation();
+                          }}
+                          onCancel={(e) => e.stopPropagation()}
+                        >
+                          <Typography.Link
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            disabled={isEditing}
+                            type="danger"
+                          >
+                            <DeleteOutlined />
+                          </Typography.Link>
+                        </Popconfirm>
+                      </div>
+                    )}
                 </div>
               }
             >
               <div className={styles.topRightBtn}>
-                <Button onClick={() => handleImportBtnClick(index)}>
-                  Import
-                </Button>
                 <Button onClick={() => handleAddStdBtn(index)}>Add</Button>
               </div>
               <Collapse accordion>
@@ -232,8 +228,8 @@ export const Standard = ({ selectedCurriculum }) => {
                             }}
                           >
                             {editingTitleIndex === index &&
-                            editingNameIndex === i &&
-                            isEditingName ? (
+                              editingNameIndex === i &&
+                              isEditingName ? (
                               <>
                                 <Form
                                   form={editNameForm}
@@ -491,7 +487,17 @@ export const Standard = ({ selectedCurriculum }) => {
         title={<Header level={3}>Import Standard</Header>}
         visible={importModalVisible}
         okText="Add"
-        onOk={() => confirmImport()}
+        onOk={() => {
+          importForm
+            .validateFields()
+            .then((value) => {
+              importForm.resetFields();
+              confirmImport(value, selectedCurriculum)
+            })
+            .catch((info) => {
+              console.log("Validate Failed", info);
+            });
+        }}
         onCancel={() => importModalCancel()}
         okButtonProps={{ htmlType: "submit" }}
         maskClosable={false}
@@ -517,24 +523,66 @@ export const Standard = ({ selectedCurriculum }) => {
               To Import Standard Data, You can download template and upload
               complete file to OBED.{" "}
             </Body>
-            <Typography.Link>Download Template</Typography.Link>
+            <Typography.Link
+              onClick={() => {
+                const data = [{
+                  standardNo:1,
+                  description:"ผลลัพธ์การเรียนรู้1",
+                  subStdNo:1,
+                  subDescription:"ผลลัพธ์การเรียนรู้ย่อย1",
+                  "":"(ตัวอย่าง)"
+                },
+                {
+                  standardNo:1,
+                  description:"ผลลัพธ์การเรียนรู้1",
+                  subStdNo:2,
+                  subDescription:"ผลลัพธ์การเรียนรู้ย่อย2",
+                  "":"(ตัวอย่าง)"
+                },
+                {
+                  standardNo:2,
+                  description:"ผลลัพธ์การเรียนรู้2",
+                  subStdNo:1,
+                  subDescription:"ผลลัพธ์การเรียนรู้ย่อย1",
+                  "":"(ตัวอย่าง)"
+                }
+              ]
+                downloadAsExcel(data, "Education Standard template", [{ width: 10 }, { width: 40 }, { width: 10 }, { width: 40 } ])
+              }}>
+              Download Template
+            </Typography.Link>
           </div>
         </div>
+        <Form
+          form={importForm}
+          name="theStandard"
+          layout="vertical"
+          autoComplete="off"
+          requiredMark={"required"}>
+          <Form.Item
+            label="Standard Name"
+            name="title"
+
+            rules={[{ required: true, message: "Please input Standard Name!" }]}
+          >
+            <Input placeholder=" standard name" />
+          </Form.Item>
+        </Form>
         <Header level={4}>Preview</Header>
         {importStandard ? (
           <div className={styles.preview}>
             <Collapse accordion>
               {importStandard.map((std, index) => (
                 <Panel
-                  header={std.standardNo + " " + std.standardName}
+                  header={std.order_number + " " + std.title}
                   key={index}
                 >
-                  {std.subStandard.map((substd, index) => (
+                  {std.sub_standards.map((substd) => (
                     <>
                       <div style={{ display: "flex", fontSize: "14px" }}>
-                        <div>{substd.subStandardNo}</div>
+                        <div>{substd.order_number}</div>
                         <Divider type="vertical" style={{ height: "100%" }} />
-                        <div>{substd.subStandardName}</div>
+                        <div>{substd.title}</div>
                       </div>
                       <Divider style={{ margin: "0.5rem 0" }} />
                     </>

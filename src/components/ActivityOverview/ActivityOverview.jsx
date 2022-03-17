@@ -68,7 +68,7 @@ export const ActivityOverview = ({ activity, category, setActivity,setTotalScore
                         <Divider type="vertical" style={{ height: "100%" }} />
                         <div className={styles.type}>
                             <Header level={2}>Type</Header>
-                            {isEditing ?
+                            {/* {isEditing ?
                                 <Select
                                     defaultValue={activity?.type}
                                     onChange={(value) => changeType(value)}
@@ -76,10 +76,9 @@ export const ActivityOverview = ({ activity, category, setActivity,setTotalScore
                                     <Option value="INDIVIDUAL">Individual</Option>
                                     <Option value="GROUP">Group</Option>
                                 </Select>
-                                :
+                                : */}
                                 <Body level={2}>{Capitalize(activity?.type)}</Body>
-                            }
-
+                            {/* } */}
                         </div>
                     </div>
                     {isEditing ?

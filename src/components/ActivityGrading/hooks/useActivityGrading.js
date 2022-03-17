@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import httpClient from "../../../utils/httpClient";
 import { useParams } from "react-router-dom";
-import { message } from "antd";
+import { message, Modal } from "antd";
 
 export const useActivityGrading = () => {
     let { activityId, sectionId } = useParams()
@@ -12,7 +12,6 @@ export const useActivityGrading = () => {
     const [scoreValue, setScoreValue] = useState()
     const [importData, setImportData] = useState()
     const [importModalVisible, setImportModalVisible] = useState(false)
-
     // const handleSelectRubric = (point, studentId, sub_activity_id) => {
     //     // let updatedScoreStudent = [...students]
     //     // const studentIndex = updatedScoreStudent.findIndex(
@@ -111,45 +110,67 @@ export const useActivityGrading = () => {
     }
 
     async function confirmImport() {
-        try{
+        try {
             const nowData = stdWithScore.map(item => ({ ...item }))
+            const invalidData = []
             const updateStdWithScore = importData.map((std) => {
                 let student = nowData.find(s => s.student_number === std.student_number)
                 student.scores.sort((a, b) => a.sub_activity_id - b.sub_activity_id).forEach((item, i) => {
-                    if(std[`ข้อ${i + 1}(${item.max_score})`] === 0){
+                    if (std[`ข้อ${i + 1}(${item.max_score})`] === 0) {
                         item.obtained_score = 0
                         return;
                     }
-                    if(!std[`ข้อ${i + 1}(${item.max_score})`]){
+                    if (!std[`ข้อ${i + 1}(${item.max_score})`]) {
+                        item.obtained_score = null
+                        return;
+                    }
+                    if (typeof (std[`ข้อ${i + 1}(${item.max_score})`]) !== "number") {
+                        invalidData.push(std[`ข้อ${i + 1}(${item.max_score})`] + ` at "ข้อ${i + 1}(${item.max_score})" of "${std.student_number}" is not a number`)
                         item.obtained_score = null
                         return;
                     }
                     const trimedScore = parseFloat(std[`ข้อ${i + 1}(${item.max_score})`].toString().trim())
-                    if (trimedScore <= item.max_score && trimedScore>=0) {
+                    if (trimedScore <= item.max_score && trimedScore >= 0) {
                         item.obtained_score = trimedScore
                         return;
                     }
                     item.obtained_score = null
+                    invalidData.push(std[`ข้อ${i + 1}(${item.max_score})`] + ` at "ข้อ${i + 1}(${item.max_score})" of "${std.student_number}" is exceeds the max value (${item.max_score})`)
+
                 })
                 return student
             })
-             return await httpClient
-            .post(`/assessment/saveIndividual`, {
-                individualAssessments: updateStdWithScore
-            })
-            .then(() => {
-                const updateStatusScore = updateStatus(updateStdWithScore)
-                setStdWithScore(updateStatusScore)
-                setImportModalVisible(false)
-            })
-            .catch((error) => {
-                console.log(error)
-            });
-        }catch(errInfo){
+            return await httpClient
+                .post(`/assessment/saveIndividual`, {
+                    individualAssessments: updateStdWithScore
+                })
+                .then(() => {
+                    const updateStatusScore = updateStatus(updateStdWithScore)
+                    setStdWithScore(updateStatusScore)
+                    setImportModalVisible(false)
+                    if (invalidData.length === 0) {
+                        Modal.success({
+                            title: 'All scores were successfully imported.',
+                           
+                        });
+                    }
+                    else {
+                        Modal.warning({
+                            width:500,
+                            title: 'There are invalid data from imported file',
+                            content: <ul>{invalidData.map(data=><li>{data}</li>)}</ul>,
+                        });
+                    }
+
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
+        } catch (errInfo) {
             message.error(`Import failed, Invalid Template.`);
         }
-       
-       
+
+
     }
 
     //fetch initial data

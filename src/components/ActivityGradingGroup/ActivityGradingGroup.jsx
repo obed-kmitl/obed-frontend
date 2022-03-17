@@ -163,11 +163,13 @@ export const ActivityGradingGroup = ({ activity }) => {
                                 }
                                 else
                                     return (
-                                        <div onClick={() => {
-                                            console.log(editingScore)
-                                            setEditingScore([record.group_id, subAct.sub_activity_id]);
-                                            setScoreValue(record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score)
-                                        }}
+                                        <div
+                                            onClick={() => {
+                                                console.log(editingScore)
+                                                setEditingScore([record.group_id, subAct.sub_activity_id]);
+                                                setScoreValue(record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score)
+                                            }}
+                                            style={{ cursor: "pointer", display: "flex", justifyContent: "flex-end" }}
                                         >
                                             {record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score === 0 ? 0
                                                 : record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score

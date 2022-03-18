@@ -259,6 +259,7 @@ export const ActivityGrading = ({ activity }) => {
                                     })
                                     return data
                                 })
+                                console.log(modifyData, activity.title);
                                 downloadAsExcel(modifyData, activity.title)
                             }}>
                             Download Template

@@ -109,11 +109,31 @@ export const useCourse = () => {
       });
   }
 
+  async function createAllCourse(curriculum_id, values) {
+    const newValues = values.map((ele) => {
+      return {
+        ...ele,
+        curriculum_id,
+      };
+    });
+    return await httpClient
+      .post("/course/createAll", { courses: newValues })
+      .then((response) => {
+        setCourses([...courses, ...response.data.data]);
+        return Promise.resolve(response.data.data);
+      })
+      .catch((error) => {
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
+      });
+  }
+
   return {
     createCourse,
     updateCourse,
     removeCourse,
     getCourseByCurriculum,
+    createAllCourse,
     getPlo,
     courses,
     message,

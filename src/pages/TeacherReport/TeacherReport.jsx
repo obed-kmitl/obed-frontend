@@ -13,7 +13,7 @@ import {
   Tooltip as ChartTooltip,
   Legend,
 } from "chart.js";
-import { TeacherReportForm } from "../../components";
+import { TeacherReportForm, ReportTable } from "../../components";
 
 ChartJS.register(
   RadialLinearScale,
@@ -109,6 +109,7 @@ export function TeacherReport() {
         </div>
       </div>
       <TeacherReportForm />
+      <ReportTable />
     </div>
   );
 }

@@ -19,7 +19,7 @@ function ReportTable() {
   }, []);
 
   return (
-    <>
+    <div className={styles.ReportTable}>
       <Header level={2} style={{ marginTop: "1rem" }}>
         ผลการเรียนรู้และการประเมินผล
       </Header>
@@ -110,7 +110,7 @@ function ReportTable() {
           width={20}
         />
       </Table>
-    </>
+    </div>
   );
 }
 

@@ -588,12 +588,36 @@ export const Student = () => {
         confirmLoading={confirmLoading}
       >
         <Header level={4}>Upload (Use KMITL REG Excel template only)</Header>
-        <Upload {...uploadProps}>
+        <Upload
+          {...uploadProps}
+          onRemove={() => {
+            setUploadList([]);
+            setStudentListValid(true);
+          }}
+        >
           <Button icon={<UploadOutlined />}>Click to Upload</Button>
           <Body level={2} className={styles.uploadWarning}>
             {!studentListValid && "Student list not found"}
           </Body>
         </Upload>
+        {uploadList.length > 0 && (
+          <div>
+            <Header level={4}>
+              Preview Student{" "}
+              <small>{"(Found " + uploadList.length + ")"}</small>
+            </Header>
+            <div className={styles.previewWrap}>
+              {uploadList.map((ele) => {
+                const name = ele.firstname + " " + ele.lastname;
+                return (
+                  <p className={styles.previewList}>
+                    {ele.student_number + " - " + name}
+                  </p>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );

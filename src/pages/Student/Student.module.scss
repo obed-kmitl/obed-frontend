@@ -74,3 +74,24 @@
   color: red;
   font-size: 14px;
 }
+
+.previewWrap {
+  max-height: 250px;
+  overflow: auto;
+  border: solid 1px $color-grey-100;
+  padding: 2px 0;
+}
+
+.previewList {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 4px;
+  cursor: default;
+  transition: all ease-in-out 150ms;
+  
+  &:hover {
+    background-color: $color-turquoise-100;
+  }
+}

@@ -209,6 +209,7 @@ export function AdminGraph({ page }) {
               style={{ width: "180px" }}
               defaultValue={null}
               value={selectedSubject?.subject?.id}
+              showSearch
             >
               <Option value={null} disabled>
                 None
@@ -331,6 +332,7 @@ export function AdminGraph({ page }) {
               }}
               style={{ width: "180px" }}
               defaultValue={null}
+              showSearch
             >
               <Option value={null} disabled>
                 None

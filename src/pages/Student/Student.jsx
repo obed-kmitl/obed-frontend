@@ -595,7 +595,7 @@ export const Student = () => {
             setStudentListValid(true);
           }}
         >
-          <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          <Button type="primary" icon={<UploadOutlined />}>Upload</Button>
           <Body level={2} className={styles.uploadWarning}>
             {!studentListValid && "Student list not found"}
           </Body>

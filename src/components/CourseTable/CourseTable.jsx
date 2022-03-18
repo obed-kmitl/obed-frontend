@@ -694,8 +694,9 @@ export const CourseTable = ({ selectedCur }) => {
         confirmLoading={confirmLoading}
         okButtonProps={{ disabled: courseList.length === 0 }}
       >
-        <Header level={4}>Download Excel Template</Header>
-        <Button
+        <Header level={4}>Upload</Header>
+        <p>Can only import course with course id and course name only.</p>
+        <Typography.Link
           onClick={() => {
             downloadAsExcel(
               [
@@ -708,10 +709,12 @@ export const CourseTable = ({ selectedCur }) => {
               "Courses"
             );
           }}
+          type="primary"
         >
-          Download
-        </Button>
-        <Divider />
+          Download template
+        </Typography.Link>
+        <br />
+        <br />
         <Upload
           {...uploadProps}
           onRemove={() => {
@@ -719,9 +722,9 @@ export const CourseTable = ({ selectedCur }) => {
             setCourseValid(true);
           }}
         >
-          <Header level={4}>Upload</Header>
-          <p>Can only import course with course id and course name only.</p>
-          <Button icon={<UploadOutlined />}>Select a file</Button>
+          <Button type="primary" icon={<UploadOutlined />}>
+            Select a file
+          </Button>
         </Upload>
         {courseList.length > 0 && (
           <div>

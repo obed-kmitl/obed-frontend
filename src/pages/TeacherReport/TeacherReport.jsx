@@ -94,6 +94,7 @@ export function TeacherReport() {
               defaultValue=""
               style={{ width: "160px" }}
               onChange={handleChange}
+              showSearch
             >
               <Option value="">None</Option>
               {mockStudentId.map((ele) => (

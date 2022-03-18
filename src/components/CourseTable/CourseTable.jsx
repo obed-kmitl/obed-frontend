@@ -15,6 +15,7 @@ import {
   Alert,
   notification,
   Select,
+  message as AMessage,
 } from "antd";
 import {
   DeleteOutlined,
@@ -26,6 +27,9 @@ import {
 import { Header, Body, Button } from "..";
 import { useCourse } from "./hooks/useCourse";
 import styles from "./CourseTable.module.scss";
+import downloadAsExcel from "../../utils/jsonToExcel";
+import excelReader from "../../utils/excelReader";
+import { useImportCourse } from "./hooks/useImportCourse";
 
 export const CourseTable = ({ selectedCur }) => {
   const {
@@ -33,6 +37,7 @@ export const CourseTable = ({ selectedCur }) => {
     createCourse,
     updateCourse,
     removeCourse,
+    createAllCourse,
     getPlo,
     setMessage,
     message,
@@ -47,6 +52,9 @@ export const CourseTable = ({ selectedCur }) => {
   const [filteredCourse, setFilteredCourse] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [ploList, setPloList] = useState([]);
+  const [courseValid, setCourseValid] = useState(true);
+  const [courseList, setCourseList] = useState([]);
+  const { getCourseListFromExcel } = useImportCourse(setCourseValid);
 
   function openNotificationWithIcon(type, message, desc) {
     notification[type]({
@@ -99,6 +107,8 @@ export const CourseTable = ({ selectedCur }) => {
     setNewCourseVisible(false);
     setImportVisible(false);
     setMessage("");
+    setCourseValid(true);
+    setCourseList([]);
     newCourseForm.resetFields();
   }
 
@@ -130,6 +140,46 @@ export const CourseTable = ({ selectedCur }) => {
       });
     fetchPlo();
   }
+
+  function submitCourseList() {
+    setConfirmLoading(true);
+    createAllCourse(selectedCur.curriculum_id, courseList)
+      .then((data) => {
+        openNotificationWithIcon(
+          "success",
+          courseList.length + " course(s) created"
+        );
+        setCourseValid(true);
+        setCourseList([]);
+        setImportVisible(false);
+        setFetchCourse([...fetchCourse, ...data]);
+      })
+      .catch((message) => {
+        openNotificationWithIcon("error", "Cannot import courses", message);
+      })
+      .finally(() => {
+        setConfirmLoading(false);
+      });
+  }
+
+  const uploadProps = {
+    name: "file",
+    beforeUpload: () => false,
+    maxCount: 1,
+    accept: ".xlsx, .xls",
+    async onChange({ file }) {
+      if (file.status !== "removed") {
+        const datafromExcel = await excelReader(file);
+        let list = getCourseListFromExcel(datafromExcel);
+        setCourseList(list);
+        if (list.length === 0) {
+          console.log(list);
+          setCourseValid(false);
+        } else setCourseValid(true);
+        AMessage.success(`${file.name} file uploaded successfully`);
+      }
+    },
+  };
 
   useEffect(() => {
     getCourses();
@@ -636,20 +686,66 @@ export const CourseTable = ({ selectedCur }) => {
         title="Import Course"
         visible={importVisible}
         okText="OK"
-        onOk={() => {}}
+        onOk={() => {
+          submitCourseList();
+        }}
         onCancel={handleCancel}
         maskClosable={false}
         confirmLoading={confirmLoading}
+        okButtonProps={{ disabled: courseList.length === 0 }}
       >
         <Header level={4}>Download Excel Template</Header>
-        <Button>Download</Button>
+        <Button
+          onClick={() => {
+            downloadAsExcel(
+              [
+                {
+                  course_number: null,
+                  course_name_en: null,
+                  course_name_th: null,
+                },
+              ],
+              "Courses"
+            );
+          }}
+        >
+          Download
+        </Button>
         <Divider />
-        <Upload accept=".xlsx, .xls, .csv">
+        <Upload
+          {...uploadProps}
+          onRemove={() => {
+            setCourseList([]);
+            setCourseValid(true);
+          }}
+        >
           <Header level={4}>Upload</Header>
-          <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          <p>Can only import course with course id and course name only.</p>
+          <Button icon={<UploadOutlined />}>Select a file</Button>
         </Upload>
+        {courseList.length > 0 && (
+          <div>
+            <Header level={4}>
+              Preview Course{" "}
+              <small>{"(Found " + courseList.length + ")"}</small>
+            </Header>
+            <div className={styles.previewWrap}>
+              {courseList.map((ele) => {
+                const name =
+                  ele.course_name_en + " (" + ele.course_name_th + ")";
+                return (
+                  <Tooltip title={name}>
+                    <p className={styles.previewList}>
+                      {ele.course_number + " - " + name}
+                    </p>
+                  </Tooltip>
+                );
+              })}
+            </div>
+          </div>
+        )}
         <Body level={2} className={styles.uploadWarning}>
-          Warning Message
+          {!courseValid && "Course list not valid or wrong template"}
         </Body>
       </Modal>
     </>

@@ -259,7 +259,6 @@ export const ActivityGradingGroup = ({ activity }) => {
                         <Typography.Link
                             onClick={() => {
                                 const modifyData = group.map((g) => {
-                                    console.log(g)
                                     const data = {
                                         group: g.title,
                                         member: g.member.map(s => s.student_number).toString()
@@ -269,7 +268,7 @@ export const ActivityGradingGroup = ({ activity }) => {
                                     })
                                     return data
                                 })
-                                console.log(modifyData)
+                                
                                 downloadAsExcel(modifyData, activity.title)
                             }}>
                             Download Template

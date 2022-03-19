@@ -148,11 +148,11 @@ export const ActivityGradingGroup = ({ activity }) => {
                                 if (editingScore[0] === record.group_id && editingScore[1] === subAct.sub_activity_id) {
                                     return (
                                         <InputNumber
-                                            min={0}
-                                            max={subAct.max_score}
-                                            step={0.5}
+                                            //min={0}
+                                            //max={subAct.max_score}
+                                            //step={0.5}
                                             style={{ width: "100%", margin: "-10px 0", borderBottom: "2px solid #009fc7" }}
-                                            onChange={onScoreChange}
+                                            onChange={(e)=>onScoreChange(e,subAct.max_score)}
                                             defaultValue={record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score}
                                             onBlur={() => saveScore(record.group_id, subAct.sub_activity_id)}
                                             onPressEnter={() => saveScore(record.group_id, subAct.sub_activity_id)}

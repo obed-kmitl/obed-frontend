@@ -53,8 +53,18 @@ export const useActivityGradingGroup = () => {
         return addedStatusGroup
     }
 
-    const onScoreChange = (value) => {
-        setScoreValue(value)
+    const onScoreChange = (value,max) => {
+        console.log(value,max)
+        if(value>max){
+            setScoreValue(max)
+        }
+        else if(value<0){
+            setScoreValue(0)
+        }
+        else{
+            setScoreValue(value)
+        }
+       
     }
 
     const saveScore = async () => {

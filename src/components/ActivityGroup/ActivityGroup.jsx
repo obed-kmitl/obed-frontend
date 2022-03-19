@@ -130,6 +130,16 @@ export const ActivityGroup = () => {
 
     useEffect(() => {
         console.log(group);
+
+        const allStudent = group?.map((g) => {
+            const student = g.students.map(s => {
+                return s.student_number
+            })
+            return student
+        });
+        if (allStudent) {
+            console.log([].concat(...allStudent))
+        }
     }, [group])
 
     return (
@@ -137,7 +147,6 @@ export const ActivityGroup = () => {
             <div className={styles.header}>
                 <Header level={2}>All Groups </Header>
                 <div style={{ gap: "0.5rem", display: "flex" }}>
-                    <Button>Import</Button>
                     <Button onClick={() => setAddGroupModal(true)}>Add</Button>
                 </div>
             </div>
@@ -178,7 +187,12 @@ export const ActivityGroup = () => {
                                         showSearch={true}
                                     >
                                         {students.map((std) =>
-                                            <Option value={std.student_id} disabled={g.students.map((e) => e.student_id).includes(std.student_id)}>{std.student_number}</Option>
+                                            <Option value={std.student_id} disabled={[].concat(...group?.map((g) => {
+                                                const student = g.students.map(s => {
+                                                    return s.student_id
+                                                })
+                                                return student
+                                            })).includes(std.student_id)}>{std.student_number}</Option>
                                         )}
                                     </Select>
                                     <CloseOutlined style={{ color: "#C73535" }} onClick={() => setAddingGroup(null)} />

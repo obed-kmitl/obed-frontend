@@ -130,7 +130,7 @@ export const WeightingTable = () => {
         <Form form={form} component={false}>
             <div className={styles.flexrowSpace}>
                 <div className={styles.flexrow}>
-                    <Header level={2}>Score Weighting&nbsp;</Header>
+                    <Header level={4}>Score Weighting&nbsp;</Header>
                     <Tooltip title=" Total score must be 100%"> <InfoCircleOutlined /></Tooltip>
                 </div>
                 {isAllEditing ?

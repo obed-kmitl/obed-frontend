@@ -6,20 +6,20 @@ import { useActivity } from './hooks/useActivity'
 import { Link } from 'react-router-dom'
 import { Modal, Form } from 'antd';
 import TextArea from 'antd/lib/input/TextArea'
-import { CategoryTable } from '../CategoryTable/CategoryTable'
+import { WeightingTable } from '../WeightingTable/WeightingTable'
 
 
 export const ActivityList = ({ google }) => {
 
     const {
-        category,   
-        filteredActivity, 
+        category,
+        filteredActivity,
         changeGroup,
-        handleAddActivity, 
-        addModalVisible, 
-        handleSubmit, 
-        form, 
-        handleCancel, 
+        handleAddActivity,
+        addModalVisible,
+        handleSubmit,
+        form,
+        handleCancel,
         deleteActivity,
         handleEditCategory,
         categoryModalVisible
@@ -45,9 +45,9 @@ export const ActivityList = ({ google }) => {
                         <Option value="Individual">Individual</Option>
                         <Option value="Group">Group</Option>
                     </Select>
-                    <Button onClick={() => handleEditCategory()} >Category</Button>
+                    <Button onClick={() => handleEditCategory()} >Manage Category</Button>
                     <Button onClick={() => handleAddActivity()} >New Activity</Button>
-                 
+
                 </div>
             }
             {category.length > 0 &&
@@ -69,7 +69,9 @@ export const ActivityList = ({ google }) => {
                             header={
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <Header level={3}>{cat.title}</Header>
-                                    <Header style={{ color: "#F7941D" }} level={4}>{cat.total_score} pts</Header>
+                                    {cat.title !== "Unassigned" &&
+                                        <Header style={{ color: "#F7941D" }} level={4}>{cat.weight} %</Header>
+                                    }
                                 </div>
                             }
                             key={cat.category_id || 0}
@@ -151,7 +153,7 @@ export const ActivityList = ({ google }) => {
                     >
                         <Select defaultValue="None" placeholder="None" allowClear>
 
-                            {category.filter((e)=>e.category_id!==undefined).map((cat) =>
+                            {category.filter((e) => e.category_id !== undefined).map((cat) =>
                                 <Option value={cat.category_id}>{cat.title}</Option> //Unassigned Activity => id 0
                             )}
                         </Select>
@@ -162,22 +164,11 @@ export const ActivityList = ({ google }) => {
                 title="Category"
                 visible={categoryModalVisible}
                 footer={null}
-                // onOk={() => {
-                //     form
-                //         .validateFields()
-                //         .then((values) => {
-                //             handleSubmit(values);
-                //         })
-                //         .catch((info) => {
-                //             console.log("Validate Failed", info);
-                //         });
-                // }}
                 onCancel={handleCancel}
-                // okButtonProps={{ htmlType: "submit" }}
                 maskClosable={false}
                 centered
             >
-              <CategoryTable/>
+                <WeightingTable />
             </Modal>
         </div>
     )

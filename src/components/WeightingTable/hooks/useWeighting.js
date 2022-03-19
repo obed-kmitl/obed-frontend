@@ -8,11 +8,12 @@ export const useWeighting = (sectionId) => {
     const [isAllEditing, setIsAllEditing] = useState(false)
     const [tempWeighting, setTempWeighting] = useState()
     const [editingKey, setEditingKey] = useState('');
-
     const [errMsg, setErrMsg] = useState()
     const [form] = Form.useForm()
-
     const [count, setCount] = useState(0)
+    const [isAdding,setIsAdding] = useState(false)
+
+
     function handleEditBtn() {
         setIsAllEditing(true)
         setTempWeighting([...weightingList])
@@ -28,6 +29,7 @@ export const useWeighting = (sectionId) => {
         setEditingKey("NEW_" + count);
         form.resetFields();
         setCount(count + 1)
+        setIsAdding(true)
     }
     function removeWeighting(record) {
         setWeightingList(weightingList.filter(e => e !== record))
@@ -73,6 +75,10 @@ export const useWeighting = (sectionId) => {
 
     const cancel = () => {
         setEditingKey('');
+        if(isAdding){
+           setWeightingList([...weightingList].slice(0,weightingList.length-1))
+           setIsAdding(false)
+        }
     };
 
     const save = async (category_id) => {
@@ -85,10 +91,16 @@ export const useWeighting = (sectionId) => {
                 newData.splice(index, 1, { ...item, ...row });
                 setWeightingList(newData);
                 setEditingKey('');
+                if(isAdding){
+                    setIsAdding(false)
+                 }
             } else {
                 newData.push(row);
                 setWeightingList(newData);
                 setEditingKey('');
+                if(isAdding){
+                    setIsAdding(false)
+                 }
             }
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);

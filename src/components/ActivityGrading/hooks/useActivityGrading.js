@@ -50,8 +50,18 @@ export const useActivityGrading = () => {
         return addedStatusStudent
     }
 
-    const onScoreChange = (value) => {
-        setScoreValue(value)
+    const onScoreChange = (value,max) => {
+        console.log(value,max)
+        if(value>max){
+            setScoreValue(max)
+        }
+        else if(value<0){
+            setScoreValue(0)
+        }
+        else{
+            setScoreValue(value)
+        }
+       
     }
 
     const saveScore = async (studentId, sub_activity_id) => {
@@ -83,7 +93,7 @@ export const useActivityGrading = () => {
         return await httpClient
             .get(`/assessment/getAllIndividualByActivity/${sectionId}/${activityId}`)
             .then((response) => {
-                console.log(updateStatus(response.data.data))
+                // console.log(updateStatus(response.data.data))
                 setStdWithScore(updateStatus(response.data.data))
 
             })

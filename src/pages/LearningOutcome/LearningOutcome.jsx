@@ -383,7 +383,7 @@ export const LearningOutcome = () => {
                     "." +
                     e.sub_order_number +
                     " " +
-                    e.group_sub_title}
+                    e.sub_title}
                 </Option>
               ))}
             </Select>

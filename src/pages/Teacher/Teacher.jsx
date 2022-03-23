@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import styles from "./Teacher.module.scss";
 import { Helmet } from "react-helmet";
-import { Header, Button, Option } from "../../components";
+import { Header, Button, Option, Input as MyInput } from "../../components";
 import {
   Alert,
   Divider,
@@ -219,23 +219,27 @@ export const Teacher = () => {
   }
 
   function deleteAccount(record) {
-    deleteTeacher(record)
-      .then(() => {
-        let newList = teachers.filter((e) => e.id !== record.id);
-        setTeachers(newList);
-        openNotificationWithIcon(
-          "success",
-          "User deleted",
-          "User " + record.username + " has been deleted."
-        );
-      })
-      .catch(() => {
-        openNotificationWithIcon(
-          "error",
-          "Cannot delete user",
-          "Unexpected error occured, Please try again."
-        );
-      });
+    if (record.role !== "ADMIN") {
+      deleteTeacher(record)
+        .then(() => {
+          let newList = teachers.filter((e) => e.id !== record.id);
+          setTeachers(newList);
+          openNotificationWithIcon(
+            "success",
+            "User deleted",
+            "User " + record.username + " has been deleted."
+          );
+        })
+        .catch(() => {
+          openNotificationWithIcon(
+            "error",
+            "Cannot delete user",
+            "Unexpected error occured, Please try again."
+          );
+        });
+    } else {
+      openNotificationWithIcon("error", "Admin cannot be delete");
+    }
   }
 
   useEffect(() => {
@@ -257,7 +261,7 @@ export const Teacher = () => {
       <div className={styles.head}>
         <Header level={1}>User</Header>
         <div>
-          <Input search placeholder="Search" onSearch={search} allowClear />
+          <MyInput search placeholder="Search" onSearch={search} allowClear />
           <Button onClick={showModal}>Add</Button>
         </div>
       </div>

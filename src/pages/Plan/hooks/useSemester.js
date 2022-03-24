@@ -89,6 +89,9 @@ export const useSemester = () => {
     setSelectedCurriculum(value);
     fetchAllCourse(value);
     fetchAllSemester(value);
+    if(selectedCurriculum!==undefined){
+      setSelectedSemester(undefined)
+    }
   }
 
   async function onChangeSemester(value) {

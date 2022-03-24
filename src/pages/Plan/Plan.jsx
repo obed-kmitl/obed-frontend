@@ -276,7 +276,7 @@ export const Plan = () => {
         </Body>
         <Body level={2}>
           <WarningTwoTone twoToneColor="#ffcc00" />
-          &nbsp;Cannot be delete if created.
+          &nbsp;Created semester cannot be deleted.
         </Body>
       </Modal>
     </div>

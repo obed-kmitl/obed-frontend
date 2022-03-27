@@ -293,10 +293,6 @@ export const LearningOutcome = () => {
                         ) || null,
                     });
                     setEditVisible(true);
-                    console.log(
-                      record?.relative_sub_standards.map((e) => e.sub_std_id) ||
-                        null
-                    );
                   }}
                   style={{
                     fontSize: "18px",

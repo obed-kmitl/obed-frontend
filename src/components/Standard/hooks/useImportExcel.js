@@ -18,7 +18,6 @@ export const useImportExcel = (fetchAllStandards) => {
         setImportModalVisible(false);
     }
     const getDetailsfromExcel = (data) => {
-        console.log(data)
         const getMainStandard = () => {
             const newArray = []
             const duplicate = []
@@ -34,8 +33,6 @@ export const useImportExcel = (fetchAllStandards) => {
             return newArray;
         }
         const mainStandard = getMainStandard()
-        //console.log(mainStandard)
-
         const getSubStandard = () => {
             const newArray = []
             data.forEach(std => {
@@ -44,7 +41,6 @@ export const useImportExcel = (fetchAllStandards) => {
             return newArray;
         }
         const subStandards = getSubStandard()
-        //console.log(subStandards)
 
         mainStandard.forEach(element => {
             const subStdList = subStandards.filter((item) => item.standardNo === element.order_number)
@@ -56,19 +52,9 @@ export const useImportExcel = (fetchAllStandards) => {
             })
         });
         setImportStandard(mainStandard)
-        console.log(importStandard)
-
-        //console.log(mainStandard, subStandards)
     }
-
-    useEffect(() => {
-      console.log(importStandard)
-
-    }, [importStandard])
     
-
     async function confirmImport(value,selectedCurriculum) {
-        console.log(value,selectedCurriculum)
         return await httpClient
         .post(`/standard/createAllStandards`,{
             curriculum_id: selectedCurriculum,

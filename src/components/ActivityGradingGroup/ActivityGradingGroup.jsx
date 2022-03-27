@@ -164,7 +164,6 @@ export const ActivityGradingGroup = ({ activity }) => {
                                     return (
                                         <div
                                             onClick={() => {
-                                                console.log(editingScore)
                                                 setEditingScore([record.group_id, subAct.sub_activity_id]);
                                                 setScoreValue(record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score)
                                             }}

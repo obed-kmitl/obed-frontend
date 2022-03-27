@@ -121,7 +121,6 @@ export const ActivityTable = ({ subActivity, setTotalScore}) => {
                 <div className={styles.overflowBox}>
                     {clos?.map((clo) => {
                         const cloData = cloList.filter((e) => e.clo_id === clo)[0]
-                        //console.log(cloData)
                         return (
                             <Tooltip title={clo.detail} >
                                 <Tag className={styles.tag} key={cloData?.clo_id}>

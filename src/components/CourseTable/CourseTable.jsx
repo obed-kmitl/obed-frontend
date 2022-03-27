@@ -173,7 +173,6 @@ export const CourseTable = ({ selectedCur }) => {
         let list = getCourseListFromExcel(datafromExcel);
         setCourseList(list);
         if (list.length === 0) {
-          console.log(list);
           setCourseValid(false);
         } else setCourseValid(true);
         AMessage.success(`${file.name} file uploaded successfully`);

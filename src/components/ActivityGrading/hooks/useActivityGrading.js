@@ -51,7 +51,6 @@ export const useActivityGrading = () => {
     }
 
     const onScoreChange = (value,max) => {
-        console.log(value,max)
         if(value>max){
             setScoreValue(max)
         }
@@ -61,11 +60,9 @@ export const useActivityGrading = () => {
         else{
             setScoreValue(value)
         }
-       
     }
 
     const saveScore = async (studentId, sub_activity_id) => {
-        console.log(scoreValue)
         let updatedScoreStudent = [...stdWithScore]
         const studentIndex = updatedScoreStudent.findIndex(
             (item) => item.student_id === studentId
@@ -161,7 +158,6 @@ export const useActivityGrading = () => {
                     if (invalidData.length === 0) {
                         Modal.success({
                             title: 'All scores were successfully imported.',
-                           
                         });
                     }
                     else {

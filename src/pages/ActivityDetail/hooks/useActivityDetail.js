@@ -42,8 +42,6 @@ export const useActivityDetail = (activityId, sectionId) => {
             total += element.max_score
         });
         setTotalScore(total)
-        console.log(total)
-
     }, [activity])
 
     return { activity, setActivity, category ,totalScore,setTotalScore}

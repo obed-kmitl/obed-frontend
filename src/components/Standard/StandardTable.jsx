@@ -68,10 +68,8 @@ export const StandardTable = ({
                   const alreadyExistNo = data
                     .map((e) => e.subStandardNo.toString())
                     .filter((e) => e !== record.subStandardNo.toString());
-                   
                   if (inputType === "number") {
                     if (alreadyExistNo.includes(value)) {
-                      console.log(record.subStandardNo)
                       return Promise.reject("Already exist!");
                     }
                     if (isNaN(value) || value.toString().includes(".")) {

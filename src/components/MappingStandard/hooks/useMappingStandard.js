@@ -72,9 +72,7 @@ export const useMappingStandard = (selectedCurriculum) => {
         return httpClient
             .get(`/mapStandard/get/${selectedCurriculum}`)
             .then((response) => {
-                //console.log(response.data.data)
                 if (response.data.data !== undefined) {
-                    console.log(response.data.data)
                     setMapping(response.data.data);
                     setMainStdId(response.data.data.main_std_id);
                     setRelativeStdId(response.data.data.relative_std_id);
@@ -167,11 +165,9 @@ export const useMappingStandard = (selectedCurriculum) => {
     
     }
     async function handleSaveBtn() {
-        console.log(mapping)
         return await httpClient
         .post(`/mapStandard/save`,mapping)
-        .then((response) => {
-            //console.log(response.data.data)
+        .then(() => {
             message.success("Save Mapping Successfully")
             setIsEditing(false)
         })

@@ -10,7 +10,6 @@ export const usePassword = () => {
     //     setIsChangePassword(false)
     // }
     async function handleChangePassword(value) {
-        console.log(value)
         const res = await httpClient.put('http://localhost:3001/obed/api/auth/updatePassword',
             {
                 oldPassword: value.oldPassword,
@@ -23,7 +22,6 @@ export const usePassword = () => {
 
             }
         });
-        console.log(res)
         if (res === "INVALID_PASSWORD") {
             message.error('Invalid Current Password!');
         } else if (res==="PASSWORD_SHOULD_DIFFERENT") {

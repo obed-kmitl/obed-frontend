@@ -84,7 +84,6 @@ export const useActivity = () => {
         return await httpClient
             .get(`/activity/getAllBySection/${sectionId}`)
             .then((response) => {
-                console.log(response.data.data)
                 function addedTotalScorePerCategoryData(data){
                     data.forEach(category => {
                         let sum = 0
@@ -118,7 +117,6 @@ export const useActivity = () => {
 
     useEffect(() => {
         setFilteredActivity(activity);
-        console.log(activity)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activity])
 

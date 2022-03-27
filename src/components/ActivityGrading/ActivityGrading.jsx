@@ -151,7 +151,6 @@ export const ActivityGrading = ({ activity }) => {
                                     return (
                                         <div
                                             onClick={() => {
-                                                console.log(editingScore)
                                                 setEditingScore([record.student_id, subAct.sub_activity_id]);
                                                 setScoreValue(record.scores.filter((e) => e.sub_activity_id === subAct.sub_activity_id)[0]?.obtained_score)
                                             }}
@@ -259,7 +258,6 @@ export const ActivityGrading = ({ activity }) => {
                                     })
                                     return data
                                 })
-                                console.log(modifyData, activity.title);
                                 downloadAsExcel(modifyData, activity.title)
                             }}>
                             Download Template

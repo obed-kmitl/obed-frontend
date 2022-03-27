@@ -40,7 +40,6 @@ export const useActivityTable = (subActivity) => {
     let { sectionId, activityId } = useParams();
 
     const edit = (record) => {
-        console.log(record)
         form.setFieldsValue({
             ...record,
         });
@@ -71,7 +70,6 @@ export const useActivityTable = (subActivity) => {
                         }
                     )
                     .then((response) => {
-                        console.log(newData)
                         let allclos = []
                         response.data.data.clos.forEach(e => allclos.push(e.clo_id))
                         const newSubActivity = {
@@ -106,7 +104,6 @@ export const useActivityTable = (subActivity) => {
                     }
                 )
                 .then((response) => {
-                    console.log(newData)
                     let allclos = []
                     response.data.data.clos.forEach(e => allclos.push(e.clo_id))
                     const newSubActivity = {

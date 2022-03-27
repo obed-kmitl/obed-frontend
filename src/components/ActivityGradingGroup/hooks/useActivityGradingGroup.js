@@ -26,7 +26,6 @@ export const useActivityGradingGroup = () => {
     // }
 
     const updateStatus = (data) => {
-        console.log(data)
         let retriveGroup = data
         const addedStatusGroup = []
         retriveGroup.forEach(g => {
@@ -54,7 +53,6 @@ export const useActivityGradingGroup = () => {
     }
 
     const onScoreChange = (value,max) => {
-        console.log(value,max)
         if(value>max){
             setScoreValue(max)
         }
@@ -109,7 +107,6 @@ export const useActivityGradingGroup = () => {
         return await httpClient
             .get(`/assessment/getAllGroupAssessmentByActivity/${activityId}`)
             .then((response) => {
-                //console.log(updateStatus(response.data.data))
                 setGroup(updateStatus(response.data.data))
 
             })
@@ -120,7 +117,6 @@ export const useActivityGradingGroup = () => {
 
     function handleImportScore(data) {
         setImportData(data)
-        console.log(importData)
     }
 
     async function confirmImport() {

@@ -326,7 +326,7 @@ function TeacherReportForm() {
   function onSave(silent = true) {
     const grades = gradeForm.getFieldsValue();
     const data = {
-      section_id: 1,
+      section_id: parseInt(sectionId),
       grade: [
         grades.A || 0,
         grades.BP || 0,
@@ -389,20 +389,20 @@ function TeacherReportForm() {
   function fetchReportData() {
     getReport(sectionId).then((data) => {
       let grades = {
-        A: data.grade[0] || 0,
-        BP: data.grade[1] || 0,
-        B: data.grade[2] || 0,
-        CP: data.grade[3] || 0,
-        C: data.grade[4] || 0,
-        DP: data.grade[5] || 0,
-        D: data.grade[6] || 0,
-        F: data.grade[7] || 0,
+        A: data?.grade[0] || 0,
+        BP: data?.grade[1] || 0,
+        B: data?.grade[2] || 0,
+        CP: data?.grade[3] || 0,
+        C: data?.grade[4] || 0,
+        DP: data?.grade[5] || 0,
+        D: data?.grade[6] || 0,
+        F: data?.grade[7] || 0,
       };
       setGrade(grades);
-      setSuggest(data?.next_improvements);
-      setSumList(data?.summary);
-      setImprovedList(data?.prev_improvement);
-      setMethodList(data?.verify_method);
+      setSuggest(data?.next_improvements || []);
+      setSumList(data?.summary || []);
+      setImprovedList(data?.prev_improvement || []);
+      setMethodList(data?.verify_method || []);
     });
   }
 
@@ -563,8 +563,8 @@ function TeacherReportForm() {
           <div className={styles.topicLine} />
         </div>
         <Collapse defaultActiveKey={[0]} expandIconPosition="right">
-          {suggest?.length !== 0 ? (
-            suggest.map((ele, i) => (
+          {suggest && suggest?.length !== 0 ? (
+            suggest?.map((ele, i) => (
               <Panel header={ele.title} key={i} extra={genExtra(i)}>
                 <Header level={4}>ที่มา/เหตุผล</Header>
                 <ul>
@@ -604,8 +604,8 @@ function TeacherReportForm() {
         <div className={styles.lastWrap}>
           <Header level={4}>วิธีการทวนสอบ</Header>
           <ul className={styles.addUl}>
-            {methodList?.length !== 0 ? (
-              methodList.map((ele, i) => (
+            {methodList && methodList?.length !== 0 ? (
+              methodList?.map((ele, i) => (
                 <li key={"method" + i} className={styles.addLi}>
                   {"- " + ele}
                   <Tooltip title="Delete">
@@ -635,8 +635,8 @@ function TeacherReportForm() {
           </Input.Group>
           <Header level={4}>สรุปผล</Header>
           <ul className={styles.addUl}>
-            {sumList?.length !== 0 ? (
-              sumList.map((ele, i) => (
+            {sumList && sumList?.length !== 0 ? (
+              sumList?.map((ele, i) => (
                 <li key={"sum" + i} className={styles.addLi}>
                   {"- " + ele}
                   <Tooltip title="Delete">
@@ -669,7 +669,11 @@ function TeacherReportForm() {
           <MyBtn className={styles.addBtn} onClick={() => alert("PDF")}>
             Export PDF
           </MyBtn>
-          <MyBtn className={styles.addBtn} onClick={() => onSave(false)}>
+          <MyBtn
+            className={styles.addBtn}
+            disabled={!dirty}
+            onClick={() => onSave(false)}
+          >
             Save
           </MyBtn>
         </div>

@@ -119,7 +119,7 @@ export const useCourse = () => {
     return await httpClient
       .post("/course/createAll", { courses: newValues })
       .then((response) => {
-        setCourses([...courses, ...response.data.data]);
+        setCourses([...courses, ...response.data.data.created_courses]);
         return Promise.resolve(response.data.data);
       })
       .catch((error) => {

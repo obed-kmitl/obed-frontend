@@ -64,6 +64,13 @@ export const CourseTable = ({ selectedCur }) => {
     });
   }
 
+  function importCourseWarning(title, content) {
+    Modal.error({
+      title: title,
+      content: content,
+    });
+  }
+
   function search(kw) {
     let keyword = kw.trim();
     if (keyword !== "") {
@@ -145,14 +152,38 @@ export const CourseTable = ({ selectedCur }) => {
     setConfirmLoading(true);
     createAllCourse(selectedCur.curriculum_id, courseList)
       .then((data) => {
-        openNotificationWithIcon(
-          "success",
-          courseList.length + " course(s) created"
-        );
+        if (data.duplicated_course_number.length !== 0) {
+          importCourseWarning(
+            "These course(s) cannot be create",
+            <div>
+              <p>
+                Found {data.duplicated_course_number.length} duplicated
+                course(s):
+              </p>
+              <div className={styles.previewWrap}>
+                {data.duplicated_course_number.map((ele) => (
+                  <p
+                    className={styles.previewList}
+                    style={{ paddingLeft: "1rem" }}
+                    key={ele}
+                  >
+                    {ele}
+                  </p>
+                ))}
+              </div>
+            </div>
+          );
+        }
+        if (data.created_courses.length > 0) {
+          openNotificationWithIcon(
+            "success",
+            data.created_courses.length + " course(s) created"
+          );
+        }
         setCourseValid(true);
         setCourseList([]);
         setImportVisible(false);
-        setFetchCourse([...fetchCourse, ...data]);
+        setFetchCourse([...fetchCourse, ...data.created_courses]);
       })
       .catch((message) => {
         openNotificationWithIcon("error", "Cannot import courses", message);
@@ -609,6 +640,10 @@ export const CourseTable = ({ selectedCur }) => {
                 required: true,
                 message: "Please input course name (en)!",
               },
+              {
+                max: 100,
+                message: "Maximum name length is 100 characters",
+              },
             ]}
           >
             <Input placeholder="Course Name in English" />
@@ -620,6 +655,10 @@ export const CourseTable = ({ selectedCur }) => {
               {
                 required: true,
                 message: "Please input course name (th)!",
+              },
+              {
+                max: 100,
+                message: "Maximum name length is 100 characters",
               },
             ]}
           >
@@ -736,7 +775,7 @@ export const CourseTable = ({ selectedCur }) => {
                 const name =
                   ele.course_name_en + " (" + ele.course_name_th + ")";
                 return (
-                  <Tooltip title={name}>
+                  <Tooltip title={name} key={ele.course_number}>
                     <p className={styles.previewList}>
                       {ele.course_number + " - " + name}
                     </p>

@@ -27,12 +27,11 @@
   padding: 4px;
   cursor: default;
   transition: all ease-in-out 150ms;
-  
+
   &:hover {
     background-color: $color-turquoise-100;
   }
 }
-
 
 .uploadWarning {
   color: red;

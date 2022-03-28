@@ -5,8 +5,9 @@ import {
     CloseOutlined, DeleteOutlined, EditOutlined
 } from '@ant-design/icons';
 import { Input, Popover, Modal, Form, Popconfirm } from 'antd';
-import { useParams } from 'react-router-dom';
 import httpClient from '../../utils/httpClient';
+import { useSectionContext } from "../../contexts/SectionContext";
+import { useActivityContext } from '../../contexts/ActivityContext';
 
 export const ActivityGroup = () => {
     const [group, setGroup] = useState()
@@ -15,8 +16,8 @@ export const ActivityGroup = () => {
     const [addGroupModal, setAddGroupModal] = useState(false)
     const [editingGroup, setEditingGroup] = useState(null)
     const [form] = Form.useForm()
-
-    let { activityId, sectionId } = useParams();
+    const {section} = useSectionContext()
+    const { activityId } = useActivityContext();
 
     async function handleAddStudent(group_id, value) {
         return await httpClient
@@ -110,7 +111,7 @@ export const ActivityGroup = () => {
 
     async function fetchStudent() {
         return await httpClient
-            .get(`/student/getAllBySection/${sectionId}`)
+            .get(`/student/getAllBySection/${section}`)
             .then((response) => {
                 setStudents(response.data.data);
             })
@@ -124,9 +125,13 @@ export const ActivityGroup = () => {
     }, [editingGroup])
 
     useEffect(() => {
-        fetchGroup()
+        if(section)
         fetchStudent()
-    }, [])
+    }, [section])
+    useEffect(() => {
+        if(activityId)
+        fetchGroup()
+    }, [activityId])
 
     useEffect(() => {
         console.log(group);

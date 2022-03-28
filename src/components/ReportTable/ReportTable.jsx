@@ -2,21 +2,23 @@ import styles from "./ReportTable.module.scss";
 import { Table, Tag, Tooltip } from "antd";
 import { Header } from "..";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { useReportTable } from "./hooks/useReportTable";
+import { useSectionContext } from "../../contexts/SectionContext";
 
 const { Column } = Table;
 
 function ReportTable() {
-  const { sectionId } = useParams();
+  const { section } = useSectionContext();
   const { getSectionReport } = useReportTable();
   const [data, setData] = useState();
 
   useEffect(() => {
-    getSectionReport(sectionId).then((res) => {
-      setData(res);
-    });
-  }, []);
+    if(section){
+      getSectionReport(section).then((res) => {
+        setData(res);
+      });
+    }
+  }, [section]);
 
   return (
     <div className={styles.ReportTable}>

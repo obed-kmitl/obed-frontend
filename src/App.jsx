@@ -11,7 +11,7 @@ import {
   Student,
   NotFound,
   Overview,
-  Planning,
+  //Planning,
   Activity,
   LearningOutcome,
   TeacherReport,
@@ -67,31 +67,28 @@ function App() {
               <PrivateRoute roles={["ADMIN"]} exact path="/summary">
                 <AdminReport />
               </PrivateRoute>
-              <PrivateRoute roles={["TEACHER"]} path="/:sectionId/overview">
+              <PrivateRoute roles={["TEACHER"]} path="/overview">
                 <Overview />
               </PrivateRoute>
-              <PrivateRoute roles={["TEACHER"]} path="/:sectionId/student">
+              <PrivateRoute roles={["TEACHER"]} path="/student">
                 <Student />
               </PrivateRoute>
-              <PrivateRoute roles={["TEACHER"]} path="/:sectionId/lo">
+              <PrivateRoute roles={["TEACHER"]} path="/lo">
                 <LearningOutcome />
               </PrivateRoute>
-              {/* <PrivateRoute roles={["TEACHER"]} path="/:sectionId/planning">
-                <Planning />
-              </PrivateRoute> */}
               <PrivateRoute
                 roles={["TEACHER"]}
                 exact
-                path="/:sectionId/activity"
+                path="/activity"
               >
                 <Activity />
               </PrivateRoute>
-              <PrivateRoute roles={["TEACHER"]} path="/:sectionId/report">
+              <PrivateRoute roles={["TEACHER"]} path="/report">
                 <TeacherReport />
               </PrivateRoute>
               <PrivateRoute
                 roles={["TEACHER"]}
-                path="/:sectionId/activity/:activityId"
+                path="/activity/detail"
               >
                 <ActivityDetail />
               </PrivateRoute>

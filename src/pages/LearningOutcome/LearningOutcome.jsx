@@ -15,9 +15,9 @@ import {
   InputNumber,
 } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useContext } from "react";
 import httpClient from "../../utils/httpClient";
-import { useParams } from "react-router-dom";
+import { useSectionContext } from "../../contexts/SectionContext";
 
 export const LearningOutcome = () => {
   const { Option } = Select;
@@ -31,11 +31,11 @@ export const LearningOutcome = () => {
   const [editVisible, setEditVisible] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  let { sectionId } = useParams();
+  const { section } = useSectionContext();
 
   async function fetchClo() {
     return await httpClient
-      .get(`/clo/getAllBySection/${sectionId}`)
+      .get(`/clo/getAllBySection/${section}`)
       .then((res) => {
         setClo(res.data.data);
       })
@@ -46,7 +46,7 @@ export const LearningOutcome = () => {
 
   async function fetchPlo() {
     return await httpClient
-      .get(`/mapStandard/getRelativeStandardBySection/${sectionId}`)
+      .get(`/mapStandard/getRelativeStandardBySection/${section}`)
       .then((res) => {
         setPlo(res.data.data);
       })
@@ -68,7 +68,7 @@ export const LearningOutcome = () => {
     setConfirmLoading(true);
     return await httpClient
       .post(`/clo/create`, {
-        section_id: parseInt(sectionId),
+        section_id: parseInt(section),
         detail: values.detail,
         order_number: values.order_number.toString(),
         relative_standards: values.relative_sub_standards || [],
@@ -154,10 +154,12 @@ export const LearningOutcome = () => {
   }
 
   useEffect(() => {
-    fetchClo();
-    fetchPlo();
+    if(section){
+      fetchClo();
+      fetchPlo();
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [section]);
 
   return (
     <div>

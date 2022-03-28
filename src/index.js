@@ -3,10 +3,16 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { SectionContextProvider } from "./contexts/SectionContext";
+import { ActivityContextProvider } from "./contexts/ActivityContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <SectionContextProvider>
+      <ActivityContextProvider>
+        <App />
+      </ActivityContextProvider>
+    </SectionContextProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

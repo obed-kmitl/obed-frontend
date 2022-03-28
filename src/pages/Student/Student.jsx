@@ -26,11 +26,11 @@ import { useState, useEffect, useContext } from "react";
 import { useStudent } from "./hooks/useStudent";
 import { useImportStudent } from "./hooks/useImportStudent";
 import excelReader from "../../utils/excelReader";
-import SectionContext from "../../contexts/SectionContext";
+import { useSectionContext } from "../../contexts/SectionContext";
 
 export const Student = () => {
   const { Column } = Table;
-  const { section } = useContext(SectionContext);
+  const { section } = useSectionContext();
   const {
     students,
     fetchStudents,

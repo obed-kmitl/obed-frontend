@@ -5,15 +5,16 @@ import { useActivityOverview } from '../ActivityOverview/hooks/useActivityOvervi
 import {
     EditOutlined, SaveOutlined,
 } from '@ant-design/icons';
-import { useParams } from 'react-router-dom';
+import { useActivityContext } from '../../contexts/ActivityContext';
 
 export const ActivityOverview = ({ activity, category, setActivity,setTotalScore}) => {
-    let { activityId } = useParams();
+    const { activityId } = useActivityContext();
     const { isEditing, editOverview, saveOverview, handleEditDescription, changecategory, changeType, handleEditTitle } = useActivityOverview(activity, setActivity, activityId)
 
     function Capitalize(str) {
         return str?.charAt(0).toUpperCase() + str?.slice(1).toLowerCase();
     }
+
    
     return (
         <>

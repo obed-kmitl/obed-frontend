@@ -23,5 +23,4 @@ export { ActivityGrading } from "./ActivityGrading/ActivityGrading";
 export { ActivityRubric } from "./ActivityRubric/ActivityRubric";
 export { ActivityGradingGroup } from "./ActivityGradingGroup/ActivityGradingGroup";
 export { WeightingTable } from "./WeightingTable/WeightingTable";
-export { CategoryTable } from "./CategoryTable/CategoryTable";
 export { ReportTable } from "./ReportTable/ReportTable";

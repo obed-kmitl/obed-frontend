@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react"
 import httpClient from "../../../utils/httpClient"
 
-export const useActivityDetail = (activityId, sectionId) => {
+import { useSectionContext } from "../../../contexts/SectionContext";
+import { useActivityContext } from "../../../contexts/ActivityContext";
+
+export const useActivityDetail = () => {
     const [activity, setActivity] = useState()
     const [category, setCategory] = useState()
     const [totalScore, setTotalScore] = useState()
-
+    const { section } = useSectionContext();
+    const { activityId } = useActivityContext();
     async function fetchActivity() {
         return await httpClient
             .get(`/activity/get/${activityId}`)
@@ -20,7 +24,7 @@ export const useActivityDetail = (activityId, sectionId) => {
 
     async function fetchCategory() {
         return await httpClient
-            .get(`/category/getAllBySection/${sectionId}`)
+            .get(`/category/getAllBySection/${section}`)
             .then((response) => {
                 setCategory(response.data.data)
                 return Promise.resolve(response.data.data);
@@ -31,10 +35,12 @@ export const useActivityDetail = (activityId, sectionId) => {
     }
 
     useEffect(() => {
-        fetchCategory();
-        fetchActivity();
+        if (section) {
+            fetchCategory();
+            fetchActivity();
+        }
         // eslint-disable-next-line
-    }, []);
+    }, [section]);
 
     useEffect(() => {
         let total = 0;
@@ -44,5 +50,5 @@ export const useActivityDetail = (activityId, sectionId) => {
         setTotalScore(total)
     }, [activity])
 
-    return { activity, setActivity, category ,totalScore,setTotalScore}
+    return { activity, setActivity, category, totalScore, setTotalScore }
 }

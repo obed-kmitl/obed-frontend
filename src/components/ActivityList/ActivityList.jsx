@@ -22,7 +22,8 @@ export const ActivityList = ({ google }) => {
         handleCancel,
         deleteActivity,
         handleEditCategory,
-        categoryModalVisible
+        categoryModalVisible,
+        setActivityId
     } = useActivity()
 
     return (
@@ -78,7 +79,7 @@ export const ActivityList = ({ google }) => {
 
                         >
                             {filteredActivity?.filter((atv) => atv.category_id === (cat.category_id || null)).map((activity, index) =>
-                                <Link to={`${window.location.pathname.split("/")[3]}/${activity.activity_id}`} className={styles.link}>
+                                <Link to={`${window.location.pathname.split("/")[2]}/detail`} onClick={()=>setActivityId(activity.activity_id)} className={styles.link}>
                                     <ActivityCard activity={activity} key={activity.activity_id} index={index + 1} deleteActivity={deleteActivity} />
                                 </Link>
                             )}

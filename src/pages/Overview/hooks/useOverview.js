@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect,useContext } from 'react'
 import httpClient from "../../../utils/httpClient"
-import { useParams } from 'react-router-dom'
+import { useSectionContext } from "../../../contexts/SectionContext";
 
 export const useOverview = () => {
     const [courseData, setCourseData] = useState()
-    const {sectionId} = useParams()
+    const { section } = useSectionContext()
 
     async function fetchData() {
         return await httpClient
-            .get(`/semester/getSection/${sectionId}`)
+            .get(`/semester/getSection/${section}`)
             .then((response) => {
                 setCourseData(response.data.data)
             })

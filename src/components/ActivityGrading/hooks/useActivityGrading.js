@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import httpClient from "../../../utils/httpClient";
-import { useParams } from "react-router-dom";
 import { message, Modal } from "antd";
 
+import { useSectionContext } from "../../../contexts/SectionContext";
+import { useActivityContext } from "../../../contexts/ActivityContext";
+
 export const useActivityGrading = () => {
-    let { activityId, sectionId } = useParams()
+    const { activityId } = useActivityContext()
+    const { section } = useSectionContext()
 
     const [stdWithScore, setStdWithScore] = useState([])
     const [subActivity, setSubActivity] = useState()
@@ -50,14 +53,14 @@ export const useActivityGrading = () => {
         return addedStatusStudent
     }
 
-    const onScoreChange = (value,max) => {
-        if(value>max){
+    const onScoreChange = (value, max) => {
+        if (value > max) {
             setScoreValue(max)
         }
-        else if(value<0){
+        else if (value < 0) {
             setScoreValue(0)
         }
-        else{
+        else {
             setScoreValue(value)
         }
     }
@@ -88,7 +91,7 @@ export const useActivityGrading = () => {
 
     const fetchStudentScore = async () => {
         return await httpClient
-            .get(`/assessment/getAllIndividualByActivity/${sectionId}/${activityId}`)
+            .get(`/assessment/getAllIndividualByActivity/${section}/${activityId}`)
             .then((response) => {
                 // console.log(updateStatus(response.data.data))
                 setStdWithScore(updateStatus(response.data.data))
@@ -162,9 +165,9 @@ export const useActivityGrading = () => {
                     }
                     else {
                         Modal.warning({
-                            width:500,
+                            width: 500,
                             title: 'There are invalid data from imported file',
-                            content: <ul>{invalidData.map(data=><li>{data}</li>)}</ul>,
+                            content: <ul>{invalidData.map(data => <li>{data}</li>)}</ul>,
                         });
                     }
 
@@ -181,9 +184,17 @@ export const useActivityGrading = () => {
 
     //fetch initial data
     useEffect(() => {
-        fetchStudentScore()
-        fetchSubActivity()
-    }, [])
+        if(section){
+            fetchStudentScore()
+        }
+        
+    }, [section])
+
+    useEffect(() => {
+        if(activityId){
+            fetchSubActivity()
+        }
+    }, [activityId])
 
     return {
         /*students,*/

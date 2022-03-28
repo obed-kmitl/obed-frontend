@@ -11,14 +11,14 @@ import {
 import { Divider, Empty } from "antd";
 import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import SectionContext from "../../contexts/SectionContext";
+import { useSectionContext } from "../../contexts/SectionContext";
 import httpClient from "../../utils/httpClient";
 
 export const Home = () => {
   const [filterSelected, setFilterSelected] = useState();
   const [filteredCourse, setFilteredCourse] = useState([]);
   const [allCourse, setAllCourse] = useState([]);
-  const { setSection } = useContext(SectionContext);
+  const { setSection } = useSectionContext();
 
   async function fetchCourse() {
     const seen = new Set();
@@ -176,11 +176,13 @@ export const Home = () => {
               <div className={styles.cards}>
                 {semesterCourse.courses.map((course, i) => (
                   <div
-                    onClick={() => setSection(course.id)}
+                    onClick={() => {
+                      setSection(course.id)
+                    }}
                     className={styles.card}
                     key={course.id}
                   >
-                    <Link to={`${course.id}/overview`}>
+                    <Link to={`/overview`}>
                       <CourseCard
                         details={course}
                         ended={false}

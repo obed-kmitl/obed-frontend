@@ -1,5 +1,4 @@
 import { Table, InputNumber, Popconfirm, Form, Typography, Tooltip } from 'antd';
-import { useParams } from "react-router-dom";
 import { useWeighting } from './hooks/useWeighting';
 import styles from './WeightingTable.module.scss'
 import { Header, Button, Input } from "../../components";
@@ -10,6 +9,7 @@ import {
     SaveOutlined,
     CloseCircleTwoTone,
 } from "@ant-design/icons";
+import { useSectionContext } from "../../contexts/SectionContext";
 
 const EditableCell = ({
     editing,
@@ -47,7 +47,7 @@ const EditableCell = ({
 };
 
 export const WeightingTable = () => {
-    let { sectionId } = useParams();
+    let { section } = useSectionContext();
     const {
         form,
         weightingList,
@@ -62,7 +62,7 @@ export const WeightingTable = () => {
         save,
         isEditing,
         editingKey,
-    } = useWeighting(sectionId)
+    } = useWeighting(section)
 
     const columns = [
         {

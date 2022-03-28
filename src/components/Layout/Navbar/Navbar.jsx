@@ -12,12 +12,10 @@ import UserContext from "../../../contexts/UserContext";
 import styles from "./Navbar.module.scss";
 import logo from "../../../assets/img/logo_nav.svg";
 import useAuthen from "../../../hooks/useAuthen";
-import SectionContext from "../../../contexts/SectionContext";
 
 const Navbar = () => {
   const { onLogout } = useAuthen();
   const { user } = useContext(UserContext);
-  const { section } = useContext(SectionContext);
   const isAdmin = user.role === "ADMIN";
   const isTeacherHome =
     window.location.pathname.split("/")[2] === "profile" ||
@@ -89,7 +87,6 @@ const Navbar = () => {
       </div>
     </div>
   ) : (
-    <SectionContext.Provider value={{ section }}>
       <div className={styles.navbar} admin={isAdmin.toString()}>
         <div className={styles.container}>
           <div className={styles.l}>
@@ -101,14 +98,14 @@ const Navbar = () => {
               style={{ visibility: isTeacherHome && "hidden" }}
             >
               <NavLink
-                to={`/${section}/overview`}
+                to={`/overview`}
                 className={styles.link}
                 activeClassName={styles.activeLink}
               >
                 Overview
               </NavLink>
               <NavLink
-                to={`/${section}/student`}
+                to={`/student`}
                 className={styles.link}
                 activeClassName={styles.activeLink}
               >
@@ -122,21 +119,21 @@ const Navbar = () => {
                 Planning
               </NavLink> */}
               <NavLink
-                to={`/${section}/lo`}
+                to={`/lo`}
                 className={styles.link}
                 activeClassName={styles.activeLink}
               >
                 Learning Outcome
               </NavLink>
               <NavLink
-                to={`/${section}/activity`}
+                to={`/activity`}
                 className={styles.link}
                 activeClassName={styles.activeLink}
               >
                 Activity
               </NavLink>
               <NavLink
-                to={`/${section}/report`}
+                to={`/report`}
                 className={styles.link}
                 activeClassName={styles.activeLink}
               >
@@ -151,7 +148,6 @@ const Navbar = () => {
           </Dropdown>
         </div>
       </div>
-    </SectionContext.Provider>
   );
 };
 

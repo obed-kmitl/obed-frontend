@@ -1,5 +1,4 @@
 import styles from './Activity.module.scss'
-import { useParams } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import {
     Header, TabPane, Tabs,
@@ -7,7 +6,6 @@ import {
 } from "../../components";
 
 export const Activity = () => {
-    // let { sectionId } = useParams();
 
     return (
         <div className={styles.activity}>

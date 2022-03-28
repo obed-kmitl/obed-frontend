@@ -1,4 +1,3 @@
-//import { useParams } from "react-router-dom";
 import styles from "../Overview/Overview.module.scss"
 import { Helmet } from "react-helmet";
 import { Body, Button, Header } from "../../components";
@@ -15,36 +14,6 @@ import { useState } from "react";
 import { useGoogleClassroom } from "./hooks/useGoogleClassroom";
 import { useOverview } from "./hooks/useOverview";
 
-const mockCourse =
-{
-  id: "1",
-  course_id: "01076001",
-  course_name_th: "วิศวกรรมคอมพิวเตอร์เบื้องต้น",
-  course_name_en: "Introduction to Computer Engineering",
-  section: "1",
-  year: "2021",
-  semester: "1",
-  prerequisite_id: "01076002",
-  prerequisite_name: "Programming Fundamental",
-  teacher: [
-    {
-      id: 1,
-      prefix: "อ.",
-      firstname: "สมชาย",
-      lastname: "สบายดี",
-      username: "somchai15",
-      email: "somchai12@obed.com",
-    },
-    {
-      id: 2,
-      prefix: "ผศ.",
-      firstname: "สมศักดิ์",
-      lastname: "พักผ่อน",
-      username: "somsak77",
-      email: "somsak77@obed.com",
-    }
-  ]
-}
 const GoogleClassroomCard = ({ name, code, selected, hasAction, handleChangeGClass, handleDeleteGClass }) => {
 
   return (

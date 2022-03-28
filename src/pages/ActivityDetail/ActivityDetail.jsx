@@ -1,5 +1,5 @@
 import styles from './ActivityDetail.module.scss'
-import { useParams, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import {
     Header, TabPane, Tabs,
@@ -10,8 +10,7 @@ import { useActivityDetail } from './hooks/useActivityDetail';
 import { LeftOutlined } from "@ant-design/icons";
 
 export const ActivityDetail = () => {
-    let { activityId, sectionId } = useParams();
-    const { activity, setActivity, category, totalScore,setTotalScore} = useActivityDetail(activityId, sectionId)
+    const { activity, setActivity, category, totalScore,setTotalScore} = useActivityDetail()
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -24,7 +23,7 @@ export const ActivityDetail = () => {
             </Helmet>
             {activity && category &&
                 <>
-                    <Link to={`/${sectionId}/activity`} className={styles.backBtn} title="Back" style={{ color: "#f7941d" }} >
+                    <Link to={`/activity`} className={styles.backBtn} title="Back" style={{ color: "#f7941d" }} >
                         <LeftOutlined /> Back
                     </Link>
                     <div className={styles.head}>

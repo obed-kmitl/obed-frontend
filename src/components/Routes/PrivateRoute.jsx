@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect } from "react";
-import { Route, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { Route } from "react-router-dom";
 
 import useUser from "../../hooks/useUser";
-import SectionContext from "../../contexts/SectionContext";
 
 const PrivateRoute = ({ children, path, roles, ...props }) => {
   const { getProfile } = useUser();
@@ -14,18 +13,9 @@ const PrivateRoute = ({ children, path, roles, ...props }) => {
 
   return (
     <Route path={path} {...props}>
-      <SectionContextManager>{children}</SectionContextManager>
+        {children}
     </Route>
   );
 };
 
-const SectionContextManager = ({ children }) => {
-  const { setSection } = useContext(SectionContext);
-  let { sectionId } = useParams();
-  useEffect(() => {
-    setSection(sectionId);
-  }, []);
-
-  return children;
-};
 export { PrivateRoute };

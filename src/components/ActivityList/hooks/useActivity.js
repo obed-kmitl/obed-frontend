@@ -2,7 +2,9 @@ import { useEffect, useState } from "react"
 import { Form } from 'antd';
 import errorTranslate from "../../../utils/errorTranslate";
 import httpClient from '../../../utils/httpClient';
-import { useParams } from "react-router-dom";
+
+import { useSectionContext } from "../../../contexts/SectionContext";
+import { useActivityContext } from "../../../contexts/ActivityContext";
 
 export const useActivity = () => {
     const [category, setcategory] = useState([])
@@ -11,14 +13,15 @@ export const useActivity = () => {
 
     const [filteredActivity, setFilteredActivity] = useState()
     const [filterOption, setFilterOption] = useState(["All"]) // group
-  
+
     const [form] = Form.useForm()
     const [addModalVisible, setAddModalVisible] = useState(false)
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
-    
+
     const [errMsg, setErrMsg] = useState()
 
-    let { sectionId } = useParams();
+    const  { section } = useSectionContext();
+    const {setActivityId} = useActivityContext() 
 
     function handleAddActivity() {
         setAddModalVisible(true)
@@ -28,7 +31,7 @@ export const useActivity = () => {
         return await httpClient
             .post(`/activity/create`,
                 {
-                    section_id: parseInt(sectionId),
+                    section_id: parseInt(section),
                     category_id: value.category_id,
                     title: value.title,
                     detail: value.description,
@@ -82,9 +85,9 @@ export const useActivity = () => {
 
     async function fetchActivity() {
         return await httpClient
-            .get(`/activity/getAllBySection/${sectionId}`)
+            .get(`/activity/getAllBySection/${section}`)
             .then((response) => {
-                function addedTotalScorePerCategoryData(data){
+                function addedTotalScorePerCategoryData(data) {
                     data.forEach(category => {
                         let sum = 0
                         category.activities.forEach(atv => {
@@ -93,7 +96,7 @@ export const useActivity = () => {
                         category.total_score = sum
                     })
                     return data
-                } 
+                }
                 setcategory(addedTotalScorePerCategoryData(response.data.data))
                 const retrivedData = response.data.data
                 const activity = []
@@ -121,21 +124,25 @@ export const useActivity = () => {
     }, [activity])
 
     useEffect(() => {
-        fetchActivity()
+        if (section) {
+            fetchActivity()
+        }
+        
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [section])
 
     return {
-        category,   
-        filteredActivity, 
+        category,
+        filteredActivity,
         changeGroup,
-        handleAddActivity, 
-        addModalVisible, 
-        handleSubmit, 
-        form, 
-        handleCancel, 
+        handleAddActivity,
+        addModalVisible,
+        handleSubmit,
+        form,
+        handleCancel,
         deleteActivity,
         handleEditCategory,
-        categoryModalVisible
+        categoryModalVisible,
+        setActivityId
     }
 }

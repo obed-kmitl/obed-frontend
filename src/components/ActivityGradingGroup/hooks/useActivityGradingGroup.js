@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import httpClient from "../../../utils/httpClient";
-import { useParams } from "react-router-dom";
 import { message, Modal } from "antd";
+import { useActivityContext } from "../../../contexts/ActivityContext";
 
 export const useActivityGradingGroup = () => {
-    let { activityId } = useParams();
+    const { activityId } = useActivityContext();
     const [group, setGroup] = useState([])
     const [subActivity, setSubActivity] = useState()
     const [editingScore, setEditingScore] = useState([])
@@ -181,11 +181,11 @@ export const useActivityGradingGroup = () => {
 
 
     useEffect(() => {
-        fetchGroup();
-        fetchSubActivity();
-        // const addedStatusGroup = updateStatus(groups)
-        // setGroup(addedStatusGroup)
-    }, [])
+        if(activityId){
+            fetchGroup();
+            fetchSubActivity();
+        }
+    }, [activityId])
 
     return {
         group,

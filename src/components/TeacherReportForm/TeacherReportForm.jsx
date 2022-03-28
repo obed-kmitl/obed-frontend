@@ -13,7 +13,7 @@ import {
   notification,
 } from "antd";
 import { useState, useEffect } from "react";
-import { useParams, Prompt } from "react-router-dom";
+import { Prompt } from "react-router-dom";
 import {
   MinusCircleOutlined,
   PlusCircleOutlined,
@@ -21,6 +21,7 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 import { useTeacherReport } from "./hooks/useTeacherReport";
+import { useSectionContext } from "../../contexts/SectionContext";
 
 const { Column } = Table;
 const { Panel } = Collapse;
@@ -37,7 +38,7 @@ const mockTableScheme = {
 };
 
 function TeacherReportForm() {
-  const { sectionId } = useParams();
+  const { section } = useSectionContext();
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
   const [gradeForm] = Form.useForm();
@@ -326,7 +327,7 @@ function TeacherReportForm() {
   function onSave(silent = true) {
     const grades = gradeForm.getFieldsValue();
     const data = {
-      section_id: parseInt(sectionId),
+      section_id: parseInt(section),
       grade: [
         grades.A || 0,
         grades.BP || 0,
@@ -387,7 +388,7 @@ function TeacherReportForm() {
   }
 
   function fetchReportData() {
-    getReport(sectionId).then((data) => {
+    getReport(section).then((data) => {
       let grades = {
         A: data?.grade[0] || 0,
         BP: data?.grade[1] || 0,
@@ -407,9 +408,11 @@ function TeacherReportForm() {
   }
 
   useEffect(() => {
-    fetchReportData();
+    if (section) {
+      fetchReportData();
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [section]);
 
   useEffect(() => {
     gradeForm.setFieldsValue(grade);

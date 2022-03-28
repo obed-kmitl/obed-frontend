@@ -1,43 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Form } from 'antd'
 import httpClient from "../../../utils/httpClient";
-import { useParams } from "react-router-dom";
-
-const mockCLO = [
-    {
-        clo_id: 1,
-        order_number: "1.1",
-        detail: "test",
-
-    },
-    {
-        clo_id: 2,
-        order_number: "1.2",
-        detail: "test",
-
-    },
-    {
-        clo_id: 3,
-        order_number: "2.1",
-        detail: "test 3",
-
-    },
-    {
-        clo_id: 4,
-        order_number: "2.2",
-        detail: "test 4",
-
-    },
-
-]
+import { useSectionContext } from '../../../contexts/SectionContext';
+import { useActivityContext } from '../../../contexts/ActivityContext';
 
 export const useActivityTable = (subActivity) => {
-    const [cloList, setCloList] = useState(mockCLO)
+    const [cloList, setCloList] = useState([])
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
     const [data, setData] = useState([]);
     const [isNewAdded, setIsNewAdded] = useState(false);
-    let { sectionId, activityId } = useParams();
+    const {section} = useSectionContext()
+    const {activityId} = useActivityContext()
 
     const edit = (record) => {
         form.setFieldsValue({
@@ -173,7 +147,7 @@ export const useActivityTable = (subActivity) => {
 
     async function fetchClo() {
         return await httpClient
-            .get(`/clo/getAllBySection/${sectionId}`)
+            .get(`/clo/getAllBySection/${section}`)
             .then((res) => {
                 setCloList(res.data.data)
             })
@@ -183,9 +157,11 @@ export const useActivityTable = (subActivity) => {
     }
 
     useEffect(() => {
-        fetchClo()
+        if(section){
+            fetchClo()
+        }
         // eslint-disable-next-line
-    }, []);
+    }, [section]);
 
     useEffect(() => {
         let simplifySubActivty = subActivity

@@ -40,7 +40,7 @@ export const ActivityList = ({ google }) => {
                 //     </Button>
                 //     :
                 <div className={styles.filter}>
-                    <Body level={1}>Group:</Body>
+                    <Body level={1}>Activity Type:</Body>
                     <Select width={150} defaultValue="All" onChange={(value) => changeGroup(value)} >
                         <Option value="All">All</Option>
                         <Option value="Individual">Individual</Option>

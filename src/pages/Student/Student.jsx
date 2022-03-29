@@ -238,9 +238,9 @@ export const Student = () => {
       setStudentListValid(true);
       if (file.status !== "removed") {
         const datafromExcel = await excelReader(file);
-        let list = getStudentListFromExcel(datafromExcel);
-        setUploadList(list);
-        if (list.length === 0) setStudentListValid(false);
+        let list = getStudentListFromExcel(datafromExcel, retrived);
+        setUploadList(list.validList);
+        if (list.validList.length === 0) setStudentListValid(false);
         else setStudentListValid(true);
         message.success(`${file.name} file uploaded successfully`);
       }
@@ -330,7 +330,12 @@ export const Student = () => {
               </Tooltip>
               <Tooltip title="Delete">
                 <Popconfirm
-                  title="Sure to delete this student?"
+                  title={
+                    <p>
+                      Sure to delete this student? <br /> Related work and score
+                      will be delete.
+                    </p>
+                  }
                   onConfirm={() => deleteStudent(record)}
                 >
                   <a
@@ -595,9 +600,11 @@ export const Student = () => {
             setStudentListValid(true);
           }}
         >
-          <Button type="primary" icon={<UploadOutlined />}>Upload</Button>
+          <Button type="primary" icon={<UploadOutlined />}>
+            Upload
+          </Button>
           <Body level={2} className={styles.uploadWarning}>
-            {!studentListValid && "Student list not found"}
+            {!studentListValid && "No new student found or invalid excel file."}
           </Body>
         </Upload>
         {uploadList.length > 0 && (

@@ -1,80 +1,80 @@
 import styles from "../Overview/Overview.module.scss"
 import { Helmet } from "react-helmet";
-import { Body, Button, Header } from "../../components";
-import { Divider, Typography, Modal, Popconfirm } from "antd";
-import {
-  //EditOutlined,
-  LinkOutlined,
-  CheckCircleFilled,
-  DeleteOutlined,
-  SyncOutlined
-} from "@ant-design/icons";
-import googleClassroomLogo from "../../assets/img/logo_google_classroom.svg"
-import { useGoogleClassroom } from "./hooks/useGoogleClassroom";
+import { Body, Header } from "../../components";
+import { Divider } from "antd";
+// import {
+//   //EditOutlined,
+//   LinkOutlined,
+//   CheckCircleFilled,
+//   DeleteOutlined,
+//   SyncOutlined
+// } from "@ant-design/icons";
+// import googleClassroomLogo from "../../assets/img/logo_google_classroom.svg"
+// import { useGoogleClassroom } from "./hooks/useGoogleClassroom";
 import { useOverview } from "./hooks/useOverview";
 
-const GoogleClassroomCard = ({ name, code, selected, hasAction, handleChangeGClass, handleDeleteGClass }) => {
+// const GoogleClassroomCard = ({ name, code, selected, hasAction, handleChangeGClass, handleDeleteGClass }) => {
 
-  return (
-    selected === false ?
-      <div className={styles.card} >
-        <div className={styles.flexrow}>
-          <Header level={1}>{name}</Header><LinkOutlined className={styles.linkicon} />
-        </div>
-        <Body level={2} >{code}</Body>
-      </div>
-      :
-      <div className={styles.selectedCard} >
-        <div className={styles.flexrowspace}>
-          <div>
-            <div className={styles.flexrow}>
-              <Header level={1}>{name}</Header><LinkOutlined className={styles.linkicon} />
-            </div><Body level={2} >{code}</Body>
-          </div>
-          {hasAction === true ?
-            <div className={styles.cardaction}>
-              <Typography.Link
-                style={{ fontSize: "20px", color: "#FFFFFF" }}
-                onClick={() => handleChangeGClass()}
-              >
-                <SyncOutlined />
-              </Typography.Link>
-              <Popconfirm
-                title="Are you sure to remove linked Google Classroom course?"
-                onConfirm={handleDeleteGClass}
-                okText="Yes"
-                cancelText="No">
-                <Typography.Link
-                  style={{ fontSize: "20px", color: "#FFFFFF" }}
-                >
-                  <DeleteOutlined />
-                </Typography.Link>
-              </Popconfirm>
-            </div>
-            :
-            <CheckCircleFilled className={styles.checkicon} />
-          }
-        </div>
-      </div>
-  )
-}
+//   return (
+//     selected === false ?
+//       <div className={styles.card} >
+//         <div className={styles.flexrow}>
+//           <Header level={1}>{name}</Header><LinkOutlined className={styles.linkicon} />
+//         </div>
+//         <Body level={2} >{code}</Body>
+//       </div>
+//       :
+//       <div className={styles.selectedCard} >
+//         <div className={styles.flexrowspace}>
+//           <div>
+//             <div className={styles.flexrow}>
+//               <Header level={1}>{name}</Header><LinkOutlined className={styles.linkicon} />
+//             </div><Body level={2} >{code}</Body>
+//           </div>
+//           {hasAction === true ?
+//             <div className={styles.cardaction}>
+//               <Typography.Link
+//                 style={{ fontSize: "20px", color: "#FFFFFF" }}
+//                 onClick={() => handleChangeGClass()}
+//               >
+//                 <SyncOutlined />
+//               </Typography.Link>
+//               <Popconfirm
+//                 title="Are you sure to remove linked Google Classroom course?"
+//                 onConfirm={handleDeleteGClass}
+//                 okText="Yes"
+//                 cancelText="No">
+//                 <Typography.Link
+//                   style={{ fontSize: "20px", color: "#FFFFFF" }}
+//                 >
+//                   <DeleteOutlined />
+//                 </Typography.Link>
+//               </Popconfirm>
+//             </div>
+//             :
+//             <CheckCircleFilled className={styles.checkicon} />
+//           }
+//         </div>
+//       </div>
+//   )
+// }
 
 export const Overview = () => {
 
   const { courseData } = useOverview()
-  const [
-    allGClass,
-    selectedGClass,
-    ggClassroomVisible,
-    handleAddGClass,
-    handleOk,
-    handleCancel,
-    handleCardClick,
-    linkedGClass,
-    handleChangeGClass,
-    changeCard,
-    handleDeleteGClass
-  ] = useGoogleClassroom()
+  // const [
+  //   allGClass,
+  //   selectedGClass,
+  //   ggClassroomVisible,
+  //   handleAddGClass,
+  //   handleOk,
+  //   handleCancel,
+  //   handleCardClick,
+  //   linkedGClass,
+  //   handleChangeGClass,
+  //   changeCard,
+  //   handleDeleteGClass
+  // ] = useGoogleClassroom()
 
 
   const getThPrefix = {
@@ -87,8 +87,6 @@ export const Overview = () => {
     DR: "ดร.",
     INSTRUCTOR: "อ.",
   };
-
-
 
   return (
     <div className={styles.overview}>
@@ -144,7 +142,7 @@ export const Overview = () => {
                 </Body>
               </td>
             </tr>
-            <tr className={styles.nestTableTitle}>
+            {/* <tr className={styles.nestTableTitle}>
               <td><Header level={5}>Google Classroom</Header></td>
               <td style={{ verticalAlign: "bottom" }}>
                 {linkedGClass === null ?
@@ -171,11 +169,11 @@ export const Overview = () => {
                   </div>
                 }
               </td>
-            </tr>
+            </tr> */}
           </tbody>
         </table>
       </div>
-      <Modal
+      {/* <Modal
         title={changeCard ? "Change Course" : "Choose Course"}
         visible={ggClassroomVisible}
         onOk={handleOk}
@@ -195,7 +193,7 @@ export const Overview = () => {
           )
           }
         </div>
-      </Modal>
+      </Modal> */}
 
     </div>
   );

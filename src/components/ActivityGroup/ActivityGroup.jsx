@@ -122,15 +122,18 @@ export const ActivityGroup = () => {
 
     useEffect(() => {
         form.setFieldsValue({ title: group?.filter((g) => g.group_id === editingGroup)[0]?.title })
+        // eslint-disable-next-line
     }, [editingGroup])
 
     useEffect(() => {
         if(section)
         fetchStudent()
+        // eslint-disable-next-line
     }, [section])
     useEffect(() => {
         if(activityId)
         fetchGroup()
+        // eslint-disable-next-line
     }, [activityId])
 
     useEffect(() => {
@@ -145,6 +148,7 @@ export const ActivityGroup = () => {
         if (allStudent) {
             console.log([].concat(...allStudent))
         }
+        // eslint-disable-next-line
     }, [group])
 
     return (

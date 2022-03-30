@@ -15,7 +15,7 @@ import {
   InputNumber,
 } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { useState, useEffect,useContext } from "react";
+import { useState, useEffect } from "react";
 import httpClient from "../../utils/httpClient";
 import { useSectionContext } from "../../contexts/SectionContext";
 

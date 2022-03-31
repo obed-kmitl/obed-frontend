@@ -1,7 +1,7 @@
 import styles from "./ClassroomTab.module.scss";
 import { GoogleLogin } from "react-google-login";
 import config from "../../config";
-import { Header, Body,Button } from "..";
+import { Header, Body, Button } from "..";
 import { useGoogleClassroom } from "./hooks/useGoogleClassroom";
 import { Radio, Space } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
@@ -32,11 +32,11 @@ const ClassroomTab = () => {
             {
               googleActivity.map((activity) =>
                 <div className={styles.card}>
-                    <img
-                      src={googleClassroomLogo}
-                      alt="google classroom"
-                      className={styles.logo}
-                    />
+                  <img
+                    src={googleClassroomLogo}
+                    alt="google classroom"
+                    className={styles.logo}
+                  />
                   <div className={styles.detail}>
                     <div className={styles.content}>
                       <div className={styles.titleBox}>
@@ -44,9 +44,7 @@ const ClassroomTab = () => {
                       </div>
                       <Body level={2} className={styles.description}>{activity.detail}</Body>
                     </div>
-                    
-                        <Button>Add to Activity</Button>
-                    
+                    <Button>Add to Activity</Button>
                   </div>
                 </div >
               )
@@ -61,7 +59,7 @@ const ClassroomTab = () => {
             <br />
             <div className={styles.flexcol}>
               <Header level={4}>Select Course</Header>
-              <br/>
+              <br />
               <Radio.Group onChange={onCourseChange} value={selectedCourse} buttonStyle="solid">
                 <Space wrap>
                   {allGClass.map((course) =>

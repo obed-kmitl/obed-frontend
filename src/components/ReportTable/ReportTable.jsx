@@ -18,6 +18,7 @@ function ReportTable() {
         setData(res);
       });
     }
+    // eslint-disable-next-line
   }, [section]);
 
   return (

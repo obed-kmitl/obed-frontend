@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import {
     Header, TabPane, Tabs,
-    ActivityOverview, ActivityGroup, ActivityGrading, ActivityRubric, ActivityGradingGroup
+    ActivityOverview, ActivityGroup, ActivityGrading,  ActivityGradingGroup
 } from "../../components";
 import { useEffect } from 'react';
 import { useActivityDetail } from './hooks/useActivityDetail';

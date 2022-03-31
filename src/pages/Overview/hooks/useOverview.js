@@ -1,4 +1,4 @@
-import { useState, useEffect,useContext } from 'react'
+import { useState, useEffect } from 'react'
 import httpClient from "../../../utils/httpClient"
 import { useSectionContext } from "../../../contexts/SectionContext";
 
@@ -19,6 +19,7 @@ export const useOverview = () => {
 
     useEffect(() => {
         fetchData()
+        // eslint-disable-next-line
     }, [])
 
     return { courseData }

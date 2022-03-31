@@ -187,13 +187,14 @@ export const useActivityGrading = () => {
         if(section){
             fetchStudentScore()
         }
-        
+        // eslint-disable-next-line
     }, [section])
 
     useEffect(() => {
         if(activityId){
             fetchSubActivity()
         }
+        // eslint-disable-next-line
     }, [activityId])
 
     return {

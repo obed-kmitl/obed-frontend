@@ -1,8 +1,7 @@
 import styles from './Profile.module.scss';
 import { Helmet } from 'react-helmet';
-import { Header, Button, Input, Option,Body } from "../../components";
+import { Header, Button, Input, Option} from "../../components";
 import { Divider, Form, Select } from "antd";
-import { LinkOutlined } from '@ant-design/icons';
 import { useProfileFrom } from './hooks/useProfile';
 import { usePassword } from './hooks/usePassword';
 
@@ -159,7 +158,7 @@ export const Profile = () => {
         <Button style={{ marginBottom: "2rem" }} type="primary" onClick={() => setIsChangePassword(true)}>Change Password</Button>
 
       } */}
-      <div className={styles.head}>
+      {/* <div className={styles.head}>
         <Header level={1}>Google Account</Header>
       </div>
       <Divider />
@@ -167,7 +166,7 @@ export const Profile = () => {
       <div className={styles.flexrow}>
       <Body>Linked with john.doe@kmitl.ac.th</Body>
       <Button  type="primary">Unlink</Button>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -185,6 +185,7 @@ export const useActivityGradingGroup = () => {
             fetchGroup();
             fetchSubActivity();
         }
+        // eslint-disable-next-line
     }, [activityId])
 
     return {

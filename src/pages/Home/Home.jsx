@@ -9,7 +9,7 @@ import {
   Input,
 } from "../../components";
 import { Divider, Empty } from "antd";
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSectionContext } from "../../contexts/SectionContext";
 import httpClient from "../../utils/httpClient";

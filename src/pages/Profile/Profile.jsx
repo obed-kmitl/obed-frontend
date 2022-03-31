@@ -1,8 +1,7 @@
 import styles from './Profile.module.scss';
 import { Helmet } from 'react-helmet';
-import { Header, Button, Input, Option,Body } from "../../components";
+import { Header, Button, Input, Option} from "../../components";
 import { Divider, Form, Select } from "antd";
-import { LinkOutlined } from '@ant-design/icons';
 import { useProfileFrom } from './hooks/useProfile';
 import { usePassword } from './hooks/usePassword';
 

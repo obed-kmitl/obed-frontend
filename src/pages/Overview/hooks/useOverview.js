@@ -18,9 +18,11 @@ export const useOverview = () => {
     }
 
     useEffect(() => {
-        fetchData()
+        if(section){
+            fetchData()
+        }
         // eslint-disable-next-line
-    }, [])
+    }, [section])
 
-    return { courseData }
+    return { courseData ,section}
 }

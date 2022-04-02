@@ -137,7 +137,7 @@ export const Overview = () => {
                 <Body level={2}>{
                   courseData?.pre_course.course_id === null ?
                     "None" :
-                    courseData?.pre_course.course_id + " " + courseData?.pre_course.course_name_en
+                    (courseData?.pre_course.course_id || "") + " " +(courseData?.pre_course.course_name_en ||"" )
                 }
                 </Body>
               </td>

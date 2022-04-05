@@ -1,5 +1,5 @@
 import styles from "./TeacherReport.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Radar } from "react-chartjs-2";
 import { Divider, Select } from "antd";
@@ -14,6 +14,9 @@ import {
   Legend,
 } from "chart.js";
 import { TeacherReportForm, ReportTable } from "../../components";
+import { useTeacherReport } from "./hooks/useTeacherReport";
+import { useStudent } from "../Student/hooks/useStudent";
+import { useSectionContext } from "../../contexts/SectionContext";
 
 ChartJS.register(
   RadialLinearScale,
@@ -24,23 +27,21 @@ ChartJS.register(
   Legend
 );
 
-const mockStudentId = [
-  {
-    id: "61010001",
-  },
-  {
-    id: "61010002",
-  },
-  {
-    id: "61010003",
-  },
-];
-
 export function TeacherReport() {
   const [selectedId, setSelectedId] = useState("");
+  const { fetchStudents } = useStudent();
+  const { getPLOSummaryBySection, getPLOSummaryByStudentAndSection } =
+    useTeacherReport();
+  const { section } = useSectionContext();
+  const [students, setStudents] = useState([]);
+  const [graphData, setGraphData] = useState([]);
+  const [studentGraph, setStudentGraph] = useState([]);
+  const [selectedVal, setSelectedVal] = useState("[]");
 
   function handleChange(value) {
-    setSelectedId(value);
+    const parsedValue = JSON.parse(value);
+    setSelectedVal(value);
+    setSelectedId(parsedValue[0]);
   }
 
   const options = {
@@ -48,6 +49,8 @@ export function TeacherReport() {
     scales: {
       r: {
         beginAtZero: true,
+        max: 100,
+        min: 0,
       },
     },
     ticks: {
@@ -56,24 +59,54 @@ export function TeacherReport() {
   };
 
   const data = {
-    labels: ["1.1", "1.2", "2.1", "3.1", "6.1"],
+    labels: graphData.map((each) => each.order_number),
     datasets: [
       {
         label: "Class Average",
-        data: [80, 56, 77, 68, 75],
+        data: graphData.map((each) => each.percent),
         backgroundColor: "rgba(0, 159, 199, 0.2)",
         borderColor: "rgba(0, 159, 199, 1)",
         borderWidth: 1,
       },
       selectedId && {
         label: selectedId,
-        data: [82, 68, 79, 81, 60],
+        data: studentGraph.map((each) => each.percent),
         backgroundColor: "rgba(247, 148, 29, 0.2)",
         borderColor: "rgba(247, 148, 29, 1)",
         borderWidth: 1,
       },
     ],
   };
+
+  function fetchStudentGraph(studentId) {
+    getPLOSummaryByStudentAndSection(section, studentId).then((data) =>
+      setStudentGraph(data)
+    );
+  }
+
+  useEffect(() => {
+    if (section) {
+      fetchStudents(section).then((data) => {
+        const newData = data.map((ele) => {
+          return {
+            label: ele.student_number,
+            value: JSON.stringify([ele.student_number, ele.student_id]),
+          };
+        });
+        setStudents(newData);
+        setSelectedVal(newData[0].value);
+      });
+      getPLOSummaryBySection(section).then((data) => setGraphData(data));
+    }
+  }, [section]);
+
+  useEffect(() => {
+    const parseVal = JSON.parse(selectedVal);
+    if (parseVal[1]) {
+      fetchStudentGraph(parseVal[1]);
+      setSelectedId(parseVal[0]);
+    }
+  }, [selectedVal]);
 
   return (
     <div>
@@ -91,18 +124,12 @@ export function TeacherReport() {
             <Header level={3}>Compare with</Header>
             <Select
               className="select-student-id"
-              defaultValue=""
               style={{ width: "160px" }}
+              value={selectedVal}
               onChange={handleChange}
               showSearch
-            >
-              <Option value="">None</Option>
-              {mockStudentId.map((ele) => (
-                <Option key={ele.id} value={ele.id}>
-                  {ele.id}
-                </Option>
-              ))}
-            </Select>
+              options={students}
+            />
           </div>
         </div>
         <div>

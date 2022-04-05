@@ -8,7 +8,7 @@ export const useReportTable = () => {
 
   async function getSectionReport(sectionId) {
     return httpClient
-      .get(`/report/getSectionReport/${sectionId}`)
+      .get(`/summary/getCLOSummaryBySection/${sectionId}`)
       .then((response) => {
         setReportData(response.data.data);
         return Promise.resolve(response.data.data);

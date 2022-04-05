@@ -673,7 +673,8 @@ export const CourseTable = ({ selectedCur }) => {
                   if (
                     alreadyExistNo.includes(value) ||
                     value === "" ||
-                    value === undefined
+                    value === undefined ||
+                    value === null
                   ) {
                     return Promise.resolve();
                   } else
@@ -692,7 +693,9 @@ export const CourseTable = ({ selectedCur }) => {
                   .toLowerCase()
                   .indexOf(input.toLowerCase()) >= 0
               }
+              defaultValue={null}
             >
+              <Option value={null}>None</Option>
               {fetchCourse.map((e) => (
                 <Option value={e.course_id} key={e.course_id}>
                   {e.course_number + " " + e.course_name_en}

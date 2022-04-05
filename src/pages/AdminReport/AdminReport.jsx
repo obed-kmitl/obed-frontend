@@ -24,7 +24,7 @@ export function AdminReport() {
         <Link to="/summary/subject" className={styles.linkWrap}>
           <div>
             <BarsOutlined />
-            &emsp;<p>Assesment Report by Subject</p>
+            &emsp;<p>Assesment Report by Course</p>
           </div>
           <RightOutlined />
         </Link>

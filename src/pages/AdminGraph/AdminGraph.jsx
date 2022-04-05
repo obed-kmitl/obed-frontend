@@ -53,6 +53,7 @@ export function AdminGraph({ page }) {
     getPLOSummaryByCourseAndSemester,
     getPLOSummaryByStudentNumberAndCurriculum,
     getPLOSummaryByCohortAndCurriculum,
+    getPLOSummaryByCurriculum,
     getCourseDropdown,
     getSemesterDropdown,
     getStudentDropdown,
@@ -61,6 +62,7 @@ export function AdminGraph({ page }) {
   const [courseList, setCourseList] = useState([]);
   const [semesterList, setSemesterList] = useState([]);
   const [studentList, setStudentList] = useState([]);
+  const [curriculumGraphData, setCurriculumGraphData] = useState(null);
   const [subjectGraphData, setSubjectGraphData] = useState(null);
   const [cohortGraphData, setCohortGraphData] = useState(null);
   const [studentGraphData, setStudentGraphData] = useState(null);
@@ -147,6 +149,28 @@ export function AdminGraph({ page }) {
   }, [selectedCohort]);
 
   useEffect(() => {
+    if (selectedStudent.curriculum !== "") {
+      setIsLoading(true);
+      getPLOSummaryByCurriculum(selectedStudent.curriculum)
+        .then((data) => {
+          setCurriculumGraphData({
+            label: "Curriculum Average",
+            data: data.map((ele) => ele.percent),
+            backgroundColor: "rgba(0, 159, 199, 0.2)",
+            borderColor: "rgba(0, 159, 199, 1)",
+            borderWidth: 1,
+          });
+        })
+        .catch(() => {
+          setCurriculumGraphData(null);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [selectedStudent.curriculum]);
+
+  useEffect(() => {
     if (selectedStudent.studentId !== "") {
       setIsLoading(true);
       getPLOSummaryByStudentNumberAndCurriculum(
@@ -157,11 +181,12 @@ export function AdminGraph({ page }) {
           setStudentGraphData({
             labels: data.map((ele) => ele.order_number),
             datasets: [
+              curriculumGraphData,
               {
                 label: selectedStudent.studentId,
                 data: data.map((ele) => ele.percent),
-                backgroundColor: "rgba(0, 159, 199, 0.2)",
-                borderColor: "rgba(0, 159, 199, 1)",
+                backgroundColor: "rgba(247, 148, 29, 0.2)",
+                borderColor: "rgba(247, 148, 29, 1)",
                 borderWidth: 1,
               },
             ],
@@ -174,7 +199,7 @@ export function AdminGraph({ page }) {
           setIsLoading(false);
         });
     }
-  }, [selectedStudent]);
+  }, [selectedStudent.studentId]);
 
   return (
     <>

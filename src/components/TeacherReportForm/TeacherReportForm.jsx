@@ -20,7 +20,7 @@ import {
   DeleteOutlined,
   EditOutlined,
 } from "@ant-design/icons";
-import { useTeacherReport } from "./hooks/useTeacherReport";
+import { useTeacherReportForm } from "./hooks/useTeacherReportForm";
 import { useSectionContext } from "../../contexts/SectionContext";
 
 const { Column } = Table;
@@ -63,7 +63,7 @@ function TeacherReportForm() {
   });
   const [grade, setGrade] = useState();
   const [dirty, setDirty] = useState(false);
-  const { getReport, saveReport } = useTeacherReport();
+  const { getReport, saveReport, exportPDF } = useTeacherReportForm();
 
   function popIndex(arr, index) {
     let newArr = [...arr.slice(0, index), ...arr.slice(index + 1)];
@@ -669,7 +669,7 @@ function TeacherReportForm() {
           </Input.Group>
         </div>
         <div className={styles.btnWrap}>
-          <MyBtn className={styles.addBtn} onClick={() => alert("PDF")}>
+          <MyBtn className={styles.addBtn} onClick={() => exportPDF(section)}>
             Export PDF
           </MyBtn>
           <MyBtn

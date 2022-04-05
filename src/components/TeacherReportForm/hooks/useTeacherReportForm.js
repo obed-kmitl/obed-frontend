@@ -2,7 +2,7 @@ import { useState } from "react";
 import httpClient from "../../../utils/httpClient";
 import errorTranslate from "../../../utils/errorTranslate";
 
-export const useTeacherReport = () => {
+export const useTeacherReportForm = () => {
   const [reportData, setReportData] = useState();
   const [message, setMessage] = useState("");
 
@@ -31,5 +31,18 @@ export const useTeacherReport = () => {
       });
   }
 
-  return { reportData, getReport, saveReport, message };
+  async function exportPDF(sectionId) {
+    return httpClient
+      .get(`/report/generate/${sectionId}`, { responseType: "blob" })
+      .then((response) => {
+        window.open(URL.createObjectURL(response.data));
+        return Promise.resolve(response.data);
+      })
+      .catch((error) => {
+        errorTranslate(error, setMessage);
+        return Promise.reject(message);
+      });
+  }
+
+  return { reportData, getReport, saveReport, exportPDF, message };
 };

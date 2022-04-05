@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Radar } from "react-chartjs-2";
 import { Divider, Select } from "antd";
-import { Header, Option } from "../../components";
+import { Header } from "../../components";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -36,7 +36,7 @@ export function TeacherReport() {
   const [students, setStudents] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const [studentGraph, setStudentGraph] = useState([]);
-  const [selectedVal, setSelectedVal] = useState("[]");
+  const [selectedVal, setSelectedVal] = useState("");
 
   function handleChange(value) {
     const parsedValue = JSON.parse(value);
@@ -101,7 +101,7 @@ export function TeacherReport() {
   }, [section]);
 
   useEffect(() => {
-    const parseVal = JSON.parse(selectedVal);
+    const parseVal = JSON.parse(selectedVal === "" ? "[]" : selectedVal);
     if (parseVal[1]) {
       fetchStudentGraph(parseVal[1]);
       setSelectedId(parseVal[0]);
@@ -123,6 +123,7 @@ export function TeacherReport() {
           <div className={styles.selectWrap}>
             <Header level={3}>Compare with</Header>
             <Select
+              placeholder="Student ID"
               className="select-student-id"
               style={{ width: "160px" }}
               value={selectedVal}

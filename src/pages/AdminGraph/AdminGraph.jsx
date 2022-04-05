@@ -1,7 +1,7 @@
 import styles from "./AdminGraph.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Divider, Select } from "antd";
+import { Divider, Select, Empty, Spin } from "antd";
 import { Header, Option } from "../../components";
 import { Link } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
@@ -16,6 +16,8 @@ import {
   Legend,
 } from "chart.js";
 
+import { useAdminGraph } from "./hooks/useAdminGraph";
+
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -25,62 +27,14 @@ ChartJS.register(
   Legend
 );
 
-const curriculum = [
-  {
-    curriculum_id: 1,
-    title: "วิศวกรรมคอมพิวเตอร์ 2564",
-  },
-  {
-    curriculum_id: 2,
-    title: "วิศวกรรมคอมพิวเตอร์ 2560",
-  },
-];
-
-const semester = [
-  {
-    id: 1,
-    title: "2/2564",
-  },
-  {
-    id: 2,
-    title: "1/2564",
-  },
-  {
-    id: 3,
-    title: "3/2563",
-  },
-];
-
-const subject = [
-  {
-    id: "01076001",
-    title: "Introduction to Computer Engineering",
-  },
-  {
-    id: "01076002",
-    title: "Programming Fundamentals",
-  },
-];
-
-const classes = ["65", "64", "63", "62", "61"];
-
-const student = [
-  {
-    id: "61010001",
-    fullname: "สมชาย ใจดี",
-  },
-  {
-    id: "61010002",
-    fullname: "สมหญิง จริงใจ",
-  },
-];
-
 const options = {
   maintainAspectRatio: false,
   responsive: true,
   scales: {
     r: {
       beginAtZero: true,
+      max: 100,
+      min: 0,
     },
   },
   ticks: {
@@ -88,44 +42,34 @@ const options = {
   },
 };
 
-const data = {
-  labels: ["1.1", "1.2", "2.1", "3.1", "6.1"],
-  datasets: [
-    {
-      label: "Label 1",
-      data: [80, 56, 77, 68, 75],
-      backgroundColor: "rgba(0, 159, 199, 0.2)",
-      borderColor: "rgba(0, 159, 199, 1)",
-      borderWidth: 1,
-    },
-  ],
-};
-
-const data2 = {
-  labels: ["PLO1", "PLO2", "PLO3", "PLO4", "PLO5"],
-  datasets: [
-    {
-      label: "Label 1",
-      data: [80, 56, 77, 68, 75],
-      backgroundColor: "rgba(0, 159, 199, 0.2)",
-      borderColor: "rgba(0, 159, 199, 1)",
-      borderWidth: 1,
-    },
-    {
-      label: "Label 2",
-      data: [82, 68, 79, 81, 60],
-      backgroundColor: "rgba(247, 148, 29, 0.2)",
-      borderColor: "rgba(247, 148, 29, 1)",
-      borderWidth: 1,
-    },
-  ],
-};
+let cohortList = [];
+for (let i = 61; i <= new Date().getFullYear() - 1957; i++) {
+  cohortList.push(i);
+}
 
 export function AdminGraph({ page }) {
+  const {
+    getCurriculumList,
+    getPLOSummaryByCourseAndSemester,
+    getPLOSummaryByStudentNumberAndCurriculum,
+    getPLOSummaryByCohortAndCurriculum,
+    getCourseDropdown,
+    getSemesterDropdown,
+    getStudentDropdown,
+  } = useAdminGraph();
+  const [curriculumList, setCurriculumList] = useState([]);
+  const [courseList, setCourseList] = useState([]);
+  const [semesterList, setSemesterList] = useState([]);
+  const [studentList, setStudentList] = useState([]);
+  const [subjectGraphData, setSubjectGraphData] = useState(null);
+  const [cohortGraphData, setCohortGraphData] = useState(null);
+  const [studentGraphData, setStudentGraphData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState({
     curriculum: "",
     semester: "",
     subject: "",
+    number: "",
   });
   const [selectedCohort, setSelectedCohort] = useState({
     curriculum: "",
@@ -135,6 +79,102 @@ export function AdminGraph({ page }) {
     curriculum: "",
     studentId: "",
   });
+
+  useEffect(() => {
+    getCurriculumList().then((data) => {
+      setCurriculumList(data);
+    });
+  }, [page]);
+
+  useEffect(() => {
+    if (selectedSubject.subject !== "") {
+      setIsLoading(true);
+      getPLOSummaryByCourseAndSemester(
+        selectedSubject.subject,
+        selectedSubject.semester
+      )
+        .then((data) => {
+          setSubjectGraphData({
+            labels: data.map((ele) => ele.order_number),
+            datasets: [
+              {
+                label: selectedSubject.number,
+                data: data.map((ele) => ele.percent),
+                backgroundColor: "rgba(0, 159, 199, 0.2)",
+                borderColor: "rgba(0, 159, 199, 1)",
+                borderWidth: 1,
+              },
+            ],
+          });
+        })
+        .catch(() => {
+          setSubjectGraphData(null);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [selectedSubject]);
+
+  useEffect(() => {
+    if (selectedCohort.cohort !== "") {
+      setIsLoading(true);
+      getPLOSummaryByCohortAndCurriculum(
+        selectedCohort.curriculum,
+        selectedCohort.cohort
+      )
+        .then((data) => {
+          setCohortGraphData({
+            labels: data.map((ele) => ele.order_number),
+            datasets: [
+              {
+                label: selectedCohort.cohort,
+                data: data.map((ele) => ele.percent),
+                backgroundColor: "rgba(0, 159, 199, 0.2)",
+                borderColor: "rgba(0, 159, 199, 1)",
+                borderWidth: 1,
+              },
+            ],
+          });
+        })
+        .catch(() => {
+          setCohortGraphData(null);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [selectedCohort]);
+
+  useEffect(() => {
+    if (selectedStudent.studentId !== "") {
+      setIsLoading(true);
+      getPLOSummaryByStudentNumberAndCurriculum(
+        selectedStudent.curriculum,
+        selectedStudent.studentId
+      )
+        .then((data) => {
+          setStudentGraphData({
+            labels: data.map((ele) => ele.order_number),
+            datasets: [
+              {
+                label: selectedStudent.studentId,
+                data: data.map((ele) => ele.percent),
+                backgroundColor: "rgba(0, 159, 199, 0.2)",
+                borderColor: "rgba(0, 159, 199, 1)",
+                borderWidth: 1,
+              },
+            ],
+          });
+        })
+        .catch(() => {
+          setStudentGraphData(null);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [selectedStudent]);
 
   return (
     <>
@@ -148,7 +188,7 @@ export function AdminGraph({ page }) {
               <Link to="/summary" className={styles.backBtn} title="Back">
                 <LeftOutlined />
               </Link>
-              Assesment Report by Subject
+              Assesment Report by Course
             </Header>
           </div>
           <Divider />
@@ -161,15 +201,17 @@ export function AdminGraph({ page }) {
                   ...selectedSubject,
                   curriculum: value,
                 });
+                getSemesterDropdown(value).then((data) => {
+                  setSemesterList(data);
+                });
               }}
               style={{ width: "260px" }}
               defaultValue={null}
-              value={selectedSubject?.curriculum.curriculum_id}
             >
               <Option value={null} disabled>
                 None
               </Option>
-              {curriculum.map((e) => (
+              {curriculumList.map((e) => (
                 <Option value={e.curriculum_id} key={e.curriculum_id}>
                   {e.title}
                 </Option>
@@ -183,47 +225,69 @@ export function AdminGraph({ page }) {
                   ...selectedSubject,
                   semester: value,
                 });
-              }}
-              style={{ width: "180px" }}
-              defaultValue={null}
-              value={selectedSubject?.semester?.id}
-            >
-              <Option value={null} disabled>
-                None
-              </Option>
-              {semester.map((e) => (
-                <Option value={e.id} key={e.id}>
-                  {e.title}
-                </Option>
-              ))}
-            </Select>
-            <Header level={3}>Subject</Header>
-            <Select
-              placeholder="Subject"
-              onChange={(value) => {
-                setSelectedSubject({
-                  ...selectedSubject,
-                  subject: value,
+                getCourseDropdown(value).then((data) => {
+                  setCourseList(data);
                 });
               }}
               style={{ width: "180px" }}
               defaultValue={null}
-              value={selectedSubject?.subject?.id}
-              showSearch
+              disabled={selectedSubject.curriculum === ""}
             >
               <Option value={null} disabled>
                 None
               </Option>
-              {subject.map((e) => (
-                <Option value={e.id} key={e.id}>
-                  {e.id}
+              {semesterList.map((e) => (
+                <Option value={e.id} key={e.label}>
+                  {e.label}
+                </Option>
+              ))}
+            </Select>
+            <Header level={3}>Course</Header>
+            <Select
+              placeholder="Course"
+              onChange={(value) => {
+                setSelectedSubject({
+                  ...selectedSubject,
+                  subject: value[1],
+                  number: value[0],
+                });
+              }}
+              style={{ width: "180px" }}
+              defaultValue={null}
+              showSearch
+              disabled={
+                selectedSubject.curriculum === "" ||
+                selectedSubject.semester === ""
+              }
+            >
+              <Option value={null} disabled>
+                None
+              </Option>
+              {courseList.map((e) => (
+                <Option value={[e.label, e.id]} key={e.label}>
+                  {e.label}
                 </Option>
               ))}
             </Select>
           </div>
-          <div className={styles.graphWrap}>
-            <Radar data={data} options={options} />
-          </div>
+          <Spin spinning={isLoading}>
+            <div className={styles.graphWrap}>
+              {subjectGraphData ? (
+                <Radar data={subjectGraphData} options={options} />
+              ) : (
+                <Empty
+                  style={{
+                    margin: "50px",
+                    color: "#c3c3c4",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                  }}
+                  imageStyle={{ height: 100 }}
+                  description="Please select course"
+                />
+              )}
+            </div>
+          </Spin>
         </div>
       )}
       {page === "cohort" && (
@@ -249,12 +313,11 @@ export function AdminGraph({ page }) {
               }}
               style={{ width: "260px" }}
               defaultValue={null}
-              value={selectedCohort?.curriculum?.curriculum_id}
             >
               <Option value={null} disabled>
                 None
               </Option>
-              {curriculum.map((e) => (
+              {curriculumList.map((e) => (
                 <Option value={e.curriculum_id} key={e.curriculum_id}>
                   {e.title}
                 </Option>
@@ -271,20 +334,36 @@ export function AdminGraph({ page }) {
               }}
               style={{ width: "180px" }}
               defaultValue={null}
+              disabled={selectedCohort.curriculum === ""}
             >
               <Option value={null} disabled>
                 None
               </Option>
-              {classes.map((e) => (
+              {cohortList?.map((e) => (
                 <Option value={e} key={e}>
                   {e}
                 </Option>
               ))}
             </Select>
           </div>
-          <div className={styles.graphWrap}>
-            <Radar data={data} options={options} />
-          </div>
+          <Spin spinning={isLoading}>
+            <div className={styles.graphWrap}>
+              {cohortGraphData ? (
+                <Radar data={cohortGraphData} options={options} />
+              ) : (
+                <Empty
+                  style={{
+                    margin: "50px",
+                    color: "#c3c3c4",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                  }}
+                  imageStyle={{ height: 100 }}
+                  description="Please select cohort"
+                />
+              )}
+            </div>
+          </Spin>
         </div>
       )}
       {page === "student" && (
@@ -307,15 +386,17 @@ export function AdminGraph({ page }) {
                   ...selectedStudent,
                   curriculum: value,
                 });
+                getStudentDropdown(value).then((data) => {
+                  setStudentList(data);
+                });
               }}
               style={{ width: "260px" }}
               defaultValue={null}
-              value={selectedCohort?.curriculum?.curriculum_id}
             >
               <Option value={null} disabled>
                 None
               </Option>
-              {curriculum.map((e) => (
+              {curriculumList.map((e) => (
                 <Option value={e.curriculum_id} key={e.curriculum_id}>
                   {e.title}
                 </Option>
@@ -333,20 +414,36 @@ export function AdminGraph({ page }) {
               style={{ width: "180px" }}
               defaultValue={null}
               showSearch
+              disabled={selectedStudent.curriculum === ""}
             >
               <Option value={null} disabled>
                 None
               </Option>
-              {student.map((e) => (
-                <Option value={e.id} key={e.id}>
-                  {e.id}
+              {studentList.map((e) => (
+                <Option value={e.value} key={e.value}>
+                  {e.value}
                 </Option>
               ))}
             </Select>
           </div>
-          <div className={styles.graphWrap}>
-            <Radar data={data2} options={options} />
-          </div>
+          <Spin spinning={isLoading}>
+            <div className={styles.graphWrap}>
+              {studentGraphData ? (
+                <Radar data={studentGraphData} options={options} />
+              ) : (
+                <Empty
+                  style={{
+                    margin: "50px",
+                    color: "#c3c3c4",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                  }}
+                  imageStyle={{ height: 100 }}
+                  description="Please select student"
+                />
+              )}
+            </div>
+          </Spin>
         </div>
       )}
     </>

@@ -3,11 +3,13 @@ const nodeEnv = process.env.REACT_APP_NODE_ENV || "development";
 const config = {
   development: {
     apiUrl: process.env.REACT_APP_API_URL,
-    googleClientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || '1075818370617-olki93anh4mfpcasj4chcb9seci5leqj.apps.googleusercontent.com'
+    googleClientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || '1075818370617-olki93anh4mfpcasj4chcb9seci5leqj.apps.googleusercontent.com',
+    config: 'https://www.googleapis.com/auth/classroom.courses.readonly',
   },
   production: {
     apiUrl: process.env.REACT_APP_API_URL_PROD,
-    googleClientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || '1075818370617-olki93anh4mfpcasj4chcb9seci5leqj.apps.googleusercontent.com'
+    googleClientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || '1075818370617-olki93anh4mfpcasj4chcb9seci5leqj.apps.googleusercontent.com',
+    config: 'https://www.googleapis.com/auth/classroom.courses.readonly',
   },
 };
 

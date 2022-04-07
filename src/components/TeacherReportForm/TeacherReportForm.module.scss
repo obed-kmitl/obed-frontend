@@ -94,6 +94,18 @@ li.addLi {
 .btnWrap {
   display: flex;
   align-self: flex-end;
+  align-items: center;
   gap: 0.5rem;
   margin: 1rem 0;
+
+  button {
+    margin: 0;
+  }
+
+  .divider {
+    margin: 0 0.5rem;
+    min-width: 1px;
+    height: 25px;
+    background-color: $color-grey-200;
+  }
 }

@@ -59,7 +59,7 @@ export function TeacherReport() {
   };
 
   const data = {
-    labels: graphData.map((each) => each.order_number),
+    labels: graphData.map((each) => "PLO " + each.order_number),
     datasets: [
       {
         label: "Class Average",

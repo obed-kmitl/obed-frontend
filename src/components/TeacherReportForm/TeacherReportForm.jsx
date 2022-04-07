@@ -356,6 +356,20 @@ function TeacherReportForm() {
       });
   }
 
+  function discardChange() {
+    setNewSuggest({
+      cause: [],
+      work: [],
+      evaluation: [],
+    });
+    setSumList([]);
+    setImprovedList([]);
+    setSuggest([]);
+    setMethodList([]);
+    setDirty(false);
+    fetchReportData();
+  }
+
   function genExtra(i) {
     return (
       <>
@@ -672,10 +686,29 @@ function TeacherReportForm() {
           <MyBtn className={styles.addBtn} onClick={() => exportPDF(section)}>
             Export PDF
           </MyBtn>
+          <div className={styles.divider} />
+          <Popconfirm
+            title="Are you sure to discard all changes?"
+            onConfirm={() => discardChange()}
+            okText="Yes"
+            cancelText="No"
+          >
+            <MyBtn
+              className={styles.addBtn}
+              disabled={!dirty}
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+            >
+              Discard
+            </MyBtn>
+          </Popconfirm>
+
           <MyBtn
             className={styles.addBtn}
             disabled={!dirty}
             onClick={() => onSave(false)}
+            type="primary"
           >
             Save
           </MyBtn>

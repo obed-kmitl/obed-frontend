@@ -97,7 +97,7 @@ export function AdminGraph({ page }) {
       )
         .then((data) => {
           setSubjectGraphData({
-            labels: data.map((ele) => ele.order_number),
+            labels: data.map((ele) => "PLO " + ele.order_number),
             datasets: [
               {
                 label: selectedSubject.number,
@@ -127,7 +127,7 @@ export function AdminGraph({ page }) {
       )
         .then((data) => {
           setCohortGraphData({
-            labels: data.map((ele) => ele.order_number),
+            labels: data.map((ele) => "PLO " + ele.order_number),
             datasets: [
               {
                 label: selectedCohort.cohort,
@@ -179,7 +179,7 @@ export function AdminGraph({ page }) {
       )
         .then((data) => {
           setStudentGraphData({
-            labels: data.map((ele) => ele.order_number),
+            labels: data.map((ele) => "PLO " + ele.order_number),
             datasets: [
               curriculumGraphData,
               {

@@ -93,8 +93,11 @@ export function TeacherReport() {
             value: JSON.stringify([ele.student_number, ele.student_id]),
           };
         });
+      
+        if(newData[0]?.value){
+          setSelectedVal(newData[0].value);
+        }
         setStudents(newData);
-        setSelectedVal(newData[0].value);
       });
       getPLOSummaryBySection(section).then((data) => setGraphData(data));
     }

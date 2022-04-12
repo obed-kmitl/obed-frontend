@@ -5,7 +5,7 @@ import { Divider, Select, Empty, Spin } from "antd";
 import { Header, Option } from "../../components";
 import { Link } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
-import { Radar } from "react-chartjs-2";
+import { Bar, Radar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -14,6 +14,10 @@ import {
   Filler,
   Tooltip as ChartTooltip,
   Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
 } from "chart.js";
 
 import { useAdminGraph } from "./hooks/useAdminGraph";
@@ -24,7 +28,11 @@ ChartJS.register(
   LineElement,
   Filler,
   ChartTooltip,
-  Legend
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
 );
 
 const options = {
@@ -41,6 +49,25 @@ const options = {
     stepSize: 20,
   },
 };
+const optionsBar = {
+  responsive: true,
+  scales: {
+    y: {
+      beginAtZero: true,
+      max: 100,
+      min: 0,
+    },
+  },
+  ticks: {
+    stepSize: 10,
+  },
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+  },
+  maintainAspectRatio: false,
+}
 
 let cohortList = [];
 for (let i = 61; i <= new Date().getFullYear() - 1957; i++) {
@@ -96,6 +123,7 @@ export function AdminGraph({ page }) {
         selectedSubject.semester
       )
         .then((data) => {
+          console.log(subjectGraphData)
           setSubjectGraphData({
             labels: data.map((ele) => "PLO " + ele.order_number),
             datasets: [
@@ -114,6 +142,7 @@ export function AdminGraph({ page }) {
         })
         .finally(() => {
           setIsLoading(false);
+
         });
     }
   }, [selectedSubject]);
@@ -298,7 +327,10 @@ export function AdminGraph({ page }) {
           <Spin spinning={isLoading}>
             <div className={styles.graphWrap}>
               {subjectGraphData ? (
-                <Radar data={subjectGraphData} options={options} />
+                subjectGraphData.labels.length > 2 ?
+                  <Radar data={subjectGraphData} options={options} />
+                  :
+                  <Bar data={subjectGraphData} options={optionsBar} />
               ) : (
                 <Empty
                   style={{

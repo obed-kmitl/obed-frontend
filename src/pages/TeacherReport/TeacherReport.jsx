@@ -1,8 +1,8 @@
 import styles from "./TeacherReport.module.scss";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Radar } from "react-chartjs-2";
-import { Divider, Select } from "antd";
+import { Bar, Radar } from "react-chartjs-2";
+import { Divider, Empty, Select, Spin } from "antd";
 import { Header } from "../../components";
 import {
   Chart as ChartJS,
@@ -12,6 +12,10 @@ import {
   Filler,
   Tooltip as ChartTooltip,
   Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
 } from "chart.js";
 import { TeacherReportForm, ReportTable } from "../../components";
 import { useTeacherReport } from "./hooks/useTeacherReport";
@@ -24,7 +28,11 @@ ChartJS.register(
   LineElement,
   Filler,
   ChartTooltip,
-  Legend
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
 );
 
 export function TeacherReport() {
@@ -78,6 +86,23 @@ export function TeacherReport() {
     ],
   };
 
+  const optionsBar = {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+        min: 0,
+      },
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+
+    }
+  }
+
   function fetchStudentGraph(studentId) {
     getPLOSummaryByStudentAndSection(section, studentId).then((data) =>
       setStudentGraph(data)
@@ -93,8 +118,8 @@ export function TeacherReport() {
             value: JSON.stringify([ele.student_number, ele.student_id]),
           };
         });
-      
-        if(newData[0]?.value){
+
+        if (newData[0]?.value) {
           setSelectedVal(newData[0].value);
         }
         setStudents(newData);
@@ -136,8 +161,17 @@ export function TeacherReport() {
             />
           </div>
         </div>
-        <div>
-          <Radar width={600} data={data} options={options} />
+        <div style={{ padding: "1rem" }}>
+          {
+            graphData.length!==0 ?
+              (graphData.length > 2 ?
+              <Radar width={600} data={data} options={options} />
+              :
+              <Bar width={500} height={400} data={data} options={optionsBar} />
+              )
+              :
+              <Spin/>
+          }
         </div>
       </div>
       <TeacherReportForm />

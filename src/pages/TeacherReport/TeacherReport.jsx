@@ -88,6 +88,13 @@ export function TeacherReport() {
 
   const optionsBar = {
     responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+        min: 0,
+      },
+    },
     plugins: {
       legend: {
         position: 'top',
@@ -95,26 +102,6 @@ export function TeacherReport() {
 
     }
   }
-
-  const dataBar = {
-    labels: graphData.map((each) => "PLO " + each.order_number),
-    datasets: [
-      {
-        label: "Class Average",
-        data: graphData.map((each) => each.percent),
-        backgroundColor: "rgba(0, 159, 199, 0.2)",
-        borderColor: "rgba(0, 159, 199, 1)",
-        borderWidth: 1,
-      },
-      selectedId && {
-        label: selectedId,
-        data: studentGraph.map((each) => each.percent),
-        backgroundColor: "rgba(247, 148, 29, 0.2)",
-        borderColor: "rgba(247, 148, 29, 1)",
-        borderWidth: 1,
-      },
-    ],
-  };
 
   function fetchStudentGraph(studentId) {
     getPLOSummaryByStudentAndSection(section, studentId).then((data) =>
@@ -180,7 +167,7 @@ export function TeacherReport() {
               (graphData.length > 2 ?
               <Radar width={600} data={data} options={options} />
               :
-              <Bar width={500} height={400} data={dataBar} options={optionsBar} />
+              <Bar width={500} height={400} data={data} options={optionsBar} />
               )
               :
               <Spin/>

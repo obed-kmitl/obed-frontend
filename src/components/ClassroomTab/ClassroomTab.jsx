@@ -30,7 +30,9 @@ const ClassroomTab = () => {
   return (
     <div>
       {loading ? (
-        <Spin />
+        <div className={styles.spinContainer}>
+          <Spin />
+        </div>
       ) : (
         <div className={styles.classroomTab}>
           {authorized ? (

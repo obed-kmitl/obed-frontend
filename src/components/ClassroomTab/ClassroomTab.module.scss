@@ -64,5 +64,19 @@
             margin: 0.5rem;
         }
     }
-    
+}
+
+.modal {
+  display: flex;
+
+  .highlight{
+    color: $color-turquoise-500;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+  }
+}
+
+.modalDescription {
+  max-height: 5rem;
+  overflow: scroll;
 }

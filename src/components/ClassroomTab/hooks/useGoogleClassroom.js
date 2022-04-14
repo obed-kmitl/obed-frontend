@@ -1,69 +1,11 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import UserContext from "../../../contexts/UserContext";
 import httpClient from "../../../utils/httpClient";
 import { useContext } from "react";
-
-const mockGoogleClassroom = [
-  {
-    id: 1,
-    name: "ICT_1_2021",
-    enrollmentCode: "rs3dpea",
-  },
-  {
-    id: 2,
-    name: "CEPP 2021",
-    enrollmentCode: "abc5dfa",
-  },
-  {
-    id: 3,
-    name: "Project_64_1",
-    enrollmentCode: "qd8aexa",
-  },
-  {
-    id: 4,
-    name: "OOP_2022_1",
-    enrollmentCode: "dfa9edw",
-  },
-  {
-    id: 5,
-    name: "CEPP long name test 2021",
-    enrollmentCode: "aejkda",
-  },
-  {
-    id: 6,
-    name: "Project_64_1",
-    enrollmentCode: "qd863ea",
-  },
-  {
-    id: 7,
-    name: "OOP_2022_1",
-    enrollmentCode: "qegedfa",
-  },
-
-];
-
-const mockGGact = [
-  {
-    id: 1,
-    title: "homework 1",
-    detail: "detail bla bla bla..."
-  },
-  {
-    id: 2,
-    title: "homework 2",
-    detail: "detail bla bla bla..."
-  },
-  {
-    id: 3,
-    title: "homework 3",
-    detail: "detail bla bla bla..."
-  },
-  {
-    id: 4,
-    title: "homework 4",
-    detail: "detail bla bla bla..."
-  }
-]
+import { useModal } from "../../../hooks";
+import { useSectionContext } from "../../../contexts/SectionContext";
+import { useForm } from "antd/lib/form/Form";
+import { Modal } from "antd";
 
 export const useGoogleClassroom = () => {
   const [allGClass, setAllGClass] = useState([]);
@@ -72,49 +14,124 @@ export const useGoogleClassroom = () => {
   const [authorized, setAuthorized] = useState(false);
   const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
+  const [toAddActivityIndex, setToAddActivityIndex] = useState(-1);
+  const { visibleModal, setVisibleModal } = useModal();
+  const { section: sectionId } = useSectionContext();
+  const [addToActivityForm] = useForm();
+  const [cloList, setCloList] = useState([]);
 
-  const onCourseChange = e => {
-    console.log(e.target.value)
-    setSelectedCourse(e.target.value);
+  const onCourseChange = async (e) => {
+    await listCourseWorks(e.target.value);
+  };
+
+  const onAddToActivity = async (index) => {
+    setVisibleModal(true);
+    setToAddActivityIndex(index);
+  };
+
+  const onCancelAddToActivity = async () => {
+    setVisibleModal(false);
+  };
+
+  const addToActivity = async (formValue) => {
+    try {
+      await httpClient.post("/activity/createFromClassroom", {
+        section_id: sectionId,
+        title: googleActivity[toAddActivityIndex].title,
+        detail: googleActivity[toAddActivityIndex].description,
+        max_score: googleActivity[toAddActivityIndex].maxPoints,
+        clos: formValue.clos,
+        allowImportStudentScore: false,
+      });
+
+      const newGoogleActivity = [...googleActivity];
+      newGoogleActivity[toAddActivityIndex].disabled = true;
+      setGoogleActivity(() => newGoogleActivity);
+      setVisibleModal(false);
+    } catch (err) {
+      Modal.error({
+        title: "Cannot add classwork to activity.",
+      });
+    }
   };
 
   const onGoogleSuccess = async (response) => {
+    setLoading(true);
     try {
       await httpClient.post("/google/authorize", {
-        userId: user.user_id, 
+        userId: user.user_id,
         code: response.code,
       });
-      setAuthorized(true)
+      await listCourses();
     } catch (err) {
-      console.log(err);
+      setAuthorized(false);
     }
+    setLoading(false);
   };
 
   const listCourses = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const res = await httpClient.get(`/google/listCourses/${user.user_id}`);
-      setAllGClass(res.data.data)
-      setAuthorized(true)
+      const res = await httpClient.get(`/google/listCourses`);
+      setAllGClass(res.data.data);
+      setAuthorized(true);
     } catch (err) {
-      setAuthorized(false)
-      console.log(err);
+      setAuthorized(false);
     }
-    setLoading(false)
+    setLoading(false);
+  };
+
+  const listCourseWorks = async (course) => {
+    setLoading(true);
+    setSelectedCourse(course);
+    try {
+      const res = await httpClient.get(`/google/listCourseWorks/${course.id}`);
+      console.log(res.data.data);
+      setGoogleActivity(res.data.data.map((each) => ({ ...each, disabled: false })));
+    } catch (err) {
+      setAuthorized(false);
+    }
+    setLoading(false);
+  };
+
+  async function fetchClo() {
+    return await httpClient
+      .get(`/clo/getAllBySection/${sectionId}`)
+      .then((res) => {
+        setCloList(res.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   useEffect(() => {
-    listCourses();
-    setGoogleActivity(mockGGact)
-  }, [])
+    if (sectionId) {
+      fetchClo();
+    }
+    // eslint-disable-next-line
+  }, [sectionId]);
 
-  return { allGClass,
-    authorized, 
-    onGoogleSuccess, 
-    selectedCourse, 
-    setSelectedCourse, 
+  useEffect(() => {
+    listCourses();
+  }, []);
+
+  return {
+    allGClass,
+    authorized,
+    onGoogleSuccess,
+    selectedCourse,
+    setSelectedCourse,
     onCourseChange,
     googleActivity,
-    loading
-  }
+    loading,
+    onAddToActivity,
+    onCancelAddToActivity,
+    addToActivity,
+    visibleModal,
+    setVisibleModal,
+    toAddActivityIndex,
+    addToActivityForm,
+    cloList,
+  };
 };

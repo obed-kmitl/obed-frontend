@@ -48,7 +48,7 @@ const ClassroomTab = () => {
                 </div>
                 <Header level={2}>{selectedCourse.name}'s Activity</Header>
                 {googleActivity?.map((activity, i) => (
-                  <div className={styles.card}>
+                  <div key={activity.id} className={styles.card}>
                     <img src={googleClassroomLogo} alt="google classroom" className={styles.logo} />
                     <div className={styles.detail}>
                       <div className={styles.content}>
@@ -79,7 +79,6 @@ const ClassroomTab = () => {
               <>
                 <div className={styles.flexrow}>
                   <Header level={2}>Google Classroom</Header>
-                  <Body level={2}>CODE: </Body>
                 </div>
                 <br />
                 <div className={styles.flexcol}>
@@ -90,7 +89,11 @@ const ClassroomTab = () => {
                       {allGClass.length === 0
                         ? "No courses"
                         : allGClass.map((course) => (
-                            <Radio.Button value={course} className={styles.courseselect}>
+                            <Radio.Button
+                              key={course.id}
+                              value={course}
+                              className={styles.courseselect}
+                            >
                               <div className={styles.course}>
                                 <Body level={4}>{course.enrollmentCode || ""}</Body>
                                 <Body level={1}>{course.name}</Body>
@@ -198,7 +201,7 @@ const ClassroomTab = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="allowImportStudentScore">
+          <Form.Item name="allowImportStudentScore" valuePropName="checked">
             <Checkbox>Allow import student score</Checkbox>
           </Form.Item>
         </Form>

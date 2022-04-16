@@ -41,7 +41,9 @@ export const useGoogleClassroom = () => {
         detail: googleActivity[toAddActivityIndex].description,
         max_score: googleActivity[toAddActivityIndex].maxPoints,
         clos: formValue.clos,
-        allowImportStudentScore: false,
+        allowImportStudentScore: formValue.allowImportStudentScore || false,
+        googleCourseId: googleActivity[toAddActivityIndex].courseId,
+        googleCourseWorkId: googleActivity[toAddActivityIndex].id,
       });
 
       const newGoogleActivity = [...googleActivity];
@@ -86,7 +88,6 @@ export const useGoogleClassroom = () => {
     setSelectedCourse(course);
     try {
       const res = await httpClient.get(`/google/listCourseWorks/${course.id}`);
-      console.log(res.data.data);
       setGoogleActivity(res.data.data.map((each) => ({ ...each, disabled: false })));
     } catch (err) {
       setAuthorized(false);

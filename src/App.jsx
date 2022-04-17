@@ -21,8 +21,8 @@ import {
 } from "./pages";
 import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
-import "./styles/global.module.scss";
 
+import "./styles/global.module.scss";
 import UserContext from "./contexts/UserContext";
 
 function App() {
@@ -76,28 +76,17 @@ function App() {
               <PrivateRoute roles={["TEACHER"]} path="/lo">
                 <LearningOutcome />
               </PrivateRoute>
-              <PrivateRoute
-                roles={["TEACHER"]}
-                exact
-                path="/activity"
-              >
+              <PrivateRoute roles={["TEACHER"]} exact path="/activity">
                 <Activity />
               </PrivateRoute>
               <PrivateRoute roles={["TEACHER"]} path="/report">
                 <TeacherReport />
               </PrivateRoute>
-              <PrivateRoute
-                roles={["TEACHER"]}
-                path="/activity/detail"
-              >
+              <PrivateRoute roles={["TEACHER"]} path="/activity/detail">
                 <ActivityDetail />
               </PrivateRoute>
               <PrivateRoute roles={["ADMIN", "TEACHER"]} exact path="/">
-                {user.role === "ADMIN" ? (
-                  <Redirect to="/curriculum" />
-                ) : (
-                  <Home />
-                )}
+                {user.role === "ADMIN" ? <Redirect to="/curriculum" /> : <Home />}
               </PrivateRoute>
               <PrivateRoute roles={["ADMIN", "TEACHER"]} path="/">
                 <NotFound />

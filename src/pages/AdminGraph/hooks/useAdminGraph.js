@@ -24,9 +24,9 @@ export const useAdminGraph = () => {
       )
       .then((response) => {
         const newData = response.data.data
-        // .sort((a, b) =>
-        //   a.order_number.localeCompare(b.order_number)
-        // );
+        .sort((a, b) =>
+          a.order_number.localeCompare(b.order_number)
+        );
         return Promise.resolve(newData);
       })
       .catch((error) => {
@@ -80,9 +80,9 @@ export const useAdminGraph = () => {
       )
       .then((response) => {
         const newData = response.data.data
-        .sort((a, b) =>
-          a.order_number.localeCompare(b.order_number)
-        );
+        // .sort((a, b) =>
+        //   a.order_number.localeCompare(b.order_number)
+        // );
         console.log(newData)
         return Promise.resolve(newData);
       })

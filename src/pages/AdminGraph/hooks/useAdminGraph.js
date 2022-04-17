@@ -23,9 +23,10 @@ export const useAdminGraph = () => {
         `/summary/getPLOSummaryByCourseAndSemester/${courseId}/${semesterId}`
       )
       .then((response) => {
-        const newData = response.data.data.sort((a, b) =>
-          a.order_number.localeCompare(b.order_number)
-        );
+        const newData = response.data.data
+        // .sort((a, b) =>
+        //   a.order_number.localeCompare(b.order_number)
+        // );
         return Promise.resolve(newData);
       })
       .catch((error) => {
@@ -43,9 +44,11 @@ export const useAdminGraph = () => {
         `/summary/getPLOSummaryByStudentNumberAndCurriculum/${curriculumId}/${studentId}`
       )
       .then((response) => {
-        const newData = response.data.data.sort((a, b) =>
-          a.order_number.localeCompare(b.order_number)
-        );
+        console.log(response.data.data)
+        const newData = response.data.data
+        // .sort((a, b) =>
+        //   a.order_number.localeCompare(b.order_number)
+        // );
         return Promise.resolve(newData);
       })
       .catch((error) => {
@@ -58,9 +61,10 @@ export const useAdminGraph = () => {
     return httpClient
       .get(`/summary/getPLOSummaryByCurriculum/${curriculumId}`)
       .then((response) => {
-        const newData = response.data.data.sort((a, b) =>
-          a.order_number.localeCompare(b.order_number)
-        );
+        const newData = response.data.data
+        // .sort((a, b) =>
+        //   a.order_number.localeCompare(b.order_number)
+        // );
         return Promise.resolve(newData);
       })
       .catch((error) => {
@@ -75,9 +79,11 @@ export const useAdminGraph = () => {
         `/summary/getPLOSummaryByCohortAndCurriculum/${curriculumId}/${cohort}`
       )
       .then((response) => {
-        const newData = response.data.data.sort((a, b) =>
+        const newData = response.data.data
+        .sort((a, b) =>
           a.order_number.localeCompare(b.order_number)
         );
+        console.log(newData)
         return Promise.resolve(newData);
       })
       .catch((error) => {

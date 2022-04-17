@@ -1,4 +1,4 @@
-GIT_BRANCH="main"
+GIT_BRANCH="master"
 
 echo
 echo "[[ Step 1: Checkout ]]"

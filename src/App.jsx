@@ -21,7 +21,6 @@ import {
 } from "./pages";
 import { PrivateRoute, PublicRoute } from "./components";
 import { Layout } from "./components/Layout/Layout";
-
 import "./styles/global.module.scss";
 import UserContext from "./contexts/UserContext";
 

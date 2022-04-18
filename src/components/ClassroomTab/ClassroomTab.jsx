@@ -1,5 +1,5 @@
 import styles from "./ClassroomTab.module.scss";
-import { GoogleLogin } from "react-google-login";
+import { GoogleLogin, GoogleLogout } from "react-google-login";
 import config from "../../config";
 import { Header, Body, Button, Select, Option } from "..";
 import { useGoogleClassroom } from "./hooks/useGoogleClassroom";
@@ -25,6 +25,7 @@ const ClassroomTab = () => {
     cloList,
     addToActivityForm,
     toAddActivityIndex,
+    onGoogleLogout
   } = useGoogleClassroom();
 
   return (
@@ -79,6 +80,11 @@ const ClassroomTab = () => {
               <>
                 <div className={styles.flexrow}>
                   <Header level={2}>Google Classroom</Header>
+                  <GoogleLogout 
+                    clientId={config.googleClientId}
+                    buttonText="Logout"
+                    onLogoutSuccess={onGoogleLogout}
+                  />
                 </div>
                 <br />
                 <div className={styles.flexcol}>

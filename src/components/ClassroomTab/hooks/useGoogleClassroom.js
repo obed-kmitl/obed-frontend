@@ -60,6 +60,7 @@ export const useGoogleClassroom = () => {
   const onGoogleSuccess = async (response) => {
     setLoading(true);
     try {
+      console.log(response)
       await httpClient.post("/google/authorize", {
         userId: user.user_id,
         code: response.code,

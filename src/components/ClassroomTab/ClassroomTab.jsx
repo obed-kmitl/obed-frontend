@@ -118,7 +118,7 @@ const ClassroomTab = () => {
                 accessType="offline"
                 responseType="code"
                 onSuccess={onGoogleSuccess}
-                onFailure={() => {}}
+                onFailure={(res) => {console.log(res)}}
                 className="google-login-button"
                 scope={config.scope}
                 cookiePolicy={"single_host_origin"}

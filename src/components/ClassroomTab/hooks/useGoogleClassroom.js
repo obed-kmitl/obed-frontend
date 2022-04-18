@@ -57,6 +57,17 @@ export const useGoogleClassroom = () => {
     }
   };
 
+  const onGoogleLogout = async () => {
+    setLoading(true);
+    try {
+      await httpClient.post(`/google/logout/${user.user_id}`);
+      setAuthorized(false);
+    } catch (err) {
+      console.log(err)
+    }
+    setLoading(false);
+  };
+
   const onGoogleSuccess = async (response) => {
     setLoading(true);
     try {
@@ -134,5 +145,6 @@ export const useGoogleClassroom = () => {
     toAddActivityIndex,
     addToActivityForm,
     cloList,
+    onGoogleLogout
   };
 };

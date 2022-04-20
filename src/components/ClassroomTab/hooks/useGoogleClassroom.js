@@ -63,6 +63,7 @@ export const useGoogleClassroom = () => {
       await httpClient.post(`/google/logout/${user.user_id}`);
       setAuthorized(false);
     } catch (err) {
+      
       console.log(err)
     }
     setLoading(false);

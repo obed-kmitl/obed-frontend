@@ -94,7 +94,7 @@ const ClassroomTab = () => {
                     {allGClass.length === 0
                       ? "No courses"
                       : allGClass.map((course) => (
-                          <div className={styles.course}>
+                          <div className={styles.course} onClick={()=>onCourseChange(course)}>
                             <div className={styles.content}>
                               <div>
                                 <Body level={2}>

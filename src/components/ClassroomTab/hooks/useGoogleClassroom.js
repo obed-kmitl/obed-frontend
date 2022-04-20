@@ -20,8 +20,8 @@ export const useGoogleClassroom = () => {
   const [addToActivityForm] = useForm();
   const [cloList, setCloList] = useState([]);
 
-  const onCourseChange = async (e) => {
-    await listCourseWorks(e.target.value);
+  const onCourseChange = async (value) => {
+    await listCourseWorks(value);
   };
 
   const onAddToActivity = async (index) => {

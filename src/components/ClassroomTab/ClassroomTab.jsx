@@ -3,7 +3,7 @@ import { GoogleLogin, GoogleLogout } from "react-google-login";
 import config from "../../config";
 import { Header, Body, Button, Select, Option } from "..";
 import { useGoogleClassroom } from "./hooks/useGoogleClassroom";
-import { Radio, Space } from "antd";
+import { Divider, Radio, Space } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import googleClassroomLogo from "../../assets/img/logo_google_classroom.svg";
 import { Spin, Modal, Checkbox, Form } from "antd";
@@ -80,7 +80,7 @@ const ClassroomTab = () => {
               <>
                 <div className={styles.flexrow}>
                   <Header level={2}>Google Classroom</Header>
-                  <GoogleLogout 
+                  <GoogleLogout
                     clientId={config.googleClientId}
                     buttonText="Logout"
                     onLogoutSuccess={onGoogleLogout}
@@ -90,24 +90,27 @@ const ClassroomTab = () => {
                 <div className={styles.flexcol}>
                   <Header level={4}>Select Course</Header>
                   <br />
-                  <Radio.Group onChange={onCourseChange} value={selectedCourse} buttonStyle="solid">
-                    <Space wrap>
-                      {allGClass.length === 0
-                        ? "No courses"
-                        : allGClass.map((course) => (
-                            <Radio.Button
-                              key={course.id}
-                              value={course}
-                              className={styles.courseselect}
-                            >
-                              <div className={styles.course}>
-                                <Body level={4}>{course.enrollmentCode || ""}</Body>
-                                <Body level={1}>{course.name}</Body>
+                  <Space wrap style={{ width: "100%" }} className={styles.courseselect} size={30}>
+                    {allGClass.length === 0
+                      ? "No courses"
+                      : allGClass.map((course) => (
+                          <div className={styles.course}>
+                            <div className={styles.content}>
+                              <div>
+                                <Body level={2}>
+                                  {course.enrollmentCode || ""}
+                                </Body>
+                                <Divider style={{ margin: "4px" }} />
+                                <div className={styles.text}>
+                                  <Header level={2}>{course.name}</Header>
+                                </div>
                               </div>
-                            </Radio.Button>
-                          ))}
-                    </Space>
-                  </Radio.Group>
+                              <Body level={2}></Body>
+                            </div>
+                          </div>
+                      ))}
+                  </Space>
+
                 </div>
               </>
             )
@@ -124,7 +127,7 @@ const ClassroomTab = () => {
                 accessType="offline"
                 responseType="code"
                 onSuccess={onGoogleSuccess}
-                onFailure={() => {}}
+                onFailure={() => { }}
                 className="google-login-button"
                 scope={config.scope}
                 cookiePolicy={"single_host_origin"}

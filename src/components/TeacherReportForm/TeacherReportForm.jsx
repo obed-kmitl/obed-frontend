@@ -130,7 +130,7 @@ function TeacherReportForm() {
     setDirty(true);
   }
 
-  // เพิ่ม การประเมิณผล ใน Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
+  // เพิ่ม การประเมินผล ใน Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onAddEvaluation() {
     if (evaluationInput.trim() !== "") {
       setSelectedData({
@@ -142,7 +142,7 @@ function TeacherReportForm() {
     setEvaluationInput("");
   }
 
-  // ลบ การประเมิณผล ใน Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
+  // ลบ การประเมินผล ใน Modal แก้ไขข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onDeleteEvaluation(index) {
     setSelectedData({
       ...selectedData,
@@ -193,7 +193,7 @@ function TeacherReportForm() {
     setDirty(true);
   }
 
-  // เพิ่ม การประเมิณผล ใน Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
+  // เพิ่ม การประเมินผล ใน Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onAddNewEvaluation() {
     if (evaluationInput.trim() !== "") {
       setNewSuggest({
@@ -205,7 +205,7 @@ function TeacherReportForm() {
     setEvaluationInput("");
   }
 
-  // ลบ การประเมิณผล ใน Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
+  // ลบ การประเมินผล ใน Modal เพิ่มข้อควรปรับปรุงสำหรับการสอนครั้งต่อไป
   function onDeleteNewEvaluation(index) {
     setNewSuggest({
       ...newSuggest,
@@ -595,7 +595,7 @@ function TeacherReportForm() {
                     <li key={"work-table-" + i + "-" + j}>{work}</li>
                   ))}
                 </ul>
-                <Header level={4}>การประเมิณผล</Header>
+                <Header level={4}>การประเมินผล</Header>
                 <ul>
                   {ele.evaluation.map((evaluation, j) => (
                     <li key={"evaluation-table-" + i + "-" + j}>
@@ -809,7 +809,7 @@ function TeacherReportForm() {
               </Button>
             </Input.Group>
           </Form.Item>
-          <Form.Item label="การประเมิณผล">
+          <Form.Item label="การประเมินผล">
             <ul className={styles.addUl}>
               {newSuggest?.evaluation.map((ele, i) => (
                 <li key={"evalutation" + i} className={styles.addLi}>
@@ -936,7 +936,7 @@ function TeacherReportForm() {
               </Button>
             </Input.Group>
           </Form.Item>
-          <Form.Item label="การประเมิณผล">
+          <Form.Item label="การประเมินผล">
             <ul className={styles.addUl}>
               {selectedData?.evaluation.map((ele, i) => (
                 <li key={"evalutation" + i} className={styles.addLi}>

@@ -149,6 +149,7 @@ export const Plan = () => {
                 }}
                 search
                 onSearch={search}
+                allowClear
               />
               <Button onClick={() => handleAdd()}>Add</Button>
             </div>
@@ -183,7 +184,7 @@ export const Plan = () => {
                                 e.stopPropagation();
                               }}
                             >
-                              <DeleteOutlined />
+                              <DeleteOutlined style={{ color: "#c73535" }} />
                             </div>
                           </Popconfirm>
                         </div>

@@ -354,7 +354,7 @@ export function AdminGraph({ page }) {
               <Link to="/summary" className={styles.backBtn} title="Back">
                 <LeftOutlined />
               </Link>
-              Curriculum Assesment Report by Cohort
+              Assesment Report by Cohort
             </Header>
           </div>
           <Divider />
@@ -430,7 +430,7 @@ export function AdminGraph({ page }) {
               <Link to="/summary" className={styles.backBtn} title="Back">
                 <LeftOutlined />
               </Link>
-              Student Report
+              Assesment Report by Student
             </Header>
           </div>
           <Divider />

@@ -46,15 +46,17 @@ export const useSemester = () => {
     return await httpClient
       .get(`/course/getAllByCurriculum/${value}`)
       .then((response) => {
-        const receivedCourses = response?.data.data.map((course) => ({
-          key: course.course_id,
-          course_id: course.course_id,
-          curriculum_id: course.curriculum_id,
-          course_number: course.course_number,
-          course_name_en: course.course_name_en,
-          course_name_th: course.course_name_th,
-          disabled: false,
-        }));
+        const receivedCourses = response?.data.data
+          .sort((a, b) => a?.course_number.localeCompare(b?.course_number))
+          .map((course) => ({
+            key: course.course_id,
+            course_id: course.course_id,
+            curriculum_id: course.curriculum_id,
+            course_number: course.course_number,
+            course_name_en: course.course_name_en,
+            course_name_th: course.course_name_th,
+            disabled: false,
+          }));
         setAllCourse(receivedCourses);
       })
       .catch((error) => {
@@ -89,8 +91,8 @@ export const useSemester = () => {
     setSelectedCurriculum(value);
     fetchAllCourse(value);
     fetchAllSemester(value);
-    if(selectedCurriculum!==undefined){
-      setSelectedSemester(undefined)
+    if (selectedCurriculum !== undefined) {
+      setSelectedSemester(undefined);
     }
   }
 
@@ -100,10 +102,10 @@ export const useSemester = () => {
       .then((response) => {
         setSelectedSemester(response.data.data);
         response.data.data.group_sections.forEach((g_sec) => {
-            g_sec.sections.forEach((section) => {
-                   section.teacher_list = section.teacher_list.map(e => e.user_id)
-                })
-        })
+          g_sec.sections.forEach((section) => {
+            section.teacher_list = section.teacher_list.map((e) => e.user_id);
+          });
+        });
         setAddedCourse(
           response.data.data.group_sections.sort(
             ({ course_number: first }, { course_number: second }) =>

@@ -17,28 +17,28 @@ export function AdminReport() {
         <title>Report - OBED</title>
       </Helmet>
       <div className={styles.head}>
-        <Header level={1}>Report</Header>
+        <Header level={1}>Assesment Report</Header>
       </div>
       <Divider />
       <div className={styles.linkContainer}>
         <Link to="/summary/subject" className={styles.linkWrap}>
           <div>
             <BarsOutlined />
-            &emsp;<p>Assesment Report by Course</p>
+            &emsp;<p>By Course</p>
           </div>
           <RightOutlined />
         </Link>
         <Link to="/summary/cohort" className={styles.linkWrap}>
           <div>
             <BookOutlined />
-            &emsp;<p>Curriculum Assesment Report by Cohort</p>
+            &emsp;<p>By Cohort</p>
           </div>
           <RightOutlined />
         </Link>
         <Link to="/summary/student" className={styles.linkWrap}>
           <div>
             <UserOutlined />
-            &emsp;<p>Student Report</p>
+            &emsp;<p>By Student</p>
           </div>
           <RightOutlined />
         </Link>

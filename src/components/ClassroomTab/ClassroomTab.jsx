@@ -91,7 +91,7 @@ const ClassroomTab = () => {
                   <Header level={4}>Select Course</Header>
                   <br />
                   <Space wrap style={{ width: "100%" }} className={styles.courseselect} size={30}>
-                    {allGClass.length === 0
+                    {allGClass?.length === 0 || !allGClass
                       ? "No courses"
                       : allGClass.map((course) => (
                           <div className={styles.course} onClick={()=>onCourseChange(course)}>

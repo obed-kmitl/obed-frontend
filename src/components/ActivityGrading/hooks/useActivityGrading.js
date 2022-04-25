@@ -141,7 +141,8 @@ export const useActivityGrading = () => {
                     }
                     const trimedScore = parseFloat(std[`ข้อ${i + 1}(${item.max_score})`].toString().trim())
                     if (trimedScore <= item.max_score && trimedScore >= 0) {
-                        item.obtained_score = trimedScore
+                        console.log(trimedScore)
+                        item.obtained_score = parseFloat(trimedScore.toFixed(2))
                         return;
                     }
                     item.obtained_score = null

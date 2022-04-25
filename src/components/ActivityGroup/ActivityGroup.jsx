@@ -194,6 +194,10 @@ export const ActivityGroup = () => {
                                         width={120}
                                         onChange={(value) => handleAddStudent(g.group_id, value)}
                                         showSearch={true}
+                                        filterOption={(input, option) =>  
+                                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0 
+                                            
+                                          }
                                     >
                                         {students.map((std) =>
                                             <Option value={std.student_id} disabled={[].concat(...group?.map((g) => {

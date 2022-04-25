@@ -10,8 +10,11 @@ export const useReportTable = () => {
     return httpClient
       .get(`/summary/getCLOSummaryBySection/${sectionId}`)
       .then((response) => {
-        setReportData(response.data.data);
-        return Promise.resolve(response.data.data);
+        const newData = response.data.data.sort((a, b) =>
+          a.order_number.localeCompare(b.order_number)
+        );
+        setReportData(newData);
+        return Promise.resolve(newData);
       })
       .catch((error) => {
         errorTranslate(error, setMessage);

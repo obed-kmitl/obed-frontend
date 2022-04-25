@@ -41,7 +41,7 @@ export const SectionTable = ({ section, teacher, groupSectionId }) => {
                 inputNode = (
                     <Select
                         mode="multiple"
-                        showSearch
+                        showSearch={false}
                         placeholder="Select Teacher"
                     >
                         {teacher.map((ele) => (
@@ -74,7 +74,7 @@ export const SectionTable = ({ section, teacher, groupSectionId }) => {
                                 validator: (rule, value, callback) => {
 
                                     const alreadyExistSection = data.map((e) => e.section_number.toString()).filter((e) => e !== record.section_number.toString())
-                                    if (alreadyExistSection.includes(value.toString())) {
+                                    if (alreadyExistSection.includes(value.toString())&& inputType !== "teacher") {
                                         return Promise.reject("Already exist!")
                                     }
                                     if ((isNaN(value.toString()) || value.toString().includes(".")) && inputType !== "teacher") {

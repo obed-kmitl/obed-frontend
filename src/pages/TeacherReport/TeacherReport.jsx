@@ -32,7 +32,7 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
+  Title
 );
 
 export function TeacherReport() {
@@ -97,11 +97,10 @@ export function TeacherReport() {
     },
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
-
-    }
-  }
+    },
+  };
 
   function fetchStudentGraph(studentId) {
     getPLOSummaryByStudentAndSection(section, studentId).then((data) =>
@@ -162,16 +161,15 @@ export function TeacherReport() {
           </div>
         </div>
         <div style={{ padding: "1rem" }}>
-          {
-            graphData.length!==0 ?
-              (graphData.length > 2 ?
+          {graphData.length !== 0 ? (
+            graphData.length > 2 ? (
               <Radar width={600} data={data} options={options} />
-              :
+            ) : (
               <Bar width={500} height={400} data={data} options={optionsBar} />
-              )
-              :
-              <Spin/>
-          }
+            )
+          ) : (
+            <Spin spinning={graphData !== []} />
+          )}
         </div>
       </div>
       <TeacherReportForm />

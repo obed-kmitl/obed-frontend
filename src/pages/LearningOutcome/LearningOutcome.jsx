@@ -81,6 +81,7 @@ export const LearningOutcome = () => {
           "CLO created",
           "CLO " + res?.data?.data?.order_number + " has been created."
         );
+        form.resetFields();
       })
       .catch((error) => {
         openNotificationWithIcon("error", "Cannot remove CLO", error);
@@ -123,6 +124,7 @@ export const LearningOutcome = () => {
 
   function handleCancel() {
     editForm.resetFields();
+    form.resetFields();
     setSelectedData(null);
     setEditVisible(false);
     setAddVisible(false);
@@ -154,7 +156,7 @@ export const LearningOutcome = () => {
   }
 
   useEffect(() => {
-    if(section){
+    if (section) {
       fetchClo();
       fetchPlo();
     }

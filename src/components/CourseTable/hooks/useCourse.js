@@ -113,6 +113,7 @@ export const useCourse = () => {
     const newValues = values.map((ele) => {
       return {
         ...ele,
+        course_number: ele.course_number.trim(),
         curriculum_id,
       };
     });

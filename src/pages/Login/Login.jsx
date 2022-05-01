@@ -116,11 +116,7 @@ export const Login = ({ isAdmin = false }) => {
               </Button>
               {!isAdmin && (
                 <Body level={2} className={styles.infoText}>
-                  To get the account please contact to OBED Administrator{" "}
-                  <a href="mailto:administrator@obce.com">
-                    administrator@obce.com
-                  </a>{" "}
-                  or <a href="tel:08X-XXX-XXXX">08X-XXX-XXXX</a>
+                  To get the account please contact OBED Administrator.
                 </Body>
               )}
             </div>

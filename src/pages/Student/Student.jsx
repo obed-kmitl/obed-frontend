@@ -301,11 +301,6 @@ export const Student = () => {
             record.prefix + " " + text + " " + record.lastname
           }
         />
-        {/* <Column
-          title="Google Classroom Account"
-          dataIndex="email"
-          key="email"
-        /> */}
         <Column
           title="Action"
           key="action"
@@ -413,30 +408,6 @@ export const Student = () => {
             >
               <Input placeholder="Lastname" />
             </Form.Item>
-            {/* <Form.Item
-              label="Google Account Email"
-              name="email"
-              rules={[
-                { required: true, message: "Please input email!" },
-                { type: "email" },
-                {
-                  validator: (rule, value, callback) => {
-                    const alreadyExistEmail = data.find(
-                      (e) => e.email === value
-                    );
-                    if (
-                      alreadyExistEmail ||
-                      addList.find((item) => item.email === value)
-                    ) {
-                      return Promise.reject("Already exist!");
-                    }
-                    return Promise.resolve();
-                  },
-                },
-              ]}
-            >
-              <Input placeholder="Email" />
-            </Form.Item> */}
             <Button
               htmlType="submit"
               style={{ width: "100%" }}
@@ -556,27 +527,6 @@ export const Student = () => {
             >
               <Input placeholder="Lastname" />
             </Form.Item>
-            {/* <Form.Item
-              label="Google Account Email"
-              name="email"
-              rules={[
-                { required: true, message: "Please input email!" },
-                { type: "email" },
-                {
-                  validator: (rule, value, callback) => {
-                    const alreadyExistEmail = retrived
-                      .map((e) => e.email)
-                      .filter((e) => e !== selectedData.email);
-                    if (alreadyExistEmail.includes(value)) {
-                      return Promise.reject("Already exist!");
-                    }
-                    return Promise.resolve();
-                  },
-                },
-              ]}
-            >
-              <Input placeholder="Email" />
-            </Form.Item> */}
           </Form>
         </div>
       </Modal>
@@ -591,6 +541,7 @@ export const Student = () => {
         okButtonProps={{ disabled: uploadList.length === 0 }}
         maskClosable={false}
         confirmLoading={confirmLoading}
+        destroyOnClose={true}
       >
         <Header level={4}>Upload (Use KMITL REG Excel template only)</Header>
         <Upload

@@ -96,7 +96,7 @@ export const Student = () => {
   }
 
   function handleSubmit(values) {
-    console.log("Recieved values of form[ADD]: ", values);
+    // console.log("Recieved values of form[ADD]: ", values);
     setConfirmLoading(true);
     createStudents(values)
       .then(() => {
@@ -117,7 +117,7 @@ export const Student = () => {
   }
 
   function handleEdit(values, id) {
-    console.log("Recieved values of form[EDIT]: ", values);
+    // console.log("Recieved values of form[EDIT]: ", values);
     setConfirmLoading(true);
     updateStudent({ ...values, section_id: section }, id)
       .then(() => {
@@ -151,7 +151,7 @@ export const Student = () => {
   function onFinish(values) {
     setAddList([...addList, { ...values, section_id: section }]);
     form.resetFields();
-    console.log("Success:", values);
+    // console.log("Success:", values);
   }
 
   function onFinishFailed(errorInfo) {

@@ -154,7 +154,7 @@ export function Curriculum() {
   }
 
   function onFinish(values) {
-    console.log("Success:", values);
+    // console.log("Success:", values);
   }
 
   function onFinishFailed(errorInfo) {

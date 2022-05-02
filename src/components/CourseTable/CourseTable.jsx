@@ -119,7 +119,7 @@ export const CourseTable = ({ selectedCur }) => {
   }
 
   function onFinish(values) {
-    console.log("Success:", values);
+    // console.log("Success:", values);
   }
 
   function onFinishFailed(errorInfo) {

@@ -123,7 +123,6 @@ export const ActivityRubric = () => {
 
   function handleSubmit(values) {
     // setConfirmLoading(true);
-    console.log("Recieved values of form: ", values);
     // addSuggest(values)
     //   .then(() => {
     //     openNotificationWithIcon(
@@ -147,7 +146,6 @@ export const ActivityRubric = () => {
   }
 
   function handleEdit(values) {
-    console.log("Recieved values of form: ", values);
     setEditVisible(false);
     setSelectedData(null);
     editForm.resetFields();
@@ -164,7 +162,7 @@ export const ActivityRubric = () => {
   }
 
   function onFinish(values) {
-    console.log("Success:", values);
+    // console.log("Success:", values);
   }
 
   function onFinishFailed(errorInfo) {

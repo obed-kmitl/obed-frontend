@@ -29,7 +29,6 @@ export const LearningOutcome = () => {
   const [plo, setPlo] = useState();
   const [addVisible, setAddVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
-  const [selectedData, setSelectedData] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const { section } = useSectionContext();
 
@@ -125,14 +124,13 @@ export const LearningOutcome = () => {
   function handleCancel() {
     editForm.resetFields();
     form.resetFields();
-    setSelectedData(null);
     setEditVisible(false);
     setAddVisible(false);
     // setMessage("");
   }
 
   function onFinish(values) {
-    console.log("Success:", values);
+    // console.log("Success:", values);
   }
 
   function onFinishFailed(errorInfo) {

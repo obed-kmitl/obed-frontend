@@ -57,7 +57,7 @@ export const Standard = ({ selectedCurriculum }) => {
     //ModalVisible
     newStdVisible,
     addStdVisible,
-    fetchAllStandards
+    fetchAllStandards,
   } = useStandard(selectedCurriculum);
   const {
     importModalVisible,
@@ -67,6 +67,7 @@ export const Standard = ({ selectedCurriculum }) => {
     confirmImport,
     importStandard,
     importForm,
+    setImportStandard,
   } = useImportExcel(fetchAllStandards);
 
   const uploadProps = {
@@ -164,43 +165,43 @@ export const Standard = ({ selectedCurriculum }) => {
                     (editingTitleIndex === index && isEditing) ||
                     isEditingName
                   ) && (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.5rem",
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <Typography.Link
+                        disabled={isEditing}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditTitle(index);
                         }}
                       >
+                        <EditOutlined />
+                      </Typography.Link>
+
+                      <Popconfirm
+                        title="Are you sure to delete ?"
+                        onConfirm={(e) => {
+                          handleDeleteTitle(item.id);
+                          e.stopPropagation();
+                        }}
+                        onCancel={(e) => e.stopPropagation()}
+                      >
                         <Typography.Link
-                          disabled={isEditing}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleEditTitle(index);
                           }}
+                          disabled={isEditing}
+                          type="danger"
                         >
-                          <EditOutlined />
+                          <DeleteOutlined />
                         </Typography.Link>
-
-                        <Popconfirm
-                          title="Are you sure to delete ?"
-                          onConfirm={(e) => {
-                            handleDeleteTitle(item.id);
-                            e.stopPropagation();
-                          }}
-                          onCancel={(e) => e.stopPropagation()}
-                        >
-                          <Typography.Link
-                            onClick={(e) => {
-                              e.stopPropagation();
-                            }}
-                            disabled={isEditing}
-                            type="danger"
-                          >
-                            <DeleteOutlined />
-                          </Typography.Link>
-                        </Popconfirm>
-                      </div>
-                    )}
+                      </Popconfirm>
+                    </div>
+                  )}
                 </div>
               }
             >
@@ -228,8 +229,8 @@ export const Standard = ({ selectedCurriculum }) => {
                             }}
                           >
                             {editingTitleIndex === index &&
-                              editingNameIndex === i &&
-                              isEditingName ? (
+                            editingNameIndex === i &&
+                            isEditingName ? (
                               <>
                                 <Form
                                   form={editNameForm}
@@ -479,7 +480,7 @@ export const Standard = ({ selectedCurriculum }) => {
             name="standardName"
             rules={[{ required: true, message: "Please input Standard Name!" }]}
           >
-            <Input placeholder=" standard name" />
+            <Input placeholder="Standard Name" />
           </Form.Item>
         </Form>
       </Modal>
@@ -492,15 +493,22 @@ export const Standard = ({ selectedCurriculum }) => {
             .validateFields()
             .then((value) => {
               importForm.resetFields();
-              confirmImport(value, selectedCurriculum)
+              confirmImport(value, selectedCurriculum);
             })
             .catch((info) => {
               console.log("Validate Failed", info);
             });
         }}
-        onCancel={() => importModalCancel()}
-        okButtonProps={{ htmlType: "submit" }}
+        onCancel={() => {
+          importModalCancel();
+          setImportStandard();
+        }}
+        okButtonProps={{
+          htmlType: "submit",
+          disabled: !importStandard,
+        }}
         maskClosable={false}
+        destroyOnClose={true}
         width="700px"
       >
         <div className={styles.importModal}>
@@ -525,30 +533,37 @@ export const Standard = ({ selectedCurriculum }) => {
             </Body>
             <Typography.Link
               onClick={() => {
-                const data = [{
-                  standardNo:1,
-                  description:"ผลลัพธ์การเรียนรู้1",
-                  subStdNo:1,
-                  subDescription:"ผลลัพธ์การเรียนรู้ย่อย1",
-                  "":"(ตัวอย่าง)"
-                },
-                {
-                  standardNo:1,
-                  description:"ผลลัพธ์การเรียนรู้1",
-                  subStdNo:2,
-                  subDescription:"ผลลัพธ์การเรียนรู้ย่อย2",
-                  "":"(ตัวอย่าง)"
-                },
-                {
-                  standardNo:2,
-                  description:"ผลลัพธ์การเรียนรู้2",
-                  subStdNo:1,
-                  subDescription:"ผลลัพธ์การเรียนรู้ย่อย1",
-                  "":"(ตัวอย่าง)"
-                }
-              ]
-                downloadAsExcel(data, "Education Standard template", [{ width: 10 }, { width: 40 }, { width: 10 }, { width: 40 } ])
-              }}>
+                const data = [
+                  {
+                    standardNo: 1,
+                    description: "ผลลัพธ์การเรียนรู้1",
+                    subStdNo: 1,
+                    subDescription: "ผลลัพธ์การเรียนรู้ย่อย1",
+                    "": "(ตัวอย่าง)",
+                  },
+                  {
+                    standardNo: 1,
+                    description: "ผลลัพธ์การเรียนรู้1",
+                    subStdNo: 2,
+                    subDescription: "ผลลัพธ์การเรียนรู้ย่อย2",
+                    "": "(ตัวอย่าง)",
+                  },
+                  {
+                    standardNo: 2,
+                    description: "ผลลัพธ์การเรียนรู้2",
+                    subStdNo: 1,
+                    subDescription: "ผลลัพธ์การเรียนรู้ย่อย1",
+                    "": "(ตัวอย่าง)",
+                  },
+                ];
+                downloadAsExcel(data, "Education Standard template", [
+                  { width: 10 },
+                  { width: 40 },
+                  { width: 10 },
+                  { width: 40 },
+                ]);
+              }}
+            >
               Download Template
             </Typography.Link>
           </div>
@@ -558,14 +573,14 @@ export const Standard = ({ selectedCurriculum }) => {
           name="theStandard"
           layout="vertical"
           autoComplete="off"
-          requiredMark={"required"}>
+          requiredMark={"required"}
+        >
           <Form.Item
             label="Standard Name"
             name="title"
-
             rules={[{ required: true, message: "Please input Standard Name!" }]}
           >
-            <Input placeholder=" standard name" />
+            <Input placeholder="Standard Name" />
           </Form.Item>
         </Form>
         <Header level={4}>Preview</Header>
@@ -573,10 +588,7 @@ export const Standard = ({ selectedCurriculum }) => {
           <div className={styles.preview}>
             <Collapse accordion>
               {importStandard.map((std, index) => (
-                <Panel
-                  header={std.order_number + " " + std.title}
-                  key={index}
-                >
+                <Panel header={std.order_number + " " + std.title} key={index}>
                   {std.sub_standards.map((substd) => (
                     <>
                       <div style={{ display: "flex", fontSize: "14px" }}>

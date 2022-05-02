@@ -119,7 +119,7 @@ export const CourseTable = ({ selectedCur }) => {
   }
 
   function onFinish(values) {
-    console.log("Success:", values);
+    // console.log("Success:", values);
   }
 
   function onFinishFailed(errorInfo) {
@@ -733,6 +733,7 @@ export const CourseTable = ({ selectedCur }) => {
         maskClosable={false}
         confirmLoading={confirmLoading}
         okButtonProps={{ disabled: courseList.length === 0 }}
+        destroyOnClose={true}
       >
         <Header level={4}>Upload</Header>
         <p>Can only import course with course id and course name only.</p>

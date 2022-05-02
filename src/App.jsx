@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import {
   Curriculum,
   Home,
-  Sandbox,
   Profile,
   Teacher,
   Plan,
@@ -12,7 +11,6 @@ import {
   Student,
   NotFound,
   Overview,
-  //Planning,
   Activity,
   LearningOutcome,
   TeacherReport,
@@ -45,9 +43,6 @@ function App() {
               </PrivateRoute>
               <PrivateRoute roles={["ADMIN"]} path="/curriculum">
                 <Curriculum />
-              </PrivateRoute>
-              <PrivateRoute roles={["ADMIN"]} path="/sandbox">
-                <Sandbox />
               </PrivateRoute>
               <PrivateRoute roles={["ADMIN", "TEACHER"]} path="/profile">
                 <Profile />

@@ -106,7 +106,7 @@ export const Teacher = () => {
   }
 
   function handleSubmit(values) {
-    console.log("Recieved values of form: ", values);
+    // console.log("Recieved values of form: ", values);
     register(values)
       .then((data) => {
         let newTeacher = {
@@ -139,7 +139,7 @@ export const Teacher = () => {
   }
 
   function handleEdit(values) {
-    console.log("Recieved values of form: ", values);
+    // console.log("Recieved values of form: ", values);
     setConfirmLoading(true);
     editTeacher(values)
       .then(() => {
@@ -180,7 +180,7 @@ export const Teacher = () => {
   }
 
   function onFinish(values) {
-    console.log("Success:", values);
+    // console.log("Success:", values);
   }
 
   function onFinishFailed(errorInfo) {

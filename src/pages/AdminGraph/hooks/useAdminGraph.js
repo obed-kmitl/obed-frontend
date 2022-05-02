@@ -44,7 +44,6 @@ export const useAdminGraph = () => {
         `/summary/getPLOSummaryByStudentNumberAndCurriculum/${curriculumId}/${studentId}`
       )
       .then((response) => {
-        console.log(response.data.data)
         const newData = response.data.data
         // .sort((a, b) =>
         //   a.order_number.localeCompare(b.order_number)
@@ -83,7 +82,6 @@ export const useAdminGraph = () => {
         // .sort((a, b) =>
         //   a.order_number.localeCompare(b.order_number)
         // );
-        console.log(newData)
         return Promise.resolve(newData);
       })
       .catch((error) => {

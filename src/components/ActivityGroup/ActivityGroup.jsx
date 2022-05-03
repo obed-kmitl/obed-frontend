@@ -143,19 +143,6 @@ export const ActivityGroup = () => {
     // eslint-disable-next-line
   }, [activityId]);
 
-  useEffect(() => {
-    const allStudent = group?.map((g) => {
-      const student = g.students.map((s) => {
-        return s.student_number;
-      });
-      return student;
-    });
-    if (allStudent) {
-      console.log([].concat(...allStudent));
-    }
-    // eslint-disable-next-line
-  }, [group]);
-
   return (
     <div className={styles.group}>
       <div className={styles.header}>

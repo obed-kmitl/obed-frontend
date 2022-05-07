@@ -2,7 +2,7 @@ import styles from "./TeacherReport.module.scss";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Bar, Radar } from "react-chartjs-2";
-import { Divider, Empty, Select, Spin } from "antd";
+import { Divider, Select, Spin } from "antd";
 import { Header } from "../../components";
 import {
   Chart as ChartJS,
@@ -125,6 +125,7 @@ export function TeacherReport() {
       });
       getPLOSummaryBySection(section).then((data) => setGraphData(data));
     }
+    // eslint-disable-next-line
   }, [section]);
 
   useEffect(() => {
@@ -133,6 +134,7 @@ export function TeacherReport() {
       fetchStudentGraph(parseVal[1]);
       setSelectedId(parseVal[0]);
     }
+    // eslint-disable-next-line
   }, [selectedVal]);
 
   return (

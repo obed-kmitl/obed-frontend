@@ -23,8 +23,7 @@ export const useAdminGraph = () => {
         `/summary/getPLOSummaryByCourseAndSemester/${courseId}/${semesterId}`
       )
       .then((response) => {
-        const newData = response.data.data
-        .sort((a, b) =>
+        const newData = response.data.data.sort((a, b) =>
           a.order_number.localeCompare(b.order_number)
         );
         return Promise.resolve(newData);
@@ -44,12 +43,7 @@ export const useAdminGraph = () => {
         `/summary/getPLOSummaryByStudentNumberAndCurriculum/${curriculumId}/${studentId}`
       )
       .then((response) => {
-        console.log(response.data.data)
-        const newData = response.data.data
-        // .sort((a, b) =>
-        //   a.order_number.localeCompare(b.order_number)
-        // );
-        return Promise.resolve(newData);
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         errorTranslate(error, setMessage);
@@ -61,11 +55,7 @@ export const useAdminGraph = () => {
     return httpClient
       .get(`/summary/getPLOSummaryByCurriculum/${curriculumId}`)
       .then((response) => {
-        const newData = response.data.data
-        // .sort((a, b) =>
-        //   a.order_number.localeCompare(b.order_number)
-        // );
-        return Promise.resolve(newData);
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         errorTranslate(error, setMessage);
@@ -79,12 +69,7 @@ export const useAdminGraph = () => {
         `/summary/getPLOSummaryByCohortAndCurriculum/${curriculumId}/${cohort}`
       )
       .then((response) => {
-        const newData = response.data.data
-        // .sort((a, b) =>
-        //   a.order_number.localeCompare(b.order_number)
-        // );
-        console.log(newData)
-        return Promise.resolve(newData);
+        return Promise.resolve(response.data.data);
       })
       .catch((error) => {
         errorTranslate(error, setMessage);

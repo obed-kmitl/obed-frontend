@@ -256,7 +256,6 @@ function TeacherReportForm() {
       ...values,
       ...newSuggest,
     };
-    console.log("Recieved values of form: ", newItem);
     setAddVisible(false);
     setConfirmLoading(false);
     setSuggest([...suggest, newItem]);
@@ -295,7 +294,7 @@ function TeacherReportForm() {
   }
 
   function onFinish(values) {
-    console.log("Success:", values);
+    // console.log("Success:", values);
   }
 
   function onFinishFailed(errorInfo) {
@@ -310,7 +309,6 @@ function TeacherReportForm() {
       work: _suggest[i].work,
       evaluation: _suggest[i].evaluation,
     };
-    console.log("SELECTED_DATA ", { ...values, index: i });
     setSelectedData({ ...values, index: i });
     editForm.setFieldsValue(values);
     setEditVisible(true);

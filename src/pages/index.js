@@ -9,7 +9,6 @@ export { Login } from "./Login/Login";
 export { Student } from "./Student/Student";
 export { NotFound } from "./NotFound/NotFound";
 export { Overview } from "./Overview/Overview";
-export { Planning } from "./Planning/Planning";
 export { Activity } from "./Activity/Activity";
 export { LearningOutcome } from "./LearningOutcome/LearningOutcome";
 export { TeacherReport } from "./TeacherReport/TeacherReport";

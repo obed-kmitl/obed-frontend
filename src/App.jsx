@@ -12,7 +12,6 @@ import {
   Student,
   NotFound,
   Overview,
-  //Planning,
   Activity,
   LearningOutcome,
   TeacherReport,

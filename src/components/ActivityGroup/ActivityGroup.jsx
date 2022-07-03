@@ -348,7 +348,7 @@ export const ActivityGroup = () => {
       </Modal>
 
       <Modal
-        title={<Header level={3}>Import Score</Header>}
+        title={<Header level={3}>Import Group</Header>}
         visible={importModalVisible}
         okText="Import"
         //onOk={() => confirmImport()}

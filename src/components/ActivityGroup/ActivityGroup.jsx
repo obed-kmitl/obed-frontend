@@ -1,11 +1,13 @@
 import styles from "../ActivityGroup/ActivityGroup.module.scss";
 import { useState, useEffect } from "react";
-import { Button, Collapse, Panel, Header, Select, Option } from "..";
-import { CloseOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Input, Popover, Modal, Form, Popconfirm } from "antd";
+import { Button, Collapse, Panel, Header, Select, Option,Body } from "..";
+import { CloseOutlined, DeleteOutlined, EditOutlined,UploadOutlined } from "@ant-design/icons";
+import { Input, Popover, Modal, Form, Popconfirm, Upload,Typography,Divider,message } from "antd";
 import httpClient from "../../utils/httpClient";
 import { useSectionContext } from "../../contexts/SectionContext";
 import { useActivityContext } from "../../contexts/ActivityContext";
+import downloadAsExcel from "../../utils/jsonToExcel";
+import excelReader from "../../utils/excelReader";
 
 export const ActivityGroup = () => {
   const [group, setGroup] = useState();
@@ -16,6 +18,21 @@ export const ActivityGroup = () => {
   const [form] = Form.useForm();
   const { section } = useSectionContext();
   const { activityId } = useActivityContext();
+  const [importModalVisible, setImportModalVisible] = useState(false)
+
+  const uploadProps = {
+    name: "file",
+    beforeUpload: () => false,
+    maxCount: 1,
+    accept: ".xlsx, .xls",
+    async onChange({ file }) {
+      if (file.status !== "removed") {
+        const datafromExcel = await excelReader(file);
+        console.log(datafromExcel)
+        message.success(`${file.name} file uploaded successfully`);
+      }
+    },
+  };
 
   async function handleAddStudent(group_id, value) {
     return await httpClient
@@ -148,7 +165,8 @@ export const ActivityGroup = () => {
       <div className={styles.header}>
         <Header level={2}>All Groups </Header>
         <div style={{ gap: "0.5rem", display: "flex" }}>
-          <Button onClick={() => setAddGroupModal(true)}>Add</Button>
+          <Button onClick={() => setImportModalVisible(true)}>Import Group</Button>
+          <Button onClick={() => setAddGroupModal(true)}>Add Group</Button>
         </div>
       </div>
       <Collapse>
@@ -327,6 +345,57 @@ export const ActivityGroup = () => {
             <Input name="title" placeholder="Group Name" />
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title={<Header level={3}>Import Score</Header>}
+        visible={importModalVisible}
+        okText="Import"
+        //onOk={() => confirmImport()}
+        onCancel={() => setImportModalVisible(false)}
+        okButtonProps={{ htmlType: "submit" }}
+        maskClosable={false}
+        width="700px"
+      >
+        <div className={styles.importModal}>
+          <div className={styles.upload}>
+            <Header level={4}>Upload File</Header>
+            <Body level={4} style={{ marginBottom: "1rem" }}>
+              Existing data will be override
+            </Body>
+            <div className={styles.uploadBtn}>
+              <Upload {...uploadProps}>
+                <Button icon={<UploadOutlined />} type="primary">
+                  Upload
+                </Button>
+              </Upload>
+            </div>
+          </div>
+          <Divider type="vertical" style={{ height: "100%" }} />
+          <div className={styles.download}>
+            <Body level={3}>
+              To Import Group, You need to download template and upload complete
+              file to OBED.{" "}
+            </Body>
+            <Typography.Link
+              onClick={() => {
+                console.log(group)
+                const modifyData = group.map((g) => {
+                  const data = {
+                    group_id: g.group_id,
+                    title: g.title,
+                    students:g.students.map(e=>e.student_number).join(" ")
+                  };
+                  console.log(data)
+                  return data
+                });
+                downloadAsExcel(modifyData, "Import Group");
+              }}
+            >
+              Download Template
+            </Typography.Link>
+          </div>
+        </div>
       </Modal>
     </div>
   );
